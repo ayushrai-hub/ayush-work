@@ -109,8 +109,6 @@ The website showcases **professional experience, projects, skills, certification
 └── next.config.js
 ```
 
-````
-
 ---
 
 ## ⚙️ Tech Stack
@@ -224,4 +222,3 @@ git push origin feature/your-feature
 
 Do you want me to also generate a **`CONTRIBUTING.md`** and **`PLANNER.md`** alongside this `README.md` so your GitHub repo is fully professional?
 ```
-````
