@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Users, Mic, Trophy, BookOpen, GitBranch, Heart, Target, Zap, Award, Calendar, MapPin } from 'lucide-react';
+import { Users, Mic, Trophy, BookOpen, GitBranch, Heart, Target, Zap, Award, MapPin } from 'lucide-react';
 
 const CommunityLeadership: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

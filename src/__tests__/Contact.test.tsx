@@ -1,13 +1,12 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import Contact from '../components/Contact';
 import * as emailService from '../lib/emailService';
-import * as analytics from '../lib/analytics';
 
 vi.mock('../lib/emailService');
-vi.mock('../lib/analytics');
+// vi.mock('../lib/analytics');
 vi.mock('react-intersection-observer', () => ({
   useInView: () => [vi.fn(), true]
 }));

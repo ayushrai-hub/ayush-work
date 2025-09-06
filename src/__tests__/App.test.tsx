@@ -19,12 +19,13 @@ vi.mock('../components/Education', () => ({
   default: () => <div>Education</div>
 }));
 
+import React from 'react';
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
-    main: ({ children, ...props }: any) => <main {...props}>{children}</main>,
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
+    main: ({ children, ...props }: React.HTMLAttributes<HTMLElement> & { children: React.ReactNode }) => <main {...props}>{children}</main>,
+    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }) => <div {...props}>{children}</div>,
+    section: ({ children, ...props }: React.HTMLAttributes<HTMLElement> & { children: React.ReactNode }) => <section {...props}>{children}</section>,
   }
 }));
 
