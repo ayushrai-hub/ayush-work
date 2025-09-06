@@ -6,7 +6,7 @@
   "framework": null,
   "functions": {
     "api/send-email.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "now-node@20"
     }
   }
 }
