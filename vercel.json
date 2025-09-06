@@ -3,10 +3,9 @@
   "outputDirectory": "dist",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "framework": null,
   "functions": {
     "api/send-email.ts": {
-      "runtime": "@vercel/node@20"
+      "runtime": "@vercel/node@3"
     }
   }
 }
