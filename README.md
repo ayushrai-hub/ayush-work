@@ -217,8 +217,3 @@ git push origin feature/your-feature
 - [ ] Add e-learning or mini-course modules.
 
 ---
-
-```
-
-Do you want me to also generate a **`CONTRIBUTING.md`** and **`PLANNER.md`** alongside this `README.md` so your GitHub repo is fully professional?
-```
