@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Mail, Phone, MapPin, Send, MessageCircle, Calendar, Github, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageCircle, Calendar, Github, Linkedin, CheckCircle, AlertCircle } from 'lucide-react';
+import EmailService from '../lib/emailService';
+import { trackContactForm, trackServiceInterest } from '../lib/analytics';
 
 const Contact: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -12,18 +14,80 @@ const Contact: React.FC = () => {
     message: '',
     service: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({
+    type: null,
+    message: ''
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Track service interest when user selects a service
+    if (name === 'service' && value) {
+      // Wait a bit to avoid tracking incomplete selections
+      setTimeout(() => {
+        if (formData.service === value) { // Ensure it hasn't changed
+          trackServiceInterest(value);
+        }
+      }, 1000);
+    }
+
+    // Clear status when user starts typing
+    if (submitStatus.type) {
+      setSubmitStatus({ type: null, message: '' });
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFormFocus = () => {
+    // Track when user starts interacting with the form
+    if (!formData.name && !formData.email && !formData.subject && !formData.message) {
+      trackContactForm('start');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    // Track form submission
+    trackContactForm('submit');
+
+    try {
+      const result = await EmailService.sendContactEmail(formData);
+
+      if (result.success) {
+        setSubmitStatus({ type: 'success', message: result.message });
+        // Track successful form submission
+        trackContactForm('success');
+        // Clear form on success
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          service: ''
+        });
+      } else {
+        setSubmitStatus({ type: 'error', message: result.message });
+        // Track form error
+        trackContactForm('error');
+      }
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Something went wrong. Please try again later.'
+      });
+      // Track form error
+      trackContactForm('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -195,6 +259,7 @@ const Contact: React.FC = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
+                      onFocus={handleFormFocus}
                       className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white"
                       required
                     />
@@ -266,12 +331,46 @@ const Contact: React.FC = () => {
                   ></textarea>
                 </div>
 
+                {/* Submit Status Message */}
+                {submitStatus.type && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`flex items-center p-4 rounded-lg ${
+                      submitStatus.type === 'success'
+                        ? 'bg-green-500/10 border border-green-500/20'
+                        : 'bg-red-500/10 border border-red-500/20'
+                    }`}
+                  >
+                    {submitStatus.type === 'success' ? (
+                      <CheckCircle className="text-green-400 mr-3 flex-shrink-0" size={20} />
+                    ) : (
+                      <AlertCircle className="text-red-400 mr-3 flex-shrink-0" size={20} />
+                    )}
+                    <p className={`text-sm ${
+                      submitStatus.type === 'success' ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      {submitStatus.message}
+                    </p>
+                  </motion.div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center px-8 py-3 bg-gradient-to-r from-secondary to-accent text-primary font-semibold rounded-lg hover:shadow-lg transition-all group"
+                  disabled={isSubmitting}
+                  className="w-full flex items-center justify-center px-8 py-3 bg-gradient-to-r from-secondary to-accent text-primary font-semibold rounded-lg hover:shadow-lg transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send size={20} className="mr-2 group-hover:translate-x-1 transition-transform" />
-                  Send Message
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary mr-2"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={20} className="mr-2 group-hover:translate-x-1 transition-transform" />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </form>
             </div>

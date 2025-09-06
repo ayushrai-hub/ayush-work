@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { GraduationCap, Calendar, Award, BookOpen } from 'lucide-react';
+import GPAChart from './GPAChart';
 
 const Education: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -113,6 +114,16 @@ const Education: React.FC = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* GPA Chart Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-16 mb-16"
+        >
+          <GPAChart />
+        </motion.div>
 
         {/* Academic Achievements */}
         <motion.div

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -6,30 +6,55 @@ import About from './components/About';
 import Education from './components/Education';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
+import Research from './components/Research';
+import CommunityLeadership from './components/CommunityLeadership';
 import Projects from './components/Projects';
 import Certifications from './components/Certifications';
 import Services from './components/Services';
 import Contact from './components/Contact';
 import ParticleBackground from './components/ParticleBackground';
+import { initGA } from './lib/analytics';
+import SEO from './components/SEO';
 import './App.css';
 
+// Lazy load heavy components
+const ThreeJSHero = lazy(() => import('./components/ThreeJSHero'));
+const ProjectTestimonials = lazy(() => import('./components/ProjectTestimonials'));
+
+// Loading component for Suspense fallback
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-[200px]">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+  </div>
+);
+
 function App() {
+  useEffect(() => {
+    initGA();
+  }, []);
+
   return (
     <div className="min-h-screen bg-primary text-white relative overflow-x-hidden">
+      <SEO />
       <ParticleBackground />
-      
+
       <Header />
-      
+
       <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <Hero />
+        <Suspense fallback={<LoadingSpinner />}>
+          <ThreeJSHero />
+          <ProjectTestimonials />
+        </Suspense>
         <About />
         <Education />
         <Experience />
         <Skills />
+        <Research />
+        <CommunityLeadership />
         <Projects />
         <Certifications />
         <Services />
