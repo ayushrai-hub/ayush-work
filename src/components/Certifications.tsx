@@ -1,7 +1,7 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Award, Calendar, ExternalLink, CheckCircle } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { Award, Calendar, ExternalLink, CheckCircle } from "lucide-react";
 
 const Certifications: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -12,18 +12,30 @@ const Certifications: React.FC = () => {
       issuer: "Cisco Networking Academy",
       date: "2022",
       category: "Cybersecurity",
-      description: "Comprehensive cybersecurity operations and incident response certification",
-      skills: ["Network Security", "Threat Detection", "Incident Response", "Security Operations"],
-      verified: true
+      description:
+        "Comprehensive cybersecurity operations and incident response certification",
+      skills: [
+        "Network Security",
+        "Threat Detection",
+        "Incident Response",
+        "Security Operations",
+      ],
+      verified: true,
     },
     {
       title: "30 Days of Google Cloud Challenge",
       issuer: "Google Cloud",
       date: "2021",
       category: "Cloud Computing",
-      description: "Hands-on cloud computing and services implementation challenge",
-      skills: ["Google Cloud Platform", "Cloud Architecture", "DevOps", "Serverless Computing"],
-      verified: true
+      description:
+        "Hands-on cloud computing and services implementation challenge",
+      skills: [
+        "Google Cloud Platform",
+        "Cloud Architecture",
+        "DevOps",
+        "Serverless Computing",
+      ],
+      verified: true,
     },
     {
       title: "Foundations: Data, Everywhere",
@@ -32,16 +44,17 @@ const Certifications: React.FC = () => {
       category: "Data Analysis",
       description: "Foundational data analysis and visualization certification",
       skills: ["Data Analysis", "Data Visualization", "SQL", "Spreadsheets"],
-      verified: true
+      verified: true,
     },
     {
       title: "Introduction to Machine Learning",
       issuer: "AWS",
       date: "2021",
       category: "Machine Learning",
-      description: "Introduction to ML concepts and AWS machine learning services",
+      description:
+        "Introduction to ML concepts and AWS machine learning services",
       skills: ["Machine Learning", "AWS ML Services", "Data Science", "Python"],
-      verified: true
+      verified: true,
     },
     {
       title: "Git from Basics to Advanced",
@@ -50,7 +63,7 @@ const Certifications: React.FC = () => {
       category: "Development Tools",
       description: "Comprehensive version control and collaboration with Git",
       skills: ["Git", "GitHub", "Version Control", "Collaboration"],
-      verified: true
+      verified: true,
     },
     {
       title: "Leadership and Talent Management",
@@ -58,8 +71,13 @@ const Certifications: React.FC = () => {
       date: "2021",
       category: "Leadership",
       description: "Strategic leadership and team management certification",
-      skills: ["Leadership", "Team Management", "Strategic Planning", "Talent Development"],
-      verified: true
+      skills: [
+        "Leadership",
+        "Team Management",
+        "Strategic Planning",
+        "Talent Development",
+      ],
+      verified: true,
     },
     {
       title: "Digital 101",
@@ -67,8 +85,13 @@ const Certifications: React.FC = () => {
       date: "2021",
       category: "Digital Skills",
       description: "Digital literacy and emerging technology fundamentals",
-      skills: ["Digital Literacy", "Emerging Technologies", "Innovation", "Digital Transformation"],
-      verified: true
+      skills: [
+        "Digital Literacy",
+        "Emerging Technologies",
+        "Innovation",
+        "Digital Transformation",
+      ],
+      verified: true,
     },
     {
       title: "Introduction to Cyber Security",
@@ -76,19 +99,44 @@ const Certifications: React.FC = () => {
       date: "2021",
       category: "Cybersecurity",
       description: "Fundamental cybersecurity principles and best practices",
-      skills: ["Cybersecurity Fundamentals", "Network Security", "Security Policies", "Risk Management"],
-      verified: true
-    }
+      skills: [
+        "Cybersecurity Fundamentals",
+        "Network Security",
+        "Security Policies",
+        "Risk Management",
+      ],
+      verified: true,
+    },
   ];
 
   const categories = [
     { name: "Cybersecurity", count: 2, color: "bg-red-500/20 text-red-400" },
-    { name: "Cloud Computing", count: 1, color: "bg-blue-500/20 text-blue-400" },
-    { name: "Machine Learning", count: 1, color: "bg-purple-500/20 text-purple-400" },
-    { name: "Data Analysis", count: 1, color: "bg-green-500/20 text-green-400" },
+    {
+      name: "Cloud Computing",
+      count: 1,
+      color: "bg-blue-500/20 text-blue-400",
+    },
+    {
+      name: "Machine Learning",
+      count: 1,
+      color: "bg-purple-500/20 text-purple-400",
+    },
+    {
+      name: "Data Analysis",
+      count: 1,
+      color: "bg-green-500/20 text-green-400",
+    },
     { name: "Leadership", count: 1, color: "bg-yellow-500/20 text-yellow-400" },
-    { name: "Development Tools", count: 1, color: "bg-pink-500/20 text-pink-400" },
-    { name: "Digital Skills", count: 1, color: "bg-indigo-500/20 text-indigo-400" }
+    {
+      name: "Development Tools",
+      count: 1,
+      color: "bg-pink-500/20 text-pink-400",
+    },
+    {
+      name: "Digital Skills",
+      count: 1,
+      color: "bg-indigo-500/20 text-indigo-400",
+    },
   ];
 
   return (
@@ -116,7 +164,9 @@ const Certifications: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-16"
         >
-          <h3 className="text-2xl font-bold text-center mb-8 gradient-text">Certification Categories</h3>
+          <h3 className="text-2xl font-bold text-center mb-8 gradient-text">
+            Certification Categories
+          </h3>
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((category, index) => (
               <motion.div
@@ -158,7 +208,7 @@ const Certifications: React.FC = () => {
                 {cert.title}
               </h3>
               <p className="text-secondary font-semibold mb-2">{cert.issuer}</p>
-              
+
               <div className="flex items-center mb-3 text-gray-400 text-sm">
                 <Calendar size={16} className="mr-2" />
                 {cert.date}
@@ -169,7 +219,9 @@ const Certifications: React.FC = () => {
               </p>
 
               <div className="mb-4">
-                <p className="text-white font-semibold mb-2 text-sm">Skills Covered:</p>
+                <p className="text-white font-semibold mb-2 text-sm">
+                  Skills Covered:
+                </p>
                 <div className="flex flex-wrap gap-1">
                   {cert.skills.map((skill, skillIndex) => (
                     <span
@@ -198,26 +250,40 @@ const Certifications: React.FC = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">Achievement Timeline</h3>
+          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
+            Achievement Timeline
+          </h3>
           <div className="relative max-w-4xl mx-auto">
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-secondary to-accent h-full"></div>
-            
-            {['2021', '2022', '2023', '2024'].map((year, index) => (
+
+            {["2021", "2022", "2023", "2024"].map((year, index) => (
               <motion.div
                 key={year}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: 1.0 + index * 0.1 }}
-                className={`flex items-center mb-8 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                className={`flex items-center mb-8 ${
+                  index % 2 === 0 ? "flex-row" : "flex-row-reverse"
+                }`}
               >
-                <div className={`w-5/12 ${index % 2 === 0 ? 'text-right pr-8' : 'text-left pl-8'}`}>
+                <div
+                  className={`w-5/12 ${
+                    index % 2 === 0 ? "text-right pr-8" : "text-left pl-8"
+                  }`}
+                >
                   <div className="card">
-                    <h4 className="text-xl font-bold mb-2 gradient-text">{year}</h4>
+                    <h4 className="text-xl font-bold mb-2 gradient-text">
+                      {year}
+                    </h4>
                     <p className="text-gray-400 text-sm">
-                      {year === '2021' && 'Started certification journey with Google Cloud and AWS'}
-                      {year === '2022' && 'Advanced in cybersecurity and data analysis'}
-                      {year === '2023' && 'Focused on leadership and advanced technical skills'}
-                      {year === '2024' && 'Specialized in AI/ML and continued professional development'}
+                      {year === "2021" &&
+                        "Started certification journey with Google Cloud and AWS"}
+                      {year === "2022" &&
+                        "Advanced in cybersecurity and data analysis"}
+                      {year === "2023" &&
+                        "Focused on leadership and advanced technical skills"}
+                      {year === "2024" &&
+                        "Specialized in AI/ML and continued professional development"}
                     </p>
                   </div>
                 </div>
@@ -237,7 +303,9 @@ const Certifications: React.FC = () => {
           transition={{ duration: 0.8, delay: 1.2 }}
           className="mt-16"
         >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">Learning Impact</h3>
+          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
+            Learning Impact
+          </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
               <div className="text-4xl font-bold gradient-text mb-2">8+</div>

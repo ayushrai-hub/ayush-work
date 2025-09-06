@@ -1,7 +1,7 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Briefcase, Calendar, MapPin, TrendingUp } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { Briefcase, Calendar, MapPin, TrendingUp } from "lucide-react";
 
 const Experience: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -17,9 +17,15 @@ const Experience: React.FC = () => {
         "Specialized in Reinforcement Learning from Human Feedback (RLHF)",
         "Collaborated with industry leaders: Turing, OpenAI, ScaleAI, Outlier",
         "Enhanced AI model reliability and performance through STEM analysis",
-        "Solved complex coding challenges and optimized ML algorithms"
+        "Solved complex coding challenges and optimized ML algorithms",
       ],
-      technologies: ["Python", "RLHF", "Machine Learning", "AI Development", "STEM Analysis"]
+      technologies: [
+        "Python",
+        "RLHF",
+        "Machine Learning",
+        "AI Development",
+        "STEM Analysis",
+      ],
     },
     {
       title: "Generative AI Engineer",
@@ -31,9 +37,15 @@ const Experience: React.FC = () => {
         "Developed LLM training datasets and optimization strategies",
         "Implemented advanced prompting strategies for Python/JavaScript",
         "Conducted comprehensive code review, testing, and debugging",
-        "Optimized ML frameworks and data preprocessing pipelines"
+        "Optimized ML frameworks and data preprocessing pipelines",
       ],
-      technologies: ["Python", "JavaScript", "LLMs", "Prompt Engineering", "ML Frameworks"]
+      technologies: [
+        "Python",
+        "JavaScript",
+        "LLMs",
+        "Prompt Engineering",
+        "ML Frameworks",
+      ],
     },
     {
       title: "Web Developer",
@@ -45,9 +57,9 @@ const Experience: React.FC = () => {
         "Developed responsive web applications for research initiatives",
         "Collaborated with research teams on technical documentation",
         "Implemented modern web technologies and best practices",
-        "Maintained and updated existing web platforms"
+        "Maintained and updated existing web platforms",
       ],
-      technologies: ["React", "TypeScript", "Node.js", "Web Development"]
+      technologies: ["React", "TypeScript", "Node.js", "Web Development"],
     },
     {
       title: "Student Developer Champion",
@@ -59,9 +71,14 @@ const Experience: React.FC = () => {
         "Led community initiatives and technical workshops",
         "Mentored students in automation and RPA technologies",
         "Organized hackathons and coding competitions",
-        "Created educational content and tutorials"
+        "Created educational content and tutorials",
       ],
-      technologies: ["UiPath", "RPA", "Community Management", "Workshop Delivery"]
+      technologies: [
+        "UiPath",
+        "RPA",
+        "Community Management",
+        "Workshop Delivery",
+      ],
     },
     {
       title: "Virtual Intern",
@@ -73,9 +90,9 @@ const Experience: React.FC = () => {
         "Completed comprehensive CRM and cloud computing projects",
         "Learned Salesforce ecosystem and best practices",
         "Developed custom applications using Salesforce platform",
-        "Earned Salesforce platform certifications"
+        "Earned Salesforce platform certifications",
       ],
-      technologies: ["Salesforce", "CRM", "Cloud Computing", "Apex"]
+      technologies: ["Salesforce", "CRM", "Cloud Computing", "Apex"],
     },
     {
       title: "WebOps Member",
@@ -87,10 +104,14 @@ const Experience: React.FC = () => {
         "Maintained and updated house website and digital infrastructure",
         "Managed social media presence and content creation",
         "Coordinated technical aspects of house events and activities",
-        "Implemented digital solutions for community engagement"
+        "Implemented digital solutions for community engagement",
       ],
-      technologies: ["Web Development", "Social Media Management", "Content Creation"]
-    }
+      technologies: [
+        "Web Development",
+        "Social Media Management",
+        "Content Creation",
+      ],
+    },
   ];
 
   return (
@@ -121,29 +142,46 @@ const Experience: React.FC = () => {
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.15 }}
-              className={`relative mb-16 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8 md:text-right'} 
-                         ${index % 2 === 1 ? 'md:pl-8' : ''}`}
+              className={`relative mb-16 ${
+                index % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-right"
+              } 
+                         ${index % 2 === 1 ? "md:pl-8" : ""}`}
             >
-              <div className="timeline-dot" style={{ top: '2rem' }}></div>
+              <div className="timeline-dot" style={{ top: "2rem" }}></div>
 
-              <div className={`card max-w-2xl ${index % 2 === 1 ? 'md:ml-auto' : ''} ml-12 md:ml-0`}>
+              <div
+                className={`card max-w-2xl ${
+                  index % 2 === 1 ? "md:ml-auto" : ""
+                } ml-12 md:ml-0`}
+              >
                 <div className="flex flex-wrap items-center justify-between mb-4">
                   <div className="flex items-center mb-2 md:mb-0">
                     <Briefcase className="text-accent mr-3" size={24} />
-                    <span className={`px-3 py-1 rounded-full text-sm font-semibold
-                      ${exp.type === 'Full-time' ? 'bg-accent/20 text-accent' : 
-                        exp.type === 'Freelance' ? 'bg-secondary/20 text-secondary' : 
-                        exp.type === 'Leadership' ? 'bg-tertiary/20 text-purple-300' :
-                        'bg-gray-500/20 text-gray-300'}`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-semibold
+                      ${
+                        exp.type === "Full-time"
+                          ? "bg-accent/20 text-accent"
+                          : exp.type === "Freelance"
+                          ? "bg-secondary/20 text-secondary"
+                          : exp.type === "Leadership"
+                          ? "bg-tertiary/20 text-purple-300"
+                          : "bg-gray-500/20 text-gray-300"
+                      }`}
+                    >
                       {exp.type}
                     </span>
                   </div>
                   <span className="text-accent font-semibold">Current</span>
                 </div>
 
-                <h3 className="text-2xl font-bold mb-2 text-white">{exp.title}</h3>
-                <p className="text-secondary font-semibold mb-3">{exp.company}</p>
-                
+                <h3 className="text-2xl font-bold mb-2 text-white">
+                  {exp.title}
+                </h3>
+                <p className="text-secondary font-semibold mb-3">
+                  {exp.company}
+                </p>
+
                 <div className="flex flex-wrap items-center gap-4 mb-4 text-gray-400 text-sm">
                   <div className="flex items-center">
                     <Calendar size={16} className="mr-2" />
@@ -158,11 +196,16 @@ const Experience: React.FC = () => {
                 <div className="mb-4">
                   <div className="flex items-center mb-3">
                     <TrendingUp size={16} className="mr-2 text-accent" />
-                    <span className="text-white font-semibold">Key Achievements:</span>
+                    <span className="text-white font-semibold">
+                      Key Achievements:
+                    </span>
                   </div>
                   <ul className="space-y-2">
                     {exp.achievements.map((achievement, achievementIndex) => (
-                      <li key={achievementIndex} className="text-gray-300 flex items-start">
+                      <li
+                        key={achievementIndex}
+                        className="text-gray-300 flex items-start"
+                      >
                         <span className="text-accent mr-2 mt-1">•</span>
                         {achievement}
                       </li>
@@ -171,7 +214,9 @@ const Experience: React.FC = () => {
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-white font-semibold mb-3">Technologies Used:</p>
+                  <p className="text-white font-semibold mb-3">
+                    Technologies Used:
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {exp.technologies.map((tech, techIndex) => (
                       <span
@@ -195,7 +240,9 @@ const Experience: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-16"
         >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">Experience Metrics</h3>
+          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
+            Experience Metrics
+          </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
               <div className="text-4xl font-bold gradient-text mb-2">4+</div>

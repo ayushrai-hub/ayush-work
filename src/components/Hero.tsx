@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ChevronDown, Github, Linkedin, Mail, Phone } from 'lucide-react';
-import CountUp from 'react-countup';
-import { useInView } from 'react-intersection-observer';
+import React from "react";
+import { motion } from "framer-motion";
+import { ChevronDown, Github, Linkedin, Mail, Phone } from "lucide-react";
+import CountUp from "react-countup";
+import { useInView } from "react-intersection-observer";
 
 const Hero: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true });
@@ -12,7 +12,7 @@ const Hero: React.FC = () => {
     "Full-Stack Developer | Data Science Enthusiast",
     "Community Leader | Technical Innovator",
     "Polymath with Strategic Approach",
-    "RLHF Specialist | LLM Optimizer"
+    "RLHF Specialist | LLM Optimizer",
   ];
 
   const [currentHeadline, setCurrentHeadline] = React.useState(0);
@@ -30,11 +30,14 @@ const Hero: React.FC = () => {
     { value: 15, label: "Projects Completed", suffix: "+" },
     { value: 8, label: "Certifications", suffix: "+" },
     { value: 5, label: "Leadership Roles", suffix: "+" },
-    { value: 10, label: "Technologies", suffix: "+" }
+    { value: 10, label: "Technologies", suffix: "+" },
   ];
 
   return (
-    <section id="home" className="min-h-screen flex flex-col justify-center relative pt-20">
+    <section
+      id="home"
+      className="min-h-screen flex flex-col justify-center relative pt-20"
+    >
       <div className="container mx-auto px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -45,7 +48,7 @@ const Hero: React.FC = () => {
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             Hi, I'm <span className="gradient-text">Ayush Rai</span>
           </h1>
-          
+
           <motion.div
             key={currentHeadline}
             initial={{ opacity: 0, y: 20 }}
@@ -66,9 +69,10 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="text-lg md:text-xl text-gray-400 mb-8 max-w-3xl mx-auto"
         >
-          Polymath with strategic approach across AI, web development, data science, 
-          and community leadership. Currently specializing in RLHF and Generative AI 
-          while pursuing dual degrees in Computer Science and Data Science.
+          Polymath with strategic approach across AI, web development, data
+          science, and community leadership. Currently specializing in RLHF and
+          Generative AI while pursuing dual degrees in Computer Science and Data
+          Science.
         </motion.p>
 
         <motion.div
@@ -134,11 +138,7 @@ const Hero: React.FC = () => {
             <div key={index} className="text-center">
               <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">
                 {inView && (
-                  <CountUp
-                    end={stat.value}
-                    duration={2}
-                    delay={index * 0.2}
-                  />
+                  <CountUp end={stat.value} duration={2} delay={index * 0.2} />
                 )}
                 {stat.suffix}
               </div>

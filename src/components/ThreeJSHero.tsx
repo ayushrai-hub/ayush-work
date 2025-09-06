@@ -1,17 +1,24 @@
-import React, { Suspense, useRef } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Sphere, Box, Octahedron, Float, MeshDistortMaterial, PresentationControls } from '@react-three/drei';
-import { motion } from 'framer-motion';
-import * as THREE from 'three';
+import React, { Suspense, useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import {
+  Sphere,
+  Box,
+  Octahedron,
+  Float,
+  MeshDistortMaterial,
+  PresentationControls,
+} from "@react-three/drei";
+import { motion } from "framer-motion";
+import * as THREE from "three";
 
 // Floating geometric shapes component
 function FloatingShapes() {
   const groupRef = useRef<THREE.Group>(null);
-  const { viewport } = useThree();
 
   useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+      groupRef.current.rotation.x =
+        Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
       groupRef.current.rotation.y = state.clock.elapsedTime * 0.1;
     }
   });
@@ -77,10 +84,18 @@ function FloatingShapes() {
 function CameraRig() {
   const { camera, mouse } = useThree();
 
-  useFrame((state) => {
+  useFrame(() => {
     // Subtle camera movement based on mouse position
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.5, 0.05);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouse.y * 0.5, 0.05);
+    camera.position.x = THREE.MathUtils.lerp(
+      camera.position.x,
+      mouse.x * 0.5,
+      0.05
+    );
+    camera.position.y = THREE.MathUtils.lerp(
+      camera.position.y,
+      mouse.y * 0.5,
+      0.05
+    );
     camera.lookAt(0, 0, 0);
   });
 
@@ -89,129 +104,130 @@ function CameraRig() {
 
 const ThreeJSHero: React.FC = () => {
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary">
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary-dark/95 to-primary/90 z-10" />
+    <section id="home">
+      <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary">
+        {/* Background overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary-dark/95 to-primary/90 z-10" />
 
-      {/* Three.js Canvas */}
-      <div className="absolute inset-0">
-        <Canvas
-          camera={{
-            position: [0, 0, 5],
-            fov: 75,
-            near: 0.1,
-            far: 1000
-          }}
-          gl={{
-            antialias: true,
-            alpha: true,
-            powerPreference: "high-performance"
-          }}
-        >
-          {/* Lighting */}
-          <ambientLight intensity={0.4} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#6366f1" />
-
-          {/* Presentation controls for interactivity */}
-          <PresentationControls
-            global
-            config={{ mass: 2, tension: 500 }}
-            snap={{ mass: 4, tension: 1500 }}
-            rotation={[0, 0.3, 0]}
-            polar={[-Math.PI / 3, Math.PI / 3]}
-            azimuth={[-Math.PI / 1.4, Math.PI / 2]}
+        {/* Three.js Canvas */}
+        <div className="absolute inset-0">
+          <Canvas
+            camera={{
+              position: [0, 0, 5],
+              fov: 75,
+              near: 0.1,
+              far: 1000,
+            }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: "high-performance",
+            }}
           >
-            <Suspense fallback={null}>
-              <FloatingShapes />
-            </Suspense>
-          </PresentationControls>
+            {/* Lighting */}
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[10, 10, 5]} intensity={1} />
+            <pointLight
+              position={[-10, -10, -10]}
+              intensity={0.5}
+              color="#6366f1"
+            />
 
-          <CameraRig />
-        </Canvas>
-      </div>
+            {/* Presentation controls for interactivity */}
+            <PresentationControls
+              global
+              config={{ mass: 2, tension: 500 }}
+              snap={{ mass: 4, tension: 1500 }}
+              rotation={[0, 0.3, 0]}
+              polar={[-Math.PI / 3, Math.PI / 3]}
+              azimuth={[-Math.PI / 1.4, Math.PI / 2]}
+            >
+              <Suspense fallback={null}>
+                <FloatingShapes />
+              </Suspense>
+            </PresentationControls>
 
-      {/* Content overlay */}
-      <div className="relative z-20 flex items-center justify-center min-h-screen px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="text-center max-w-4xl"
-        >
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="text-6xl md:text-8xl font-bold mb-6"
-          >
-            <span className="gradient-text">Ayush Rai</span>
-          </motion.h1>
+            <CameraRig />
+          </Canvas>
+        </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
-            className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed"
-          >
-            AI Engineer & Full-Stack Developer
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.1 }}
-            className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed"
-          >
-            Exploring the intersection of artificial intelligence, web technologies,
-            and innovative problem-solving to create transformative solutions.
-          </motion.p>
-
+        {/* Content overlay */}
+        <div className="relative z-20 flex items-center justify-center min-h-screen px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.3 }}
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-center max-w-4xl"
           >
-            <a
-              href="#projects"
-              className="btn-primary px-8 py-4 text-lg"
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+              className="text-6xl md:text-8xl font-bold mb-6"
             >
-              View My Work
-            </a>
-            <a
-              href="#contact"
-              className="btn-secondary px-8 py-4 text-lg"
+              <span className="gradient-text">Ayush Rai</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.9 }}
+              className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed"
             >
-              Let's Connect
-            </a>
+              AI Engineer & Full-Stack Developer
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
+              className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed"
+            >
+              Exploring the intersection of artificial intelligence, web
+              technologies, and innovative problem-solving to create
+              transformative solutions.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.3 }}
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            >
+              <a href="#projects" className="btn-primary px-8 py-4 text-lg">
+                View My Work
+              </a>
+              <a href="#contact" className="btn-secondary px-8 py-4 text-lg">
+                Let's Connect
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 2 }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="flex flex-col items-center text-gray-400"
+          >
+            <span className="text-sm mb-2">Scroll to explore</span>
+            <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+              <motion.div
+                animate={{ y: [0, 12, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-1 h-3 bg-accent rounded-full mt-2"
+              />
+            </div>
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="flex flex-col items-center text-gray-400"
-        >
-          <span className="text-sm mb-2">Scroll to explore</span>
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1 h-3 bg-accent rounded-full mt-2"
-            />
-          </div>
-        </motion.div>
-      </motion.div>
-    </div>
+    </section>
   );
 };
 

@@ -1,6 +1,10 @@
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { defaultSEO, structuredData, organizationStructuredData } from '../lib/seo';
+import React from "react";
+import { Helmet } from "react-helmet-async";
+import {
+  defaultSEO,
+  structuredData,
+  organizationStructuredData,
+} from "../lib/seo";
 
 interface SEOProps {
   title?: string;
@@ -15,10 +19,11 @@ const SEO: React.FC<SEOProps> = ({
   description = defaultSEO.description,
   keywords = defaultSEO.keywords,
   image,
-  url = defaultSEO.url
+  url = defaultSEO.url,
 }) => {
   const siteTitle = "Ayush Rai";
-  const fullTitle = title === defaultSEO.title ? title : `${title} | ${siteTitle}`;
+  const fullTitle =
+    title === defaultSEO.title ? title : `${title} | ${siteTitle}`;
 
   return (
     <Helmet>
@@ -47,9 +52,23 @@ const SEO: React.FC<SEOProps> = ({
 
       {/* Favicon and Icons */}
       <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+      <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="/apple-touch-icon.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/favicon-32x32.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/favicon-16x16.png"
+      />
 
       {/* Canonical URL */}
       <link rel="canonical" href={url} />

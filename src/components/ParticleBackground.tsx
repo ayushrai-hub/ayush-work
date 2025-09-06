@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
 const ParticleBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -7,7 +7,7 @@ const ParticleBackground: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const resizeCanvas = () => {
@@ -16,7 +16,7 @@ const ParticleBackground: React.FC = () => {
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
 
     const particles: Array<{
       x: number;
@@ -28,7 +28,7 @@ const ParticleBackground: React.FC = () => {
       color: string;
     }> = [];
 
-    const colors = ['#00D9FF', '#39FF14', '#6B46C1', '#9333EA'];
+    const colors = ["#00D9FF", "#39FF14", "#6B46C1", "#9333EA"];
     const particleCount = 80;
 
     // Initialize particles
@@ -40,7 +40,7 @@ const ParticleBackground: React.FC = () => {
         vy: (Math.random() - 0.5) * 0.5,
         size: Math.random() * 2 + 1,
         opacity: Math.random() * 0.5 + 0.2,
-        color: colors[Math.floor(Math.random() * colors.length)]
+        color: colors[Math.floor(Math.random() * colors.length)],
       });
     }
 
@@ -61,7 +61,9 @@ const ParticleBackground: React.FC = () => {
         // Draw particle
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `${particle.color}${Math.floor(particle.opacity * 255).toString(16).padStart(2, '0')}`;
+        ctx.fillStyle = `${particle.color}${Math.floor(particle.opacity * 255)
+          .toString(16)
+          .padStart(2, "0")}`;
         ctx.fill();
 
         // Draw connections
@@ -75,8 +77,10 @@ const ParticleBackground: React.FC = () => {
               ctx.beginPath();
               ctx.moveTo(particle.x, particle.y);
               ctx.lineTo(otherParticle.x, otherParticle.y);
-              const opacity = (150 - distance) / 150 * 0.2;
-              ctx.strokeStyle = `#00D9FF${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`;
+              const opacity = ((150 - distance) / 150) * 0.2;
+              ctx.strokeStyle = `#00D9FF${Math.floor(opacity * 255)
+                .toString(16)
+                .padStart(2, "0")}`;
               ctx.lineWidth = 0.5;
               ctx.stroke();
             }
@@ -90,7 +94,7 @@ const ParticleBackground: React.FC = () => {
     animate();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
 
@@ -98,7 +102,7 @@ const ParticleBackground: React.FC = () => {
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{ background: 'transparent' }}
+      style={{ background: "transparent" }}
     />
   );
 };

@@ -1,10 +1,33 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, RadialLinearScale, RadarController } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  RadialLinearScale,
+  RadarController,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, RadialLinearScale, RadarController);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  RadialLinearScale,
+  RadarController
+);
 
 const GPAChart: React.FC = () => {
   const chartRef = useRef<ChartJS<"line">>(null);
@@ -12,59 +35,61 @@ const GPAChart: React.FC = () => {
 
   // GPA data based on education timeline
   const gpaData = [
-    { semester: '2020-II', gpa: 8.2, course: 'B.Tech - Year 1' },
-    { semester: '2021-I', gpa: 8.8, course: 'B.Tech - Year 1' },
-    { semester: '2021-II', gpa: 9.1, course: 'B.Tech - Year 2' },
-    { semester: '2022-I', gpa: 8.5, course: 'B.Tech - Year 2' },
-    { semester: '2022-II', gpa: 8.9, course: 'B.Tech - Year 3' },
-    { semester: '2023-I', gpa: 8.2, course: 'B.Tech - Year 3' },
-    { semester: '2023-II', gpa: 8.6, course: 'B.Tech - Year 4' },
-    { semester: '2024-I', gpa: 8.1, course: 'B.Tech - Year 4' },
+    { semester: "2020-II", gpa: 8.2, course: "B.Tech - Year 1" },
+    { semester: "2021-I", gpa: 8.8, course: "B.Tech - Year 1" },
+    { semester: "2021-II", gpa: 9.1, course: "B.Tech - Year 2" },
+    { semester: "2022-I", gpa: 8.5, course: "B.Tech - Year 2" },
+    { semester: "2022-II", gpa: 8.9, course: "B.Tech - Year 3" },
+    { semester: "2023-I", gpa: 8.2, course: "B.Tech - Year 3" },
+    { semester: "2023-II", gpa: 8.6, course: "B.Tech - Year 4" },
+    { semester: "2024-I", gpa: 8.1, course: "B.Tech - Year 4" },
   ];
 
   // IIT Madras BS program GPA data (parallel)
   const bsGpaData = [
-    { semester: '2021-I', gpa: 7.2, course: 'BS - Year 1' },
-    { semester: '2021-II', gpa: 6.9, course: 'BS - Year 1' },
-    { semester: '2022-I', gpa: 7.1, course: 'BS - Year 2' },
-    { semester: '2022-II', gpa: 6.8, course: 'BS - Year 2' },
-    { semester: '2023-I', gpa: 7.3, course: 'BS - Year 3' },
-    { semester: '2023-II', gpa: 6.7, course: 'BS - Year 3' },
-    { semester: '2024-I', gpa: 7.0, course: 'BS - Year 4' },
+    { semester: "2021-I", gpa: 7.2, course: "BS - Year 1" },
+    { semester: "2021-II", gpa: 6.9, course: "BS - Year 1" },
+    { semester: "2022-I", gpa: 7.1, course: "BS - Year 2" },
+    { semester: "2022-II", gpa: 6.8, course: "BS - Year 2" },
+    { semester: "2023-I", gpa: 7.3, course: "BS - Year 3" },
+    { semester: "2023-II", gpa: 6.7, course: "BS - Year 3" },
+    { semester: "2024-I", gpa: 7.0, course: "BS - Year 4" },
   ];
 
   const data = {
-    labels: gpaData.map(item => item.semester),
+    labels: gpaData.map((item) => item.semester),
     datasets: [
       {
-        label: 'B.Tech CSE GPA',
-        data: gpaData.map(item => item.gpa),
-        borderColor: 'rgb(99, 102, 241)',
-        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+        label: "B.Tech CSE GPA",
+        data: gpaData.map((item) => item.gpa),
+        borderColor: "rgb(99, 102, 241)",
+        backgroundColor: "rgba(99, 102, 241, 0.1)",
         tension: 0.4,
         fill: true,
-        pointBackgroundColor: 'rgb(99, 102, 241)',
-        pointBorderColor: '#fff',
+        pointBackgroundColor: "rgb(99, 102, 241)",
+        pointBorderColor: "#fff",
         pointBorderWidth: 2,
         pointRadius: 6,
         pointHoverRadius: 8,
       },
       {
-        label: 'BS Data Science GPA',
-        data: bsGpaData.map(bs => {
-          const index = gpaData.findIndex(item => item.semester === bs.semester);
+        label: "BS Data Science GPA",
+        data: bsGpaData.map((bs) => {
+          const index = gpaData.findIndex(
+            (item) => item.semester === bs.semester
+          );
           return index >= 0 ? bs.gpa : null;
         }),
-        borderColor: 'rgb(168, 85, 247)',
-        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+        borderColor: "rgb(168, 85, 247)",
+        backgroundColor: "rgba(168, 85, 247, 0.1)",
         tension: 0.4,
         fill: true,
-        pointBackgroundColor: 'rgb(168, 85, 247)',
-        pointBorderColor: '#fff',
+        pointBackgroundColor: "rgb(168, 85, 247)",
+        pointBorderColor: "#fff",
         pointBorderWidth: 2,
         pointRadius: 6,
         pointHoverRadius: 8,
-      }
+      },
     ],
   };
 
@@ -73,45 +98,49 @@ const GPAChart: React.FC = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: "top" as const,
         labels: {
-          color: '#e5e7eb',
+          color: "#e5e7eb",
           font: {
             size: 12,
-            family: 'Inter, sans-serif',
+            family: "Inter, sans-serif",
           },
           padding: 20,
         },
       },
       tooltip: {
-        backgroundColor: 'rgba(17, 24, 39, 0.9)',
-        titleColor: '#f9fafb',
-        bodyColor: '#e5e7eb',
-        borderColor: 'rgba(99, 102, 241, 0.5)',
+        backgroundColor: "rgba(17, 24, 39, 0.9)",
+        titleColor: "#f9fafb",
+        bodyColor: "#e5e7eb",
+        borderColor: "rgba(99, 102, 241, 0.5)",
         borderWidth: 1,
         titleFont: {
           size: 14,
-          weight: 'bold' as const,
+          weight: "bold" as const,
         },
         bodyFont: {
           size: 12,
         },
         padding: 12,
         callbacks: {
-          label: (context: any) => {
+          label: (context: { dataIndex: number }) => {
             const semester = gpaData[context.dataIndex];
-            const bsSemester = bsGpaData.find(bs => {
-              const gpaIndex = gpaData.findIndex(g => g.semester === bs.semester);
+            const bsSemester = bsGpaData.find((bs) => {
+              const gpaIndex = gpaData.findIndex(
+                (g) => g.semester === bs.semester
+              );
               return gpaIndex === context.dataIndex;
             });
             return [
               `GPA: ${context.parsed.y.toFixed(1)}/10.0`,
               ...(semester ? [semester.course] : []),
-              ...(bsSemester && bsSemester.course !== (semester?.course) ? [bsSemester.course] : [])
+              ...(bsSemester && bsSemester.course !== semester?.course
+                ? [bsSemester.course]
+                : []),
             ];
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       y: {
@@ -119,51 +148,51 @@ const GPAChart: React.FC = () => {
         min: 6.0,
         max: 10.0,
         grid: {
-          color: 'rgba(75, 85, 99, 0.3)',
+          color: "rgba(75, 85, 99, 0.3)",
         },
         ticks: {
-          color: '#9ca3af',
+          color: "#9ca3af",
           font: {
             size: 11,
           },
-          callback: function(value: any) {
-            return value + '/10.0';
-          }
+          callback: function (value: number) {
+            return value + "/10.0";
+          },
         },
         title: {
           display: true,
-          text: 'GPA',
-          color: '#9ca3af',
+          text: "GPA",
+          color: "#9ca3af",
           font: {
             size: 12,
-            weight: 'bold' as const,
-          }
-        }
+            weight: "bold" as const,
+          },
+        },
       },
       x: {
         grid: {
-          color: 'rgba(75, 85, 99, 0.3)',
+          color: "rgba(75, 85, 99, 0.3)",
         },
         ticks: {
-          color: '#9ca3af',
+          color: "#9ca3af",
           font: {
             size: 10,
           },
         },
         title: {
           display: true,
-          text: 'Semester',
-          color: '#9ca3af',
+          text: "Semester",
+          color: "#9ca3af",
           font: {
             size: 12,
-            weight: 'bold' as const,
-          }
-        }
+            weight: "bold" as const,
+          },
+        },
       },
     },
     interaction: {
       intersect: false,
-      mode: 'index' as const,
+      mode: "index" as const,
     },
   };
 
@@ -171,7 +200,7 @@ const GPAChart: React.FC = () => {
     // Update chart colors when theme changes
     if (chartRef.current) {
       const chart = chartRef.current;
-      chart.update('none');
+      chart.update("none");
     }
   }, []);
 
@@ -224,7 +253,9 @@ const GPAChart: React.FC = () => {
             <div className="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
             <div>
               <span className="text-white font-semibold">B.Tech CSE</span>
-              <p className="text-gray-400">Lakshmi Narain College of Technology</p>
+              <p className="text-gray-400">
+                Lakshmi Narain College of Technology
+              </p>
             </div>
           </div>
           <div className="flex items-center">

@@ -1,7 +1,14 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { ExternalLink, Github, Calendar, Code, Users, TrendingUp } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import {
+  ExternalLink,
+  Github,
+  Calendar,
+  Code,
+  Users,
+  TrendingUp,
+} from "lucide-react";
 
 const Projects: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -11,78 +18,108 @@ const Projects: React.FC = () => {
       title: "Stock Price Analysis Platform",
       category: "Data Science & Web Development",
       duration: "March - July 2023",
-      description: "Comprehensive stock market analysis platform with real-time data visualization, trend analysis, and predictive modeling capabilities.",
-      technologies: ["React", "TypeScript", "Python", "Pandas", "Chart.js", "REST APIs"],
+      description:
+        "Comprehensive stock market analysis platform with real-time data visualization, trend analysis, and predictive modeling capabilities.",
+      technologies: [
+        "React",
+        "TypeScript",
+        "Python",
+        "Pandas",
+        "Chart.js",
+        "REST APIs",
+      ],
       features: [
         "Real-time stock data integration",
         "Interactive charts and visualizations",
         "Technical analysis indicators",
         "Portfolio tracking and management",
-        "Responsive design for mobile and desktop"
+        "Responsive design for mobile and desktop",
       ],
-      impact: "Enhanced investment decision-making with comprehensive market insights",
+      impact:
+        "Enhanced investment decision-making with comprehensive market insights",
       github: "#",
       demo: "#",
       image: "https://images.pexels.com/photos/159888/pexels-photo-159888.jpeg",
-      status: "Completed"
     },
     {
       title: "Iha-By-Himani Art Studio Website",
       category: "Web Development & Design",
       duration: "Jan - Feb 2023",
-      description: "Modern, responsive website for an art studio showcasing artwork, services, and facilitating client connections.",
-      technologies: ["React", "TypeScript", "CSS Modules", "Framer Motion", "Responsive Design"],
+      description:
+        "Modern, responsive website for an art studio showcasing artwork, services, and facilitating client connections.",
+      technologies: [
+        "React",
+        "TypeScript",
+        "CSS Modules",
+        "Framer Motion",
+        "Responsive Design",
+      ],
       features: [
         "Dynamic portfolio gallery",
         "Smooth animations and transitions",
         "Contact form with email integration",
         "SEO optimization",
-        "Mobile-first responsive design"
+        "Mobile-first responsive design",
       ],
       impact: "Increased online presence and client inquiries by 300%",
       github: "#",
       demo: "#",
-      image: "https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg",
-      status: "Completed"
+      image:
+        "https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg",
     },
     {
       title: "AI-Powered Code Review Assistant",
       category: "AI & Machine Learning",
       duration: "Dec 2024 - Present",
-      description: "Intelligent code review system using LLMs to provide automated feedback, bug detection, and optimization suggestions.",
-      technologies: ["Python", "LLMs", "Prompt Engineering", "GitHub API", "Flask"],
+      description:
+        "Intelligent code review system using LLMs to provide automated feedback, bug detection, and optimization suggestions.",
+      technologies: [
+        "Python",
+        "LLMs",
+        "Prompt Engineering",
+        "GitHub API",
+        "Flask",
+      ],
       features: [
         "Automated code quality analysis",
         "Bug detection and security vulnerabilities",
         "Performance optimization suggestions",
         "Multi-language support",
-        "Integration with GitHub workflows"
+        "Integration with GitHub workflows",
       ],
       impact: "Reduced code review time by 60% and improved code quality",
       github: "#",
       demo: "#",
       image: "https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg",
-      status: "In Progress"
     },
     {
       title: "Community Management Dashboard",
       category: "Full-Stack Development",
       duration: "Aug - Nov 2023",
-      description: "Comprehensive dashboard for managing online communities with analytics, engagement tracking, and automated moderation.",
-      technologies: ["React", "Node.js", "PostgreSQL", "Express", "D3.js", "WebSockets"],
+      description:
+        "Comprehensive dashboard for managing online communities with analytics, engagement tracking, and automated moderation.",
+      technologies: [
+        "React",
+        "Node.js",
+        "PostgreSQL",
+        "Express",
+        "D3.js",
+        "WebSockets",
+      ],
       features: [
         "Real-time analytics and insights",
         "Automated content moderation",
         "Member engagement tracking",
         "Event management system",
-        "Social media integration"
+        "Social media integration",
       ],
-      impact: "Improved community engagement by 150% and reduced moderation time",
+      impact:
+        "Improved community engagement by 150% and reduced moderation time",
       github: "#",
       demo: "#",
-      image: "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg",
-      status: "Completed"
-    }
+      image:
+        "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg",
+    },
   ];
 
   return (
@@ -118,29 +155,31 @@ const Projects: React.FC = () => {
                   alt={project.title}
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
-                <div className="absolute top-4 right-4">
-                  <span className={`px-3 py-1 rounded-full text-sm font-semibold
-                    ${project.status === 'Completed' ? 'bg-accent/20 text-accent' : 'bg-secondary/20 text-secondary'}`}>
-                    {project.status}
-                  </span>
-                </div>
               </div>
 
               <div className="flex items-center justify-between mb-4">
-                <span className="text-secondary font-semibold text-sm">{project.category}</span>
+                <span className="text-secondary font-semibold text-sm">
+                  {project.category}
+                </span>
                 <div className="flex items-center text-gray-400 text-sm">
                   <Calendar size={16} className="mr-1" />
                   {project.duration}
                 </div>
               </div>
 
-              <h3 className="text-2xl font-bold mb-3 text-white">{project.title}</h3>
-              <p className="text-gray-400 mb-4 leading-relaxed">{project.description}</p>
+              <h3 className="text-2xl font-bold mb-3 text-white">
+                {project.title}
+              </h3>
+              <p className="text-gray-400 mb-4 leading-relaxed">
+                {project.description}
+              </p>
 
               <div className="mb-4">
                 <div className="flex items-center mb-2">
                   <Code size={16} className="mr-2 text-accent" />
-                  <span className="text-white font-semibold">Technologies:</span>
+                  <span className="text-white font-semibold">
+                    Technologies:
+                  </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, techIndex) => (
@@ -157,11 +196,16 @@ const Projects: React.FC = () => {
               <div className="mb-4">
                 <div className="flex items-center mb-2">
                   <Users size={16} className="mr-2 text-secondary" />
-                  <span className="text-white font-semibold">Key Features:</span>
+                  <span className="text-white font-semibold">
+                    Key Features:
+                  </span>
                 </div>
                 <ul className="space-y-1">
                   {project.features.slice(0, 3).map((feature, featureIndex) => (
-                    <li key={featureIndex} className="text-gray-400 text-sm flex items-start">
+                    <li
+                      key={featureIndex}
+                      className="text-gray-400 text-sm flex items-start"
+                    >
                       <span className="text-accent mr-2 mt-1">•</span>
                       {feature}
                     </li>
@@ -203,7 +247,9 @@ const Projects: React.FC = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">Project Impact</h3>
+          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
+            Project Impact
+          </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
               <div className="text-4xl font-bold gradient-text mb-2">15+</div>
