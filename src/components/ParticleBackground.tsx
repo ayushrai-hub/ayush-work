@@ -101,6 +101,7 @@ const ParticleBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
+      data-testid="particle-canvas"
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
       style={{ background: "transparent" }}
     />

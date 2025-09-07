@@ -87,6 +87,14 @@ const Hero: React.FC = () => {
           <a href="#projects" className="btn-secondary">
             View My Work
           </a>
+          <a
+            href="https://drive.google.com/file/d/1oJlYWL4UAavvSwbjwwptoGWizPXjYtAn/view?usp=drive_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline"
+          >
+            Download Resume
+          </a>
         </motion.div>
 
         {/* Contact Links */}

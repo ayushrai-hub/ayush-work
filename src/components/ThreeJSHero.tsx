@@ -194,6 +194,9 @@ const ThreeJSHero: React.FC = () => {
               transition={{ duration: 0.8, delay: 1.3 }}
               className="flex flex-col sm:flex-row gap-6 justify-center items-center"
             >
+              <a href="https://drive.google.com/file/d/1oJlYWL4UAavvSwbjwwptoGWizPXjYtAn/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="btn-primary px-8 py-4 text-lg">
+                Download Resume
+              </a>
               <a href="#projects" className="btn-primary px-8 py-4 text-lg">
                 View My Work
               </a>
