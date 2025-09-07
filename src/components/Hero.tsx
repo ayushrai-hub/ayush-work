@@ -88,7 +88,7 @@ const Hero: React.FC = () => {
             View My Work
           </a>
           <a
-            href="https://drive.google.com/file/d/1oJlYWL4UAavvSwbjwwptoGWizPXjYtAn/view?usp=drive_link"
+            href="https://drive.google.com/file/d/1EjIs-sIQrmHf0vRoQ9pTiDM_4M5x_P2p/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline"
