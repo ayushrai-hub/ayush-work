@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { GraduationCap, Calendar, Award, BookOpen } from "lucide-react";
-import GPAChart from "./GPAChart";
+
 
 const Education: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -156,41 +156,7 @@ const Education: React.FC = () => {
           ))}
         </div>
 
-        {/* GPA Chart Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-16 mb-16"
-        >
-          <GPAChart />
-        </motion.div>
 
-        {/* Academic Achievements */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="mt-16"
-        >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
-            Academic Highlights
-          </h3>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">Dual</div>
-              <p className="text-gray-400">Degrees Simultaneously</p>
-            </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">8.47</div>
-              <p className="text-gray-400">CGPA in B.Tech CSE</p>
-            </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">IIT</div>
-              <p className="text-gray-400">Madras Student</p>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

@@ -12,12 +12,7 @@ const Skills: React.FC = () => {
       icon: Brain,
       title: "AI & Machine Learning",
       skills: [
-        { name: "Python", level: 90 },
-        { name: "RLHF", level: 85 },
-        { name: "LLMs", level: 88 },
-        { name: "TensorFlow", level: 75 },
-        { name: "PyTorch", level: 80 },
-        { name: "Prompt Engineering", level: 92 },
+        "Python", "RLHF", "LLMs", "TensorFlow", "PyTorch", "Prompt Engineering"
       ],
       color: "from-accent to-secondary",
     },
@@ -25,12 +20,7 @@ const Skills: React.FC = () => {
       icon: Code,
       title: "Web Development",
       skills: [
-        { name: "React", level: 90 },
-        { name: "TypeScript", level: 85 },
-        { name: "Node.js", level: 82 },
-        { name: "JavaScript", level: 90 },
-        { name: "HTML/CSS", level: 95 },
-        { name: "REST APIs", level: 88 },
+        "React", "TypeScript", "Node.js", "JavaScript", "HTML/CSS", "REST APIs"
       ],
       color: "from-secondary to-tertiary",
     },
@@ -38,12 +28,7 @@ const Skills: React.FC = () => {
       icon: Database,
       title: "Data Science",
       skills: [
-        { name: "SQL", level: 88 },
-        { name: "Pandas", level: 85 },
-        { name: "NumPy", level: 80 },
-        { name: "Data Visualization", level: 82 },
-        { name: "Statistics", level: 78 },
-        { name: "Tableau", level: 75 },
+        "SQL", "Pandas", "NumPy", "Data Visualization", "Statistics", "Tableau"
       ],
       color: "from-tertiary to-accent",
     },
@@ -51,12 +36,7 @@ const Skills: React.FC = () => {
       icon: Cloud,
       title: "Cloud & DevOps",
       skills: [
-        { name: "Google Cloud", level: 75 },
-        { name: "AWS", level: 70 },
-        { name: "Git/GitHub", level: 90 },
-        { name: "Docker", level: 65 },
-        { name: "CI/CD", level: 68 },
-        { name: "Linux", level: 72 },
+        "Google Cloud", "AWS", "Git/GitHub", "Docker", "CI/CD", "Linux"
       ],
       color: "from-accent to-secondary",
     },
@@ -64,12 +44,7 @@ const Skills: React.FC = () => {
       icon: Users,
       title: "Leadership",
       skills: [
-        { name: "Team Management", level: 90 },
-        { name: "Project Management", level: 85 },
-        { name: "Community Building", level: 92 },
-        { name: "Public Speaking", level: 80 },
-        { name: "Mentoring", level: 88 },
-        { name: "Strategic Planning", level: 82 },
+        "Team Management", "Project Management", "Community Building", "Public Speaking", "Mentoring", "Strategic Planning"
       ],
       color: "from-secondary to-tertiary",
     },
@@ -77,12 +52,7 @@ const Skills: React.FC = () => {
       icon: Lightbulb,
       title: "Creative & Strategic",
       skills: [
-        { name: "Problem Solving", level: 95 },
-        { name: "Innovation", level: 88 },
-        { name: "Content Creation", level: 82 },
-        { name: "Design Thinking", level: 78 },
-        { name: "Business Strategy", level: 75 },
-        { name: "Communication", level: 90 },
+        "Problem Solving", "Innovation", "Content Creation", "Design Thinking", "Business Strategy", "Communication"
       ],
       color: "from-tertiary to-accent",
     },
@@ -106,49 +76,41 @@ const Skills: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+        {/* Horizontal Skills Layout */}
+        <div className="space-y-6 mb-16">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: categoryIndex * 0.1 }}
-              className="card"
+              className="bg-primary-dark border border-accent/20 rounded-lg p-4"
             >
-              <div className="flex items-center mb-6">
+              <div className="flex items-center mb-3">
                 <div
-                  className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${category.color} rounded-lg mr-4`}
+                  className={`inline-flex items-center justify-center w-8 h-8 bg-gradient-to-r ${category.color} rounded-md mr-3`}
                 >
-                  <category.icon size={24} className="text-primary" />
+                  <category.icon size={16} className="text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold text-white">
+                <h3 className="text-lg font-semibold text-white">
                   {category.title}
                 </h3>
               </div>
 
-              <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIndex) => (
-                  <div key={skillIndex}>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-gray-300">{skill.name}</span>
-                      <span className="text-accent font-semibold">
-                        {skill.level}%
-                      </span>
-                    </div>
-                    <div className="skill-bar">
-                      <motion.div
-                        className="skill-progress"
-                        initial={{ width: 0 }}
-                        animate={
-                          inView ? { width: `${skill.level}%` } : { width: 0 }
-                        }
-                        transition={{
-                          duration: 1,
-                          delay: categoryIndex * 0.1 + skillIndex * 0.05,
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <motion.div
+                    key={skillIndex}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{
+                      duration: 0.5,
+                      delay: categoryIndex * 0.1 + skillIndex * 0.05,
+                    }}
+                    className="px-3 py-1 bg-primary rounded-full text-sm text-gray-300 border border-accent/10 hover:border-accent/30 transition-colors"
+                  >
+                    {skill}
+                  </motion.div>
                 ))}
               </div>
             </motion.div>

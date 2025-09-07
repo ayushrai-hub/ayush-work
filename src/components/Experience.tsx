@@ -245,11 +245,11 @@ const Experience: React.FC = () => {
           </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">4+</div>
+              <div className="text-4xl font-bold gradient-text mb-2">2+</div>
               <p className="text-gray-400">Years Experience</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">6</div>
+              <div className="text-4xl font-bold gradient-text mb-2">2</div>
               <p className="text-gray-400">Companies</p>
             </div>
             <div className="card text-center">

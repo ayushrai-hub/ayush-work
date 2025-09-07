@@ -15,6 +15,92 @@ const Projects: React.FC = () => {
 
   const projects = [
     {
+      title: "Personal Portfolio Website",
+      category: "Web Development & Design",
+      duration: "2024 - Present",
+      description:
+        "A modern, single-page personal portfolio website designed to showcase my expertise as a polymath across Generative AI, Web Development, and Data Science. The portfolio includes interactive sections for About Me, Skills, Projects, Education, Experience, Certifications, Blog, and Contact, with a strong focus on performance, accessibility, and SEO. It also integrates animations, dynamic resume downloads, and a serverless contact form to create a professional, engaging, and interactive user experience.",
+      technologies: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion",
+        "Three.js",
+        "Netlify",
+      ],
+      features: [
+        "Interactive portfolio sections",
+        "Performance, accessibility, and SEO optimization",
+        "Dynamic resume downloads",
+        "Serverless contact form",
+        "Responsive mobile-first design",
+      ],
+      impact:
+        "Enhancing personal brand through a professional, engaging, and accessible portfolio website",
+      github: "https://github.com/ayushrai-hub/ayush-work",
+      demo: "https://ayush-me.netlify.app/",
+      image: "https://images.pexels.com/photos/12498604/pexels-photo-12498604.jpeg",
+    },
+    {
+      title: "Expert-O",
+      category: "AI & Digital Innovation",
+      duration: "2024 - Present",
+      description:
+        "Expert-O is a visionary collective of polymaths in India that blends technology, design, strategy, and AI-driven workflows to deliver transformative digital solutions. It positions itself as an elite tribe of multi-disciplinary innovators who execute 5x faster by leveraging AI augmentation and cross-domain expertise. The platform showcases their mission, values, services, portfolio, pricing models, thought leadership, and recruitment process, with a goal to reshape India's digital future.",
+      technologies: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion",
+        "Three.js",
+        "Vercel",
+      ],
+      features: [
+        "AI-augmented digital solutions",
+        "Polymath-driven innovation studio",
+        "Comprehensive service portfolio and pricing",
+        "Thought leadership content",
+        "Streamlined recruitment process",
+        "Responsive design with 3D animations",
+      ],
+      impact:
+        "Accelerating India's digital transformation through 5x faster execution and AI-driven innovation",
+      github: "https://github.com/ayushrai-hub/ayush-work",
+      demo: "https://expert-o.vercel.app/",
+      image: "https://images.pexels.com/photos/8100064/pexels-photo-8100064.jpeg",
+    },
+    {
+      title: "Shiksha-Mitra",
+      category: "Community & Education Platform",
+      duration: "2024 - Present",
+      description:
+        "Shiksha-Mitra is a collaborative learning and acknowledgement platform designed to help peers support and recognize each other's growth in career and education. It provides an ecosystem where learners, professionals, and mentors can exchange resources, acknowledge progress, and celebrate milestones. The project emphasizes community-driven growth, building a culture of appreciation and collective success in the academic and professional journey.",
+      technologies: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Firebase",
+        "MongoDB",
+        "Vercel",
+      ],
+      features: [
+        "Peer learning and mentorship platform",
+        "Progress acknowledgement and celebration",
+        "Resource sharing ecosystem",
+        "Community engagement tools",
+        "Collaborative educational environment",
+        "Serverless backend for scalability",
+      ],
+      impact:
+        "Fostering community-driven growth and creating a culture of appreciation in education and career development",
+      github: "https://github.com/ayushrai-hub/Shiksha-Mitra",
+      demo: "https://shiksha-mitra.vercel.app/",
+      image: "https://images.pexels.com/photos/1181414/pexels-photo-1181414.jpeg",
+    },
+    {
       title: "Stock Price Analysis Platform",
       category: "Data Science & Web Development",
       duration: "March - July 2023",

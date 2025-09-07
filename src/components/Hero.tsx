@@ -25,8 +25,8 @@ const Hero: React.FC = () => {
   }, []);
 
   const stats = [
-    { value: 4, label: "Years Experience", suffix: "+" },
-    { value: 2, label: "Degrees in Progress", suffix: "" },
+    { value: 2, label: "Years Experience", suffix: "+" },
+    { value: 2, label: "Companies Worked", suffix: "" },
     { value: 15, label: "Projects Completed", suffix: "+" },
     { value: 8, label: "Certifications", suffix: "+" },
     { value: 5, label: "Leadership Roles", suffix: "+" },

@@ -1,3 +1,4 @@
+import React from "react";
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
 
@@ -219,11 +220,11 @@ vi.mock('framer-motion', async () => {
         }
         return acc;
       }, {}),
-      div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-      section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
+      div: ({ children, ...props }: any) => React.createElement('div', props, children),
+      section: ({ children, ...props }: any) => React.createElement('section', props, children),
       // Add other motion components as needed
     },
-    AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    AnimatePresence: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   };
 });
 

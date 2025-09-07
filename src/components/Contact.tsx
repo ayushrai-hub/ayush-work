@@ -13,7 +13,6 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
-import EmailService from "../lib/emailService";
 import { trackContactForm, trackServiceInterest } from "../lib/analytics";
 
 const Contact: React.FC = () => {
@@ -82,36 +81,72 @@ const Contact: React.FC = () => {
     // Track form submission
     trackContactForm("submit");
 
-    try {
-      const result = await EmailService.sendContactEmail(formData);
+    await submitForm();
+  };
 
-      if (result.success) {
-        setSubmitStatus({ type: "success", message: result.message });
-        // Track successful form submission
-        trackContactForm("success");
-        // Clear form on success
-        setFormData({
-          name: "",
-          email: "",
-          subject: "",
-          message: "",
-          service: "",
-        });
+  const submitForm = async () => {
+    try {
+      // Prepare form data for Formspree (exclude empty service field if not selected)
+      const formDataToSend = {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        ...(formData.service && { service: formData.service }), // Only include service if selected
+      };
+
+      const response = await fetch("https://formspree.io/f/mandaogr", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formDataToSend),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.ok || result.success) {
+          setSubmitStatus({ type: "success", message: "Thank you! Your message has been sent successfully. I'll get back to you soon." });
+          // Track successful form submission
+          trackContactForm("success");
+          // Clear form on success
+          setFormData({
+            name: "",
+            email: "",
+            subject: "",
+            message: "",
+            service: "",
+          });
+        } else {
+          setSubmitStatus({ type: "error", message: result.message || "Failed to send message. Please try again." });
+          // Track form error
+          trackContactForm("error");
+        }
+      } else if (response.status === 429) {
+        setSubmitStatus({ type: "error", message: "Too many requests. Please try again later." });
+        trackContactForm("error");
       } else {
-        setSubmitStatus({ type: "error", message: result.message });
+        setSubmitStatus({ type: "error", message: `Failed to send message (${response.status}). Please try again.` });
         // Track form error
         trackContactForm("error");
       }
-    } catch {
+    } catch (error) {
+      console.error("Form submission error:", error);
       setSubmitStatus({
         type: "error",
-        message: "Something went wrong. Please try again later.",
+        message: "Network error. Please check your internet connection and try again.",
       });
       // Track form error
       trackContactForm("error");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleRetry = () => {
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: "" });
+    submitForm();
   };
 
   const contactInfo = [
@@ -287,7 +322,12 @@ const Contact: React.FC = () => {
               <h3 className="text-2xl font-bold mb-6 text-white">
                 Send Me a Message
               </h3>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                action="https://formspree.io/f/mandaogr"
+                method="POST"
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label
@@ -391,7 +431,7 @@ const Contact: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`flex items-center p-4 rounded-lg ${
+                    className={`flex items-start p-4 rounded-lg ${
                       submitStatus.type === "success"
                         ? "bg-green-500/10 border border-green-500/20"
                         : "bg-red-500/10 border border-red-500/20"
@@ -399,24 +439,36 @@ const Contact: React.FC = () => {
                   >
                     {submitStatus.type === "success" ? (
                       <CheckCircle
-                        className="text-green-400 mr-3 flex-shrink-0"
+                        className="text-green-400 mr-3 flex-shrink-0 mt-0.5"
                         size={20}
                       />
                     ) : (
                       <AlertCircle
-                        className="text-red-400 mr-3 flex-shrink-0"
+                        className="text-red-400 mr-3 flex-shrink-0 mt-0.5"
                         size={20}
                       />
                     )}
-                    <p
-                      className={`text-sm ${
-                        submitStatus.type === "success"
-                          ? "text-green-400"
-                          : "text-red-400"
-                      }`}
-                    >
-                      {submitStatus.message}
-                    </p>
+                    <div className="flex-1">
+                      <p
+                        className={`text-sm ${
+                          submitStatus.type === "success"
+                            ? "text-green-400"
+                            : "text-red-400"
+                        }`}
+                      >
+                        {submitStatus.message}
+                      </p>
+                      {submitStatus.type === "error" && (
+                        <button
+                          type="button"
+                          onClick={handleRetry}
+                          disabled={isSubmitting}
+                          className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Try Again
+                        </button>
+                      )}
+                    </div>
                   </motion.div>
                 )}
 

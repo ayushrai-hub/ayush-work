@@ -112,7 +112,7 @@ const Profiles: React.FC = () => {
   };
 
   return (
-    <section id="profiles" className="section-padding bg-primary">
+    <section id="profiles" className="py-8 sm:py-12 bg-primary">
       <div className="container mx-auto px-4">
         {/* Hero Section */}
         <motion.div
@@ -132,7 +132,7 @@ const Profiles: React.FC = () => {
             Profiles & <span className="gradient-text">Platforms</span>
           </motion.h1>
           <motion.p
-            className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto mb-8 relative z-10"
+            className="text-lg md:text-xl text-gray-400 max-w-4xl mx-auto mb-6 relative z-10"
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -142,45 +142,45 @@ const Profiles: React.FC = () => {
 
           {/* Stats */}
           <motion.div
-            className="flex justify-center items-center space-x-8 mb-12"
+            className="flex flex-wrap justify-center items-center gap-6 md:gap-8 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
             <div className="text-center">
-              <div className="text-4xl font-bold gradient-text">{profiles.length}+</div>
-              <p className="text-gray-400 text-sm">Platforms Showcased</p>
+              <div className="text-2xl md:text-3xl font-bold gradient-text">{profiles.length}+</div>
+              <p className="text-gray-400 text-xs">Platforms</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold gradient-text">{domains.length}</div>
-              <p className="text-gray-400 text-sm">Categories</p>
+              <div className="text-2xl md:text-3xl font-bold gradient-text">{domains.length}</div>
+              <p className="text-gray-400 text-xs">Categories</p>
             </div>
           </motion.div>
         </motion.div>
 
         {/* Search and Filters */}
         <motion.div
-          className="mb-12"
+          className="mb-8"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           <div className="max-w-4xl mx-auto">
             {/* Search Bar */}
-            <div className="relative mb-6">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <div className="relative mb-4">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
                 type="text"
                 placeholder="Search profiles, categories, or descriptions..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-primary-dark border border-accent/20 rounded-lg text-white placeholder-gray-400 focus:border-accent focus:outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-2 bg-primary-dark border border-accent/20 rounded-lg text-white placeholder-gray-400 focus:border-accent focus:outline-none transition-colors text-sm"
                 aria-label="Search profiles"
               />
             </div>
 
             {/* Domain Filters */}
-            <div className="flex flex-wrap justify-center gap-3 pb-4">
+            <div className="flex flex-wrap justify-center gap-2 pb-2">
               <button
                 onClick={() => setSelectedDomain('all')}
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 flex items-center space-x-2 ${
@@ -286,20 +286,20 @@ const Profiles: React.FC = () => {
                               whileTap={{ scale: 0.95 }}
                               className="group"
                             >
-                              <div className="card p-6 h-full hover:shadow-xl transition-all duration-300 border border-accent/10 hover:border-accent/30">
-                                <div className="flex items-center mb-4">
-                                  <div className={`p-3 rounded-lg bg-gradient-to-r ${domain.gradient} mr-4 group-hover:scale-110 transition-transform duration-300`}>
-                                    <IconComponent className="text-primary" size={24} />
+                              <div className="card p-4 h-full hover:shadow-xl transition-all duration-300 border border-accent/10 hover:border-accent/30">
+                                <div className="flex items-center mb-3">
+                                  <div className={`p-2 rounded-md bg-gradient-to-r ${domain.gradient} mr-3 group-hover:scale-110 transition-transform duration-300`}>
+                                    <IconComponent className="text-primary" size={18} />
                                   </div>
                                   <div className="flex-1">
-                                    <h4 className="text-xl font-bold text-white mb-1">{profile.name}</h4>
+                                    <h4 className="text-lg font-bold text-white mb-1">{profile.name}</h4>
                                     <span className="text-xs text-accent font-semibold px-2 py-1 bg-accent/10 rounded-full">
                                       {profile.category}
                                     </span>
                                   </div>
                                 </div>
 
-                                <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                                <p className="text-gray-400 text-xs mb-4 leading-relaxed">
                                   {profile.description}
                                 </p>
 
@@ -307,10 +307,10 @@ const Profiles: React.FC = () => {
                                   href={profile.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className={`inline-flex items-center px-4 py-2 bg-gradient-to-r ${domain.gradient} text-primary font-semibold rounded-lg hover:shadow-lg transition-all duration-300 group-hover:scale-105`}
+                                  className={`inline-flex items-center px-3 py-2 bg-gradient-to-r ${domain.gradient} text-primary font-semibold rounded-md hover:shadow-lg transition-all duration-300 group-hover:scale-105 text-sm`}
                                   aria-label={`Visit ${profile.name} profile`}
                                 >
-                                  <ExternalLink size={16} className="mr-2" />
+                                  <ExternalLink size={14} className="mr-2" />
                                   Visit Profile
                                 </a>
                               </div>
