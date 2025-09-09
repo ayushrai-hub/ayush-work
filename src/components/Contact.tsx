@@ -288,11 +288,12 @@ const Contact: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 1.0 }}
+              className="mb-6"
             >
-              <h4 className="text-lg font-bold mb-3 text-white">
+              <h4 className="text-lg font-bold mb-4 text-white">
                 Connect With Me
               </h4>
-              <div className="flex space-x-3">
+              <div className="flex space-x-4">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={index}

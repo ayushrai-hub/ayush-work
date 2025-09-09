@@ -2,7 +2,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Code, Brain, Database, Cloud, Users, Lightbulb } from "lucide-react";
-import SkillsRadarChart from "./SkillsRadarChart";
 
 const Skills: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -118,15 +117,7 @@ const Skills: React.FC = () => {
           ))}
         </div>
 
-        {/* Skills Radar Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mb-16"
-        >
-          <SkillsRadarChart />
-        </motion.div>
+
       </div>
     </section>
   );
