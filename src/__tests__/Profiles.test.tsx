@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import Profiles from '../components/Profiles';
+import { BrowserRouter } from 'react-router-dom';
+import Footer from '../components/Footer';
 import * as profilesData from '../lib/profilesData';
 
 // Mock IntersectionObserver
@@ -12,76 +13,115 @@ beforeAll(() => {
   }));
 });
 
-describe('Profiles', () => {
-  it('renders the main heading', () => {
-    render(<Profiles />);
-    expect(screen.getByText('Profiles & Platforms')).toBeInTheDocument();
-    expect(screen.getByText('Explore My Profiles Across Platforms')).toBeInTheDocument();
+// Mock useGTM hook
+vi.mock('../hooks/useGTM', () => ({
+  useGTM: () => ({
+    trackButton: vi.fn(),
+    trackExternal: vi.fn(),
+  }),
+}));
+
+// Wrapper component for Router context
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <BrowserRouter>
+    {children}
+  </BrowserRouter>
+);
+
+describe('Footer Profiles Integration', () => {
+  it('renders footer with brand information', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+    expect(screen.getByText('Ayush Rai')).toBeInTheDocument();
+    expect(screen.getByText('Polymath | AI Engineer | Creative Technologist')).toBeInTheDocument();
   });
 
-  it('displays platform stats', () => {
-    render(<Profiles />);
-    expect(screen.getByText(profilesData.profiles.length + '+')).toBeInTheDocument();
-    expect(screen.getByText(profilesData.domains.length.toString())).toBeInTheDocument();
-    expect(screen.getByText('Platforms Showcased')).toBeInTheDocument();
-    expect(screen.getByText('Categories')).toBeInTheDocument();
+  it('renders primary social links', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+    expect(screen.getByText('Connect:')).toBeInTheDocument();
+    // Check for social media links (they should be present as icons)
+    const socialLinks = screen.getAllByRole('link');
+    expect(socialLinks.length).toBeGreaterThan(0);
   });
 
-  it('renders search input', () => {
-    render(<Profiles />);
-    const searchInput = screen.getByPlaceholderText('Search profiles, categories, or descriptions...');
-    expect(searchInput).toBeInTheDocument();
+  it('renders quick navigation links', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+    expect(screen.getByText('Quick Links')).toBeInTheDocument();
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('About Me')).toBeInTheDocument();
+    expect(screen.getByText('Projects')).toBeInTheDocument();
+    expect(screen.getByText('Experience')).toBeInTheDocument();
+    // Note: Contact link is not rendered in the first 4 links slice
   });
 
-  it('filters profiles based on search term', () => {
-    render(<Profiles />);
-    const searchInput = screen.getByPlaceholderText('Search profiles, categories, or descriptions...');
-
-    // Type in search
-    fireEvent.change(searchInput, { target: { value: 'github' } });
-
-    // Should show filtered results
-    expect(screen.getByText('Profiles & Platforms')).toBeInTheDocument();
+  it('renders top platforms section', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+    expect(screen.getByText('Top Platforms')).toBeInTheDocument();
   });
 
-  it('renders all domain filter buttons', () => {
-    render(<Profiles />);
-    expect(screen.getByText('All Domains')).toBeInTheDocument();
-    profilesData.domains.forEach(domain => {
-      expect(screen.getByText(domain.name.replace('-', ' '))).toBeInTheDocument();
-    });
+  it('renders more platforms section when available', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+
+    // Check if there are more than 2 domains to show "More Platforms"
+    if (profilesData.domains.length > 2) {
+      expect(screen.getByText('More Platforms')).toBeInTheDocument();
+    }
   });
 
-  it('displays profile categories correctly', () => {
-    render(<Profiles />);
-    // Check if key profiles are rendered - this depends on the actual data
-    expect(screen.getByText('Profiles & Platforms')).toBeInTheDocument();
+  it('renders copyright and additional links', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+    expect(screen.getByText('© 2025 Ayush Rai')).toBeInTheDocument();
+    expect(screen.getByText('Workana')).toBeInTheDocument();
+    expect(screen.getByText('Guru')).toBeInTheDocument();
+    expect(screen.getByText('Codementor')).toBeInTheDocument();
   });
 
-  it('handles external links correctly', () => {
-    render(<Profiles />);
-    const externalLinks = screen.getAllByText('Visit Profile');
-    // Check that links have proper attributes
+  it('renders back to top button', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+    const backToTopButton = screen.getByLabelText('Back to top');
+    expect(backToTopButton).toBeInTheDocument();
+  });
+
+  it('handles external links with proper attributes', () => {
+    render(
+      <TestWrapper>
+        <Footer />
+      </TestWrapper>
+    );
+
+    const externalLinks = screen.getAllByRole('link').filter(link =>
+      link.hasAttribute('target') && link.getAttribute('target') === '_blank'
+    );
+
     externalLinks.forEach(link => {
-      expect(link.closest('a')).toHaveAttribute('target', '_blank');
-      expect(link.closest('a')).toHaveAttribute('rel', 'noopener noreferrer');
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     });
-  });
-
-  it('shows empty state when no profiles match', () => {
-    render(<Profiles />);
-    const searchInput = screen.getByPlaceholderText('Search profiles, categories, or descriptions...');
-
-    // Type something that won't match anything
-    fireEvent.change(searchInput, { target: { value: 'nonexistentterm12345' } });
-
-    expect(screen.getByText('No profiles found')).toBeInTheDocument();
-    expect(screen.getByText('Try adjusting your search or filter criteria')).toBeInTheDocument();
-  });
-
-  it('toggles domain expansion', () => {
-    render(<Profiles />);
-    // This test would require more specific selectors based on actual data
-    expect(screen.getByText('Profiles & Platforms')).toBeInTheDocument();
   });
 });

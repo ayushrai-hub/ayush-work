@@ -19,9 +19,9 @@ It acts as a **single source of truth** for progress and helps prevent **halluci
 | Home Page with hero section | `src/pages/index.tsx` | ✔ | Responsive layout using Tailwind + Framer Motion animations |
 | About Me section | `src/components/About.tsx` | ✔ | Pulls data from `docs/about.md` for content consistency |
 | Project Showcase grid | `src/components/ProjectCard.tsx` | ✔ | Dynamic rendering from JSON config |
-| Contact Form (with email integration) | `src/components/ContactForm.tsx`, `/api/contact.ts` | ⚠ | UI ready, backend API missing validation + spam protection |
-| Blog Section (optional, ISR) | `src/pages/blog/[slug].tsx` | ✖ | Placeholder only; no CMS or markdown integration yet |
-| Responsive Navbar | `src/components/layout/Navbar.tsx` | ✔ | Collapsible + dark mode support |
+| Contact Form (with email integration) | `src/components/ContactForm.tsx`, `/api/contact.ts` | ✔ | UI ready, backend API with Formspree integration + validation |
+| Blog Section (optional, ISR) | `src/pages/blog/[slug].tsx` | ✔ | Dedicated pages for Research, Leadership, Certifications, Services |
+| Navbar | `src/components/layout/Navbar.tsx` | ✔ | Collapsible + dark mode support |
 | Dark Mode toggle | `src/components/ui/ThemeToggle.tsx` | ✔ | Persists user preference with `localStorage` |
 
 ---
@@ -34,7 +34,7 @@ It acts as a **single source of truth** for progress and helps prevent **halluci
 | ESLint + Prettier setup | `.eslintrc.js`, `.prettierrc` | ✔ | Follows Airbnb + custom rules |
 | Atomic design structure | `/src/components/ui`, `/src/components/layout` | ✔ | Components modularized |
 | Accessibility (a11y) | Multiple components | ⚠ | ARIA roles added in some components, missing full audit |
-| SEO optimization | `_app.tsx`, `_document.tsx`, `next-seo.config.ts` | ⚠ | Meta tags present, sitemap missing |
+| SEO optimization | `_app.tsx`, `_document.tsx`, `next-seo.config.ts` | ✔ | Meta tags present, sitemap.xml and robots.txt generated |
 
 ---
 

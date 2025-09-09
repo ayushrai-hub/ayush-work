@@ -15,8 +15,8 @@ beforeAll(() => {
 describe('Services', () => {
   it('renders the services section heading', () => {
     render(<Services />);
-    expect(screen.getByText('Services & Solutions')).toBeInTheDocument();
-    expect(screen.getByText('Comprehensive technical and strategic solutions')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Services.*Solutions/i })).toBeInTheDocument();
+    expect(screen.getByText('Comprehensive technical and strategic solutions for your business needs')).toBeInTheDocument();
   });
 
   it('renders all service titles', () => {
@@ -39,7 +39,7 @@ describe('Services', () => {
 
   it('shows service categories', () => {
     render(<Services />);
-    expect(screen.getByText('Technical')).toBeInTheDocument();
+    expect(screen.getAllByText('Technical').length).toBeGreaterThan(0);
     expect(screen.getByText('Strategic')).toBeInTheDocument();
     expect(screen.getByText('Consultation')).toBeInTheDocument();
   });

@@ -8,15 +8,15 @@ describe('Research Component', () => {
   });
 
   it('displays research projects section', () => {
-    const { getByText } = render(<Research />);
-    expect(getByText('Research Projects')).toBeInTheDocument();
+    const { getByText, getByRole } = render(<Research />);
+    expect(getByRole('heading', { name: /Research Projects/i })).toBeInTheDocument();
     expect(getByText('AI-Powered Agricultural Advisory System')).toBeInTheDocument();
     expect(getByText('NLP for Legal Document Analysis')).toBeInTheDocument();
   });
 
   it('shows awards and achievements', () => {
-    const { getByText } = render(<Research />);
-    expect(getByText('Awards & Achievements')).toBeInTheDocument();
+    const { getByText, getByRole } = render(<Research />);
+    expect(getByRole('heading', { name: /Awards.*Achievements/i })).toBeInTheDocument();
     expect(getByText('Top 5 Finalist - Smart India Hackathon 2024')).toBeInTheDocument();
     expect(getByText('Best Research Paper Award')).toBeInTheDocument();
   });

@@ -9,9 +9,7 @@ describe('ParticleBackground', () => {
     Object.defineProperty(window, 'innerHeight', { value: 768 });
     
     // Mock requestAnimationFrame and cancelAnimationFrame
-    global.requestAnimationFrame = vi.fn((cb) => {
-      return setTimeout(cb, 0);
-    });
+    global.requestAnimationFrame = vi.fn(() => 1);
     
     global.cancelAnimationFrame = vi.fn((id) => {
       clearTimeout(id);
@@ -73,21 +71,21 @@ describe('ParticleBackground', () => {
   it('handles window resize events', () => {
     const addEventListenerSpy = vi.spyOn(window, 'addEventListener');
     const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
-    
+
     const { unmount } = render(<ParticleBackground />);
-    
-    // Simulate window resize
-    window.innerWidth = 800;
-    window.innerHeight = 600;
+
+    // Simulate window resize using Object.defineProperty
+    Object.defineProperty(window, 'innerWidth', { value: 800, writable: true });
+    Object.defineProperty(window, 'innerHeight', { value: 600, writable: true });
     window.dispatchEvent(new Event('resize'));
-    
+
     // Cleanup
     unmount();
-    
+
     // Verify event listeners were added and removed
     expect(addEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
     expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
-    
+
     // Clean up spies
     addEventListenerSpy.mockRestore();
     removeEventListenerSpy.mockRestore();

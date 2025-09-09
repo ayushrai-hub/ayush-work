@@ -8,10 +8,9 @@ describe('About Component', () => {
   });
 
   it('displays the correct heading', () => {
-    render(<About />);
-    // Look for the main heading that contains both 'About' and 'Me' text
-    const heading = screen.getByRole('heading', { level: 2 });
-    expect(heading).toHaveTextContent('About Me');
+    const { getByText } = render(<About />);
+    expect(getByText((content) => content.includes("My Story"))).toBeInTheDocument();
+    expect(getByText('The Polymath\'s Journey')).toBeInTheDocument();
   });
 
   it('renders core values section', () => {
@@ -37,18 +36,18 @@ describe('About Component', () => {
 
   it('has accessible markup for heading structure', () => {
     render(<About />);
-    
+
     // Check main heading
-    const mainHeading = screen.getByRole('heading', { level: 2, name: /About Me/i });
+    const mainHeading = screen.getByRole('heading', { level: 2, name: /My Story/i });
     expect(mainHeading).toBeInTheDocument();
-    
+
     // Check for specific h3 headings
     const storyHeading = screen.getByRole('heading', { level: 3, name: 'My Story' });
     const coreValuesHeading = screen.getByRole('heading', { level: 3, name: 'Core Values & Approach' });
-    
+
     expect(storyHeading).toBeInTheDocument();
     expect(coreValuesHeading).toBeInTheDocument();
-    
+
     // Check for h4 headings within the component
     const philosophyHeading = screen.getByRole('heading', { level: 4, name: 'Personal Philosophy' });
     expect(philosophyHeading).toBeInTheDocument();

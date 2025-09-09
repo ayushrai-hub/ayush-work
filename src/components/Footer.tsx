@@ -118,13 +118,13 @@ const Footer: React.FC = () => {
       name: 'GitHub',
       url: 'https://github.com/ayushrai-hub',
       icon: Github,
-      color: 'hover:text-gray-400'
+      color: 'hover:text-gray-300'
     },
     {
       name: 'Email',
       url: 'mailto:ayushrai0211@gmail.com',
       icon: Mail,
-      color: 'hover:text-red-500'
+      color: 'hover:text-red-400'
     }
   ];
 

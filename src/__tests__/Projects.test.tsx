@@ -34,15 +34,15 @@ describe('Projects Component', () => {
     const codeLinks = getAllByText('Code');
     const demoLinks = getAllByText('Live Demo');
 
-    expect(codeLinks.length).toBe(4); // 4 projects
-    expect(demoLinks.length).toBe(4);
+    expect(codeLinks.length).toBe(7); // 7 projects
+    expect(demoLinks.length).toBe(7);
   });
 
   it('displays project impact stats', () => {
     const { getByText } = render(<Projects />);
     expect(getByText('Project Impact')).toBeInTheDocument();
-    expect(getByText('15+')).toBeInTheDocument();
-    expect(getByText('50+')).toBeInTheDocument();
+    expect(getByText('20+')).toBeInTheDocument();
+    expect(getByText('10+')).toBeInTheDocument();
     expect(getByText('100%')).toBeInTheDocument();
   });
 

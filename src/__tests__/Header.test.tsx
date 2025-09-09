@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
 import { vi } from 'vitest';
 
@@ -51,20 +52,32 @@ describe('Header Component', () => {
   });
 
   it('renders without crashing', () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
     expect(screen.getByText('Ayush Rai')).toBeInTheDocument();
   });
 
   it('displays the logo', () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
     const logo = screen.getByText('Ayush Rai');
     expect(logo).toBeInTheDocument();
     expect(logo).toHaveClass('gradient-text');
   });
 
   it('renders navigation menu items', () => {
-    render(<Header />);
-    
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
+
     const menuItems = [
       'Home',
       'About',
@@ -75,49 +88,61 @@ describe('Header Component', () => {
       'Services',
       'Contact'
     ];
-    
+
     menuItems.forEach(item => {
       expect(screen.getByText(item)).toBeInTheDocument();
     });
   });
 
   it('has accessible navigation', () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
     const nav = screen.getByRole('navigation');
     expect(nav).toBeInTheDocument();
-    
+
     // Check if all links are accessible
     const links = screen.getAllByRole('link');
     expect(links.length).toBeGreaterThan(0);
-    
+
     // Check if each link has an href attribute
     links.forEach(link => {
       expect(link).toHaveAttribute('href');
       expect(link.getAttribute('href')).toMatch(/^#/);
     });
   });
-  
+
   it('shows mobile menu button on small screens', () => {
     // Set small screen size
     window.innerWidth = 600;
-    
-    render(<Header />);
-    
+
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
+
     // Menu button should be visible on mobile
     const menuButton = screen.getByRole('button', { name: /menu/i });
     expect(menuButton).toBeInTheDocument();
   });
-  
+
   it('adds background when scrolled', () => {
     // Mock scroll position
     window.scrollY = 100;
-    
+
     // Trigger scroll event
     const scrollEvent = new Event('scroll');
     window.dispatchEvent(scrollEvent);
-    
-    render(<Header />);
-    
+
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
+
     const header = screen.getByRole('banner');
     expect(header).toHaveClass('bg-primary-dark/95');
     expect(header).toHaveClass('backdrop-blur-md');

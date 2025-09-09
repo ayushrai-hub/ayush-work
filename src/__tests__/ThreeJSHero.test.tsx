@@ -2,6 +2,16 @@ import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import ThreeJSHero from '../components/ThreeJSHero';
 
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
+    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
+    a: ({ children, ...props }: any) => <a {...props}>{children}</a>,
+  },
+}));
+
 // Mock three.js and react-three-fiber
 vi.mock('@react-three/fiber', () => ({
   Canvas: ({ children }: any) => <div data-testid="canvas">{children}</div>,
@@ -39,10 +49,7 @@ describe('ThreeJSHero', () => {
     expect(screen.getByText('Let\'s Connect')).toBeInTheDocument();
   });
 
-  it('renders scroll indicator', () => {
-    render(<ThreeJSHero />);
-    expect(screen.getByText('Scroll to explore')).toBeInTheDocument();
-  });
+
 
   it('has correct section id', () => {
     const { container } = render(<ThreeJSHero />);

@@ -9,7 +9,8 @@ describe('Hero Component', () => {
 
   it('displays the name Ayush Rai', () => {
     const { getByText } = render(<Hero />);
-    expect(getByText('Hi, I\'m Ayush Rai')).toBeInTheDocument();
+    expect(getByText(/Hi, I'm/)).toBeInTheDocument();
+    expect(getByText('Ayush Rai')).toBeInTheDocument();
   });
 
   it('shows initial headline', () => {
@@ -37,47 +38,23 @@ describe('Hero Component', () => {
   });
 
   it('displays statistics', () => {
-    const { getAllByText } = render(<Hero />);
-    expect(getAllByText('+')).toBeTruthy(); // suffixes
-    // Since CountUp is mocked, check the labels
+    render(<Hero />);
+    // Check the labels
     expect(screen.getByText('Years Experience')).toBeInTheDocument();
-    expect(screen.getByText('Degrees in Progress')).toBeInTheDocument();
+    expect(screen.getByText('Companies Worked')).toBeInTheDocument();
+    expect(screen.getByText('Projects Completed')).toBeInTheDocument();
+    expect(screen.getByText('Certifications')).toBeInTheDocument();
+    expect(screen.getByText('Leadership Roles')).toBeInTheDocument();
+    expect(screen.getByText('Technologies')).toBeInTheDocument();
   });
 
   it('shows status badges', () => {
     render(<Hero />);
-    
-    // Use a function to find text that might be split across elements
-    const statusBadge1 = screen.getByText((content, element) => {
-      const hasText = (node) => node.textContent === 'Available for Freelance Projects';
-      const elementHasText = hasText(element);
-      const childrenDontHaveText = Array.from(element?.children || []).every(
-        child => !hasText(child)
-      );
-      return elementHasText && childrenDontHaveText;
-    });
-    
-    const statusBadge2 = screen.getByText((content, element) => {
-      const hasText = (node) => node.textContent === 'Open to Full-time Opportunities';
-      const elementHasText = hasText(element);
-      const childrenDontHaveText = Array.from(element?.children || []).every(
-        child => !hasText(child)
-      );
-      return elementHasText && childrenDontHaveText;
-    });
-    
-    const statusBadge3 = screen.getByText((content, element) => {
-      const hasText = (node) => node.textContent === 'Actively Learning: Advanced AI/ML';
-      const elementHasText = hasText(element);
-      const childrenDontHaveText = Array.from(element?.children || []).every(
-        child => !hasText(child)
-      );
-      return elementHasText && childrenDontHaveText;
-    });
-    
-    expect(statusBadge1).toBeInTheDocument();
-    expect(statusBadge2).toBeInTheDocument();
-    expect(statusBadge3).toBeInTheDocument();
+
+    // Check for the status badge text (including emojis as they appear in the component)
+    expect(screen.getByText('🟢 Available for Freelance Projects')).toBeInTheDocument();
+    expect(screen.getByText('🔵 Open to Full-time Opportunities')).toBeInTheDocument();
+    expect(screen.getByText('🟡 Actively Learning: Advanced AI/ML')).toBeInTheDocument();
   });
 
   it('has accessible markup for main heading', () => {

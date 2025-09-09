@@ -130,34 +130,71 @@ vi.mock("react-helmet-async", () => ({
   HelmetProvider: ({ children }: any) => children,
 }));
 
-// Mock lucide-react icons
-const createIconMock = (name: string) => {
-  return ({ className, ...props }: { className?: string; [key: string]: any }) => {
-    const testId = `${name.toLowerCase()}-icon`;
-    return React.createElement('div', {
-      'data-testid': testId,
-      className,
-      ...props,
-    }, `${name}Icon`);
+// Mock lucide-react icons with partial mock using importOriginal
+vi.mock('lucide-react', async (importOriginal) => {
+  const actual = await importOriginal();
+  const createIconMock = (name: string) => {
+    return ({ className, ...props }: { className?: string; [key: string]: any }) => {
+      const testId = `${name.toLowerCase()}-icon`;
+      return React.createElement('div', {
+        'data-testid': testId,
+        className,
+        ...props,
+      }, `${name}Icon`);
+    };
   };
-};
 
-// Mock all lucide-react icons used in the application
-vi.mock('lucide-react', async () => {
-  const actual = await vi.importActual('lucide-react');
+  // Return all actual exports plus mocked versions of the icons we use
   return {
-    ...actual,
-    Mail: createIconMock('Mail'),
-    Phone: createIconMock('Phone'),
+    ...(actual as any),
+    // Navigation & UI
+    Menu: createIconMock('Menu'),
+    X: createIconMock('X'),
+    ChevronDown: createIconMock('ChevronDown'),
+    ChevronUp: createIconMock('ChevronUp'),
+    ArrowLeft: createIconMock('ArrowLeft'),
+    ExternalLink: createIconMock('ExternalLink'),
+    Search: createIconMock('Search'),
+    Filter: createIconMock('Filter'),
+
+    // Social & Contact
     Github: createIconMock('Github'),
     Linkedin: createIconMock('Linkedin'),
+    Mail: createIconMock('Mail'),
+    Phone: createIconMock('Phone'),
+    Sun: createIconMock('Sun'),
+    Moon: createIconMock('Moon'),
+    Monitor: createIconMock('Monitor'),
+
+    // Content & Education
+    GraduationCap: createIconMock('GraduationCap'),
+    BookOpen: createIconMock('BookOpen'),
+    Award: createIconMock('Award'),
     Calendar: createIconMock('Calendar'),
+    CheckCircle: createIconMock('CheckCircle'),
+    Microscope: createIconMock('Microscope'),
+
+    // Skills & Tech
     Code: createIconMock('Code'),
+    Brain: createIconMock('Brain'),
+    Database: createIconMock('Database'),
+    Cloud: createIconMock('Cloud'),
     Users: createIconMock('Users'),
-    TrendingUp: createIconMock('TrendingUp'),
-    Mic: createIconMock('Mic'),
+    Lightbulb: createIconMock('Lightbulb'),
+    BarChart3: createIconMock('BarChart3'),
     FileText: createIconMock('FileText'),
-    // Add other icons as needed
+    Briefcase: createIconMock('Briefcase'),
+    Globe: createIconMock('Globe'),
+    Heart: createIconMock('Heart'),
+    Palette: createIconMock('Palette'),
+    Sparkles: createIconMock('Sparkles'),
+
+    // Community & Leadership
+    Mic: createIconMock('Mic'),
+    Target: createIconMock('Target'),
+    Zap: createIconMock('Zap'),
+    MapPin: createIconMock('MapPin'),
+    TrendingUp: createIconMock('TrendingUp'),
   };
 });
 
@@ -218,20 +255,22 @@ global.ResizeObserver = ResizeObserver;
 // Mock framer-motion with proper React component forwarding
 vi.mock('framer-motion', async () => {
   const actual = await vi.importActual('framer-motion');
-  const motionComponents = (actual as any).motion || {};
+
+  // Create motion component factory
+  const createMotionComponent = (elementType: string) => {
+    return ({ children, ...props }: any) => React.createElement(elementType, props, children);
+  };
+
   return {
-    ...actual,
-    motion: {
-      ...Object.entries(motionComponents).reduce((acc: any, [key, value]: [string, any]) => {
-        if (typeof value === 'string') {
-          acc[key] = ({ children, ...props }: any) => React.createElement(value, props, children);
+    ...(actual as any),
+    motion: new Proxy({}, {
+      get(target, prop) {
+        if (typeof prop === 'string') {
+          return createMotionComponent(prop);
         }
-        return acc;
-      }, {}),
-      div: ({ children, ...props }: any) => React.createElement('div', props, children),
-      section: ({ children, ...props }: any) => React.createElement('section', props, children),
-      // Add other motion components as needed
-    },
+        return createMotionComponent('div');
+      }
+    }),
     AnimatePresence: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   };
 });
@@ -266,3 +305,80 @@ global.requestAnimationFrame = vi.fn((cb) => {
 global.cancelAnimationFrame = vi.fn((id) => {
   clearTimeout(id as any);
 });
+
+// Mock Three.js
+vi.mock('three', () => ({
+  __esModule: true,
+  default: {
+    MathUtils: {
+      lerp: vi.fn((start, end, alpha) => start + (end - start) * alpha),
+    },
+    Group: vi.fn(),
+    SphereGeometry: vi.fn(),
+    BoxGeometry: vi.fn(),
+    OctahedronGeometry: vi.fn(),
+    MeshStandardMaterial: vi.fn(),
+    MeshDistortMaterial: vi.fn(),
+    AmbientLight: vi.fn(),
+    DirectionalLight: vi.fn(),
+    PointLight: vi.fn(),
+    PerspectiveCamera: vi.fn(),
+    WebGLRenderer: vi.fn(),
+    Scene: vi.fn(),
+    Clock: vi.fn(() => ({
+      elapsedTime: 0,
+      getElapsedTime: vi.fn(() => 0),
+    })),
+  },
+  MathUtils: {
+    lerp: vi.fn((start, end, alpha) => start + (end - start) * alpha),
+  },
+  Group: vi.fn(),
+  SphereGeometry: vi.fn(),
+  BoxGeometry: vi.fn(),
+  OctahedronGeometry: vi.fn(),
+  MeshStandardMaterial: vi.fn(),
+  MeshDistortMaterial: vi.fn(),
+  AmbientLight: vi.fn(),
+  DirectionalLight: vi.fn(),
+  PointLight: vi.fn(),
+  PerspectiveCamera: vi.fn(),
+  WebGLRenderer: vi.fn(),
+  Scene: vi.fn(),
+  Clock: vi.fn(() => ({
+    elapsedTime: 0,
+    getElapsedTime: vi.fn(() => 0),
+  })),
+}));
+
+// Mock @react-three/fiber
+vi.mock('@react-three/fiber', () => ({
+  __esModule: true,
+  Canvas: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'canvas', ...props }, children),
+  useFrame: vi.fn(),
+  useThree: vi.fn(() => ({
+    camera: {
+      position: { x: 0, y: 0, z: 5 },
+      lookAt: vi.fn(),
+    },
+    mouse: { x: 0, y: 0 },
+  })),
+  extend: vi.fn(),
+  // Add lowercase elements that might be used
+  ambientLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'ambient-light', ...props }, children),
+  directionalLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'directional-light', ...props }, children),
+  pointLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'point-light', ...props }, children),
+  group: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'group', ...props }, children),
+  meshStandardMaterial: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'mesh-standard-material', ...props }, children),
+}));
+
+// Mock @react-three/drei
+vi.mock('@react-three/drei', () => ({
+  __esModule: true,
+  Sphere: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'sphere', ...props }, children),
+  Box: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'box', ...props }, children),
+  Octahedron: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'octahedron', ...props }, children),
+  Float: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'float', ...props }, children),
+  MeshDistortMaterial: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'mesh-distort-material', ...props }, children),
+  PresentationControls: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'presentation-controls', ...props }, children),
+}));

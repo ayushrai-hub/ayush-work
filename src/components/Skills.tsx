@@ -76,33 +76,32 @@ const Skills: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Skills Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + categoryIndex * 0.1 }}
-              className="card text-center"
+              transition={{ duration: 0.6, delay: 0.1 * categoryIndex }}
+              className="group bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-secondary to-accent rounded-full mb-4">
-                <category.icon size={32} className="text-primary" />
+              <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${category.color}`}>
+                <category.icon size={28} className="text-white" />
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
                 {category.title}
               </h3>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIndex) => (
                   <motion.span
                     key={skillIndex}
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
                     transition={{
-                      duration: 0.5,
-                      delay: 0.4 + categoryIndex * 0.1 + skillIndex * 0.05,
+                      duration: 0.3,
+                      delay: 0.1 * categoryIndex + 0.03 * skillIndex,
                     }}
-                    className="px-3 py-1 bg-gray-100 dark:bg-primary rounded-full text-sm text-gray-700 dark:text-gray-300 border border-accent/20 hover:border-accent/40 transition-colors"
+                    className="px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                   >
                     {skill}
                   </motion.span>
@@ -111,8 +110,6 @@ const Skills: React.FC = () => {
             </motion.div>
           ))}
         </div>
-
-
       </div>
     </section>
   );

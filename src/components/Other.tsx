@@ -89,7 +89,7 @@ const Other: React.FC = () => {
               <div className="text-3xl mb-3">{page.icon}</div>
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">{page.title}</h3>
               <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">{page.description}</p>
-              <div className="flex items-center text-blue-600 hover:text-blue-700">
+              <div className="flex items-center text-blue-400 hover:text-blue-500">
                 <span className="text-sm font-medium">Explore</span>
                 <ExternalLink className="ml-2" size={14} />
               </div>

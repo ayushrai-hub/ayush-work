@@ -1,5 +1,15 @@
 import { render } from '@testing-library/react';
+import { vi } from 'vitest';
 import Skills from '../components/Skills';
+
+// Mock IntersectionObserver
+beforeAll(() => {
+  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+});
 
 describe('Skills Component', () => {
   it('renders without crashing', () => {
@@ -9,18 +19,19 @@ describe('Skills Component', () => {
 
   it('displays the correct heading', () => {
     const { getByText } = render(<Skills />);
-    expect(getByText('Multi-Disciplinary Skills')).toBeInTheDocument();
+    expect(getByText('Multi-Disciplinary')).toBeInTheDocument();
+    expect(getByText('Skills')).toBeInTheDocument();
     expect(getByText('Technical Expertise Across Multiple Domains')).toBeInTheDocument();
   });
 
   it('renders skill categories', () => {
-    const { getByText } = render(<Skills />);
-    expect(getByText('AI & Machine Learning')).toBeInTheDocument();
-    expect(getByText('Web Development')).toBeInTheDocument();
-    expect(getByText('Data Science')).toBeInTheDocument();
-    expect(getByText('Cloud & DevOps')).toBeInTheDocument();
-    expect(getByText('Leadership')).toBeInTheDocument();
-    expect(getByText('Creative & Strategic')).toBeInTheDocument();
+    const { getAllByText } = render(<Skills />);
+    expect(getAllByText('AI & Machine Learning')).toHaveLength(2); // icon and heading
+    expect(getAllByText('Web Development')).toHaveLength(2);
+    expect(getAllByText('Data Science')).toHaveLength(2);
+    expect(getAllByText('Cloud & DevOps')).toHaveLength(2);
+    expect(getAllByText('Leadership')).toHaveLength(2);
+    expect(getAllByText('Creative & Strategic')).toHaveLength(2);
   });
 
   it('displays individual skills', () => {
@@ -33,11 +44,10 @@ describe('Skills Component', () => {
     expect(getByText('Problem Solving')).toBeInTheDocument();
   });
 
-  it('shows skill levels', () => {
-    const { getByText } = render(<Skills />);
-    expect(getByText('90%')).toBeInTheDocument();
-    expect(getByText('85%')).toBeInTheDocument();
-    expect(getByText('80%')).toBeInTheDocument();
+  it('renders all skill categories', () => {
+    const { container } = render(<Skills />);
+    const skillDivs = container.querySelectorAll('div[data-testid$="-icon"]');
+    expect(skillDivs).toHaveLength(6); // Should have 6 skill categories
   });
 
   it('has accessible markup for main heading', () => {

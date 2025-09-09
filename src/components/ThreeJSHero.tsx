@@ -9,6 +9,7 @@ import {
   PresentationControls,
 } from "@react-three/drei";
 import { motion } from "framer-motion";
+import { Github, Linkedin, Mail } from "lucide-react";
 import * as THREE from "three";
 
 // Floating geometric shapes component
@@ -105,7 +106,7 @@ function CameraRig() {
 const ThreeJSHero: React.FC = () => {
   return (
     <section id="home">
-      <div className="relative w-full min-h-[60vh] md:h-[70vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+      <div className="relative w-full min-h-[60vh] md:h-[95vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
         {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50/90 via-white/95 to-blue-50/90 dark:from-blue-900/90 dark:via-gray-900/95 dark:to-blue-900/90 z-10" />
 
@@ -152,7 +153,7 @@ const ThreeJSHero: React.FC = () => {
         </div>
 
         {/* Content overlay */}
-        <div className="relative z-20 flex items-center justify-center min-h-[60vh] md:h-[70vh] px-4 py-8 md:py-0">
+        <div className="relative z-20 flex items-center justify-center min-h-[60vh] md:h-[95vh] px-4 py-8 md:py-0">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -192,7 +193,7 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.3 }}
-              className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center px-4"
+              className="flex flex-col sm:flex-row gap-8 md:gap-12 justify-center items-center px-8 py-6"
             >
               <a
                 href="https://drive.google.com/file/d/1EjIs-sIQrmHf0vRoQ9pTiDM_4M5x_P2p/view?usp=sharing"
@@ -215,31 +216,47 @@ const ThreeJSHero: React.FC = () => {
                 Let's Connect
               </a>
             </motion.div>
+
+            {/* Social Media Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.5 }}
+              className="flex justify-center items-center space-x-6 mt-8"
+            >
+              <motion.a
+                href="https://github.com/ayushrai-hub"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Github size={24} className="text-gray-300 hover:text-white" />
+              </motion.a>
+              <motion.a
+                href="https://linkedin.com/in/ayushrai02"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Linkedin size={24} className="text-gray-300 hover:text-white" />
+              </motion.a>
+              <motion.a
+                href="mailto:ayushrai0211@gmail.com"
+                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Mail size={24} className="text-gray-300 hover:text-white" />
+              </motion.a>
+            </motion.div>
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="flex flex-col items-center text-gray-500 dark:text-gray-400"
-          >
-            <span className="text-sm mb-2">Scroll to explore</span>
-            <div className="w-6 h-10 border-2 border-gray-500 dark:border-gray-400 rounded-full flex justify-center">
-              <motion.div
-                animate={{ y: [0, 12, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="w-1 h-3 bg-blue-600 rounded-full mt-2"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
+
       </div>
     </section>
   );
