@@ -1,12 +1,10 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ExternalLink,
   ArrowUp,
   Mail,
-  Phone,
-  MapPin,
   Github,
   Linkedin,
   Twitter,
@@ -68,9 +66,13 @@ const Footer: React.FC = () => {
     }
   };
 
-  // Icon mapping for profiles
+  /**
+   * Gets the appropriate icon component based on the icon name
+   * @param iconName - The name of the icon to retrieve
+   * @returns The React component for the specified icon, or Globe as fallback
+   */
   const getIcon = (iconName: string) => {
-    const icons: { [key: string]: any } = {
+    const icons: Record<string, React.ComponentType<any>> = {
       github: Github,
       linkedin: Linkedin,
       twitter: Twitter,
@@ -279,9 +281,79 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-800 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
             <p className="text-gray-500 text-xs">
-              &copy; 2025 Ayush Rai. All rights reserved.
+              &copy; 2025 Ayush Rai
             </p>
             <div className="flex items-center space-x-4">
+              <a
+                href="https://www.workana.com/freelancer/052bc40cbb5e205f5b39bbf629409be3"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.workana.com/freelancer/052bc40cbb5e205f5b39bbf629409be3', 'Workana')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Workana</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://www.guru.com/freelancers/ayushrai02"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.guru.com/freelancers/ayushrai02', 'Guru')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Guru</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://www.codementor.io/@ayushrai188327"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.codementor.io/@ayushrai188327', 'Codementor')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Codementor</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://magic.lemon.io/share/candidate?id=68c09bc7d31295bad67a375f&availability=Full-time%20only"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://magic.lemon.io/share/candidate?id=68c09bc7d31295bad67a375f&availability=Full-time%20only', 'Lemon.io')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Lemon.io</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://www.producthunt.com/@ayush_rai02"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.producthunt.com/@ayush_rai02', 'ProductHunt')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>ProductHunt</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://www.peopleperhour.com/freelancer/ayush-rai-zymqwwmm"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.peopleperhour.com/freelancer/ayush-rai-zymqwwmm', 'PeoplePerHour')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>PeoplePerHour</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://www.freelancer.com/u/ayushrai0211"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.freelancer.com/u/ayushrai0211', 'Freelancer.com')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Freelancer</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
               <a
                 href="https://matching.turing.com/developer-resume-preview/69045f6db69910c43569fa230383aefb09b9814f2621b6"
                 target="_blank"

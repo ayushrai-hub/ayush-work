@@ -105,12 +105,12 @@ function CameraRig() {
 const ThreeJSHero: React.FC = () => {
   return (
     <section id="home">
-      <div className="relative w-full h-[70vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+      <div className="relative w-full min-h-[60vh] md:h-[70vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
         {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50/90 via-white/95 to-blue-50/90 dark:from-blue-900/90 dark:via-gray-900/95 dark:to-blue-900/90 z-10" />
 
-        {/* Three.js Canvas */}
-        <div className="absolute inset-0">
+        {/* Three.js Canvas - Hidden on mobile for performance */}
+        <div className="absolute inset-0 hidden md:block">
           <Canvas
             camera={{
               position: [0, 0, 5],
@@ -152,18 +152,18 @@ const ThreeJSHero: React.FC = () => {
         </div>
 
         {/* Content overlay */}
-        <div className="relative z-20 flex items-center justify-center h-full px-4">
+        <div className="relative z-20 flex items-center justify-center min-h-[60vh] md:h-[70vh] px-4 py-8 md:py-0">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-center max-w-4xl"
+            className="text-center max-w-4xl w-full"
           >
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-6xl md:text-8xl font-bold mb-6 text-gray-800 dark:text-white"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold mb-4 md:mb-6 text-gray-800 dark:text-white leading-tight"
             >
               <span className="text-blue-600">Ayush Rai</span>
             </motion.h1>
@@ -172,7 +172,7 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
-              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
+              className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8 leading-relaxed"
             >
               AI Engineer & Full-Stack Developer
             </motion.p>
@@ -181,7 +181,7 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.1 }}
-              className="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed"
+              className="text-base md:text-lg text-gray-500 dark:text-gray-400 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed px-4"
             >
               Exploring the intersection of artificial intelligence, web
               technologies, and innovative problem-solving to create
@@ -192,15 +192,26 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.3 }}
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center px-4"
             >
-              <a href="https://drive.google.com/file/d/1oJlYWL4UAavvSwbjwwptoGWizPXjYtAn/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="btn-primary px-8 py-4 text-lg">
+              <a
+                href="https://drive.google.com/file/d/1EjIs-sIQrmHf0vRoQ9pTiDM_4M5x_P2p/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="touch-target btn-primary px-6 md:px-8 py-3 md:py-4 text-base md:text-lg w-full sm:w-auto text-center"
+              >
                 Download Resume
               </a>
-              <a href="#projects" className="btn-primary px-8 py-4 text-lg">
+              <a
+                href="#projects"
+                className="touch-target btn-primary px-6 md:px-8 py-3 md:py-4 text-base md:text-lg w-full sm:w-auto text-center"
+              >
                 View My Work
               </a>
-              <a href="#contact" className="btn-secondary px-8 py-4 text-lg">
+              <a
+                href="#contact"
+                className="touch-target btn-secondary px-6 md:px-8 py-3 md:py-4 text-base md:text-lg w-full sm:w-auto text-center"
+              >
                 Let's Connect
               </a>
             </motion.div>

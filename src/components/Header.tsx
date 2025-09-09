@@ -138,8 +138,9 @@ const Header: React.FC = () => {
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle />
             <button
-              className="text-gray-700 dark:text-white"
+              className="touch-target text-gray-700 dark:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle navigation menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

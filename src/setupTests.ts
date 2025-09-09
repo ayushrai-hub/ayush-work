@@ -1,6 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
+import "jest-axe/extend-expect";
 
 // Setup global mocks for jsdom
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -24,7 +25,7 @@ Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
 });
 
 // Mock Canvas for Chart.js
-HTMLCanvasElement.prototype.getContext = vi.fn((contextType) => {
+const mockGetContext = vi.fn((contextType: string) => {
   if (contextType === "2d") {
     return {
       fillRect: vi.fn(),
@@ -44,10 +45,16 @@ HTMLCanvasElement.prototype.getContext = vi.fn((contextType) => {
       fill: vi.fn(),
       arc: vi.fn(),
       measureText: vi.fn(() => ({ width: 10 })),
-    };
+      canvas: {} as HTMLCanvasElement,
+      globalAlpha: 1,
+      globalCompositeOperation: 'source-over',
+      clip: vi.fn(),
+    } as unknown as CanvasRenderingContext2D;
   }
   return null;
 });
+
+(HTMLCanvasElement.prototype as any).getContext = mockGetContext;
 
 // Mock chart.js with proper scale registration
 vi.mock("chart.js", () => {
@@ -211,10 +218,11 @@ global.ResizeObserver = ResizeObserver;
 // Mock framer-motion with proper React component forwarding
 vi.mock('framer-motion', async () => {
   const actual = await vi.importActual('framer-motion');
+  const motionComponents = (actual as any).motion || {};
   return {
     ...actual,
     motion: {
-      ...Object.entries(actual.motion).reduce((acc, [key, value]) => {
+      ...Object.entries(motionComponents).reduce((acc: any, [key, value]: [string, any]) => {
         if (typeof value === 'string') {
           acc[key] = ({ children, ...props }: any) => React.createElement(value, props, children);
         }
@@ -249,3 +257,12 @@ vi.mock("@sendgrid/mail", () => ({
   setApiKey: vi.fn(),
   send: vi.fn().mockResolvedValue({}),
 }));
+
+// Mock requestAnimationFrame
+global.requestAnimationFrame = vi.fn((cb) => {
+  return setTimeout(cb, 16) as any;
+});
+
+global.cancelAnimationFrame = vi.fn((id) => {
+  clearTimeout(id as any);
+});

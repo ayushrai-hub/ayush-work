@@ -228,7 +228,7 @@ const Projects: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 mb-8">
           {projects.map((project, index) => (
             <motion.div
               key={index}
@@ -237,11 +237,11 @@ const Projects: React.FC = () => {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               className="card group hover:scale-[1.02] transition-transform duration-300"
             >
-              <div className="relative overflow-hidden rounded-lg mb-6">
+              <div className="relative overflow-hidden rounded-lg mb-4 md:mb-6">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="responsive-img w-full h-32 md:h-40 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
 
@@ -309,17 +309,17 @@ const Projects: React.FC = () => {
                 <p className="text-gray-600 dark:text-gray-400 text-sm">{project.impact}</p>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <a
                   href={project.github}
-                  className="flex items-center px-4 py-2 bg-gray-800 dark:bg-primary hover:bg-gray-700 dark:hover:bg-gray-800 rounded-lg text-white transition-colors"
+                  className="touch-target flex items-center justify-center px-4 py-2 bg-gray-800 dark:bg-primary hover:bg-gray-700 dark:hover:bg-gray-800 rounded-lg text-white transition-colors text-sm"
                 >
                   <Github size={16} className="mr-2" />
                   Code
                 </a>
                 <a
                   href={project.demo}
-                  className="flex items-center px-4 py-2 bg-gradient-to-r from-secondary to-accent text-primary rounded-lg font-semibold hover:shadow-lg transition-shadow"
+                  className="touch-target flex items-center justify-center px-4 py-2 bg-gradient-to-r from-secondary to-accent text-primary rounded-lg font-semibold hover:shadow-lg transition-shadow text-sm"
                 >
                   <ExternalLink size={16} className="mr-2" />
                   Live Demo

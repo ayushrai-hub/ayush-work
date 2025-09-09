@@ -97,7 +97,7 @@ export const profiles: Profile[] = [
     icon: 'code',
     category: 'Coding Practice',
     description: 'Check out my coding solutions and articles',
-    domain: 'development'
+    domain: 'data-science'
   },
 
   // Data Science & Analytics
@@ -189,6 +189,60 @@ export const profiles: Profile[] = [
     domain: 'professional'
   },
   {
+    id: 'braintrust',
+    name: 'Braintrust',
+    url: 'https://app.usebraintrust.com/talent/1859806/',
+    icon: 'briefcase',
+    category: 'Freelance Network',
+    description: 'Connect with top-tier clients and projects',
+    domain: 'professional'
+  },
+  {
+    id: 'workana',
+    name: 'Workana',
+    url: 'https://www.workana.com/freelancer/052bc40cbb5e205f5b39bbf629409be3',
+    icon: 'briefcase',
+    category: 'Freelance',
+    description: 'Find freelance opportunities and projects',
+    domain: 'professional'
+  },
+  {
+    id: 'guru',
+    name: 'Guru',
+    url: 'https://www.guru.com/freelancers/ayushrai02',
+    icon: 'briefcase',
+    category: 'Freelance',
+    description: 'Connect with clients for freelance work',
+    domain: 'professional'
+  },
+  {
+    id: 'codementor',
+    name: 'Codementor',
+    url: 'https://www.codementor.io/@ayushrai188327',
+    icon: 'briefcase',
+    category: 'Mentorship',
+    description: 'Mentor and get mentored by developers',
+    domain: 'professional'
+  },
+  {
+    id: 'lemonio',
+    name: 'Lemon.io',
+    url: 'https://magic.lemon.io/share/candidate?id=68c09bc7d31295bad67a375f&availability=Full-time%20only',
+    icon: 'briefcase',
+    category: 'Job Board',
+    description: 'Connect with startups and companies',
+    domain: 'professional'
+  },
+  {
+    id: 'producthunt',
+    name: 'ProductHunt',
+    url: 'https://www.producthunt.com/@ayush_rai02',
+    icon: 'briefcase',
+    category: 'Product Discovery',
+    description: 'Discover and share amazing products',
+    domain: 'professional'
+  },
+  {
     id: 'upwork',
     name: 'Upwork',
     url: 'https://www.upwork.com/freelancers/~0154ec8cf0990e80bc?mp_source=share',
@@ -204,6 +258,15 @@ export const profiles: Profile[] = [
     icon: 'briefcase',
     category: 'Freelance',
     description: 'Find me for creative and development services',
+    domain: 'professional'
+  },
+  {
+    id: 'peopleperhour',
+    name: 'PeoplePerHour',
+    url: 'https://www.peopleperhour.com/freelancer/ayush-rai-zymqwwmm',
+    icon: 'briefcase',
+    category: 'Freelance',
+    description: 'Hire me for development and tech projects',
     domain: 'professional'
   },
 

@@ -330,11 +330,11 @@ const Contact: React.FC = () => {
                 onSubmit={handleSubmit}
                 className="space-y-4"
               >
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-gray-300 text-sm font-medium mb-1.5"
+                      className="block text-gray-300 text-base font-medium mb-2"
                     >
                       Your Name
                     </label>
@@ -345,14 +345,15 @@ const Contact: React.FC = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       onFocus={handleFormFocus}
-                      className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
+                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
                       required
+                      autoComplete="name"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-gray-300 text-sm font-medium mb-1.5"
+                      className="block text-gray-300 text-base font-medium mb-2"
                     >
                       Email Address
                     </label>
@@ -362,70 +363,70 @@ const Contact: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
+                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
                       required
+                      autoComplete="email"
                     />
                   </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="service"
-                    className="block text-gray-300 text-sm font-medium mb-1.5"
-                  >
-                    Service Interest
-                  </label>
-                  <select
-                    id="service"
-                    name="service"
-                    value={formData.service}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
-                  >
-                    <option value="">Select a service</option>
-                    <option value="ai-ml">AI & Machine Learning</option>
-                    <option value="web-dev">Web Development</option>
-                    <option value="data-science">Data Science</option>
-                    <option value="consultation">Technical Consultation</option>
-                    <option value="community">Community Management</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="subject"
-                    className="block text-gray-300 text-sm font-medium mb-1.5"
-                  >
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-gray-300 text-sm font-medium mb-1.5"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm resize-none"
-                    required
-                  ></textarea>
+                  <div>
+                    <label
+                      htmlFor="service"
+                      className="block text-gray-300 text-base font-medium mb-2"
+                    >
+                      Service Interest
+                    </label>
+                    <select
+                      id="service"
+                      name="service"
+                      value={formData.service}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
+                    >
+                      <option value="">Select a service</option>
+                      <option value="ai-ml">AI & Machine Learning</option>
+                      <option value="web-dev">Web Development</option>
+                      <option value="data-science">Data Science</option>
+                      <option value="consultation">Technical Consultation</option>
+                      <option value="community">Community Management</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="subject"
+                      className="block text-gray-300 text-base font-medium mb-2"
+                    >
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
+                      required
+                      autoComplete="subject"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="message"
+                      className="block text-gray-300 text-base font-medium mb-2"
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      rows={5}
+                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base resize-none touch-target"
+                      required
+                      autoComplete="message"
+                    ></textarea>
+                  </div>
                 </div>
 
                 {/* Submit Status Message */}
@@ -478,7 +479,7 @@ const Contact: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group"
+                  className="w-full touch-target bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group text-base"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center">
@@ -517,15 +518,15 @@ const Contact: React.FC = () => {
               let's discuss how we can work together.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <a href="mailto:ayushrai0211@gmail.com" className="btn-primary text-sm px-4 py-2">
+              <a href="mailto:ayushrai0211@gmail.com" className="touch-target btn-primary text-sm px-4 py-3 flex items-center justify-center">
                 <Mail size={16} className="mr-1.5" />
                 Email Me
               </a>
-              <a href="tel:+917440567944" className="btn-secondary text-sm px-4 py-2">
+              <a href="tel:+917440567944" className="touch-target btn-secondary text-sm px-4 py-3 flex items-center justify-center">
                 <Phone size={16} className="mr-1.5" />
                 Call Now
               </a>
-              <a href="https://calendly.com/ayushrai0211" target="_blank" rel="noopener noreferrer" className="btn-secondary text-sm px-4 py-2">
+              <a href="https://calendly.com/ayushrai0211" target="_blank" rel="noopener noreferrer" className="touch-target btn-secondary text-sm px-4 py-3 flex items-center justify-center">
                 <Calendar size={16} className="mr-1.5" />
                 Schedule Call
               </a>
