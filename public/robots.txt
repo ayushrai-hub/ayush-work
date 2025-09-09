@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ayush-me.netlify.app/sitemap.xml
