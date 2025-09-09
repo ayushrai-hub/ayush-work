@@ -34,7 +34,7 @@ const About: React.FC = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
+    <section id="about" className="py-20 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -44,9 +44,9 @@ const About: React.FC = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            My <span className="text-blue-600">Story</span>
+            My <span className="text-secondary dark:text-secondary-400">Story</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             The Polymath's Journey
           </p>
@@ -58,7 +58,7 @@ const About: React.FC = () => {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h3 className="text-3xl font-bold mb-6 text-blue-600">My Story</h3>
+            <h3 className="text-3xl font-bold mb-6 text-secondary dark:text-secondary-400">My Story</h3>
             <div className="space-y-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
               <p>
                 I'm a technology enthusiast with a unique blend of technical
@@ -95,7 +95,7 @@ const About: React.FC = () => {
             className="relative"
           >
             <div className="bg-glass rounded-2xl p-8 border border-accent/20">
-              <h4 className="text-2xl font-bold mb-4 text-blue-600">
+              <h4 className="text-2xl font-bold mb-4 text-secondary dark:text-secondary-400">
                 Personal Philosophy
               </h4>
               <blockquote className="text-gray-600 dark:text-gray-300 italic text-lg leading-relaxed">
@@ -103,7 +103,7 @@ const About: React.FC = () => {
                 polymath, I bridge the gap between different domains to create
                 holistic solutions that address real-world challenges."
               </blockquote>
-              <cite className="block mt-4 text-blue-500 font-semibold">
+              <cite className="block mt-4 text-secondary-500 dark:text-secondary-400 font-semibold">
                 - Ayush Rai
               </cite>
             </div>
@@ -115,7 +115,7 @@ const About: React.FC = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h3 className="text-3xl font-bold text-center mb-12 text-blue-600">
+          <h3 className="text-3xl font-bold text-center mb-12 text-secondary dark:text-secondary-400">
             Core Values & Approach
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

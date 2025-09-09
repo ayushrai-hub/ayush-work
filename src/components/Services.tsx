@@ -115,7 +115,7 @@ const Services: React.FC = () => {
   ];
 
   return (
-    <section id="services" className="py-12 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
+    <section id="services" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -125,9 +125,9 @@ const Services: React.FC = () => {
           className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            <span className="text-blue-600">Services</span> & Solutions
+            <span className="text-secondary">Services</span> & Solutions
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <div className="w-24 h-1 bg-secondary mx-auto rounded-full mb-6"></div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Comprehensive technical and strategic solutions for your business
             needs

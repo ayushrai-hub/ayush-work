@@ -9,6 +9,7 @@ import {
   Users,
   TrendingUp,
 } from "lucide-react";
+import CountUp from "react-countup";
 
 const Projects: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -209,7 +210,7 @@ const Projects: React.FC = () => {
   ];
 
   return (
-    <section id="projects" className="py-12 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+    <section id="projects" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -219,9 +220,9 @@ const Projects: React.FC = () => {
           className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            Featured <span className="text-blue-600">Projects</span>
+            Featured <span className="text-secondary dark:text-secondary-400">Projects</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Technical Excellence Across Multiple Domains
           </p>
@@ -248,23 +249,23 @@ const Projects: React.FC = () => {
                 <span className="text-secondary font-semibold text-sm">
                   {project.category}
                 </span>
-                <div className="flex items-center text-gray-400 text-sm">
+                <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
                   <Calendar size={16} className="mr-1" />
                   {project.duration}
                 </div>
               </div>
 
-              <h3 className="text-2xl font-bold mb-3 text-white">
+              <h3 className="text-2xl font-bold mb-3 text-gray-800 dark:text-white">
                 {project.title}
               </h3>
-              <p className="text-gray-400 mb-4 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                 {project.description}
               </p>
 
               <div className="mb-4">
                 <div className="flex items-center mb-2">
                   <Code size={16} className="mr-2 text-accent" />
-                  <span className="text-white font-semibold">
+                  <span className="text-gray-800 dark:text-white font-semibold">
                     Technologies:
                   </span>
                 </div>
@@ -272,7 +273,7 @@ const Projects: React.FC = () => {
                   {project.technologies.map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className="px-2 py-1 bg-primary rounded text-xs text-gray-300 border border-accent/20"
+                      className="px-2 py-1 bg-gray-100 dark:bg-primary rounded text-xs text-gray-700 dark:text-gray-300 border border-accent/20"
                     >
                       {tech}
                     </span>
@@ -283,7 +284,7 @@ const Projects: React.FC = () => {
               <div className="mb-4">
                 <div className="flex items-center mb-2">
                   <Users size={16} className="mr-2 text-secondary" />
-                  <span className="text-white font-semibold">
+                  <span className="text-gray-800 dark:text-white font-semibold">
                     Key Features:
                   </span>
                 </div>
@@ -291,7 +292,7 @@ const Projects: React.FC = () => {
                   {project.features.slice(0, 3).map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="text-gray-400 text-sm flex items-start"
+                      className="text-gray-600 dark:text-gray-400 text-sm flex items-start"
                     >
                       <span className="text-accent mr-2 mt-1">•</span>
                       {feature}
@@ -303,15 +304,15 @@ const Projects: React.FC = () => {
               <div className="mb-6">
                 <div className="flex items-center mb-2">
                   <TrendingUp size={16} className="mr-2 text-tertiary" />
-                  <span className="text-white font-semibold">Impact:</span>
+                  <span className="text-gray-800 dark:text-white font-semibold">Impact:</span>
                 </div>
-                <p className="text-gray-400 text-sm">{project.impact}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{project.impact}</p>
               </div>
 
               <div className="flex gap-4">
                 <a
                   href={project.github}
-                  className="flex items-center px-4 py-2 bg-primary hover:bg-gray-800 rounded-lg text-white transition-colors"
+                  className="flex items-center px-4 py-2 bg-gray-800 dark:bg-primary hover:bg-gray-700 dark:hover:bg-gray-800 rounded-lg text-white transition-colors"
                 >
                   <Github size={16} className="mr-2" />
                   Code
@@ -339,20 +340,29 @@ const Projects: React.FC = () => {
           </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">20+</div>
-              <p className="text-gray-400">Projects Completed</p>
+              <div className="text-4xl font-bold gradient-text mb-2">
+                {inView && <CountUp end={20} duration={2} delay={0.2} />}
+                +
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">Projects Completed</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">10+</div>
-              <p className="text-gray-400">Happy Clients</p>
+              <div className="text-4xl font-bold gradient-text mb-2">
+                {inView && <CountUp end={10} duration={2} delay={0.4} />}
+                +
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">Happy Clients</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">100%</div>
-              <p className="text-gray-400">Success Rate</p>
+              <div className="text-4xl font-bold gradient-text mb-2">
+                {inView && <CountUp end={100} duration={2} delay={0.6} />}
+                %
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">Success Rate</p>
             </div>
             <div className="card text-center">
               <div className="text-4xl font-bold gradient-text mb-2">24/7</div>
-              <p className="text-gray-400">Support</p>
+              <p className="text-gray-600 dark:text-gray-400">Support</p>
             </div>
           </div>
         </motion.div>

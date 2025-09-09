@@ -11,7 +11,7 @@ const Skills: React.FC = () => {
       icon: Brain,
       title: "AI & Machine Learning",
       skills: [
-        "Python", "RLHF", "LLMs", "TensorFlow", "PyTorch", "Prompt Engineering"
+        "Python", "RLHF", "LLMs", "PyTorch", "Prompt Engineering"
       ],
       color: "from-accent to-secondary",
     },
@@ -35,7 +35,7 @@ const Skills: React.FC = () => {
       icon: Cloud,
       title: "Cloud & DevOps",
       skills: [
-        "Google Cloud", "AWS", "Git/GitHub", "Docker", "CI/CD", "Linux"
+        "AWS", "Git/GitHub", "Docker", "CI/CD", "Linux"
       ],
       color: "from-accent to-secondary",
     },
@@ -58,59 +58,54 @@ const Skills: React.FC = () => {
   ];
 
   return (
-    <section id="skills" className="py-12 bg-white dark:bg-gray-800">
+    <section id="skills" className="py-20 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8"
+          className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            Multi-Disciplinary <span className="text-blue-600">Skills</span>
+            Multi-Disciplinary <span className="text-secondary dark:text-secondary-400">Skills</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Technical Expertise Across Multiple Domains
           </p>
         </motion.div>
 
-        {/* Vertical Grid Skills Layout */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        {/* Skills Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: categoryIndex * 0.1 }}
-              className="bg-primary-dark border border-accent/20 rounded-lg p-4"
+              transition={{ duration: 0.6, delay: 0.2 + categoryIndex * 0.1 }}
+              className="card text-center"
             >
-              <div className="flex items-center mb-3">
-                <div
-                  className={`inline-flex items-center justify-center w-8 h-8 bg-gradient-to-r ${category.color} rounded-md mr-3`}
-                >
-                  <category.icon size={16} className="text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold text-white">
-                  {category.title}
-                </h3>
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-secondary to-accent rounded-full mb-4">
+                <category.icon size={32} className="text-primary" />
               </div>
-
-              <div className="flex flex-wrap gap-2">
+              <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+                {category.title}
+              </h3>
+              <div className="flex flex-wrap gap-2 justify-center">
                 {category.skills.map((skill, skillIndex) => (
-                  <motion.div
+                  <motion.span
                     key={skillIndex}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
                     transition={{
                       duration: 0.5,
-                      delay: categoryIndex * 0.1 + skillIndex * 0.05,
+                      delay: 0.4 + categoryIndex * 0.1 + skillIndex * 0.05,
                     }}
-                    className="px-2 py-1 bg-primary rounded-full text-xs text-gray-300 border border-accent/10 hover:border-accent/30 transition-colors"
+                    className="px-3 py-1 bg-gray-100 dark:bg-primary rounded-full text-sm text-gray-700 dark:text-gray-300 border border-accent/20 hover:border-accent/40 transition-colors"
                   >
                     {skill}
-                  </motion.div>
+                  </motion.span>
                 ))}
               </div>
             </motion.div>

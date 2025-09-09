@@ -1,17 +1,62 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         primary: {
           DEFAULT: '#0D1B2A',
+          50: '#f0f4f8',
+          100: '#d9e2ec',
+          200: '#bcccdc',
+          300: '#9fb3cc',
+          400: '#8299bc',
+          500: '#6580ac',
+          600: '#4d6490',
+          700: '#3d5174',
+          800: '#2e3e58',
+          900: '#1e2b3c',
           dark: '#041E42'
         },
-        secondary: '#00D9FF',
-        accent: '#39FF14',
+        secondary: {
+          DEFAULT: '#00D9FF',
+          50: '#e6f9ff',
+          100: '#ccedff',
+          200: '#99dbff',
+          300: '#66c9ff',
+          400: '#33b7ff',
+          500: '#00a5ff',
+          600: '#0084cc',
+          700: '#006399',
+          800: '#004266',
+          900: '#002133'
+        },
+        accent: {
+          DEFAULT: '#39FF14',
+          50: '#e8ffe6',
+          100: '#d1ffcc',
+          200: '#a3ff99',
+          300: '#75ff66',
+          400: '#47ff33',
+          500: '#19ff00',
+          600: '#14cc00',
+          700: '#0f9900',
+          800: '#0a6600',
+          900: '#053300'
+        },
         tertiary: {
           DEFAULT: '#6B46C1',
+          50: '#f3f1ff',
+          100: '#e9e5ff',
+          200: '#d3ccff',
+          300: '#bdb3ff',
+          400: '#a799ff',
+          500: '#917fff',
+          600: '#7a66cc',
+          700: '#635099',
+          800: '#4c3a66',
+          900: '#352533',
           light: '#9333EA'
         }
       },

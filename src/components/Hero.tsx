@@ -36,13 +36,29 @@ const Hero: React.FC = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-center relative pt-20"
+      className="min-h-screen flex flex-col justify-center relative pt-20 pb-20"
     >
       <div className="container mx-auto px-4 text-center">
+        {/* Profile Image */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          className="mb-8"
+        >
+          <div className="w-32 h-32 md:w-40 md:h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-accent shadow-xl">
+            <img
+              src="/profile-image.jpeg"
+              alt="Ayush Rai"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-8"
         >
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
@@ -57,7 +73,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="h-16 flex items-center justify-center"
           >
-            <p className="text-xl md:text-2xl text-gray-300">
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300">
               {headlines[currentHeadline]}
             </p>
           </motion.div>
@@ -66,20 +82,49 @@ const Hero: React.FC = () => {
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-lg md:text-xl text-gray-400 mb-8 max-w-3xl mx-auto"
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-4xl mx-auto leading-relaxed"
         >
           Polymath with strategic approach across AI, web development, data
           science, and community leadership. Currently specializing in RLHF and
           Generative AI while pursuing dual degrees in Computer Science and Data
-          Science.
+          Science. Passionate about creating innovative solutions that bridge
+          technology and human experience.
         </motion.p>
 
+        {/* Social Media Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-wrap justify-center gap-4 mb-12"
+        >
+          <a
+            href="https://linkedin.com/in/ayushrai02"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary flex items-center gap-2"
+          >
+            <Linkedin size={20} />
+            LinkedIn
+          </a>
+          <a
+            href="https://github.com/ayushrai-hub"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary flex items-center gap-2"
+          >
+            <Github size={20} />
+            GitHub
+          </a>
+        </motion.div>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="flex flex-wrap justify-center gap-4 mb-16"
         >
           <a href="#contact" className="btn-primary">
             Let's Work Together
@@ -101,18 +146,20 @@ const Hero: React.FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="flex justify-center space-x-6 mb-16"
+          transition={{ duration: 0.8, delay: 1.0 }}
+          className="flex justify-center space-x-6 mb-20"
         >
           <a
             href="mailto:ayushrai0211@gmail.com"
-            className="text-gray-400 hover:text-accent transition-colors p-2"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            title="Email"
           >
             <Mail size={24} />
           </a>
           <a
             href="tel:+917440567944"
-            className="text-gray-400 hover:text-accent transition-colors p-2"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            title="Phone"
           >
             <Phone size={24} />
           </a>
@@ -120,7 +167,8 @@ const Hero: React.FC = () => {
             href="https://github.com/ayushrai-hub"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-accent transition-colors p-2"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            title="GitHub"
           >
             <Github size={24} />
           </a>
@@ -128,7 +176,8 @@ const Hero: React.FC = () => {
             href="https://linkedin.com/in/ayushrai02"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-accent transition-colors p-2"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            title="LinkedIn"
           >
             <Linkedin size={24} />
           </a>
@@ -150,7 +199,7 @@ const Hero: React.FC = () => {
                 )}
                 {stat.suffix}
               </div>
-              <p className="text-gray-400 text-sm">{stat.label}</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">{stat.label}</p>
             </div>
           ))}
         </motion.div>

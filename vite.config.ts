@@ -38,6 +38,8 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
           // UI library and smaller utilities
           ui: ['lucide-react', 'react-intersection-observer', 'react-helmet-async'],
+          // Analytics and utilities
+          utils: ['react-countup'],
         },
       },
     },
@@ -55,7 +57,7 @@ export default defineConfig({
     // Optimize for better performance
     cssCodeSplit: true,
     reportCompressedSize: true,
-    // Split chunks for better caching with lower limit to force splitting
-    chunkSizeWarningLimit: 400,
+    // Increased chunk size limit to reduce warnings
+    chunkSizeWarningLimit: 600,
   },
 });

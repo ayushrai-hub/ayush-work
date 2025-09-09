@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  ExternalLink, 
-  ArrowUp, 
-  Mail, 
-  Phone, 
+import {
+  ExternalLink,
+  ArrowUp,
+  Mail,
+  Phone,
   MapPin,
   Github,
   Linkedin,
@@ -17,13 +18,21 @@ import {
   BarChart3,
   FileText,
   Briefcase,
-  Heart
+  Heart,
+  Database,
+  Bot,
+  Droplets,
+  Edit,
+  Trophy,
+  Link as LinkIcon
 } from 'lucide-react';
 import { profiles, domains } from '../lib/profilesData';
 import { useGTM } from '../hooks/useGTM';
 
 const Footer: React.FC = () => {
   const { trackButton, trackExternal } = useGTM();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const scrollToTop = () => {
     trackButton('back_to_top', 'footer');
@@ -32,6 +41,31 @@ const Footer: React.FC = () => {
 
   const handleExternalLink = (url: string, name: string) => {
     trackExternal(url, name);
+  };
+
+  // Handle navigation to sections
+  const handleSectionNavigation = (href: string) => {
+    if (href === '/') {
+      navigate('/');
+    } else if (location.pathname !== '/') {
+      // If not on main page, navigate to main page first
+      navigate('/');
+      // Wait for navigation to complete, then scroll
+      setTimeout(() => {
+        const sectionId = href.split('#')[1];
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      // If already on main page, just scroll
+      const sectionId = href.split('#')[1];
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   // Icon mapping for profiles
@@ -43,19 +77,19 @@ const Footer: React.FC = () => {
       instagram: Instagram,
       facebook: Facebook,
       code: Code,
-      award: Code,
+      award: Trophy,
       'bar-chart-2': BarChart3,
-      database: BarChart3,
-      robot: BarChart3,
+      database: Database,
+      robot: Bot,
       image: Palette,
-      droplet: Palette,
+      droplet: Droplets,
       'book-open': FileText,
-      'edit-3': FileText,
+      'edit-3': Edit,
       cloud: Briefcase,
       briefcase: Briefcase,
       'layout-grid': Globe,
       globe: Globe,
-      link: Globe,
+      link: LinkIcon,
       heart: Heart
     };
     return icons[iconName.toLowerCase().replace('-', '')] || Globe;
@@ -94,32 +128,40 @@ const Footer: React.FC = () => {
 
   // Quick navigation links
   const quickLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', href: '/' },
+    { name: 'About Me', href: '/#aboutme' },
+    { name: 'Projects', href: '/#projects' },
+    { name: 'Experience', href: '/#experience' },
+    { name: 'Contact', href: '/#contact' }
   ];
 
   return (
-    <footer className="bg-gray-900 text-white relative overflow-hidden">
+    <footer className="bg-primary-dark text-white relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-gray-900 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-900/20 via-secondary-900/20 to-primary-dark pointer-events-none"></div>
       
       <div className="container mx-auto px-6 relative z-10">
-        {/* Main Footer Content */}
-        <div className="py-10">
-          {/* Primary Socials */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-8"
-          >
-            <h2 className="text-2xl font-bold mb-4">
-              Let's <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Connect</span>
-            </h2>
-            <div className="flex justify-center space-x-6 mb-6">
+        {/* Compact Footer Content */}
+        <div className="py-8">
+          {/* Top Section - Brand & Social */}
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-4 md:mb-0"
+            >
+              <h3 className="text-xl font-bold mb-1">Ayush Rai</h3>
+              <p className="text-gray-400 text-sm">Polymath | AI Engineer | Creative Technologist</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="flex items-center space-x-4"
+            >
+              <span className="text-gray-400 text-sm hidden md:block">Connect:</span>
               {primarySocials.map((social, index) => {
                 const IconComponent = social.icon;
                 return (
@@ -129,134 +171,108 @@ const Footer: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleExternalLink(social.url, social.name)}
-                    className={`p-3 bg-gray-800 rounded-full transition-all duration-300 ${social.color} hover:scale-110 hover:shadow-lg`}
+                    className={`p-2 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 ${social.color} hover:scale-110`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    <IconComponent size={20} />
+                    <IconComponent size={18} />
                   </motion.a>
                 );
               })}
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
-          {/* Footer Sections Grid */}
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6 mb-10">
-            {/* Branding & Quick Links */}
+          {/* Middle Section - Quick Links & Platforms */}
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            {/* Quick Navigation */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="lg:col-span-1"
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h3 className="text-xl font-bold mb-3">Ayush Rai</h3>
-              <p className="text-gray-400 text-xs mb-3 md:mb-0">
-                Polymath | AI Engineer | Creative Technologist
-              </p>
-              
-              <h4 className="font-semibold mb-2 text-gray-300 text-sm">Quick Links</h4>
-              <div className="space-y-2">
-                {quickLinks.map((link) => (
-                  <a
+              <h4 className="font-semibold mb-3 text-gray-300 text-sm">Quick Links</h4>
+              <div className="grid grid-cols-2 gap-2">
+                {quickLinks.slice(0, 4).map((link) => (
+                  <button
                     key={link.name}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white transition-colors text-xs"
-                    onClick={() => handleExternalLink(link.href, link.name)}
+                    onClick={() => handleSectionNavigation(link.href)}
+                    className="text-gray-400 hover:text-white transition-colors text-xs text-left hover:bg-gray-800/30 px-2 py-1 rounded"
                   >
                     {link.name}
-                  </a>
+                  </button>
                 ))}
               </div>
             </motion.div>
 
-            {/* Profiles & Platforms */}
-            {Object.entries(groupedProfiles).slice(0, 3).map(([domainName, domainProfiles], index) => {
-              const domain = domains.find(d => d.name === domainName);
-              if (!domain) return null;
+            {/* Top Platforms */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <h4 className="font-semibold mb-3 text-gray-300 text-sm">Top Platforms</h4>
+              <div className="space-y-2">
+                {Object.entries(groupedProfiles).slice(0, 2).flatMap(([domainName, domainProfiles]) => {
+                  return domainProfiles.slice(0, 3).map((profile) => {
+                    const IconComponent = getIcon(profile.icon);
+                    return (
+                      <a
+                        key={profile.id}
+                        href={profile.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => handleExternalLink(profile.url, profile.name)}
+                        className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group text-xs"
+                      >
+                        <IconComponent size={14} className="flex-shrink-0" />
+                        <span className="group-hover:underline truncate">{profile.name}</span>
+                      </a>
+                    );
+                  });
+                })}
+              </div>
+            </motion.div>
 
-              return (
-                <motion.div
-                  key={domainName}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-                >
-                  <h4 className="font-semibold mb-3 text-gray-300 text-sm capitalize">
-                    {domainName.replace('-', ' ')}
-                  </h4>
-                  <div className="space-y-2">
-                    {domainProfiles.slice(0, 6).map((profile) => {
+            {/* More Platforms - Compact Cards */}
+            {Object.keys(groupedProfiles).length > 2 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <h4 className="font-semibold mb-3 text-gray-300 text-sm">More Platforms</h4>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(groupedProfiles).slice(2).flatMap(([domainName, domainProfiles]) => {
+                    const domain = domains.find(d => d.name === domainName);
+                    if (!domain) return [];
+
+                    return domainProfiles.slice(0, 2).map((profile) => {
                       const IconComponent = getIcon(profile.icon);
                       return (
-                        <a
+                        <motion.a
                           key={profile.id}
                           href={profile.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={() => handleExternalLink(profile.url, profile.name)}
-                          className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group text-xs"
+                          className="flex flex-col items-center p-2 bg-gray-800/30 hover:bg-gray-800/60 rounded-lg transition-all duration-300 hover:scale-105 group min-w-[60px]"
+                          whileHover={{ y: -1 }}
                         >
-                          <IconComponent size={14} className="flex-shrink-0" />
-                          <span className="group-hover:underline truncate">{profile.name}</span>
-                          <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </a>
+                          <IconComponent size={16} className="text-gray-400 group-hover:text-accent mb-1 transition-colors" />
+                          <span className="text-xs text-gray-400 group-hover:text-white text-center leading-tight truncate w-full">
+                            {profile.name}
+                          </span>
+                        </motion.a>
                       );
-                    })}
-                  </div>
-                </motion.div>
-              );
-            })}
+                    });
+                  })}
+                </div>
+              </motion.div>
+            )}
           </div>
-
-          {/* Additional Profiles (Remaining domains) */}
-          {Object.keys(groupedProfiles).length > 3 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="mb-12"
-            >
-              <h4 className="font-semibold mb-6 text-center text-gray-300">More Platforms</h4>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Object.entries(groupedProfiles).slice(3).map(([domainName, domainProfiles]) => {
-                  const domain = domains.find(d => d.name === domainName);
-                  if (!domain) return null;
-
-                  return (
-                    <div key={domainName} className="bg-gray-800 rounded-lg p-4">
-                      <h5 className="font-medium mb-3 text-gray-300 capitalize text-sm">
-                        {domainName.replace('-', ' ')}
-                      </h5>
-                      <div className="space-y-2">
-                        {domainProfiles.map((profile) => {
-                          const IconComponent = getIcon(profile.icon);
-                          return (
-                            <a
-                              key={profile.id}
-                              href={profile.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={() => handleExternalLink(profile.url, profile.name)}
-                              className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group text-sm"
-                            >
-                              <IconComponent size={14} />
-                              <span>{profile.name}</span>
-                              <ExternalLink size={10} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </a>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
         </div>
 
         {/* Footer Bottom */}
@@ -266,7 +282,7 @@ const Footer: React.FC = () => {
           </p>
           <button
             onClick={scrollToTop}
-            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 text-sm"
+            className="fixed bottom-6 right-6 bg-secondary hover:bg-secondary-600 text-white p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 text-sm"
             aria-label="Back to top"
           >
             <ArrowUp size={16} />

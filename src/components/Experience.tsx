@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Briefcase, Calendar, MapPin, TrendingUp } from "lucide-react";
+import CountUp from "react-countup";
 
 const Experience: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -115,7 +116,7 @@ const Experience: React.FC = () => {
   ];
 
   return (
-    <section id="experience" className="py-12 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
+    <section id="experience" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -125,9 +126,9 @@ const Experience: React.FC = () => {
           className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            Professional <span className="text-blue-600">Experience</span>
+            Professional <span className="text-secondary dark:text-secondary-400">Experience</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Career Journey Across AI, Web Development, and Leadership
           </p>
@@ -176,14 +177,14 @@ const Experience: React.FC = () => {
                   <span className="text-accent font-semibold">Current</span>
                 </div>
 
-                <h3 className="text-2xl font-bold mb-2 text-white">
+                <h3 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">
                   {exp.title}
                 </h3>
                 <p className="text-secondary font-semibold mb-3">
                   {exp.company}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-4 mb-4 text-gray-400 text-sm">
+                <div className="flex flex-wrap items-center gap-4 mb-4 text-gray-600 dark:text-gray-400 text-sm">
                   <div className="flex items-center">
                     <Calendar size={16} className="mr-2" />
                     {exp.duration}
@@ -197,7 +198,7 @@ const Experience: React.FC = () => {
                 <div className="mb-4">
                   <div className="flex items-center mb-3">
                     <TrendingUp size={16} className="mr-2 text-accent" />
-                    <span className="text-white font-semibold">
+                    <span className="text-gray-800 dark:text-white font-semibold">
                       Key Achievements:
                     </span>
                   </div>
@@ -205,7 +206,7 @@ const Experience: React.FC = () => {
                     {exp.achievements.map((achievement, achievementIndex) => (
                       <li
                         key={achievementIndex}
-                        className="text-gray-300 flex items-start"
+                        className="text-gray-700 dark:text-gray-300 flex items-start"
                       >
                         <span className="text-accent mr-2 mt-1">•</span>
                         {achievement}
@@ -215,14 +216,14 @@ const Experience: React.FC = () => {
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-white font-semibold mb-3">
+                  <p className="text-gray-800 dark:text-white font-semibold mb-3">
                     Technologies Used:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {exp.technologies.map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="px-3 py-1 bg-primary rounded-full text-sm text-gray-300 border border-accent/20"
+                        className="px-3 py-1 bg-gray-100 dark:bg-primary rounded-full text-sm text-gray-700 dark:text-gray-300 border border-accent/20"
                       >
                         {tech}
                       </span>
@@ -246,20 +247,30 @@ const Experience: React.FC = () => {
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">2+</div>
-              <p className="text-gray-400">Years Experience</p>
+              <div className="text-4xl font-bold gradient-text mb-2">
+                {inView && <CountUp end={2} duration={2} delay={0.2} />}
+                +
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">Years Experience</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">2</div>
-              <p className="text-gray-400">Companies</p>
+              <div className="text-4xl font-bold gradient-text mb-2">
+                {inView && <CountUp end={2} duration={2} delay={0.4} />}
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">Companies</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">3</div>
-              <p className="text-gray-400">Industries</p>
+              <div className="text-4xl font-bold gradient-text mb-2">
+                {inView && <CountUp end={3} duration={2} delay={0.6} />}
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">Industries</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">100%</div>
-              <p className="text-gray-400">Success Rate</p>
+              <div className="text-4xl font-bold gradient-text mb-2">
+                {inView && <CountUp end={100} duration={2} delay={0.8} />}
+                %
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">Success Rate</p>
             </div>
           </div>
         </motion.div>

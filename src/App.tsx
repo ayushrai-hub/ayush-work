@@ -2,28 +2,29 @@ import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
-import About from './components/About';
-import AboutMe from './components/AboutMe';
-import Education from './components/Education';
-import Experience from './components/Experience';
-import Skills from './components/Skills';
-import Other from './components/Other';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ParticleBackground from './components/ParticleBackground';
+import FloatingNav from './components/FloatingNav';
 import { initGA } from './lib/analytics';
 import SEO from './components/SEO';
 import './App.css';
 
 // Lazy load heavy components
 const ThreeJSHero = lazy(() => import('./components/ThreeJSHero'));
+const About = lazy(() => import('./components/About'));
+const AboutMe = lazy(() => import('./components/AboutMe'));
+const Education = lazy(() => import('./components/Education'));
+const Experience = lazy(() => import('./components/Experience'));
+const Skills = lazy(() => import('./components/Skills'));
+const Other = lazy(() => import('./components/Other'));
+const Projects = lazy(() => import('./components/Projects'));
+const Contact = lazy(() => import('./components/Contact'));
 
-// Lazy load page components
-const ResearchPage = lazy(() => import('./components/pages/ResearchPage'));
-const LeadershipPage = lazy(() => import('./components/pages/LeadershipPage'));
-const CertificationsPage = lazy(() => import('./components/pages/CertificationsPage'));
-const ServicesPage = lazy(() => import('./components/pages/ServicesPage'));
+// Import page components directly (no lazy loading)
+import ResearchPage from './components/pages/ResearchPage';
+import LeadershipPage from './components/pages/LeadershipPage';
+import CertificationsPage from './components/pages/CertificationsPage';
+import ServicesPage from './components/pages/ServicesPage';
 
 // Loading component for Suspense fallback
 const LoadingSpinner = () => (
@@ -39,7 +40,7 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 text-gray-800 dark:text-white relative overflow-x-hidden">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-gray-100 relative overflow-x-hidden transition-colors duration-300">
         <SEO />
         <ParticleBackground />
 
@@ -49,6 +50,7 @@ function App() {
             <Route path="/" element={
               <>
                 <Header />
+                <FloatingNav />
                 <motion.main
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -57,14 +59,30 @@ function App() {
                   <Suspense fallback={<LoadingSpinner />}>
                     <ThreeJSHero />
                   </Suspense>
-                  <AboutMe />
-                  <Experience />
-                  <Projects />
-                  <Education />
-                  <Skills />
-                  <Other />
-                  <About />
-                  <Contact />
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AboutMe />
+                  </Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Experience />
+                  </Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Projects />
+                  </Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Education />
+                  </Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Skills />
+                  </Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Other />
+                  </Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <About />
+                  </Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Contact />
+                  </Suspense>
                 </motion.main>
                 <Footer />
               </>
