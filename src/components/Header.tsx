@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
@@ -14,18 +15,17 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const location = useLocation();
+
   const menuItems = [
-    { label: "Home", href: "#home" },
-    { label: "About Me", href: "#aboutme" },
-    { label: "Experience", href: "#experience" },
-    { label: "Projects", href: "#projects" },
-    { label: "Education", href: "#education" },
-    { label: "Skills", href: "#skills" },
-    { label: "Research", href: "#research" },
-    { label: "Leadership", href: "#community" },
-    { label: "Certifications", href: "#certifications" },
-    { label: "Services", href: "#services" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/", isRoute: true },
+    { label: "About Me", href: "#aboutme", isRoute: false },
+    { label: "Experience", href: "#experience", isRoute: false },
+    { label: "Projects", href: "#projects", isRoute: false },
+    { label: "Education", href: "#education", isRoute: false },
+    { label: "Skills", href: "#skills", isRoute: false },
+    { label: "Other", href: "#other", isRoute: false },
+    { label: "Contact", href: "#contact", isRoute: false },
   ];
 
   return (
@@ -54,17 +54,31 @@ const Header: React.FC = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">
             {menuItems.map((item, index) => (
-              <motion.a
+              <motion.div
                 key={item.label}
-                href={item.href}
-                className="text-gray-300 hover:text-accent transition-colors duration-300"
                 whileHover={{ scale: 1.1 }}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {item.label}
-              </motion.a>
+                {item.isRoute ? (
+                  <Link
+                    to={item.href}
+                    className={`text-gray-300 hover:text-accent transition-colors duration-300 ${
+                      location.pathname === item.href ? 'text-accent' : ''
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={item.href}
+                    className="text-gray-300 hover:text-accent transition-colors duration-300"
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </motion.div>
             ))}
           </div>
 
@@ -86,14 +100,27 @@ const Header: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             {menuItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="block py-2 text-gray-300 hover:text-accent transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.label}
-              </a>
+              <div key={item.label}>
+                {item.isRoute ? (
+                  <Link
+                    to={item.href}
+                    className={`block py-2 text-gray-300 hover:text-accent transition-colors ${
+                      location.pathname === item.href ? 'text-accent' : ''
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={item.href}
+                    className="block py-2 text-gray-300 hover:text-accent transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </div>
             ))}
           </motion.div>
         )}

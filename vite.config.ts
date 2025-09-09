@@ -1,4 +1,5 @@
 // @ts-ignore - Include test config for Vitest
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -8,6 +9,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+
   // Vitest configuration (merged into Vite config for Vite >= 3.0)
   test: {
     globals: true,
@@ -30,6 +32,8 @@ export default defineConfig({
           charts: ['chart.js', 'react-chartjs-2'],
           // Separate animation library
           animations: ['framer-motion'],
+          // Separate routing library
+          router: ['react-router-dom'],
           // Vendor libraries
           vendor: ['react', 'react-dom'],
           // UI library and smaller utilities
