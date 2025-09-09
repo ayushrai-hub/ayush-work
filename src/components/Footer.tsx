@@ -281,16 +281,38 @@ const Footer: React.FC = () => {
             <p className="text-gray-500 text-xs">
               &copy; 2025 Ayush Rai. All rights reserved.
             </p>
-            <a
-              href="https://matching.turing.com/developer-resume-preview/69045f6db69910c43569fa230383aefb09b9814f2621b6"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleExternalLink('https://matching.turing.com/developer-resume-preview/69045f6db69910c43569fa230383aefb09b9814f2621b6', 'Turing Talent Network')}
-              className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
-            >
-              <span>Turing Profile</span>
-              <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
-            </a>
+            <div className="flex items-center space-x-4">
+              <a
+                href="https://matching.turing.com/developer-resume-preview/69045f6db69910c43569fa230383aefb09b9814f2621b6"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://matching.turing.com/developer-resume-preview/69045f6db69910c43569fa230383aefb09b9814f2621b6', 'Turing Talent Network')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Turing Profile</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://www.upwork.com/freelancers/~0154ec8cf0990e80bc?mp_source=share"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.upwork.com/freelancers/~0154ec8cf0990e80bc?mp_source=share', 'Upwork')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Upwork</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://www.fiverr.com/ayush_rai02?public_mode=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://www.fiverr.com/ayush_rai02?public_mode=true', 'Fiverr')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Fiverr</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+            </div>
           </div>
           <button
             onClick={scrollToTop}
