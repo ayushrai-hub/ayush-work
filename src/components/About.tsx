@@ -34,7 +34,7 @@ const About: React.FC = () => {
   ];
 
   return (
-    <section id="about" className="section-padding bg-primary-dark">
+    <section id="about" className="py-20 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -43,10 +43,11 @@ const About: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            About <span className="gradient-text">Me</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            My <span className="text-blue-600">Story</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             The Polymath's Journey
           </p>
         </motion.div>
@@ -57,27 +58,32 @@ const About: React.FC = () => {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h3 className="text-3xl font-bold mb-6 gradient-text">My Story</h3>
-            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+            <h3 className="text-3xl font-bold mb-6 text-blue-600">My Story</h3>
+            <div className="space-y-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
               <p>
                 I'm a technology enthusiast with a unique blend of technical
-                expertise and strategic thinking. Currently pursuing dual
-                degrees in Computer Science Engineering and Data Science from
-                IIT Madras, I believe in the power of interdisciplinary
-                knowledge.
+                expertise and strategic thinking. I graduated in 2024 from LNCT
+                Group of Colleges, Bhopal, and I am currently pursuing a degree
+                in Data Science at IIT Madras.
               </p>
               <p>
-                My journey spans across AI/ML development, full-stack web
-                development, data science, and community leadership. As an SDE -
-                AI Engineer at FoCDoT Technologies, I specialize in
-                Reinforcement Learning from Human Feedback (RLHF) and work with
-                industry leaders like OpenAI, ScaleAI, and Outlier.
+                In today's interconnected world and the ongoing AI revolution, I
+                believe that interdisciplinary skills and knowledge provide the
+                most important perspective for solving complex challenges. My
+                journey spans across AI/ML development, full-stack web
+                development, data science, and community leadership.
+              </p>
+              <p>
+                As an SDE - AI Engineer at FoCDoT Technologies, I specialize in
+                Reinforcement Learning from Human Feedback (RLHF) and collaborate
+                with global leaders such as OpenAI, ScaleAI, and Outlier.
               </p>
               <p>
                 What drives me is the intersection of technology and human
-                impact. Whether it's optimizing AI models, building scalable web
-                applications, or leading technical communities, I approach every
-                challenge with strategic thinking and execution excellence.
+                impact. Whether it's optimizing AI models, building scalable
+                applications, or leading technical communities, I bring a mindset
+                of strategic thinking and execution excellence to every challenge
+                I take on.
               </p>
             </div>
           </motion.div>
@@ -89,15 +95,15 @@ const About: React.FC = () => {
             className="relative"
           >
             <div className="bg-glass rounded-2xl p-8 border border-accent/20">
-              <h4 className="text-2xl font-bold mb-4 text-accent">
+              <h4 className="text-2xl font-bold mb-4 text-blue-600">
                 Personal Philosophy
               </h4>
-              <blockquote className="text-gray-300 italic text-lg leading-relaxed">
+              <blockquote className="text-gray-600 dark:text-gray-300 italic text-lg leading-relaxed">
                 "Technology should amplify human potential, not replace it. As a
                 polymath, I bridge the gap between different domains to create
                 holistic solutions that address real-world challenges."
               </blockquote>
-              <cite className="block mt-4 text-secondary font-semibold">
+              <cite className="block mt-4 text-blue-500 font-semibold">
                 - Ayush Rai
               </cite>
             </div>
@@ -109,7 +115,7 @@ const About: React.FC = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h3 className="text-3xl font-bold text-center mb-12 gradient-text">
+          <h3 className="text-3xl font-bold text-center mb-12 text-blue-600">
             Core Values & Approach
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -124,10 +130,10 @@ const About: React.FC = () => {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-secondary to-accent rounded-full mb-4">
                   <value.icon size={32} className="text-primary" />
                 </div>
-                <h4 className="text-xl font-bold mb-4 text-white">
+                <h4 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
                   {value.title}
                 </h4>
-                <p className="text-gray-400">{value.description}</p>
+                <p className="text-gray-600 dark:text-gray-300">{value.description}</p>
               </motion.div>
             ))}
           </div>

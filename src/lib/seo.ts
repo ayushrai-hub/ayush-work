@@ -10,7 +10,8 @@ export const defaultSEO: SEOMetadata = {
   title: "Ayush Rai - AI & Full-Stack Developer Portfolio",
   description: "Experienced AI/ML Engineer and Full-Stack Developer specializing in React, Python, and machine learning. Explore my projects, skills, and get in touch for your next project.",
   keywords: "AI, Machine Learning, React, Python, Full-Stack Developer, Data Science, Web Development, Portfolio, Profiles, Ayush Rai, Connect, Socials",
-  url: "https://ayushrai.dev"
+  image: "/profile-image.jpeg",
+  url: "https://ayush-me.netlify.app"
 };
 
 export const structuredData = {
@@ -19,7 +20,8 @@ export const structuredData = {
   "name": "Ayush Rai",
   "jobTitle": "AI & Full-Stack Developer",
   "description": "Experienced AI/ML Engineer and Full-Stack Developer specializing in React, Python, and machine learning",
-  "url": "https://ayushrai.dev",
+  "url": "https://ayush-me.netlify.app",
+  "image": "/profile-image.jpeg",
   "sameAs": [
     "https://github.com/ayushrai-hub",
     "https://linkedin.com/in/ayushrai02"
@@ -53,7 +55,7 @@ export const organizationStructuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Ayush Rai Portfolio",
-  "url": "https://ayushrai.dev",
-  "logo": "https://ayushrai.dev/logo.png",
+  "url": "https://ayush-me.netlify.app",
+  "logo": "/profile-image.jpeg",
   "description": "Professional portfolio of Ayush Rai - AI & Full-Stack Developer"
 };

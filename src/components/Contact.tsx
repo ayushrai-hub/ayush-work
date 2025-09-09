@@ -198,7 +198,7 @@ const Contact: React.FC = () => {
   ];
 
   return (
-    <section id="contact" className="section-padding">
+    <section id="contact" className="py-20 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -207,10 +207,11 @@ const Contact: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Let's Work <span className="gradient-text">Together</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            Let's Work <span className="text-blue-600">Together</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Ready to bring your ideas to life? Let's discuss your project and
             create something amazing together.
           </p>
@@ -522,10 +523,10 @@ const Contact: React.FC = () => {
                 <Phone size={20} className="mr-2" />
                 Call Now
               </a>
-              <button className="btn-secondary">
+              <a href="https://calendly.com/ayushrai0211" target="_blank" rel="noopener noreferrer" className="btn-secondary">
                 <Calendar size={20} className="mr-2" />
                 Schedule Call
-              </button>
+              </a>
             </div>
           </div>
         </motion.div>

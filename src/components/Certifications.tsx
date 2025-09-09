@@ -140,7 +140,7 @@ const Certifications: React.FC = () => {
   ];
 
   return (
-    <section id="certifications" className="section-padding">
+    <section id="certifications" className="py-20 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -149,10 +149,11 @@ const Certifications: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="gradient-text">Certifications</span> & Achievements
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            <span className="text-blue-600">Certifications</span> & Achievements
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Continuous Learning and Professional Development
           </p>
         </motion.div>
@@ -244,57 +245,6 @@ const Certifications: React.FC = () => {
           ))}
         </div>
 
-        {/* Achievement Timeline */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
-            Achievement Timeline
-          </h3>
-          <div className="relative max-w-4xl mx-auto">
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-secondary to-accent h-full"></div>
-
-            {["2021", "2022", "2023", "2024"].map((year, index) => (
-              <motion.div
-                key={year}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 1.0 + index * 0.1 }}
-                className={`flex items-center mb-8 ${
-                  index % 2 === 0 ? "flex-row" : "flex-row-reverse"
-                }`}
-              >
-                <div
-                  className={`w-5/12 ${
-                    index % 2 === 0 ? "text-right pr-8" : "text-left pl-8"
-                  }`}
-                >
-                  <div className="card">
-                    <h4 className="text-xl font-bold mb-2 gradient-text">
-                      {year}
-                    </h4>
-                    <p className="text-gray-400 text-sm">
-                      {year === "2021" &&
-                        "Started certification journey with Google Cloud and AWS"}
-                      {year === "2022" &&
-                        "Advanced in cybersecurity and data analysis"}
-                      {year === "2023" &&
-                        "Focused on leadership and advanced technical skills"}
-                      {year === "2024" &&
-                        "Specialized in AI/ML and continued professional development"}
-                    </p>
-                  </div>
-                </div>
-                <div className="w-2/12 flex justify-center">
-                  <div className="w-4 h-4 bg-accent rounded-full border-4 border-primary"></div>
-                </div>
-                <div className="w-5/12"></div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
 
         {/* Certification Stats */}
         <motion.div

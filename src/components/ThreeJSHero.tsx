@@ -105,9 +105,9 @@ function CameraRig() {
 const ThreeJSHero: React.FC = () => {
   return (
     <section id="home">
-      <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary">
+      <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
         {/* Background overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary-dark/95 to-primary/90 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/90 via-white/95 to-blue-50/90 dark:from-blue-900/90 dark:via-gray-900/95 dark:to-blue-900/90 z-10" />
 
         {/* Three.js Canvas */}
         <div className="absolute inset-0">
@@ -163,16 +163,16 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-6xl md:text-8xl font-bold mb-6"
+              className="text-6xl md:text-8xl font-bold mb-6 text-gray-800 dark:text-white"
             >
-              <span className="gradient-text">Ayush Rai</span>
+              <span className="text-blue-600">Ayush Rai</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
-              className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed"
+              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
             >
               AI Engineer & Full-Stack Developer
             </motion.p>
@@ -181,7 +181,7 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.1 }}
-              className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed"
+              className="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed"
             >
               Exploring the intersection of artificial intelligence, web
               technologies, and innovative problem-solving to create
@@ -217,14 +217,14 @@ const ThreeJSHero: React.FC = () => {
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="flex flex-col items-center text-gray-400"
+            className="flex flex-col items-center text-gray-500 dark:text-gray-400"
           >
             <span className="text-sm mb-2">Scroll to explore</span>
-            <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+            <div className="w-6 h-10 border-2 border-gray-500 dark:border-gray-400 rounded-full flex justify-center">
               <motion.div
                 animate={{ y: [0, 12, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                className="w-1 h-3 bg-accent rounded-full mt-2"
+                className="w-1 h-3 bg-blue-600 rounded-full mt-2"
               />
             </div>
           </motion.div>

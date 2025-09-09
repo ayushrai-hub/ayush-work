@@ -164,7 +164,7 @@ const CommunityLeadership: React.FC = () => {
         );
 
   return (
-    <section id="community" className="section-padding">
+    <section id="community" className="py-20 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -173,10 +173,11 @@ const CommunityLeadership: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="gradient-text">Community Leadership</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            <span className="text-blue-600">Community Leadership</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Building bridges between technology, education, and community impact
           </p>
         </motion.div>

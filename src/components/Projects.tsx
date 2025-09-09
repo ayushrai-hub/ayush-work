@@ -209,7 +209,7 @@ const Projects: React.FC = () => {
   ];
 
   return (
-    <section id="projects" className="section-padding bg-primary-dark">
+    <section id="projects" className="py-20 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -218,10 +218,11 @@ const Projects: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Featured <span className="gradient-text">Projects</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+            Featured <span className="text-blue-600">Projects</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Technical Excellence Across Multiple Domains
           </p>
         </motion.div>
@@ -338,11 +339,11 @@ const Projects: React.FC = () => {
           </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">15+</div>
+              <div className="text-4xl font-bold gradient-text mb-2">20+</div>
               <p className="text-gray-400">Projects Completed</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">50+</div>
+              <div className="text-4xl font-bold gradient-text mb-2">10+</div>
               <p className="text-gray-400">Happy Clients</p>
             </div>
             <div className="card text-center">

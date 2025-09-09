@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Logo from "./Logo";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,11 +17,14 @@ const Header: React.FC = () => {
 
   const menuItems = [
     { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Education", href: "#education" },
+    { label: "About Me", href: "#aboutme" },
     { label: "Experience", href: "#experience" },
-    { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
+    { label: "Education", href: "#education" },
+    { label: "Skills", href: "#skills" },
+    { label: "Research", href: "#research" },
+    { label: "Leadership", href: "#community" },
+    { label: "Certifications", href: "#certifications" },
     { label: "Services", href: "#services" },
     { label: "Contact", href: "#contact" },
   ];
@@ -39,10 +43,9 @@ const Header: React.FC = () => {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <motion.div
-            className="text-2xl font-bold gradient-text"
             whileHover={{ scale: 1.05 }}
           >
-            Ayush Rai
+            <Logo size="md" />
           </motion.div>
 
           {/* Desktop Menu */}

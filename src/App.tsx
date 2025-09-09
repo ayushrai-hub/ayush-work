@@ -1,17 +1,18 @@
-import React, { useEffect, Suspense, lazy } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import About from './components/About';
+import AboutMe from './components/AboutMe';
 import Education from './components/Education';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
 import Research from './components/Research';
 import CommunityLeadership from './components/CommunityLeadership';
 import Projects from './components/Projects';
-import Profiles from './components/Profiles';
 import Certifications from './components/Certifications';
 import Services from './components/Services';
 import Contact from './components/Contact';
+import Footer from './components/Footer';
 import ParticleBackground from './components/ParticleBackground';
 import { initGA } from './lib/analytics';
 import SEO from './components/SEO';
@@ -33,7 +34,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-primary text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 text-gray-800 dark:text-white relative overflow-x-hidden">
       <SEO />
       <ParticleBackground />
 
@@ -47,37 +48,20 @@ function App() {
         <Suspense fallback={<LoadingSpinner />}>
           <ThreeJSHero />
         </Suspense>
-        <About />
-        <Education />
+        <AboutMe />
         <Experience />
+        <Projects />
+        <Education />
         <Skills />
         <Research />
         <CommunityLeadership />
-        <Projects />
-        <Profiles />
         <Certifications />
         <Services />
+        <About />
         <Contact />
       </motion.main>
 
-      <footer className="bg-primary-dark border-t border-accent/20 py-8 text-center relative z-10">
-        <div className="container mx-auto px-4">
-          <p className="text-gray-300">
-            © 2025 Ayush Rai. All rights reserved. Built with React & TypeScript.
-          </p>
-          <div className="flex justify-center space-x-6 mt-4">
-            <a href="mailto:ayushrai0211@gmail.com" className="text-accent hover:text-secondary transition-colors">
-              Email
-            </a>
-            <a href="https://github.com/ayushrai-hub" target="_blank" rel="noopener noreferrer" className="text-accent hover:text-secondary transition-colors">
-              GitHub
-            </a>
-            <a href="https://linkedin.com/in/ayushrai02" target="_blank" rel="noopener noreferrer" className="text-accent hover:text-secondary transition-colors">
-              LinkedIn
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

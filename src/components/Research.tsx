@@ -4,7 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { Microscope, Award } from "lucide-react";
 
 const Research: React.FC = () => {
-  const [inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   const researchProjects = [
     {
@@ -74,7 +74,7 @@ const Research: React.FC = () => {
   ];
 
   return (
-    <section id="research" className="section-padding">
+    <section id="research" className="py-20 bg-white dark:bg-gray-800" ref={ref}>
       <div className="container mx-auto px-4">
         {/* Research Projects */}
         <motion.div
@@ -83,9 +83,10 @@ const Research: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center gradient-text">
-            Research Projects
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 text-center">
+            Research <span className="text-blue-600">Projects</span>
           </h2>
+          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-8"></div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {researchProjects.map((project, index) => (
@@ -144,9 +145,10 @@ const Research: React.FC = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 1.2 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center gradient-text">
-            Awards & Achievements
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 text-center">
+            Awards & <span className="text-blue-600">Achievements</span>
           </h2>
+          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-8"></div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {achievements.map((achievement, index) => (
