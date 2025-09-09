@@ -48,7 +48,7 @@ export const AboutMe: React.FC = () => {
   };
 
   return (
-    <section id="about" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+    <section id="aboutme" className="py-12 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
       <div className="container mx-auto px-6">
         <motion.div
           ref={ref}
@@ -58,14 +58,14 @@ export const AboutMe: React.FC = () => {
           className="max-w-6xl mx-auto"
         >
           {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center mb-16">
+          <motion.div variants={itemVariants} className="text-center mb-8">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-4">
               About <span className="text-blue-600">Me</span>
             </h2>
             <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full"></div>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
             {/* Profile Image Section */}
             <motion.div variants={itemVariants} className="relative">
               <div className="relative group">

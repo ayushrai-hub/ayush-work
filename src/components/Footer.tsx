@@ -108,18 +108,18 @@ const Footer: React.FC = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Main Footer Content */}
-        <div className="py-16">
+        <div className="py-10">
           {/* Primary Socials */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
-            <h2 className="text-3xl font-bold mb-6">
+            <h2 className="text-2xl font-bold mb-4">
               Let's <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Connect</span>
             </h2>
-            <div className="flex justify-center space-x-8 mb-8">
+            <div className="flex justify-center space-x-6 mb-6">
               {primarySocials.map((social, index) => {
                 const IconComponent = social.icon;
                 return (
@@ -129,14 +129,14 @@ const Footer: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleExternalLink(social.url, social.name)}
-                    className={`p-4 bg-gray-800 rounded-full transition-all duration-300 ${social.color} hover:scale-110 hover:shadow-lg`}
+                    className={`p-3 bg-gray-800 rounded-full transition-all duration-300 ${social.color} hover:scale-110 hover:shadow-lg`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    <IconComponent size={24} />
+                    <IconComponent size={20} />
                   </motion.a>
                 );
               })}
@@ -144,7 +144,7 @@ const Footer: React.FC = () => {
           </motion.div>
 
           {/* Footer Sections Grid */}
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6 mb-10">
             {/* Branding & Quick Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -152,18 +152,21 @@ const Footer: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="lg:col-span-1"
             >
-              <h3 className="text-2xl font-bold mb-4">Ayush Rai</h3>
-              <p className="text-gray-400 mb-6 text-sm leading-relaxed">
+              <h3 className="text-xl font-bold mb-3">Ayush Rai</h3>
+              <p className="text-gray-400 text-xs mb-3 md:mb-0">
                 Polymath | AI Engineer | Creative Technologist
               </p>
               
-              <h4 className="font-semibold mb-3 text-gray-300">Quick Links</h4>
+              <h4 className="font-semibold mb-2 text-gray-300 text-sm">Quick Links</h4>
               <div className="space-y-2">
                 {quickLinks.map((link) => (
                   <a
                     key={link.name}
                     href={link.href}
-                    className="block text-gray-400 hover:text-white transition-colors text-sm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors text-xs"
+                    onClick={() => handleExternalLink(link.href, link.name)}
                   >
                     {link.name}
                   </a>
@@ -183,10 +186,10 @@ const Footer: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
                 >
-                  <h4 className="font-semibold mb-4 text-gray-300 capitalize">
+                  <h4 className="font-semibold mb-3 text-gray-300 text-sm capitalize">
                     {domainName.replace('-', ' ')}
                   </h4>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {domainProfiles.slice(0, 6).map((profile) => {
                       const IconComponent = getIcon(profile.icon);
                       return (
@@ -196,10 +199,10 @@ const Footer: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={() => handleExternalLink(profile.url, profile.name)}
-                          className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors group"
+                          className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group text-xs"
                         >
-                          <IconComponent size={16} className="group-hover:scale-110 transition-transform" />
-                          <span className="text-sm">{profile.name}</span>
+                          <IconComponent size={14} className="flex-shrink-0" />
+                          <span className="group-hover:underline truncate">{profile.name}</span>
                           <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
                       );
@@ -257,24 +260,18 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Footer Bottom */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="border-t border-gray-700 py-8 flex flex-col md:flex-row justify-between items-center"
-        >
-          <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2025 Ayush Rai. All rights reserved.
+        <div className="border-t border-gray-800 py-6">
+          <p className="text-gray-500 text-xs">
+            &copy; 2025 Ayush Rai. All rights reserved.
           </p>
-          
           <button
             onClick={scrollToTop}
-            className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors group"
+            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 text-sm"
+            aria-label="Back to top"
           >
-            <ArrowUp size={16} className="group-hover:-translate-y-1 transition-transform" />
-            <span className="text-sm">Back to Top</span>
+            <ArrowUp size={16} />
           </button>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

@@ -74,21 +74,22 @@ const Research: React.FC = () => {
   ];
 
   return (
-    <section id="research" className="py-20 bg-white dark:bg-gray-800" ref={ref}>
+    <section id="research" className="py-12 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
       <div className="container mx-auto px-4">
         {/* Research Projects */}
         <motion.div
+          ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="mb-16"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 text-center">
             Research <span className="text-blue-600">Projects</span>
           </h2>
           <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-8"></div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {researchProjects.map((project, index) => (
               <motion.div
                 key={index}

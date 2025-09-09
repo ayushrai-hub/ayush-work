@@ -55,14 +55,14 @@ const Education: React.FC = () => {
   ];
 
   return (
-    <section id="education" className="py-20 bg-white dark:bg-gray-800">
+    <section id="education" className="py-12 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
             <span className="text-blue-600">Education</span>
@@ -83,7 +83,7 @@ const Education: React.FC = () => {
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className={`relative mb-16 ${
+              className={`relative mb-8 ${
                 index % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-right"
               } 
                          ${index % 2 === 1 ? "md:pl-8" : ""}`}
@@ -123,7 +123,7 @@ const Education: React.FC = () => {
                   {edu.institution}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-4 mb-4 text-gray-400">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 text-gray-400">
                   <div className="flex items-center">
                     <Calendar size={16} className="mr-2" />
                     {edu.duration}

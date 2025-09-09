@@ -140,14 +140,14 @@ const Certifications: React.FC = () => {
   ];
 
   return (
-    <section id="certifications" className="py-20 bg-white dark:bg-gray-800">
+    <section id="certifications" className="py-12 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
             <span className="text-blue-600">Certifications</span> & Achievements
@@ -163,7 +163,7 @@ const Certifications: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-16"
+          className="mb-8"
         >
           <h3 className="text-2xl font-bold text-center mb-8 gradient-text">
             Certification Categories
@@ -184,7 +184,7 @@ const Certifications: React.FC = () => {
         </motion.div>
 
         {/* Certifications Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {certifications.map((cert, index) => (
             <motion.div
               key={index}

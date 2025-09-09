@@ -164,14 +164,14 @@ const CommunityLeadership: React.FC = () => {
         );
 
   return (
-    <section id="community" className="py-20 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
+    <section id="community" className="py-12 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
             <span className="text-blue-600">Community Leadership</span>
@@ -212,7 +212,7 @@ const CommunityLeadership: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="grid md:grid-cols-2 gap-8 mb-16"
+          className="grid md:grid-cols-2 gap-4 mb-8"
         >
           {filteredActivities.map((activity, index) => (
             <motion.div

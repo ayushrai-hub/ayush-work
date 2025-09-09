@@ -59,14 +59,14 @@ const Skills: React.FC = () => {
   ];
 
   return (
-    <section id="skills" className="py-20 bg-white dark:bg-gray-800">
+    <section id="skills" className="py-12 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
             Multi-Disciplinary <span className="text-blue-600">Skills</span>
@@ -77,8 +77,8 @@ const Skills: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Horizontal Skills Layout */}
-        <div className="space-y-6 mb-16">
+        {/* Vertical Grid Skills Layout */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
@@ -108,7 +108,7 @@ const Skills: React.FC = () => {
                       duration: 0.5,
                       delay: categoryIndex * 0.1 + skillIndex * 0.05,
                     }}
-                    className="px-3 py-1 bg-primary rounded-full text-sm text-gray-300 border border-accent/10 hover:border-accent/30 transition-colors"
+                    className="px-2 py-1 bg-primary rounded-full text-xs text-gray-300 border border-accent/10 hover:border-accent/30 transition-colors"
                   >
                     {skill}
                   </motion.div>

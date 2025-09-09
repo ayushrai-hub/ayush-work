@@ -105,7 +105,7 @@ function CameraRig() {
 const ThreeJSHero: React.FC = () => {
   return (
     <section id="home">
-      <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+      <div className="relative w-full h-[70vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
         {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50/90 via-white/95 to-blue-50/90 dark:from-blue-900/90 dark:via-gray-900/95 dark:to-blue-900/90 z-10" />
 
@@ -152,7 +152,7 @@ const ThreeJSHero: React.FC = () => {
         </div>
 
         {/* Content overlay */}
-        <div className="relative z-20 flex items-center justify-center min-h-screen px-4">
+        <div className="relative z-20 flex items-center justify-center h-full px-4">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}

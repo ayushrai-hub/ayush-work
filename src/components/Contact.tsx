@@ -198,37 +198,37 @@ const Contact: React.FC = () => {
   ];
 
   return (
-    <section id="contact" className="py-20 bg-white dark:bg-gray-800">
+    <section id="contact" className="py-12 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-10"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-3">
             Let's Work <span className="text-blue-600">Together</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-16 h-1 bg-blue-600 mx-auto rounded-full mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Ready to bring your ideas to life? Let's discuss your project and
             create something amazing together.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-8">
           {/* Contact Information */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h3 className="text-3xl font-bold mb-8 gradient-text">
+            <h3 className="text-2xl font-bold mb-6 gradient-text">
               Get In Touch
             </h3>
 
-            <div className="space-y-6 mb-8">
+            <div className="space-y-4 mb-6">
               {contactInfo.map((info, index) => (
                 <motion.div
                   key={index}
@@ -237,7 +237,7 @@ const Contact: React.FC = () => {
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                   className="flex items-center group"
                 >
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-secondary to-accent rounded-lg mr-4 group-hover:scale-110 transition-transform">
+                  <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-secondary to-accent rounded-lg mr-3 group-hover:scale-110 transition-transform">
                     <info.icon size={24} className="text-primary" />
                   </div>
                   <div>
@@ -258,14 +258,14 @@ const Contact: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="bg-glass rounded-2xl p-6 border border-accent/20 mb-8"
+              className="bg-glass rounded-xl p-4 border border-accent/20 mb-6"
             >
-              <h4 className="text-xl font-bold mb-4 text-accent">
+              <h4 className="text-lg font-bold mb-3 text-accent">
                 Current Availability
               </h4>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-center">
-                  <span className="w-3 h-3 bg-green-400 rounded-full mr-3"></span>
+                  <span className="w-2.5 h-2.5 bg-green-400 rounded-full mr-2"></span>
                   <span className="text-green-400">
                     Available for new projects
                   </span>
@@ -289,17 +289,17 @@ const Contact: React.FC = () => {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 1.0 }}
             >
-              <h4 className="text-xl font-bold mb-4 text-white">
+              <h4 className="text-lg font-bold mb-3 text-white">
                 Connect With Me
               </h4>
-              <div className="flex space-x-4">
+              <div className="flex space-x-3">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={index}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center w-12 h-12 bg-primary-dark border border-accent/20 rounded-lg hover:border-accent hover:bg-accent/10 transition-all group"
+                    className="flex items-center justify-center w-10 h-10 bg-primary-dark border border-accent/20 rounded-lg hover:border-accent hover:bg-accent/10 transition-all group"
                     whileHover={{ scale: 1.1 }}
                     title={social.name}
                   >
@@ -320,20 +320,20 @@ const Contact: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <div className="card">
-              <h3 className="text-2xl font-bold mb-6 text-white">
+              <h3 className="text-xl font-bold mb-4 text-white">
                 Send Me a Message
               </h3>
               <form
                 action="https://formspree.io/f/mandaogr"
                 method="POST"
                 onSubmit={handleSubmit}
-                className="space-y-6"
+                className="space-y-4"
               >
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-gray-300 font-medium mb-2"
+                      className="block text-gray-300 text-sm font-medium mb-1.5"
                     >
                       Your Name
                     </label>
@@ -344,14 +344,14 @@ const Contact: React.FC = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       onFocus={handleFormFocus}
-                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white"
+                      className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
                       required
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-gray-300 font-medium mb-2"
+                      className="block text-gray-300 text-sm font-medium mb-1.5"
                     >
                       Email Address
                     </label>
@@ -361,7 +361,7 @@ const Contact: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white"
+                      className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
                       required
                     />
                   </div>
@@ -370,7 +370,7 @@ const Contact: React.FC = () => {
                 <div>
                   <label
                     htmlFor="service"
-                    className="block text-gray-300 font-medium mb-2"
+                    className="block text-gray-300 text-sm font-medium mb-1.5"
                   >
                     Service Interest
                   </label>
@@ -379,7 +379,7 @@ const Contact: React.FC = () => {
                     name="service"
                     value={formData.service}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white"
+                    className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
                   >
                     <option value="">Select a service</option>
                     <option value="ai-ml">AI & Machine Learning</option>
@@ -394,7 +394,7 @@ const Contact: React.FC = () => {
                 <div>
                   <label
                     htmlFor="subject"
-                    className="block text-gray-300 font-medium mb-2"
+                    className="block text-gray-300 text-sm font-medium mb-1.5"
                   >
                     Subject
                   </label>
@@ -404,7 +404,7 @@ const Contact: React.FC = () => {
                     name="subject"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white"
+                    className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm"
                     required
                   />
                 </div>
@@ -412,7 +412,7 @@ const Contact: React.FC = () => {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block text-gray-300 font-medium mb-2"
+                    className="block text-gray-300 text-sm font-medium mb-1.5"
                   >
                     Message
                   </label>
@@ -421,8 +421,8 @@ const Contact: React.FC = () => {
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
-                    rows={5}
-                    className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white resize-none"
+                    rows={4}
+                    className="w-full px-3 py-2 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-sm resize-none"
                     required
                   ></textarea>
                 </div>
@@ -473,16 +473,17 @@ const Contact: React.FC = () => {
                   </motion.div>
                 )}
 
+                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center px-8 py-3 bg-gradient-to-r from-secondary to-accent text-primary font-semibold rounded-lg hover:shadow-lg transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group"
                 >
                   {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary mr-2"></div>
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Sending...
-                    </>
+                    </div>
                   ) : (
                     <>
                       <Send
@@ -503,28 +504,28 @@ const Contact: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="text-center mt-16"
+          className="text-center mt-10"
         >
-          <div className="bg-glass rounded-2xl p-8 border border-accent/20">
-            <h3 className="text-3xl font-bold mb-4 gradient-text">
+          <div className="bg-glass rounded-xl p-6 border border-accent/20">
+            <h3 className="text-2xl font-bold mb-3 gradient-text">
               Ready to Start Your Project?
             </h3>
-            <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
+            <p className="text-gray-400 text-sm mb-5 max-w-2xl mx-auto">
               I'm here to help you turn your ideas into reality. Whether you
               need AI solutions, web development, or strategic consultation,
               let's discuss how we can work together.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <a href="mailto:ayushrai0211@gmail.com" className="btn-primary">
-                <Mail size={20} className="mr-2" />
+            <div className="flex flex-wrap justify-center gap-3">
+              <a href="mailto:ayushrai0211@gmail.com" className="btn-primary text-sm px-4 py-2">
+                <Mail size={16} className="mr-1.5" />
                 Email Me
               </a>
-              <a href="tel:+917440567944" className="btn-secondary">
-                <Phone size={20} className="mr-2" />
+              <a href="tel:+917440567944" className="btn-secondary text-sm px-4 py-2">
+                <Phone size={16} className="mr-1.5" />
                 Call Now
               </a>
-              <a href="https://calendly.com/ayushrai0211" target="_blank" rel="noopener noreferrer" className="btn-secondary">
-                <Calendar size={20} className="mr-2" />
+              <a href="https://calendly.com/ayushrai0211" target="_blank" rel="noopener noreferrer" className="btn-secondary text-sm px-4 py-2">
+                <Calendar size={16} className="mr-1.5" />
                 Schedule Call
               </a>
             </div>

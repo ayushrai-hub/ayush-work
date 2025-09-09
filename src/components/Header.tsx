@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import Logo from "./Logo";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +44,11 @@ const Header: React.FC = () => {
           <motion.div
             whileHover={{ scale: 1.05 }}
           >
-            <Logo size="md" />
+            <img 
+              src="/profile-image.jpeg" 
+              alt="Ayush Rai" 
+              className="w-10 h-10 rounded-full object-cover border-2 border-accent"
+            />
           </motion.div>
 
           {/* Desktop Menu */}
