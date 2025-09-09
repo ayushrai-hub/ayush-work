@@ -90,6 +90,15 @@ export const profiles: Profile[] = [
     description: 'View my participation in coding competitions',
     domain: 'development'
   },
+  {
+    id: 'geeksforgeeks',
+    name: 'GeeksforGeeks',
+    url: 'https://www.geeksforgeeks.org/user/ayushrai0211/',
+    icon: 'code',
+    category: 'Coding Practice',
+    description: 'Check out my coding solutions and articles',
+    domain: 'development'
+  },
 
   // Data Science & Analytics
   {
@@ -182,10 +191,19 @@ export const profiles: Profile[] = [
   {
     id: 'upwork',
     name: 'Upwork',
-    url: 'https://upwork.com/freelancers/ayushrai',
+    url: 'https://www.upwork.com/freelancers/~0154ec8cf0990e80bc?mp_source=share',
     icon: 'briefcase',
     category: 'Freelance',
     description: 'Hire me for development projects',
+    domain: 'professional'
+  },
+  {
+    id: 'fiverr',
+    name: 'Fiverr',
+    url: 'https://www.fiverr.com/ayush_rai02?public_mode=true',
+    icon: 'briefcase',
+    category: 'Freelance',
+    description: 'Find me for creative and development services',
     domain: 'professional'
   },
 

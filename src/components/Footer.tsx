@@ -277,9 +277,21 @@ const Footer: React.FC = () => {
 
         {/* Footer Bottom */}
         <div className="border-t border-gray-800 py-6">
-          <p className="text-gray-500 text-xs">
-            &copy; 2025 Ayush Rai. All rights reserved.
-          </p>
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+            <p className="text-gray-500 text-xs">
+              &copy; 2025 Ayush Rai. All rights reserved.
+            </p>
+            <a
+              href="https://matching.turing.com/developer-resume-preview/69045f6db69910c43569fa230383aefb09b9814f2621b6"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleExternalLink('https://matching.turing.com/developer-resume-preview/69045f6db69910c43569fa230383aefb09b9814f2621b6', 'Turing Talent Network')}
+              className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+            >
+              <span>Turing Profile</span>
+              <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+            </a>
+          </div>
           <button
             onClick={scrollToTop}
             className="fixed bottom-6 right-6 bg-secondary hover:bg-secondary-600 text-white p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 text-sm"
