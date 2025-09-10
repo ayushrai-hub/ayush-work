@@ -86,13 +86,13 @@ const Contact: React.FC = () => {
 
   const submitForm = async () => {
     try {
-      // Prepare form data for Formspree (exclude empty service field if not selected)
+      // Prepare form data for Formspree
       const formDataToSend = {
         name: formData.name,
         email: formData.email,
         subject: formData.subject,
         message: formData.message,
-        ...(formData.service && { service: formData.service }), // Only include service if selected
+        service: formData.service,
       };
 
       const response = await fetch("https://formspree.io/f/mandaogr", {
@@ -124,6 +124,9 @@ const Contact: React.FC = () => {
         }
       } else if (response.status === 429) {
         setSubmitStatus({ type: "error", message: "Too many requests. Please try again later." });
+        trackContactForm("error");
+      } else if (response.status === 400) {
+        setSubmitStatus({ type: "error", message: "Failed to send message (400). Please try again." });
         trackContactForm("error");
       } else {
         setSubmitStatus({ type: "error", message: `Failed to send message (${response.status}). Please try again.` });
@@ -325,8 +328,6 @@ const Contact: React.FC = () => {
                 Send Me a Message
               </h3>
               <form
-                action="https://formspree.io/f/mandaogr"
-                method="POST"
                 onSubmit={handleSubmit}
                 className="space-y-4"
               >
@@ -346,7 +347,6 @@ const Contact: React.FC = () => {
                       onChange={handleInputChange}
                       onFocus={handleFormFocus}
                       className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
-                      required
                       autoComplete="name"
                     />
                   </div>
@@ -364,7 +364,6 @@ const Contact: React.FC = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
-                      required
                       autoComplete="email"
                     />
                   </div>
@@ -405,7 +404,6 @@ const Contact: React.FC = () => {
                       value={formData.subject}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
-                      required
                       autoComplete="subject"
                     />
                   </div>
@@ -423,7 +421,6 @@ const Contact: React.FC = () => {
                       onChange={handleInputChange}
                       rows={5}
                       className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base resize-none touch-target"
-                      required
                       autoComplete="message"
                     ></textarea>
                   </div>

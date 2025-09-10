@@ -84,6 +84,7 @@ const Footer: React.FC = () => {
       database: Database,
       robot: Bot,
       image: Palette,
+      palette: Palette,
       droplet: Droplets,
       'book-open': FileText,
       'edit-3': Edit,
@@ -352,6 +353,16 @@ const Footer: React.FC = () => {
                 className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
               >
                 <span>Freelancer</span>
+                <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
+              </a>
+              <a
+                href="https://arc.dev/@ayushrai188327"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleExternalLink('https://arc.dev/@ayushrai188327', 'Arc.dev')}
+                className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-1 group"
+              >
+                <span>Arc.dev</span>
                 <ExternalLink size={12} className="group-hover:translate-x-0.5 transition-transform" />
               </a>
               <a

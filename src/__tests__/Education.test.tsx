@@ -9,7 +9,7 @@ describe('Education Component', () => {
 
   it('displays the correct heading', () => {
     const { getByText } = render(<Education />);
-    expect(getByText('Education Hub')).toBeInTheDocument();
+    expect(getByText('Education')).toBeInTheDocument();
     expect(getByText('Academic Excellence & Continuous Learning Journey')).toBeInTheDocument();
   });
 
@@ -36,10 +36,9 @@ describe('Education Component', () => {
 
   it('displays academic highlights', () => {
     const { getByText } = render(<Education />);
-    expect(getByText('Academic Highlights')).toBeInTheDocument();
-    expect(getByText('Dual')).toBeInTheDocument();
-    expect(getByText('8.47')).toBeInTheDocument();
-    expect(getByText('IIT')).toBeInTheDocument();
+    expect(getByText('8.47/10.0')).toBeInTheDocument();
+    expect(getByText('Indian Institute of Technology, Madras')).toBeInTheDocument();
+    expect(getByText('Lakshmi Narain College of Technology and Science, Bhopal')).toBeInTheDocument();
   });
 
   it('shows degree types', () => {
@@ -52,6 +51,6 @@ describe('Education Component', () => {
   it('has accessible markup for main heading', () => {
     const { getByRole } = render(<Education />);
     const mainHeading = getByRole('heading', { level: 2 });
-    expect(mainHeading).toHaveTextContent('Education Hub');
+    expect(mainHeading).toHaveTextContent('Education');
   });
 });

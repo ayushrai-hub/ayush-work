@@ -140,6 +140,15 @@ export const profiles: Profile[] = [
     domain: 'design'
   },
   {
+    id: 'designcrowd',
+    name: 'DesignCrowd',
+    url: 'https://www.designcrowd.com/designer/1663180/ayushrai02/about',
+    icon: 'palette',
+    category: 'Design Marketplace',
+    description: 'Explore my design services and completed projects',
+    domain: 'design'
+  },
+  {
     id: 'dribbble',
     name: 'Dribbble',
     url: 'https://dribbble.com/ayushrai',
