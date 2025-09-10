@@ -105,14 +105,20 @@ const Header: React.FC = () => {
                     <ChevronDown className={`ml-1 transform transition-transform ${workDropdownOpen ? 'rotate-180' : ''}`} size={16} />
                   </button>
                 ) : item.isRoute ? (
-                  <Link
-                    to={item.href}
+                  <button
+                    onClick={() => {
+                      if (item.href === '/' && location.pathname !== '/') {
+                        navigate('/');
+                      } else if (item.href !== '/') {
+                        navigate(item.href);
+                      }
+                    }}
                     className={`text-gray-700 dark:text-gray-300 hover:text-accent transition-colors duration-300 ${
                       location.pathname === item.href ? 'text-accent' : ''
                     }`}
                   >
                     {item.label}
-                  </Link>
+                  </button>
                 ) : (
                   <button
                     onClick={() => handleSectionNavigation(item.href.substring(1))}
@@ -158,15 +164,21 @@ const Header: React.FC = () => {
             {menuItems.map((item) => (
               <div key={item.label}>
                 {item.isRoute ? (
-                  <Link
-                    to={item.href}
-                    className={`block py-2 text-gray-700 dark:text-gray-300 hover:text-accent transition-colors ${
+                  <button
+                    onClick={() => {
+                      if (item.href === '/' && location.pathname !== '/') {
+                        navigate('/');
+                      } else if (item.href !== '/') {
+                        navigate(item.href);
+                      }
+                      setIsMenuOpen(false);
+                    }}
+                    className={`block py-2 text-gray-700 dark:text-gray-300 hover:text-accent transition-colors text-left w-full ${
                       location.pathname === item.href ? 'text-accent' : ''
                     }`}
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.label}
-                  </Link>
+                  </button>
                 ) : item.isDropdown ? (
                   <div>
                     <button

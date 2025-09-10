@@ -132,7 +132,7 @@ vi.mock("react-helmet-async", () => ({
 
 // Mock lucide-react icons with partial mock using importOriginal
 vi.mock('lucide-react', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as any;
   const createIconMock = (name: string) => {
     return ({ className, ...props }: { className?: string; [key: string]: any }) => {
       const testId = `${name.toLowerCase()}-icon`;
@@ -144,10 +144,8 @@ vi.mock('lucide-react', async (importOriginal) => {
     };
   };
 
-  // Return all actual exports plus mocked versions of the icons we use
   return {
-    ...(actual as any),
-    // Navigation & UI
+    ...actual,
     Menu: createIconMock('Menu'),
     X: createIconMock('X'),
     ChevronDown: createIconMock('ChevronDown'),
@@ -156,8 +154,6 @@ vi.mock('lucide-react', async (importOriginal) => {
     ExternalLink: createIconMock('ExternalLink'),
     Search: createIconMock('Search'),
     Filter: createIconMock('Filter'),
-
-    // Social & Contact
     Github: createIconMock('Github'),
     Linkedin: createIconMock('Linkedin'),
     Mail: createIconMock('Mail'),
@@ -165,16 +161,12 @@ vi.mock('lucide-react', async (importOriginal) => {
     Sun: createIconMock('Sun'),
     Moon: createIconMock('Moon'),
     Monitor: createIconMock('Monitor'),
-
-    // Content & Education
     GraduationCap: createIconMock('GraduationCap'),
     BookOpen: createIconMock('BookOpen'),
     Award: createIconMock('Award'),
     Calendar: createIconMock('Calendar'),
     CheckCircle: createIconMock('CheckCircle'),
     Microscope: createIconMock('Microscope'),
-
-    // Skills & Tech
     Code: createIconMock('Code'),
     Brain: createIconMock('Brain'),
     Database: createIconMock('Database'),
@@ -188,8 +180,6 @@ vi.mock('lucide-react', async (importOriginal) => {
     Heart: createIconMock('Heart'),
     Palette: createIconMock('Palette'),
     Sparkles: createIconMock('Sparkles'),
-
-    // Community & Leadership
     Mic: createIconMock('Mic'),
     Target: createIconMock('Target'),
     Zap: createIconMock('Zap'),

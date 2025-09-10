@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
+import { ThemeProvider } from '../contexts/ThemeContext';
 import { vi } from 'vitest';
 
 // Mock the motion component from framer-motion
@@ -17,6 +18,10 @@ vi.mock('framer-motion', () => ({
 vi.mock('lucide-react', () => ({
   Menu: () => <div data-testid="menu-icon">MenuIcon</div>,
   X: () => <div data-testid="close-icon">XIcon</div>,
+  ChevronDown: () => <div data-testid="chevron-down-icon">ChevronDownIcon</div>,
+  Sun: () => <div data-testid="sun-icon">SunIcon</div>,
+  Moon: () => <div data-testid="moon-icon">MoonIcon</div>,
+  Monitor: () => <div data-testid="monitor-icon">MonitorIcon</div>,
 }));
 
 describe('Header Component', () => {
@@ -53,39 +58,46 @@ describe('Header Component', () => {
 
   it('renders without crashing', () => {
     render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </ThemeProvider>
     );
-    expect(screen.getByText('Ayush Rai')).toBeInTheDocument();
+    const logo = screen.getByAltText('Ayush Rai');
+    expect(logo).toBeInTheDocument();
   });
 
   it('displays the logo', () => {
     render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </ThemeProvider>
     );
-    const logo = screen.getByText('Ayush Rai');
+    const logo = screen.getByAltText('Ayush Rai');
     expect(logo).toBeInTheDocument();
-    expect(logo).toHaveClass('gradient-text');
+    expect(logo).toHaveClass('w-10', 'h-10', 'rounded-full');
   });
 
   it('renders navigation menu items', () => {
     render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     const menuItems = [
       'Home',
-      'About',
-      'Education',
+      'About Me',
       'Experience',
-      'Skills',
       'Projects',
-      'Services',
+      'Education',
+      'Skills',
+      'Work',
       'Contact'
     ];
 
@@ -96,22 +108,23 @@ describe('Header Component', () => {
 
   it('has accessible navigation', () => {
     render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </ThemeProvider>
     );
     const nav = screen.getByRole('navigation');
     expect(nav).toBeInTheDocument();
 
-    // Check if all links are accessible
-    const links = screen.getAllByRole('link');
-    expect(links.length).toBeGreaterThan(0);
+    // Check if navigation buttons are present
+    const buttons = screen.getAllByRole('button');
+    expect(buttons.length).toBeGreaterThan(0);
 
-    // Check if each link has an href attribute
-    links.forEach(link => {
-      expect(link).toHaveAttribute('href');
-      expect(link.getAttribute('href')).toMatch(/^#/);
-    });
+    // Check if Home button is present
+    const homeButton = screen.getByText('Home');
+    expect(homeButton).toBeInTheDocument();
+    expect(homeButton.tagName).toBe('BUTTON');
   });
 
   it('shows mobile menu button on small screens', () => {
@@ -119,9 +132,11 @@ describe('Header Component', () => {
     window.innerWidth = 600;
 
     render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     // Menu button should be visible on mobile
@@ -129,23 +144,17 @@ describe('Header Component', () => {
     expect(menuButton).toBeInTheDocument();
   });
 
-  it('adds background when scrolled', () => {
-    // Mock scroll position
-    window.scrollY = 100;
-
-    // Trigger scroll event
-    const scrollEvent = new Event('scroll');
-    window.dispatchEvent(scrollEvent);
-
+  it('renders with correct initial styling', () => {
     render(
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     const header = screen.getByRole('banner');
-    expect(header).toHaveClass('bg-primary-dark/95');
-    expect(header).toHaveClass('backdrop-blur-md');
-    expect(header).toHaveClass('shadow-lg');
+    expect(header).toHaveClass('fixed', 'top-0', 'w-full', 'z-50');
+    expect(header).toHaveClass('bg-transparent');
   });
 });

@@ -25,13 +25,13 @@ describe('Skills Component', () => {
   });
 
   it('renders skill categories', () => {
-    const { getAllByText } = render(<Skills />);
-    expect(getAllByText('AI & Machine Learning')).toHaveLength(2); // icon and heading
-    expect(getAllByText('Web Development')).toHaveLength(2);
-    expect(getAllByText('Data Science')).toHaveLength(2);
-    expect(getAllByText('Cloud & DevOps')).toHaveLength(2);
-    expect(getAllByText('Leadership')).toHaveLength(2);
-    expect(getAllByText('Creative & Strategic')).toHaveLength(2);
+    const { getByText } = render(<Skills />);
+    expect(getByText('AI & ML')).toBeInTheDocument();
+    expect(getByText('Web Dev')).toBeInTheDocument();
+    expect(getByText('Data Science')).toBeInTheDocument();
+    expect(getByText('Cloud & DevOps')).toBeInTheDocument();
+    expect(getByText('Leadership')).toBeInTheDocument();
+    expect(getByText('Creative')).toBeInTheDocument();
   });
 
   it('displays individual skills', () => {
@@ -39,8 +39,8 @@ describe('Skills Component', () => {
     expect(getByText('Python')).toBeInTheDocument();
     expect(getByText('React')).toBeInTheDocument();
     expect(getByText('SQL')).toBeInTheDocument();
-    expect(getByText('Git/GitHub')).toBeInTheDocument();
-    expect(getByText('Team Management')).toBeInTheDocument();
+    expect(getByText('Git')).toBeInTheDocument();
+    expect(getByText('Team Mgmt')).toBeInTheDocument();
     expect(getByText('Problem Solving')).toBeInTheDocument();
   });
 

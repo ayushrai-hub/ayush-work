@@ -9,17 +9,17 @@ const Skills: React.FC = () => {
   const skillCategories = [
     {
       icon: Brain,
-      title: "AI & Machine Learning",
+      title: "AI & ML",
       skills: [
-        "Python", "RLHF", "LLMs", "PyTorch", "Prompt Engineering"
+        "Python", "LLMs", "PyTorch", "Prompt Engineering"
       ],
       color: "from-accent to-secondary",
     },
     {
       icon: Code,
-      title: "Web Development",
+      title: "Web Dev",
       skills: [
-        "React", "TypeScript", "Node.js", "JavaScript", "HTML/CSS", "REST APIs"
+        "React", "TypeScript", "Node.js", "JavaScript"
       ],
       color: "from-secondary to-tertiary",
     },
@@ -27,7 +27,7 @@ const Skills: React.FC = () => {
       icon: Database,
       title: "Data Science",
       skills: [
-        "SQL", "Pandas", "NumPy", "Data Visualization", "Statistics", "Tableau"
+        "SQL", "Pandas", "NumPy", "Tableau"
       ],
       color: "from-tertiary to-accent",
     },
@@ -35,7 +35,7 @@ const Skills: React.FC = () => {
       icon: Cloud,
       title: "Cloud & DevOps",
       skills: [
-        "AWS", "Git/GitHub", "Docker", "CI/CD", "Linux"
+        "AWS", "Docker", "Git", "CI/CD"
       ],
       color: "from-accent to-secondary",
     },
@@ -43,55 +43,55 @@ const Skills: React.FC = () => {
       icon: Users,
       title: "Leadership",
       skills: [
-        "Team Management", "Project Management", "Community Building", "Public Speaking", "Mentoring", "Strategic Planning"
+        "Team Mgmt", "Project Mgmt", "Mentoring", "Strategy"
       ],
       color: "from-secondary to-tertiary",
     },
     {
       icon: Lightbulb,
-      title: "Creative & Strategic",
+      title: "Creative",
       skills: [
-        "Problem Solving", "Innovation", "Content Creation", "Design Thinking", "Business Strategy", "Communication"
+        "Problem Solving", "Innovation", "Design Thinking", "Communication"
       ],
       color: "from-tertiary to-accent",
     },
   ];
 
   return (
-    <section id="skills" className="py-20 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
+    <section id="skills" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             Multi-Disciplinary <span className="text-secondary dark:text-secondary-400">Skills</span>
           </h2>
-          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-16 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-4"></div>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Technical Expertise Across Multiple Domains
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * categoryIndex }}
-              className="group bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
-              <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${category.color}`}>
-                <category.icon size={28} className="text-white" />
+              <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3 bg-gradient-to-r ${category.color}`}>
+                <category.icon size={20} className="text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+              <h3 className="text-lg font-bold mb-3 text-gray-800 dark:text-white">
                 {category.title}
               </h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {category.skills.map((skill, skillIndex) => (
                   <motion.span
                     key={skillIndex}
@@ -101,7 +101,7 @@ const Skills: React.FC = () => {
                       duration: 0.3,
                       delay: 0.1 * categoryIndex + 0.03 * skillIndex,
                     }}
-                    className="px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    className="px-2 py-1 bg-gray-50 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                   >
                     {skill}
                   </motion.span>
