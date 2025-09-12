@@ -12,6 +12,12 @@ import { motion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 import * as THREE from "three";
 
+const headlines = [
+  "SDE - AI Engineer | Generative AI Specialist",
+  "Full-Stack Developer | Data Science Enthusiast",
+  "Product Builder | Lifelong learner",
+];
+
 // Floating geometric shapes component
 function FloatingShapes() {
   const groupRef = useRef<THREE.Group>(null);
@@ -104,6 +110,15 @@ function CameraRig() {
 }
 
 const ThreeJSHero: React.FC = () => {
+  const [currentHeadline, setCurrentHeadline] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentHeadline((prev) => (prev + 1) % headlines.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section id="home">
       <div className="relative w-full min-h-[60vh] md:h-[95vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
@@ -169,14 +184,18 @@ const ThreeJSHero: React.FC = () => {
               <span className="text-blue-600">Ayush Rai</span>
             </motion.h1>
 
-            <motion.p
+            <motion.div
+              key={currentHeadline}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8 leading-relaxed"
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="min-h-[4rem] md:min-h-[5rem] flex items-center justify-center mb-6 md:mb-8"
             >
-              AI Engineer & Full-Stack Developer
-            </motion.p>
+              <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed text-center">
+                {headlines[currentHeadline]}
+              </p>
+            </motion.div>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
