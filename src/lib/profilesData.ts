@@ -169,6 +169,24 @@ export const profiles: Profile[] = [
     domain: 'writing'
   },
   {
+    id: 'substack',
+    name: 'Substack',
+    url: 'https://substack.com/@ayushrai02',
+    icon: 'book-open',
+    category: 'Newsletter',
+    description: 'Subscribe to my newsletter and articles',
+    domain: 'writing'
+  },
+  {
+    id: 'quora',
+    name: 'Quora',
+    url: 'https://www.quora.com/profile/Ayush-Rai-751',
+    icon: 'help-circle',
+    category: 'Q&A Platform',
+    description: 'Share knowledge and get answers to questions',
+    domain: 'writing'
+  },
+  {
     id: 'blogger',
     name: 'Blogger',
     url: 'https://ayushrai02.blogspot.com/',
@@ -316,6 +334,15 @@ export const profiles: Profile[] = [
     icon: 'twitter',
     category: 'Microblogging',
     description: 'Follow me for updates and thoughts',
+    domain: 'social'
+  },
+  {
+    id: 'bluesky',
+    name: 'Bluesky',
+    url: 'https://bsky.app/profile/ayush-rai.bsky.social',
+    icon: 'globe',
+    category: 'Microblogging',
+    description: 'Follow me for decentralized social networking',
     domain: 'social'
   },
   {

@@ -116,6 +116,18 @@ const Footer: React.FC = () => {
       color: 'hover:text-blue-500'
     },
     {
+      name: 'Twitter',
+      url: 'https://x.com/AyushRai0211',
+      icon: Twitter,
+      color: 'hover:text-blue-400'
+    },
+    {
+      name: 'Instagram',
+      url: 'https://www.instagram.com/ayush_rai02/',
+      icon: Instagram,
+      color: 'hover:text-pink-500'
+    },
+    {
       name: 'GitHub',
       url: 'https://github.com/ayushrai-hub',
       icon: Github,
@@ -128,6 +140,24 @@ const Footer: React.FC = () => {
       color: 'hover:text-red-400'
     }
   ];
+
+  // Get IDs of primary social links to exclude from main sections
+  const primarySocialIds = primarySocials.map(social =>
+    social.name.toLowerCase().split('/')[0].replace(' ', '-').replace('.', '').replace('@', '')
+  );
+
+  // Bottom section platforms that are already in footer bottom - exclude from More Platforms
+  const bottomSectionIds = ['workana', 'guru', 'codementor', 'lemonio', 'producthunt', 'upwork', 'fiverr', 'peopleperhour', 'freelancer', 'arc.dev', 'turing'];
+
+  // Filter out primary social profiles and bottom section profiles from grouped profiles
+  const filteredGroupedProfiles = Object.fromEntries(
+    Object.entries(groupedProfiles).map(([domainName, domainProfiles]) => {
+      return [
+        domainName,
+        domainProfiles.filter(profile => !primarySocialIds.includes(profile.id) && !bottomSectionIds.includes(profile.id))
+      ];
+    })
+  );
 
   // Quick navigation links
   const quickLinks = [
@@ -218,8 +248,8 @@ const Footer: React.FC = () => {
             >
               <h4 className="font-semibold mb-3 text-gray-300 text-sm">Top Platforms</h4>
               <div className="space-y-2">
-                {Object.entries(groupedProfiles).slice(0, 2).flatMap(([domainName, domainProfiles]) => {
-                  return domainProfiles.slice(0, 3).map((profile) => {
+                {Object.entries(filteredGroupedProfiles).slice(0, 2).flatMap(([domainName, domainProfiles]) => {
+                  return domainProfiles.map((profile) => {
                     const IconComponent = getIcon(profile.icon);
                     return (
                       <a
@@ -248,11 +278,11 @@ const Footer: React.FC = () => {
               >
                 <h4 className="font-semibold mb-3 text-gray-300 text-sm">More Platforms</h4>
                 <div className="flex flex-wrap gap-2">
-                  {Object.entries(groupedProfiles).slice(2).flatMap(([domainName, domainProfiles]) => {
+                  {Object.entries(filteredGroupedProfiles).slice(2).flatMap(([domainName, domainProfiles]) => {
                     const domain = domains.find(d => d.name === domainName);
                     if (!domain) return [];
 
-                    return domainProfiles.slice(0, 2).map((profile) => {
+                    return domainProfiles.map((profile) => {
                       const IconComponent = getIcon(profile.icon);
                       return (
                         <motion.a

@@ -45,8 +45,9 @@ const Profiles: React.FC = () => {
       globe: Globe, // Super Site
       link: Globe, // Linktree
       twitter: Heart,
-      instagram: Heart,
-      facebook: Heart
+      instagram: Globe, // Use Globe as distinct icon
+      facebook: Heart,
+      'help-circle': Globe // Add icon mapping for Quora
     };
     return icons[iconName.toLowerCase().replace('-', '')] || Globe;
   };
