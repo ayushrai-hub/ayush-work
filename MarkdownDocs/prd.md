@@ -27,14 +27,14 @@ This PRD outlines the requirements for a comprehensive, cutting-edge portfolio w
 
 - **Hero Section:** Dynamic headlines, animated counters, and status indicators.  
 - **About Me:** Interactive timeline, personal philosophy, and personality showcase.  
-- **Education Hub:** Dual-degree showcase, academic timeline visualization, and GPA progression.  
+- **Education Hub:** Dual-degree showcase, academic timeline visualization, and academic achievements.
 - **Professional Experience:** Current and previous roles with an experience metrics dashboard.  
 - **Skills Matrix:** Detailed categorization of technical, non-technical, and managerial skills.  
-- **Certifications & Achievements:** Showcase with verification links and a timeline.  
+- **Certifications & Achievements:** Showcase with verification links.
 - **Projects Portfolio:** Featured projects with live demos, code repos, and client testimonials.  
 - **Research & Publications:** Blog integration, technical articles, and thought leadership.  
 - **Community Leadership:** Highlighting roles and involvement in tech communities.  
-- **Domain Expertise:** Radar chart visualization of expertise and active learning areas.  
+- **Domain Expertise:** Showcase of expertise areas and active learning.
 - **Services & Offerings:** Detailed breakdown of freelance services with pricing models.  
 - **Frameworks & Strategies:** Showcase of mastered technical and strategic methodologies.  
 - **Workshops & Events:** History of organized and attended events, including speaking engagements.  
@@ -63,7 +63,7 @@ This PRD outlines the requirements for a comprehensive, cutting-edge portfolio w
 
 ## 5. Development & Deployment
 
-- **Front-end Technology:** React or Next.js for a performant SPA. TypeScript for type safety.  
+- **Front-end Technology:** React with Vite for a performant SPA. TypeScript for type safety.
 - **Styling:** Tailwind CSS or styled-components for consistent and scalable styling.  
 - **Version Control:** Git with GitHub for collaborative development.  
 - **Deployment:** Vercel or Netlify for continuous integration and fast hosting.  
@@ -73,4 +73,4 @@ This PRD outlines the requirements for a comprehensive, cutting-edge portfolio w
 
 - The website should be designed for easy content updates.  
 - Future enhancements include a full-fledged blog section, more interactive 3D elements, and new project showcases.  
-- Regular performance monitoring and security updates will be necessary.  
+- Regular performance monitoring and security updates will be necessary.

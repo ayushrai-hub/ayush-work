@@ -3,4 +3,3 @@
 - [x] Fix Projects tests (text broken into multiple elements)
 - [x] Fix Services tests (mock Clock icon)
 - [x] Fix Skills tests (mock Cloud icon)
-- [x] Fix SkillsRadarChart tests (radialLinear scale registration)

@@ -120,7 +120,9 @@ vi.mock("chart.js", () => {
     scales: registry.scales,
     getScale: vi.fn((id: string) => {
       return registry.getScale(id);
-    })
+    }),
+    // Export individual scale classes
+    RadialLinear: vi.fn(() => ({ id: 'radialLinear' })),
   };
 });
 
@@ -251,16 +253,43 @@ vi.mock('framer-motion', async () => {
     return ({ children, ...props }: any) => React.createElement(elementType, props, children);
   };
 
+  // Create motion object with common HTML elements
+  const motion = {
+    div: createMotionComponent('div'),
+    button: createMotionComponent('button'),
+    header: createMotionComponent('header'),
+    nav: createMotionComponent('nav'),
+    ul: createMotionComponent('ul'),
+    li: createMotionComponent('li'),
+    a: createMotionComponent('a'),
+    span: createMotionComponent('span'),
+    p: createMotionComponent('p'),
+    h1: createMotionComponent('h1'),
+    h2: createMotionComponent('h2'),
+    h3: createMotionComponent('h3'),
+    h4: createMotionComponent('h4'),
+    img: createMotionComponent('img'),
+    section: createMotionComponent('section'),
+    article: createMotionComponent('article'),
+    main: createMotionComponent('main'),
+    aside: createMotionComponent('aside'),
+    footer: createMotionComponent('footer'),
+  };
+
+  // Add Proxy for dynamic property access
+  const motionProxy = new Proxy(motion, {
+    get(target, prop) {
+      if (typeof prop === 'string' && prop in target) {
+        return target[prop as keyof typeof target];
+      }
+      // For any other property, create a generic div component
+      return createMotionComponent(prop as string);
+    }
+  });
+
   return {
     ...(actual as any),
-    motion: new Proxy({}, {
-      get(target, prop) {
-        if (typeof prop === 'string') {
-          return createMotionComponent(prop);
-        }
-        return createMotionComponent('div');
-      }
-    }),
+    motion: motionProxy,
     AnimatePresence: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   };
 });

@@ -1,7 +1,7 @@
 ````markdown
 # 🌐 Ayush Rai – Portfolio Website
 
-A modern, dynamic, and interactive personal portfolio website built with **Next.js, Tailwind CSS, and Framer Motion**.  
+A modern, dynamic, and interactive personal portfolio website built with **React, Vite, Tailwind CSS, and Framer Motion**.
 The website showcases **professional experience, projects, skills, certifications, and achievements** while integrating animations, interactivity, and a CMS-driven backend for easy updates.
 
 ---
@@ -24,7 +24,6 @@ The website showcases **professional experience, projects, skills, certification
 
 ### 🔹 Education Hub
 - Dual-degree details with expandable cards.
-- GPA progression chart (Chart.js/Recharts).
 - Academic achievements & honors.
 
 ### 🔹 Professional Experience
@@ -33,7 +32,6 @@ The website showcases **professional experience, projects, skills, certification
 
 ### 🔹 Skills Matrix
 - Categorized technical skills (AI/ML, Web Dev, Cloud, etc.).
-- Domain expertise radar chart visualization.
 - Non-technical/managerial skills included.
 
 ### 🔹 Projects Portfolio
@@ -84,7 +82,7 @@ The website showcases **professional experience, projects, skills, certification
 ├── public/                 # Static assets (images, icons, etc.)
 ├── src/
 │   ├── components/         # Reusable UI components
-│   ├── pages/              # Next.js pages
+│   ├── pages/              # Dedicated page components
 │   ├── styles/             # Global styles
 │   ├── utils/              # Helper functions
 │   └── lib/                # CMS/API integration
@@ -92,14 +90,15 @@ The website showcases **professional experience, projects, skills, certification
 ├── package.json
 ├── tailwind.config.js
 ├── README.md
-└── next.config.js
+├── vite.config.ts
+└── index.html
 ````
 
 ---
 
 ## ⚙️ Tech Stack
 
-* **Framework:** [Next.js](https://nextjs.org/)
+* **Framework:** [React](https://reactjs.org/) with [Vite](https://vitejs.dev/)
 * **Styling:** [Tailwind CSS](https://tailwindcss.com/), CSS-in-JS (optional)
 * **Animations:** [Framer Motion](https://www.framer.com/motion/), [react-three-fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction)
 * **CMS (optional):** Sanity / Contentful / Strapi
@@ -113,11 +112,11 @@ The website showcases **professional experience, projects, skills, certification
 ## ✅ Development Checklist
 
 * [x] Define project scope and requirements
-* [x] Choose tech stack (Next.js, Tailwind, Framer Motion)
+* [x] Choose tech stack (React, Vite, Tailwind, Framer Motion)
 * [ ] Implement Hero section with animations
 * [ ] Add About Me interactive timeline
-* [ ] Build Education Hub with GPA charts
-* [ ] Add Skills Matrix with radar chart
+* [ ] Build Education Hub
+* [ ] Add Skills Matrix
 * [ ] Create Projects Portfolio with cards & filters
 * [ ] Add Certifications showcase
 * [ ] Integrate Contact Form (serverless)

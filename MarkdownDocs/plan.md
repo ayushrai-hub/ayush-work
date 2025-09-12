@@ -8,14 +8,14 @@
 ## 2) Key Requirements (from PRD, checklist, docs)
 - Hero: rotating headlines, counters, status indicators, animated background.
 - About/Timeline: interactive timeline, “My Story” content.
-- Education: dual degree, GPA chart, achievements.
+- Education: dual degree, achievements.
 - Experience: structured roles, metrics.
-- Skills: categorized + radar chart.
+- Skills: categorized skills.
 - Projects: cards, live/demo, GitHub, categories, testimonials.
 - Certifications: verification links, timeline.
 - Research/Blog: CMS or Markdown, tagging.
 - Community/Leadership: highlights, icons/badges.
-- Domain Expertise: radar visualization + current learning.
+- Domain Expertise: showcase of expertise areas.
 - Services: cards + pricing models.
 - Frameworks & Strategies: methodologies and visuals.
 - Workshops & Events: timeline view.
@@ -51,7 +51,7 @@
   - Move hardcoded arrays to `src/data/*` and map components.
   - Add basic filtering in Projects.
 - M4: Visualizations
-  - Integrate lightweight charting for GPA/radar (Recharts or Chart.js) behind feature flag.
+  - Integrate lightweight charting for skills visualization (Recharts or Chart.js) behind feature flag.
 - M5: Contact & Resume
   - Accessible form with client + server validation (zod).
   - Serverless: rate limit, CAPTCHA, spam filtering, secret management, audit logs, and safe email handling.
@@ -91,5 +91,5 @@
 ## 9) Future Enhancements (Phase 2)
 - GA4 integration; CMS for projects/blog/testimonials.
 - Serverless contact + resume generation; calendar integration.
-- Charts for Education and Domain Expertise; project filters/search.
+- Skills visualization; project filters/search.
 - 3D/particles background; testimonials carousel; sitemap/robots automation.

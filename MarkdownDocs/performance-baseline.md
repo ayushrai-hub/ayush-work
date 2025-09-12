@@ -141,7 +141,7 @@ const ProjectTestimonials = lazy(() => import('./components/ProjectTestimonials'
 ```javascript
 // Additional lazy loading candidates
 const GPAChart = lazy(() => import('./components/GPAChart'));
-const SkillsRadarChart = lazy(() => import('./components/SkillsRadarChart'));
+
 const CommunityLeadership = lazy(() => import('./components/CommunityLeadership'));
 ```
 
