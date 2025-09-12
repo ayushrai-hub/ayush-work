@@ -10,7 +10,7 @@ import SEO from './components/SEO';
 import './App.css';
 
 // Lazy load heavy components
-const ThreeJSHero = lazy(() => import('./components/ThreeJSHero'));
+const SplineHero = lazy(() => import('./components/SplineHero'));
 const About = lazy(() => import('./components/About'));
 const AboutMe = lazy(() => import('./components/AboutMe'));
 const Education = lazy(() => import('./components/Education'));
@@ -57,7 +57,7 @@ function App() {
                   transition={{ duration: 0.8 }}
                 >
                   <Suspense fallback={<LoadingSpinner />}>
-                    <ThreeJSHero />
+                    <SplineHero />
                   </Suspense>
                   <Suspense fallback={<LoadingSpinner />}>
                     <AboutMe />
