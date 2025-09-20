@@ -76,7 +76,7 @@ export const AboutMe: React.FC = () => {
                 <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl">
                   <div className="aspect-square rounded-xl overflow-hidden">
                     <img
-                      src={`/profile-image.jpeg?v=${Date.now()}`}
+                      src="/profile-image.jpeg"
                       alt="Ayush Rai - AI Engineer & Full-Stack Developer"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition duration-500"
                       loading="eager"

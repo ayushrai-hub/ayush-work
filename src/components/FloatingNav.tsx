@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 const FloatingNav: React.FC = () => {
@@ -40,7 +42,7 @@ const FloatingNav: React.FC = () => {
           onHoverEnd={() => setHoveredIndex(null)}
         >
           <Link
-            to={item.href}
+            href={item.href}
             className="block w-12 h-12 bg-primary-dark/90 backdrop-blur-md rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-accent transition-colors duration-300"
             title={item.label}
           >

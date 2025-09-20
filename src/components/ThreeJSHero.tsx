@@ -1,3 +1,5 @@
+'use client';
+
 import React, { Suspense, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {

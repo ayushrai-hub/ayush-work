@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Header from '../Header';
 import Footer from '../Footer';
 import Research from '../Research';
@@ -16,7 +18,7 @@ const ResearchPage: React.FC = () => {
       <main className="pt-20">
         <div className="container mx-auto px-4 py-6">
           <Link
-            to="/"
+            href="/"
             className="inline-flex items-center text-secondary hover:text-secondary-600 dark:text-secondary-400 dark:hover:text-secondary-300 transition-colors mb-8 px-4 py-2 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-900/20"
           >
             <ArrowLeft size={16} className="mr-2" />

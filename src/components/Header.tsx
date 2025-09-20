@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
@@ -9,8 +12,8 @@ const Header: React.FC = () => {
   const [workDropdownOpen, setWorkDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,9 +25,9 @@ const Header: React.FC = () => {
 
   // Handle navigation to sections
   const handleSectionNavigation = (sectionId: string) => {
-    if (location.pathname !== '/') {
+    if (pathname !== '/') {
       // If not on main page, navigate to main page first
-      navigate('/');
+      router.push('/');
       // Wait for navigation to complete, then scroll
       setTimeout(() => {
         const element = document.getElementById(sectionId);
@@ -50,13 +53,11 @@ const Header: React.FC = () => {
 
   const menuItems = [
     { label: "Home", href: "/", isRoute: true },
-    { label: "About Me", href: "#aboutme", isRoute: false },
-    { label: "Experience", href: "#experience", isRoute: false },
-    { label: "Projects", href: "#projects", isRoute: false },
-    { label: "Education", href: "#education", isRoute: false },
-    { label: "Skills", href: "#skills", isRoute: false },
+    { label: "About", href: "/about", isRoute: true },
+    { label: "Experience", href: "/experience", isRoute: true },
+    { label: "Projects", href: "/projects", isRoute: true },
     { label: "Work", href: "#work", isRoute: false, isDropdown: true },
-    { label: "Contact", href: "#contact", isRoute: false },
+    { label: "Contact", href: "/contact", isRoute: true },
   ];
 
   return (
@@ -76,7 +77,7 @@ const Header: React.FC = () => {
             whileHover={{ scale: 1.05 }}
             className="flex-shrink-0 mr-4"
           >
-            <Link to="/">
+            <Link href="/">
               <img
                 src="/profile-image.jpeg"
                 alt="Ayush Rai"
@@ -105,20 +106,14 @@ const Header: React.FC = () => {
                     <ChevronDown className={`ml-1 transform transition-transform ${workDropdownOpen ? 'rotate-180' : ''}`} size={16} />
                   </button>
                 ) : item.isRoute ? (
-                  <button
-                    onClick={() => {
-                      if (item.href === '/' && location.pathname !== '/') {
-                        navigate('/');
-                      } else if (item.href !== '/') {
-                        navigate(item.href);
-                      }
-                    }}
+                  <Link
+                    href={item.href}
                     className={`text-gray-700 dark:text-gray-300 hover:text-accent transition-colors duration-300 ${
-                      location.pathname === item.href ? 'text-accent' : ''
+                      pathname === item.href ? 'text-accent' : ''
                     }`}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 ) : (
                   <button
                     onClick={() => handleSectionNavigation(item.href.substring(1))}
@@ -164,21 +159,15 @@ const Header: React.FC = () => {
             {menuItems.map((item) => (
               <div key={item.label}>
                 {item.isRoute ? (
-                  <button
-                    onClick={() => {
-                      if (item.href === '/' && location.pathname !== '/') {
-                        navigate('/');
-                      } else if (item.href !== '/') {
-                        navigate(item.href);
-                      }
-                      setIsMenuOpen(false);
-                    }}
+                  <Link
+                    href={item.href}
                     className={`block py-2 text-gray-700 dark:text-gray-300 hover:text-accent transition-colors text-left w-full ${
-                      location.pathname === item.href ? 'text-accent' : ''
+                      pathname === item.href ? 'text-accent' : ''
                     }`}
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 ) : item.isDropdown ? (
                   <div>
                     <button
@@ -193,7 +182,7 @@ const Header: React.FC = () => {
                         {workItems.map((workItem) => (
                           <Link
                             key={workItem.label}
-                            to={workItem.href}
+                            href={workItem.href}
                             className="block py-1 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors text-sm"
                             onClick={() => {
                               setIsMenuOpen(false);
@@ -234,7 +223,7 @@ const Header: React.FC = () => {
               {workItems.map((item) => (
                 <Link
                   key={item.label}
-                  to={item.href}
+                  href={item.href}
                   className="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
                   onClick={() => setWorkDropdownOpen(false)}
                 >

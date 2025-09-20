@@ -1,11 +1,10 @@
 // Web Vitals monitoring for Core Web Vitals
-import { onCLS, onFCP, onFID, onLCP, onTTFB } from 'web-vitals';
+import { onCLS, onFCP, onLCP, onTTFB } from 'web-vitals';
 
 export function reportWebVitals(callback: (metric: any) => void) {
   if (typeof window !== 'undefined') {
     // Core Web Vitals
     onCLS(callback);
-    onFID(callback);
     onFCP(callback);
     onLCP(callback);
     onTTFB(callback);
