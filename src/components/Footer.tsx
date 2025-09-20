@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   ExternalLink,
@@ -29,8 +31,8 @@ import { useGTM } from '../hooks/useGTM';
 
 const Footer: React.FC = () => {
   const { trackButton, trackExternal } = useGTM();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const scrollToTop = () => {
     trackButton('back_to_top', 'footer');
@@ -44,10 +46,10 @@ const Footer: React.FC = () => {
   // Handle navigation to sections
   const handleSectionNavigation = (href: string) => {
     if (href === '/') {
-      navigate('/');
-    } else if (location.pathname !== '/') {
+      router.push('/');
+    } else if (pathname !== '/') {
       // If not on main page, navigate to main page first
-      navigate('/');
+      router.push('/');
       // Wait for navigation to complete, then scroll
       setTimeout(() => {
         const sectionId = href.split('#')[1];
@@ -145,9 +147,9 @@ const Footer: React.FC = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Compact Footer Content */}
-        <div className="py-8">
+        <div className="py-4">
           {/* Top Section - Brand & Social */}
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-4">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -189,7 +191,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Middle Section - Quick Links & Platforms */}
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="grid md:grid-cols-3 gap-6 mb-4">
             {/* Quick Navigation */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -279,7 +281,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="border-t border-gray-800 py-6">
+        <div className="border-t border-gray-800 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
             <p className="text-gray-500 text-xs">
               &copy; 2025 Ayush Rai
