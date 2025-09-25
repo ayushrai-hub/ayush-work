@@ -220,7 +220,7 @@ const Footer: React.FC = () => {
             >
               <h4 className="font-semibold mb-3 text-gray-300 text-sm">Top Platforms</h4>
               <div className="space-y-2">
-                {Object.entries(groupedProfiles).slice(0, 2).flatMap(([domainName, domainProfiles]) => {
+                {Object.entries(groupedProfiles).slice(0, 2).flatMap(([_, domainProfiles]) => {
                   return domainProfiles.slice(0, 3).map((profile) => {
                     const IconComponent = getIcon(profile.icon);
                     return (
