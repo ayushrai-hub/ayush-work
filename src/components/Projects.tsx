@@ -16,6 +16,32 @@ const Projects: React.FC = () => {
 
   const projects = [
     {
+      title: "Overlay Text Box Extension",
+      category: "Browser Extension & Web Development",
+      duration: "2024 - Present",
+      description:
+        "A Chrome browser extension that provides an overlay text box to simulate typing into text fields on any webpage. This tool enables users to input text through a clean interface and have it automatically typed character-by-character into target fields, making it ideal for filling out forms with repetitive content, testing user inputs, or avoiding problematic input fields.",
+      technologies: [
+        "JavaScript",
+        "HTML",
+        "Chrome Extension API",
+        "Manifest V3",
+      ],
+      features: [
+        "Overlay interface with resizable text area",
+        "Trigger button next to clicked text fields",
+        "Character-by-character typing simulation with random delays",
+        "Start/Stop controls for full typing process management",
+        "Visual feedback and field disabling during typing",
+        "Universal compatibility across all websites",
+      ],
+      impact:
+        "Enhancing user experience for form filling, testing, and accessibility by providing a more comfortable and efficient text input method",
+      github: "https://github.com/ayushrai-hub/overlay-text-box-extension",
+      demo: "https://github.com/ayushrai-hub/overlay-text-box-extension",
+      image: "https://images.pexels.com/photos/1229861/pexels-photo-1229861.jpeg",
+    },
+    {
       title: "Personal Portfolio Website",
       category: "Web Development & Design",
       duration: "2024 - Present",

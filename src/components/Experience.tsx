@@ -84,6 +84,7 @@ const Experience: React.FC = () => {
         "Community Management",
         "Workshop Delivery",
       ],
+      link: "https://drive.google.com/file/d/1Nx4TJZIvOUrA12zj0JuXeZGHhDgBDCPp/view?usp=sharing",
     },
     {
       title: "Virtual Intern",
@@ -99,6 +100,7 @@ const Experience: React.FC = () => {
         "Earned Salesforce platform certifications",
       ],
       technologies: ["Salesforce", "CRM", "Cloud Computing", "Apex"],
+      link: "https://drive.google.com/file/d/1WQIAEc7387yi-bh6Eq4LqtCZd4RnGqR7/view?usp=sharing",
     },
     {
       title: "WebOps Member",
@@ -118,7 +120,10 @@ const Experience: React.FC = () => {
         "Social Media Management",
         "Content Creation",
       ],
+      link: "https://drive.google.com/file/d/1Q5uEpe9Q3XrGR_FBpy3pbxzZZRYUk2VG/view?usp=sharing",
     },
+
+
   ];
 
   return (
@@ -238,6 +243,22 @@ const Experience: React.FC = () => {
                     ))}
                   </div>
                 </div>
+
+                {exp.link && (
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <a
+                      href={exp.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 bg-secondary text-primary rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clipRule="evenodd" />
+                      </svg>
+                      View Resources
+                    </a>
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}

@@ -61,7 +61,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-8"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6">
             Hi, I'm <span className="gradient-text">Ayush Rai</span>
           </h1>
 
@@ -71,9 +71,9 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="h-16 flex items-center justify-center"
+            className="h-12 flex items-center justify-center"
           >
-            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300">
+            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
               {headlines[currentHeadline]}
             </p>
           </motion.div>
@@ -83,7 +83,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-4xl mx-auto leading-relaxed"
+          className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-8 max-w-4xl mx-auto leading-relaxed"
         >
           Polymath with strategic approach across AI, web development, data
           science, and community leadership. Currently specializing in RLHF and

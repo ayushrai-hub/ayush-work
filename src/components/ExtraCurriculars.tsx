@@ -43,12 +43,58 @@ const ExtraCurriculars: React.FC = () => {
       skills: ["Performance", "Teamwork", "Communication", "Arts"],
       verified: true,
     },
+    {
+      title: "We Care",
+      category: "Social Work",
+      date: "June 2022 - Jan. 2023",
+      description: "Volunteer work with We Care organization focusing on community welfare and social service initiatives",
+      impact: "Contributed to community welfare and social betterment programs",
+      skills: ["Community Outreach", "Social Services", "Volunteering", "Empathy", "Teamwork"],
+      verified: true,
+    },
+    {
+      title: "Management Team Member",
+      category: "Leadership",
+      date: "May 2022 - Nov 2022",
+      description: "Contributed to organizational management and strategic initiatives at The Curious Organization",
+      impact: "Supported organizational growth and development activities",
+      skills: ["Team Management", "Project Coordination", "Strategic Planning", "Communication"],
+      verified: true,
+    },
+    {
+      title: "Volunteer & Member - Raahat",
+      category: "Social Work",
+      date: "Nov 2022 - July 2023",
+      description: "Member of Raahat - Be The Change Maker club at LNCT Group, contributing to social impact initiatives",
+      impact: "Supported organizational goals for community betterment",
+      skills: ["Community Engagement", "Social Impact", "Team Collaboration", "Event Organization"],
+      verified: true,
+    },
+    {
+      title: "Volunteer - Dragonfly Festival",
+      category: "Social Work",
+      date: "July 2022 - May 2023",
+      description: "Participated in WWF India's Dragonfly Festival for environmental conservation and awareness",
+      impact: "Engaged in community outreach for environmental education",
+      skills: ["Environmental Education", "Community Outreach", "Event Management", "Conservation Awareness"],
+      verified: true,
+    },
+    {
+      title: "Volunteer - Hack2Skill",
+      category: "Events",
+      date: "July 2022 - Aug 2022",
+      description: "Supported coding and skill development initiatives through Hack2Skill volunteer activities",
+      impact: "Helped promote coding education and skill building",
+      skills: ["Programming Education", "Event Coordination", "Community Building", "Technical Support"],
+      verified: true,
+    },
   ];
 
   const categories = [
-    { name: "Events", count: 2, color: "bg-orange-500/20 text-orange-400", icon: Calendar },
-    { name: "Social Work", count: 1, color: "bg-red-500/20 text-red-400", icon: Heart },
+    { name: "Events", count: 3, color: "bg-orange-500/20 text-orange-400", icon: Calendar },
+    { name: "Social Work", count: 4, color: "bg-red-500/20 text-red-400", icon: Heart },
     { name: "Drama", count: 1, color: "bg-purple-500/20 text-purple-400", icon: BookOpen },
+    { name: "Leadership", count: 1, color: "bg-blue-500/20 text-blue-400", icon: Users },
   ];
 
   return (
@@ -111,6 +157,7 @@ const ExtraCurriculars: React.FC = () => {
                   {activity.category === "Social Work" && <Heart className="text-accent mr-3" size={24} />}
                   {activity.category === "Events" && <Calendar className="text-accent mr-3" size={24} />}
                   {activity.category === "Drama" && <BookOpen className="text-accent mr-3" size={24} />}
+                  {activity.category === "Leadership" && <Users className="text-accent mr-3" size={24} />}
                   {activity.verified && (
                     <CheckCircle className="text-green-400" size={20} />
                   )}
@@ -177,11 +224,11 @@ const ExtraCurriculars: React.FC = () => {
           </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">4</div>
+              <div className="text-4xl font-bold gradient-text mb-2">9</div>
               <p className="text-gray-400">Activities Completed</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">3</div>
+              <div className="text-4xl font-bold gradient-text mb-2">4</div>
               <p className="text-gray-400">Categories Explored</p>
             </div>
             <div className="card text-center">

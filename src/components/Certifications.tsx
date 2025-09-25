@@ -20,10 +20,10 @@ const Certifications: React.FC = () => {
     {
       title: "CyberOps Associate",
       issuer: "Cisco Networking Academy",
-      date: "2021-2026",
+      date: "4 Jul 2023",
       category: "Cybersecurity",
-      description: "Advanced cybersecurity operations and network security certification",
-      skills: ["Cyber Security", "Cloud"],
+      description: "Advanced cybersecurity operations and network security certification covering threat analysis, incident response, and network monitoring",
+      skills: ["Cyber Security", "Network Security", "Incident Response", "Virtual Machines", "Windows OS", "Linux OS"],
       verified: true,
       link: "https://drive.google.com/file/d/1cYU351AbShDaJlv8z8pAyaV2CmuKMHq9/view?usp=sharing"
     },
@@ -50,7 +50,7 @@ const Certifications: React.FC = () => {
     {
       title: "Introduction to Packet Tracer",
       issuer: "Cisco Networking Academy",
-      date: "2021",
+      date: "25 Jan 2023",
       category: "Cybersecurity",
       description: "Network simulation and cybersecurity fundamentals using Packet Tracer",
       skills: ["Cyber Security"],
@@ -58,9 +58,9 @@ const Certifications: React.FC = () => {
       link: "https://drive.google.com/file/d/1_CIDIlPRbNR9rhwgaAFLQlRe9rJqC_qN/view?usp=sharing"
     },
     {
-      title: "Introduction to Cyber Security",
+      title: "Introduction to Cybersecurity",
       issuer: "Cisco Networking Academy",
-      date: "2021",
+      date: "10 Feb 2023",
       category: "Cybersecurity",
       description: "Fundamental cybersecurity principles and practices",
       skills: ["Cyber Security"],
