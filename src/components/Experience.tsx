@@ -14,6 +14,7 @@ const Experience: React.FC = () => {
       location: "Remote",
       duration: "Apr 2024 - Present",
       type: "Full-time",
+      isCurrent: true,
       achievements: [
         "Specialized in Reinforcement Learning from Human Feedback (RLHF)",
         "Collaborated with industry leaders: Turing, OpenAI, ScaleAI, Outlier",
@@ -32,8 +33,9 @@ const Experience: React.FC = () => {
       title: "Generative AI Engineer",
       company: "Outlier",
       location: "Remote",
-      duration: "Dec 2024 - Present",
-      type: "Freelance",
+      duration: "Aug 2025 - Present",
+      type: "Part-time",
+      isCurrent: true,
       achievements: [
         "Developed LLM training datasets and optimization strategies",
         "Implemented advanced prompting strategies for Python/JavaScript",
@@ -52,8 +54,9 @@ const Experience: React.FC = () => {
       title: "Web Developer",
       company: "RaSoR-IITM",
       location: "Chennai, India",
-      duration: "Dec 2023 - Present",
-      type: "Part-time",
+      duration: "Dec 2023 - Ended",
+      type: "Internship",
+      isCurrent: false,
       achievements: [
         "Developed responsive web applications for research initiatives",
         "Collaborated with research teams on technical documentation",
@@ -67,7 +70,8 @@ const Experience: React.FC = () => {
       company: "UiPath",
       location: "Remote",
       duration: "July 2022 - July 2023",
-      type: "Leadership",
+      type: "Leadership Internship",
+      isCurrent: false,
       achievements: [
         "Led community initiatives and technical workshops",
         "Mentored students in automation and RPA technologies",
@@ -87,6 +91,7 @@ const Experience: React.FC = () => {
       location: "Remote",
       duration: "Oct 2022 - Dec 2022",
       type: "Internship",
+      isCurrent: false,
       achievements: [
         "Completed comprehensive CRM and cloud computing projects",
         "Learned Salesforce ecosystem and best practices",
@@ -101,6 +106,7 @@ const Experience: React.FC = () => {
       location: "Chennai, India",
       duration: "Sept 2022 - July 2023",
       type: "Part-time",
+      isCurrent: false,
       achievements: [
         "Maintained and updated house website and digital infrastructure",
         "Managed social media presence and content creation",
@@ -166,7 +172,7 @@ const Experience: React.FC = () => {
                           ? "bg-accent/20 text-accent"
                           : exp.type === "Freelance"
                           ? "bg-secondary/20 text-secondary"
-                          : exp.type === "Leadership"
+                          : exp.type === "Leadership Internship"
                           ? "bg-tertiary/20 text-purple-300"
                           : "bg-gray-500/20 text-gray-300"
                       }`}
@@ -174,7 +180,9 @@ const Experience: React.FC = () => {
                       {exp.type}
                     </span>
                   </div>
-                  <span className="text-accent font-semibold">Current</span>
+                  <span className={`font-semibold ${exp.isCurrent ? 'text-accent' : 'text-gray-600 dark:text-gray-400'}`}>
+                    {exp.isCurrent ? 'Current' : 'Ended'}
+                  </span>
                 </div>
 
                 <h3 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">

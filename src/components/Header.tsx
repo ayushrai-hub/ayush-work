@@ -46,6 +46,7 @@ const Header: React.FC = () => {
     { label: "Leadership", href: "/leadership", description: "Community leadership and mentorship activities", icon: "👥" },
     { label: "Certifications", href: "/certifications", description: "Professional certifications and credentials", icon: "🏆" },
     { label: "Services", href: "/services", description: "Professional services and consulting offerings", icon: "💼" },
+    { label: "Extra-curriculars", href: "/extracurriculars", description: "Personal interests, hobbies, and community involvement", icon: "🎯" },
   ];
 
   const menuItems = [

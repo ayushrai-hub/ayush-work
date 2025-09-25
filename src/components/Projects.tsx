@@ -154,59 +154,7 @@ const Projects: React.FC = () => {
       image:
         "https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg",
     },
-    {
-      title: "AI-Powered Code Review Assistant",
-      category: "AI & Machine Learning",
-      duration: "Dec 2024 - Present",
-      description:
-        "Intelligent code review system using LLMs to provide automated feedback, bug detection, and optimization suggestions.",
-      technologies: [
-        "Python",
-        "LLMs",
-        "Prompt Engineering",
-        "GitHub API",
-        "Flask",
-      ],
-      features: [
-        "Automated code quality analysis",
-        "Bug detection and security vulnerabilities",
-        "Performance optimization suggestions",
-        "Multi-language support",
-        "Integration with GitHub workflows",
-      ],
-      impact: "Reduced code review time by 60% and improved code quality",
-      github: "#",
-      demo: "#",
-      image: "https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg",
-    },
-    {
-      title: "Community Management Dashboard",
-      category: "Full-Stack Development",
-      duration: "Aug - Nov 2023",
-      description:
-        "Comprehensive dashboard for managing online communities with analytics, engagement tracking, and automated moderation.",
-      technologies: [
-        "React",
-        "Node.js",
-        "PostgreSQL",
-        "Express",
-        "D3.js",
-        "WebSockets",
-      ],
-      features: [
-        "Real-time analytics and insights",
-        "Automated content moderation",
-        "Member engagement tracking",
-        "Event management system",
-        "Social media integration",
-      ],
-      impact:
-        "Improved community engagement by 150% and reduced moderation time",
-      github: "#",
-      demo: "#",
-      image:
-        "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg",
-    },
+
   ];
 
   return (

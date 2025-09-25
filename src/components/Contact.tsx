@@ -193,6 +193,12 @@ const Contact: React.FC = () => {
       handle: "@ayushrai02",
     },
     {
+      icon: MessageCircle,
+      name: "WhatsApp",
+      url: "https://api.whatsapp.com/send/?phone=7440567944&text&type=phone_number&app_absent=0",
+      handle: "+91-7440567944",
+    },
+    {
       icon: Mail,
       name: "Email",
       url: "mailto:ayushrai0211@gmail.com",

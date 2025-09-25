@@ -25,6 +25,7 @@ import ResearchPage from './components/pages/ResearchPage';
 import LeadershipPage from './components/pages/LeadershipPage';
 import CertificationsPage from './components/pages/CertificationsPage';
 import ServicesPage from './components/pages/ServicesPage';
+import ExtraCurricularsPage from './components/pages/ExtraCurricularsPage';
 
 // Loading component for Suspense fallback
 const LoadingSpinner = () => (
@@ -93,6 +94,7 @@ function App() {
             <Route path="/leadership" element={<LeadershipPage />} />
             <Route path="/certifications" element={<CertificationsPage />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/extracurriculars" element={<ExtraCurricularsPage />} />
           </Routes>
         </Suspense>
       </div>

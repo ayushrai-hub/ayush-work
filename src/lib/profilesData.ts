@@ -362,5 +362,14 @@ export const profiles: Profile[] = [
     category: 'Social Network',
     description: 'Connect with me on Facebook',
     domain: 'social'
+  },
+  {
+    id: 'whatsapp',
+    name: 'WhatsApp',
+    url: 'https://api.whatsapp.com/send/?phone=7440567944&text&type=phone_number&app_absent=0',
+    icon: 'message-circle',
+    category: 'Messaging',
+    description: 'Send me a message on WhatsApp',
+    domain: 'social'
   }
 ];

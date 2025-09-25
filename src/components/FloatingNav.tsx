@@ -20,6 +20,7 @@ const FloatingNav: React.FC = () => {
     { label: 'Leadership', href: '/leadership', icon: '👥' },
     { label: 'Certifications', href: '/certifications', icon: '🏆' },
     { label: 'Services', href: '/services', icon: '💼' },
+    { label: 'Extra-curriculars', href: '/extracurriculars', icon: '🎯' },
   ];
 
   if (!isVisible) return null;

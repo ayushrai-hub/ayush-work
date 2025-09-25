@@ -8,109 +8,79 @@ const Certifications: React.FC = () => {
 
   const certifications = [
     {
+      title: "30 Days of Google Cloud",
+      issuer: "Google Cloud",
+      date: "2020-2024",
+      category: "Cloud Computing",
+      description: "Comprehensive Google Cloud training and certification program",
+      skills: ["Python", "Google Cloud", "ML", "Data Analysis"],
+      verified: true,
+      link: "https://drive.google.com/file/d/1VCcOhp_OW1qVUVbB5pUadznZuceHxLzF/view?usp=sharing"
+    },
+    {
       title: "CyberOps Associate",
       issuer: "Cisco Networking Academy",
-      date: "2022",
+      date: "2021-2026",
       category: "Cybersecurity",
-      description:
-        "Comprehensive cybersecurity operations and incident response certification",
-      skills: [
-        "Network Security",
-        "Threat Detection",
-        "Incident Response",
-        "Security Operations",
-      ],
+      description: "Advanced cybersecurity operations and network security certification",
+      skills: ["Cyber Security", "Cloud"],
       verified: true,
-    },
-    {
-      title: "30 Days of Google Cloud Challenge",
-      issuer: "Google Cloud",
-      date: "2021",
-      category: "Cloud Computing",
-      description:
-        "Hands-on cloud computing and services implementation challenge",
-      skills: [
-        "Google Cloud Platform",
-        "Cloud Architecture",
-        "DevOps",
-        "Serverless Computing",
-      ],
-      verified: true,
-    },
-    {
-      title: "Foundations: Data, Everywhere",
-      issuer: "Coursera (Google)",
-      date: "2022",
-      category: "Data Analysis",
-      description: "Foundational data analysis and visualization certification",
-      skills: ["Data Analysis", "Data Visualization", "SQL", "Spreadsheets"],
-      verified: true,
-    },
-    {
-      title: "Introduction to Machine Learning",
-      issuer: "AWS",
-      date: "2021",
-      category: "Machine Learning",
-      description:
-        "Introduction to ML concepts and AWS machine learning services",
-      skills: ["Machine Learning", "AWS ML Services", "Data Science", "Python"],
-      verified: true,
-    },
-    {
-      title: "Git from Basics to Advanced",
-      issuer: "Udemy",
-      date: "2022",
-      category: "Development Tools",
-      description: "Comprehensive version control and collaboration with Git",
-      skills: ["Git", "GitHub", "Version Control", "Collaboration"],
-      verified: true,
+      link: "https://drive.google.com/file/d/1cYU351AbShDaJlv8z8pAyaV2CmuKMHq9/view?usp=sharing"
     },
     {
       title: "Leadership and Talent Management",
-      issuer: "Professional Development",
-      date: "2021",
+      issuer: "Lakshmi Narain College of Technology & Science, Bhopal",
+      date: "11 May, 2021",
       category: "Leadership",
-      description: "Strategic leadership and team management certification",
-      skills: [
-        "Leadership",
-        "Team Management",
-        "Strategic Planning",
-        "Talent Development",
-      ],
+      description: "Professional leadership and talent management training",
+      skills: ["Leadership"],
       verified: true,
+      link: "https://drive.google.com/file/d/1KLQRhZWKtZP3wUTHWhpk1aBBVOUhiKL-/view"
     },
     {
-      title: "Digital 101",
-      issuer: "FutureSkills Prime",
-      date: "2021",
-      category: "Digital Skills",
-      description: "Digital literacy and emerging technology fundamentals",
-      skills: [
-        "Digital Literacy",
-        "Emerging Technologies",
-        "Innovation",
-        "Digital Transformation",
-      ],
+      title: "Introduction to Machine Learning",
+      issuer: "AWS Training & Certification",
+      date: "27 April, 2021",
+      category: "Machine Learning",
+      description: "AWS machine learning fundamentals and implementation",
+      skills: ["Machine Learning"],
       verified: true,
+      link: "https://drive.google.com/file/d/1LHtAR2zdBEUHYe1oQC_ZNeeO1-UQ4YCQ/view"
+    },
+    {
+      title: "Introduction to Packet Tracer",
+      issuer: "Cisco Networking Academy",
+      date: "2021",
+      category: "Cybersecurity",
+      description: "Network simulation and cybersecurity fundamentals using Packet Tracer",
+      skills: ["Cyber Security"],
+      verified: true,
+      link: "https://drive.google.com/file/d/1_CIDIlPRbNR9rhwgaAFLQlRe9rJqC_qN/view?usp=sharing"
     },
     {
       title: "Introduction to Cyber Security",
       issuer: "Cisco Networking Academy",
       date: "2021",
       category: "Cybersecurity",
-      description: "Fundamental cybersecurity principles and best practices",
-      skills: [
-        "Cybersecurity Fundamentals",
-        "Network Security",
-        "Security Policies",
-        "Risk Management",
-      ],
+      description: "Fundamental cybersecurity principles and practices",
+      skills: ["Cyber Security"],
       verified: true,
+      link: "https://drive.google.com/file/d/1dR5JkyQiC66W5lu_7c9PJbhNccVoCMDT/view?usp=sharing"
+    },
+    {
+      title: "Foundations: Data, Everywhere",
+      issuer: "Coursera",
+      date: "4 Mar. 2022",
+      category: "Data Science",
+      description: "Foundational data science and analytics certification",
+      skills: ["Data Science"],
+      verified: true,
+      link: "https://drive.google.com/file/d/1SdTEH72nLWGtL50vYh_tH7Fhj_JJ881J/view?usp=sharing"
     },
   ];
 
   const categories = [
-    { name: "Cybersecurity", count: 2, color: "bg-red-500/20 text-red-400" },
+    { name: "Cybersecurity", count: 3, color: "bg-red-500/20 text-red-400" },
     {
       name: "Cloud Computing",
       count: 1,
@@ -122,21 +92,11 @@ const Certifications: React.FC = () => {
       color: "bg-purple-500/20 text-purple-400",
     },
     {
-      name: "Data Analysis",
+      name: "Data Science",
       count: 1,
       color: "bg-green-500/20 text-green-400",
     },
     { name: "Leadership", count: 1, color: "bg-yellow-500/20 text-yellow-400" },
-    {
-      name: "Development Tools",
-      count: 1,
-      color: "bg-pink-500/20 text-pink-400",
-    },
-    {
-      name: "Digital Skills",
-      count: 1,
-      color: "bg-indigo-500/20 text-indigo-400",
-    },
   ];
 
   return (
@@ -258,11 +218,11 @@ const Certifications: React.FC = () => {
           </h3>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">8+</div>
+              <div className="text-4xl font-bold gradient-text mb-2">7</div>
               <p className="text-gray-400">Certifications Earned</p>
             </div>
             <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">7</div>
+              <div className="text-4xl font-bold gradient-text mb-2">5</div>
               <p className="text-gray-400">Skill Categories</p>
             </div>
             <div className="card text-center">

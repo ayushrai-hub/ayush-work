@@ -26,7 +26,7 @@ const Education: React.FC = () => {
     {
       degree: "BS Data Science and Applications",
       institution: "Indian Institute of Technology, Madras",
-      duration: "2021-2026",
+      duration: "2021-2024",
       cgpa: "6.86/10.0",
       coursework: [
         "Statistics",
