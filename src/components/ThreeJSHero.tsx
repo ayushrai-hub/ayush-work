@@ -18,6 +18,17 @@ const headlines = [
   "Product Builder | Lifelong learner",
 ];
 
+// WebGL availability check
+const isWebGLAvailable = () => {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    return !!gl;
+  } catch (e) {
+    return false;
+  }
+};
+
 // Floating geometric shapes component
 function FloatingShapes() {
   const groupRef = useRef<THREE.Group>(null);
@@ -109,8 +120,71 @@ function CameraRig() {
   return null;
 }
 
+// Three.js Canvas with error handling
+function ThreeJSContent() {
+  const [webGLError, setWebGLError] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isWebGLAvailable()) {
+      setWebGLError(true);
+    }
+  }, []);
+
+  if (webGLError) {
+    return null; // Don't render Canvas if WebGL is not available
+  }
+
+  try {
+    return (
+      <Canvas
+        camera={{
+          position: [0, 0, 5],
+          fov: 75,
+          near: 0.1,
+          far: 1000,
+        }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+        }}
+        onError={() => setWebGLError(true)}
+      >
+        {/* Lighting */}
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[10, 10, 5]} intensity={1} />
+        <pointLight
+          position={[-10, -10, -10]}
+          intensity={0.5}
+          color="#6366f1"
+        />
+
+        {/* Presentation controls for interactivity */}
+        <PresentationControls
+          global
+          config={{ mass: 2, tension: 500 }}
+          snap={{ mass: 4, tension: 1500 }}
+          rotation={[0, 0.3, 0]}
+          polar={[-Math.PI / 3, Math.PI / 3]}
+          azimuth={[-Math.PI / 1.4, Math.PI / 2]}
+        >
+          <Suspense fallback={null}>
+            <FloatingShapes />
+          </Suspense>
+        </PresentationControls>
+
+        <CameraRig />
+      </Canvas>
+    );
+  } catch (error) {
+    console.warn('ThreeJS: WebGL context creation failed', error);
+    return null;
+  }
+}
+
 const ThreeJSHero: React.FC = () => {
   const [currentHeadline, setCurrentHeadline] = React.useState(0);
+  const [webGLAvailable, setWebGLAvailable] = React.useState(true);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -119,53 +193,22 @@ const ThreeJSHero: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  React.useEffect(() => {
+    setWebGLAvailable(isWebGLAvailable());
+  }, []);
+
   return (
     <section id="home">
       <div className="relative w-full min-h-[60vh] md:h-[95vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
         {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50/90 via-white/95 to-blue-50/90 dark:from-blue-900/90 dark:via-gray-900/95 dark:to-blue-900/90 z-10" />
 
-        {/* Three.js Canvas - Hidden on mobile for performance */}
-        <div className="absolute inset-0 hidden md:block">
-          <Canvas
-            camera={{
-              position: [0, 0, 5],
-              fov: 75,
-              near: 0.1,
-              far: 1000,
-            }}
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: "high-performance",
-            }}
-          >
-            {/* Lighting */}
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
-            <pointLight
-              position={[-10, -10, -10]}
-              intensity={0.5}
-              color="#6366f1"
-            />
-
-            {/* Presentation controls for interactivity */}
-            <PresentationControls
-              global
-              config={{ mass: 2, tension: 500 }}
-              snap={{ mass: 4, tension: 1500 }}
-              rotation={[0, 0.3, 0]}
-              polar={[-Math.PI / 3, Math.PI / 3]}
-              azimuth={[-Math.PI / 1.4, Math.PI / 2]}
-            >
-              <Suspense fallback={null}>
-                <FloatingShapes />
-              </Suspense>
-            </PresentationControls>
-
-            <CameraRig />
-          </Canvas>
-        </div>
+        {/* Three.js Canvas - Hidden on mobile for performance and if WebGL not available */}
+        {webGLAvailable && (
+          <div className="absolute inset-0 hidden md:block">
+            <ThreeJSContent />
+          </div>
+        )}
 
         {/* Content overlay */}
         <div className="relative z-20 flex items-center justify-center min-h-[60vh] md:h-[95vh] px-4 py-8 md:py-0">
@@ -257,7 +300,7 @@ const ThreeJSHero: React.FC = () => {
                 href="https://linkedin.com/in/ayushrai02"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
+                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover;scale-110"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -274,8 +317,6 @@ const ThreeJSHero: React.FC = () => {
             </motion.div>
           </motion.div>
         </div>
-
-
       </div>
     </section>
   );
