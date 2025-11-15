@@ -48,8 +48,16 @@ describe('About Component', () => {
     expect(storyHeading).toBeInTheDocument();
     expect(coreValuesHeading).toBeInTheDocument();
 
-    // Check for h4 headings within the component
-    const philosophyHeading = screen.getByRole('heading', { level: 4, name: 'Personal Philosophy' });
-    expect(philosophyHeading).toBeInTheDocument();
+    // Check for h4 headings in core values cards
+    const headings = screen.getAllByRole('heading', { level: 4 });
+    expect(headings.length).toBe(4); // Four core value headings
+    expect(headings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ textContent: 'Strategic Thinking' }),
+        expect.objectContaining({ textContent: 'Technical Innovation' }),
+        expect.objectContaining({ textContent: 'Community Leadership' }),
+        expect.objectContaining({ textContent: 'Continuous Learning' })
+      ])
+    );
   });
 });
