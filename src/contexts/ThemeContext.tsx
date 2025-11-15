@@ -23,31 +23,47 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Check localStorage first, then system preference
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      return savedTheme;
+    // Check if window is available (browser environment)
+    if (typeof window === 'undefined') {
+      return 'light';
     }
 
-    // Check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
+    try {
+      // Check localStorage first, then system preference
+      const savedTheme = localStorage.getItem('theme') as Theme;
+      if (savedTheme) {
+        return savedTheme;
+      }
+
+      // Check system preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch (error) {
+      console.warn('Theme context: Could not access localStorage', error);
     }
 
     return 'light';
   });
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    // Check if window is available
+    if (typeof window === 'undefined') return;
 
-    // Remove existing theme classes
-    root.classList.remove('light', 'dark');
+    try {
+      const root = window.document.documentElement;
 
-    // Add current theme class
-    root.classList.add(theme);
+      // Remove existing theme classes
+      root.classList.remove('light', 'dark');
 
-    // Save to localStorage
-    localStorage.setItem('theme', theme);
+      // Add current theme class
+      root.classList.add(theme);
+
+      // Save to localStorage
+      localStorage.setItem('theme', theme);
+    } catch (error) {
+      console.warn('Theme context: Could not update theme classes', error);
+    }
   }, [theme]);
 
   const toggleTheme = () => {
