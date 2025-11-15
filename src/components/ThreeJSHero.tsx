@@ -11,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 import * as THREE from "three";
+import ErrorBoundary from "./ErrorBoundary";
 
 const headlines = [
   "SDE - AI Engineer | Generative AI Specialist",
@@ -134,8 +135,8 @@ function ThreeJSContent() {
     return null; // Don't render Canvas if WebGL is not available
   }
 
-  try {
-    return (
+  return (
+    <ErrorBoundary>
       <Canvas
         camera={{
           position: [0, 0, 5],
@@ -148,7 +149,6 @@ function ThreeJSContent() {
           alpha: true,
           powerPreference: "high-performance",
         }}
-        onError={() => setWebGLError(true)}
       >
         {/* Lighting */}
         <ambientLight intensity={0.4} />
@@ -175,11 +175,8 @@ function ThreeJSContent() {
 
         <CameraRig />
       </Canvas>
-    );
-  } catch (error) {
-    console.warn('ThreeJS: WebGL context creation failed', error);
-    return null;
-  }
+    </ErrorBoundary>
+  );
 }
 
 const ThreeJSHero: React.FC = () => {
