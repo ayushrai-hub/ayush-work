@@ -46,7 +46,7 @@ describe('Experience', () => {
     // Remote appears in 4 experiences
     expect(screen.getAllByText('Remote')).toHaveLength(4);
     expect(screen.getByText('Apr 2024 - Present')).toBeInTheDocument();
-    expect(screen.getByText('Dec 2024 - Present')).toBeInTheDocument();
+    expect(screen.getByText('Aug 2025 - Present')).toBeInTheDocument();
     // Chennai, India appears in 2 experiences
     expect(screen.getAllByText('Chennai, India')).toHaveLength(2);
   });
@@ -54,11 +54,10 @@ describe('Experience', () => {
   it('displays job types with correct styling', () => {
     render(<Experience />);
     expect(screen.getByText('Full-time')).toBeInTheDocument();
-    expect(screen.getByText('Freelance')).toBeInTheDocument();
     // Part-time appears in 2 experiences
     expect(screen.getAllByText('Part-time')).toHaveLength(2);
-    expect(screen.getByText('Leadership')).toBeInTheDocument();
-    expect(screen.getByText('Internship')).toBeInTheDocument();
+    expect(screen.getByText('Leadership Internship')).toBeInTheDocument();
+    expect(screen.getAllByText('Internship')).toHaveLength(2);
   });
 
   it('renders technology tags', () => {
@@ -100,10 +99,8 @@ describe('Experience', () => {
   });
 
   it('renders with correct structure for timelines and cards', () => {
-    render(<Experience />);
-    const cards = screen.getAllByText((content, element) => {
-      return element?.className?.includes('card') || false;
-    });
-    expect(cards).toBeDefined();
+    const { container } = render(<Experience />);
+    const cards = container.querySelectorAll('.card');
+    expect(cards.length).toBe(6);
   });
 });

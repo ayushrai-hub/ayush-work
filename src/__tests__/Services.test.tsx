@@ -31,8 +31,8 @@ describe('Services', () => {
 
   it('displays pricing and duration', () => {
     render(<Services />);
-    expect(screen.getByText('Starting at $2000')).toBeInTheDocument();
-    expect(screen.getByText('Starting at $1500')).toBeInTheDocument();
+    expect(screen.getByText('Starting at $2000, negotiable')).toBeInTheDocument();
+    expect(screen.getByText('Starting at $1500, negotiable')).toBeInTheDocument();
     expect(screen.getByText('2-8 weeks')).toBeInTheDocument();
     expect(screen.getByText('Ongoing')).toBeInTheDocument();
   });

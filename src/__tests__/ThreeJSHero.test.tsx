@@ -40,7 +40,7 @@ describe('ThreeJSHero', () => {
   it('renders the hero section', () => {
     render(<ThreeJSHero />);
     expect(screen.getByText('Ayush Rai')).toBeInTheDocument();
-    expect(screen.getByText(/AI Engineer & Full-Stack Developer/i)).toBeInTheDocument();
+    expect(screen.getByText(/SDE - AI Engineer \| Generative AI Specialist/i)).toBeInTheDocument();
   });
 
   it('renders CTA buttons', () => {

@@ -15,7 +15,7 @@ describe('Hero Component', () => {
 
   it('shows initial headline', () => {
     const { getByText } = render(<Hero />);
-    expect(getByText('SDE - AI Engineer | Generative AI Specialist')).toBeInTheDocument();
+    expect(getByText(/SDE - AI Engineer \| Generative AI Specialist/i)).toBeInTheDocument();
   });
 
   it('displays contact links', () => {

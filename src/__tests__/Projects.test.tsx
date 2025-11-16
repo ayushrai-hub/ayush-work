@@ -18,8 +18,10 @@ describe('Projects Component', () => {
     const { getByText } = render(<Projects />);
     expect(getByText('Stock Price Analysis Platform')).toBeInTheDocument();
     expect(getByText('Iha-By-Himani Art Studio Website')).toBeInTheDocument();
-    expect(getByText('AI-Powered Code Review Assistant')).toBeInTheDocument();
-    expect(getByText('Community Management Dashboard')).toBeInTheDocument();
+    expect(getByText('Overlay Text Box Extension')).toBeInTheDocument();
+    expect(getByText('Personal Portfolio Website')).toBeInTheDocument();
+    expect(getByText('Expert-O')).toBeInTheDocument();
+    expect(getByText('Shiksha-Mitra')).toBeInTheDocument();
   });
 
   it('displays technologies', () => {
@@ -34,8 +36,8 @@ describe('Projects Component', () => {
     const codeLinks = getAllByText('Code');
     const demoLinks = getAllByText('Live Demo');
 
-    expect(codeLinks.length).toBe(7); // 7 projects
-    expect(demoLinks.length).toBe(7);
+    expect(codeLinks.length).toBe(6); // 6 projects
+    expect(demoLinks.length).toBe(6);
   });
 
   it('displays project impact stats', () => {
@@ -49,7 +51,7 @@ describe('Projects Component', () => {
   it('shows categories for projects', () => {
     const { getByText } = render(<Projects />);
     expect(getByText('Data Science & Web Development')).toBeInTheDocument();
-    expect(getByText('AI & Machine Learning')).toBeInTheDocument();
+    expect(getByText('AI & Digital Innovation')).toBeInTheDocument();
   });
 
   it('has accessible markup for main heading', () => {

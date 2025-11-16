@@ -132,6 +132,8 @@ vi.mock("react-helmet-async", () => ({
   HelmetProvider: ({ children }: any) => children,
 }));
 
+
+
 // Mock lucide-react icons with partial mock using importOriginal
 vi.mock('lucide-react', async (importOriginal) => {
   const actual = await importOriginal() as any;
@@ -142,52 +144,22 @@ vi.mock('lucide-react', async (importOriginal) => {
         'data-testid': testId,
         className,
         ...props,
-      }, `${name}Icon`);
+      });
     };
   };
 
-  return {
-    ...actual,
-    Menu: createIconMock('Menu'),
-    X: createIconMock('X'),
-    ChevronDown: createIconMock('ChevronDown'),
-    ChevronUp: createIconMock('ChevronUp'),
-    ArrowLeft: createIconMock('ArrowLeft'),
-    ExternalLink: createIconMock('ExternalLink'),
-    Search: createIconMock('Search'),
-    Filter: createIconMock('Filter'),
-    Github: createIconMock('Github'),
-    Linkedin: createIconMock('Linkedin'),
-    Mail: createIconMock('Mail'),
-    Phone: createIconMock('Phone'),
-    Sun: createIconMock('Sun'),
-    Moon: createIconMock('Moon'),
-    Monitor: createIconMock('Monitor'),
-    GraduationCap: createIconMock('GraduationCap'),
-    BookOpen: createIconMock('BookOpen'),
-    Award: createIconMock('Award'),
-    Calendar: createIconMock('Calendar'),
-    CheckCircle: createIconMock('CheckCircle'),
-    Microscope: createIconMock('Microscope'),
-    Code: createIconMock('Code'),
-    Brain: createIconMock('Brain'),
-    Database: createIconMock('Database'),
-    Cloud: createIconMock('Cloud'),
-    Users: createIconMock('Users'),
-    Lightbulb: createIconMock('Lightbulb'),
-    BarChart3: createIconMock('BarChart3'),
-    FileText: createIconMock('FileText'),
-    Briefcase: createIconMock('Briefcase'),
-    Globe: createIconMock('Globe'),
-    Heart: createIconMock('Heart'),
-    Palette: createIconMock('Palette'),
-    Sparkles: createIconMock('Sparkles'),
-    Mic: createIconMock('Mic'),
-    Target: createIconMock('Target'),
-    Zap: createIconMock('Zap'),
-    MapPin: createIconMock('MapPin'),
-    TrendingUp: createIconMock('TrendingUp'),
-  };
+  return new Proxy(actual, {
+    get(target, prop) {
+      if (prop in target) {
+        return target[prop];
+      }
+      // Auto-mock any icon component
+      if (typeof prop === 'string' && /^[A-Z]/.test(prop)) {
+        return createIconMock(prop);
+      }
+      return undefined;
+    }
+  });
 });
 
 // Mock next/image
