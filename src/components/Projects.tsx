@@ -21,6 +21,7 @@
  * - Shiksha-Mitra (Community Education Platform)
  * - Stock Price Analysis Platform (Data Science)
  * - Iha-By-Himani Art Studio Website (Web Design)
+ * - Praful H. - Stock Price Analysis Platform (Enterprise AI Data Analytics)
  *
  * @component
  * @example
@@ -52,6 +53,7 @@ import portfolioImage from "../assets/porfolio.jpeg";
 import expertoImage from "../assets/experto.jpeg";
 import shikshMitraImage from "../assets/shikshMitra.png";
 import ihabyhimaniImage from "../assets/ihabyhimani.jpeg";
+import prafulImage from "../assets/prafful.png";
 
 /**
  * Projects — Featured projects portfolio showcase component.
@@ -237,6 +239,36 @@ const Projects: React.FC = () => {
       github: "https://github.com/ayushrai-hub/IHA-art-studio",
       demo: "https://www.ihabyhimani.com/",
       image: ihabyhimaniImage,
+    },
+    {
+      title: "Praful H. - Stock Price Analysis Platform",
+      category: "Enterprise Data Analytics & AI",
+      duration: "2024",
+      description:
+        "Advanced stock market analysis platform developed for Praful H., a seasoned Technology Leader with 17+ years of experience transforming complex enterprise environments. This platform integrates real-time data visualization, AI-driven predictive analytics, and enterprise-level operational resilience frameworks. Built with cybersecurity excellence in mind, it provides strategic AI implementation for informed investment decision-making in volatile markets.",
+      technologies: [
+        "React",
+        "TypeScript",
+        "Python",
+        "TensorFlow",
+        "Next.js",
+        "PostgreSQL",
+        "Kubernetes",
+        "OAuth 2.0",
+      ],
+      features: [
+        "Real-time market data integration with enterprise APIs",
+        "AI-powered predictive modeling and trend analysis",
+        "Cybersecurity-compliant data handling and encryption",
+        "Operational resilience with automated failover systems",
+        "Executive dashboard with strategic decision support",
+        "Multi-tenant enterprise architecture",
+      ],
+      impact:
+        "Empowering enterprise leaders with AI-driven market insights and cybersecurity excellence, transforming strategic investment decisions for complex enterprise environments",
+      github: "https://github.com/ayushrai-hub/client-portfolio-praful",
+      demo: "https://praful-h.netlify.app/",
+      image: prafulImage,
     },
 
   ];
