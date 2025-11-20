@@ -19,9 +19,8 @@
  * - Personal Portfolio Website (Web Development)
  * - Expert-O (AI Innovation Platform)
  * - Shiksha-Mitra (Community Education Platform)
- * - Stock Price Analysis Platform (Data Science)
  * - Iha-By-Himani Art Studio Website (Web Design)
- * - Praful H. - Stock Price Analysis Platform (Enterprise AI Data Analytics)
+ * - Praful H. Professional Website (Enterprise Portfolio & Leadership)
  *
  * @component
  * @example
@@ -189,33 +188,6 @@ const Projects: React.FC = () => {
       image: shikshMitraImage,
     },
     {
-      title: "Stock Price Analysis Platform",
-      category: "Data Science & Web Development",
-      duration: "March - July 2023",
-      description:
-        "Comprehensive stock market analysis platform with real-time data visualization, trend analysis, and predictive modeling capabilities.",
-      technologies: [
-        "React",
-        "TypeScript",
-        "Python",
-        "Pandas",
-        "Chart.js",
-        "REST APIs",
-      ],
-      features: [
-        "Real-time stock data integration",
-        "Interactive charts and visualizations",
-        "Technical analysis indicators",
-        "Portfolio tracking and management",
-        "Responsive design for mobile and desktop",
-      ],
-      impact:
-        "Enhanced investment decision-making with comprehensive market insights",
-      github: "https://github.com/ayushrai-hub/stock-price-analysis",
-      demo: "https://github.com/ayushrai-hub/stock-price-analysis",
-      image: "https://images.pexels.com/photos/159888/pexels-photo-159888.jpeg",
-    },
-    {
       title: "Iha-By-Himani Art Studio Website",
       category: "Web Development & Design",
       duration: "Jan - Feb 2023",
@@ -241,11 +213,11 @@ const Projects: React.FC = () => {
       image: ihabyhimaniImage,
     },
     {
-      title: "Praful H. - Stock Price Analysis Platform",
-      category: "Enterprise Data Analytics & AI",
+      title: "Praful H. Professional Website",
+      category: "Enterprise Portfolio & Leadership",
       duration: "2024",
       description:
-        "Advanced stock market analysis platform developed for Praful H., a seasoned Technology Leader with 17+ years of experience transforming complex enterprise environments. This platform integrates real-time data visualization, AI-driven predictive analytics, and enterprise-level operational resilience frameworks. Built with cybersecurity excellence in mind, it provides strategic AI implementation for informed investment decision-making in volatile markets.",
+        "A premium professional portfolio website crafted for a UK-based industry leader, showcasing over 17 years of expertise in driving large-scale technology transformation. The site highlights a proven track record in enterprise architecture, digital innovation, and strategic leadership, presented through a refined, modern design. Built with strong emphasis on credibility, performance, and user experience, it effectively communicates the client's achievements, capabilities, and thought leadership within the global technology landscape.",
       technologies: [
         "React",
         "TypeScript",
@@ -257,15 +229,15 @@ const Projects: React.FC = () => {
         "OAuth 2.0",
       ],
       features: [
-        "Real-time market data integration with enterprise APIs",
-        "AI-powered predictive modeling and trend analysis",
-        "Cybersecurity-compliant data handling and encryption",
-        "Operational resilience with automated failover systems",
-        "Executive dashboard with strategic decision support",
-        "Multi-tenant enterprise architecture",
+        "Modern responsive design with mobile-first approach",
+        "SEO optimization and performance enhancement",
+        "Interactive leadership showcase and achievements timeline",
+        "Professional social proof and testimonials integration",
+        "Secure contact forms and credential management",
+        "Content management system for easy updates",
       ],
       impact:
-        "Empowering enterprise leaders with AI-driven market insights and cybersecurity excellence, transforming strategic investment decisions for complex enterprise environments",
+        "Elevating professional presence and credibility through a high-impact digital portfolio that effectively communicates 17+ years of industry leadership and drives strategic business opportunities",
       github: "https://github.com/ayushrai-hub/client-portfolio-praful",
       demo: "https://praful-h.netlify.app/",
       image: prafulImage,
