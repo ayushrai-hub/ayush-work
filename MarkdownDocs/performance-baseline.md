@@ -140,8 +140,6 @@ const ProjectTestimonials = lazy(() => import('./components/ProjectTestimonials'
 ### Code Splitting Enhancements
 ```javascript
 // Additional lazy loading candidates
-const GPAChart = lazy(() => import('./components/GPAChart'));
-
 const CommunityLeadership = lazy(() => import('./components/CommunityLeadership'));
 ```
 

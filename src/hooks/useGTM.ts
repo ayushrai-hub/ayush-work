@@ -16,7 +16,7 @@ export const useGTM = () => {
     trackPageView(currentUrl, currentTitle);
   }, []);
 
-  const trackCustomEvent = useCallback((eventName: string, parameters?: Record<string, any>) => {
+  const trackCustomEvent = useCallback((eventName: string, parameters?: Record<string, string | number | boolean | null | undefined>) => {
     trackEvent(eventName, parameters);
   }, []);
 

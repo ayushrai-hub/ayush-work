@@ -1,6 +1,6 @@
 # 🌐 Ayush Rai – Portfolio Website
 
-A modern, dynamic, and interactive personal portfolio website built with **Next.js, Tailwind CSS, and Framer Motion**.
+A modern, dynamic, and interactive personal portfolio website built with **Vite React, Tailwind CSS, and Framer Motion**.
 
 The website showcases **professional experience, projects, skills, certifications, and achievements** while integrating animations, interactivity, and a CMS-driven backend for easy updates.
 
@@ -11,7 +11,7 @@ The website showcases **professional experience, projects, skills, certification
 ### 🔹 Dynamic Content
 
 - Headless CMS integration (Sanity/Contentful/Strapi) for projects, certifications, and blog posts.
-- API fetching via Next.js (`getStaticProps` / `getServerSideProps`) for SEO-friendly pre-rendered content.
+- API fetching via React hooks for dynamic content.
 
 ### 🔹 Hero Section
 
@@ -28,7 +28,6 @@ The website showcases **professional experience, projects, skills, certification
 ### 🔹 Education Hub
 
 - Dual-degree details with expandable cards.
-- GPA progression chart (Chart.js/Recharts).
 - Academic achievements & honors.
 
 ### 🔹 Professional Experience
@@ -86,9 +85,10 @@ The website showcases **professional experience, projects, skills, certification
 
 ### 🔹 Deployment
 
-- Hosted on **Vercel** or **Netlify**.
+- Hosted on **Netlify** (primary) with serverless functions.
 - Custom domain with SSL certificate.
-- Final cross-browser & device compatibility check.
+- Real-time function logs and analytics.
+- Built-in CDN with global edge locations.
 
 ---
 
@@ -98,7 +98,7 @@ The website showcases **professional experience, projects, skills, certification
 ├── public/                 # Static assets (images, icons, etc.)
 ├── src/
 │   ├── components/         # Reusable UI components
-│   ├── pages/              # Next.js pages
+│   ├── components/pages/   # Page components
 │   ├── styles/             # Global styles
 │   ├── utils/              # Helper functions
 │   └── lib/                # CMS/API integration
@@ -106,14 +106,14 @@ The website showcases **professional experience, projects, skills, certification
 ├── package.json
 ├── tailwind.config.js
 ├── README.md
-└── next.config.js
+└── vite.config.ts
 ```
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Framework:** [Next.js](https://nextjs.org/)
+- **Framework:** [Vite](https://vitejs.dev/) with React
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/), CSS-in-JS (optional)
 - **Animations:** [Framer Motion](https://www.framer.com/motion/), [react-three-fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction)
 - **CMS (optional):** Sanity / Contentful / Strapi
@@ -127,22 +127,31 @@ The website showcases **professional experience, projects, skills, certification
 ## ✅ Development Checklist
 
 - [x] Define project scope and requirements
-- [x] Choose tech stack (Next.js, Tailwind, Framer Motion)
+- [x] Choose tech stack (Vite React, Tailwind, Framer Motion)
 - [ ] Implement Hero section with animations
 - [ ] Add About Me interactive timeline
-- [ ] Build Education Hub with GPA charts
-- [ ] Add Skills Matrix with radar chart
 - [ ] Create Projects Portfolio with cards & filters
 - [ ] Add Certifications showcase
 - [ ] Integrate Contact Form (serverless)
 - [ ] Implement Resume Download feature
 - [ ] Optimize for SEO & performance
 - [ ] Add accessibility features
-- [ ] Deploy on Vercel with custom domain
+- [ ] Deploy on Netlify with serverless functions
+- [ ] Configure Netlify Functions with environment variables
+- [ ] Set up continuous deployment via GitHub
+- [ ] Test contact form functionality in production
 
 ---
 
 ## 📦 Installation & Setup
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- npm or yarn
+- Netlify CLI (for local development)
+
+### Setup Steps
 
 ```bash
 # Clone repo
@@ -154,24 +163,75 @@ cd ayush-portfolio
 # Install dependencies
 npm install
 
+# Install Netlify CLI globally (for local development)
+npm install -g netlify-cli
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env and fill in your actual API keys and configuration values
+
 # Run development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view in your browser.
+Open [http://localhost:5173](http://localhost:5173) to view in your browser.
+
+### Netlify Functions Development
+
+```bash
+# Run with Netlify Functions locally
+npm run netlify:dev
+```
+
+This enables the contact form API endpoint at `http://localhost:8888/.netlify/functions/send-email`
+
+### Environment Variables Required
+
+Create a `.env` file with the following variables:
+
+```bash
+# SendGrid API Configuration
+SENDGRID_API_KEY=your_sendgrid_api_key_here
+
+# Contact Form Settings
+CONTACT_EMAIL=ayushrai0211@gmail.com
+FROM_EMAIL=noreply@ayush-rai-work.netlify.app
+```
 
 ---
 
 ## 📤 Deployment
 
-Deployed easily with **Vercel**:
+### Netlify Deployment (Recommended)
+
+1. **Connect to GitHub**: Import your repository in Netlify dashboard
+2. **Build Settings**:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+3. **Environment Variables**: Add in Netlify dashboard:
+   - `SENDGRID_API_KEY`
+   - `CONTACT_EMAIL`
+   - `FROM_EMAIL`
+4. **Deploy**: Automatic deployment on git push
+
+**Or deploy manually:**
+```bash
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Login and deploy
+netlify login
+netlify deploy --prod --dir=dist
+```
+
+### Vercel Deployment (Alternative)
 
 ```bash
 npm run build
 vercel --prod
 ```
 
-Or use **Netlify** with CI/CD from GitHub.
+**Note**: Netlify is the primary deployment platform with optimized serverless functions.
 
 ---
 

@@ -1,5 +1,60 @@
+/**
+ * ParticleBackground.tsx — Animated particle system background component with performance optimizations.
+ *
+ * This component creates a dynamic, animated particle system using HTML5 Canvas and requestAnimationFrame.
+ * Features WebGL availability checks, responsive canvas sizing, and performance optimizations for mobile devices.
+ * Implements connection lines between particles with color-coded relationships and smooth motion animations.
+ *
+ * The component includes:
+ * - Canvas-based particle rendering with custom animations
+ * - Performance optimization with mobile device detection
+ * - Adaptive particle connection based on distance
+ * - Color-coded particle system with gradient effects
+ * - Responsive canvas sizing and cleanup management
+ * - Browser compatibility and error handling
+ *
+ * Performance Considerations:
+ * - Disabled on mobile devices to preserve battery life
+ * - Frame rate optimization with requestAnimationFrame
+ * - Memory leak prevention with proper cleanup
+ * - WebGL availability checks before initialization
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import ParticleBackground from './components/ParticleBackground';
+ *
+ * function AppBackground() {
+ *   return (
+ *     <>
+ *       <ParticleBackground />
+ *       <MainContent />
+ *     </>
+ *   );
+ * }
+ * ```
+ *
+ * @see {@link src/components/ThreeJSHero.tsx} for primary usage
+ */
 import React, { useEffect, useRef } from "react";
 
+/**
+ * ParticleBackground — Animated canvas particle system component.
+ *
+ * Creates a visually appealing particle background with animated nodes
+ * and connection lines. Optimized for performance with mobile detection
+ * and cleanup management. Disabled on mobile devices to preserve battery life.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered particle background canvas
+ *
+ * @example
+ * ```tsx
+ * <ParticleBackground />
+ * ```
+ *
+ * @see {@link src/components/ThreeJSHero.tsx} for integration example
+ */
 const ParticleBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 

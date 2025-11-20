@@ -96,7 +96,6 @@ Create a cutting-edge, dynamic portfolio website for **Ayush Rai**, showcasing e
 
 **Academic Timeline Visualization:**
 - Interactive timeline with expandable course details
-- GPA progression charts
 - Key projects from academic years
 - Academic achievements and honors
 

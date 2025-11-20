@@ -1,9 +1,51 @@
+/**
+ * AboutMe.tsx — Detailed personal profile component with analytics integration.
+ *
+ * This component provides an in-depth personal profile section featuring professional background,
+ * skills showcase, key achievements, and interactive call-to-action buttons. It integrates
+ * Google Tag Manager (GTM) analytics tracking for user engagement measurement.
+ *
+ * The component includes:
+ * - Professional background and current education
+ * - Skills tag cloud with key technologies
+ * - Achievement metrics and statistics
+ * - Interactive buttons with analytics tracking
+ * - Responsive design with animations
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import { AboutMe } from './components/AboutMe';
+ *
+ * function App() {
+ *   return <AboutMe />;
+ * }
+ * ```
+ *
+ * @see {@link src/hooks/useGTM.ts} for analytics integration
+ * @see {@link src/components/Contact.tsx} for contact form
+ * @see {@link src/lib/profilesData.ts} for profiles configuration
+ */
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useGTM } from '../hooks/useGTM';
-// import profileImage from '../assets/E232F4CF-1BC6-4BB4-A659-75BD42299F6E_1_105_c.jpeg';
 
+/**
+ * AboutMe — Comprehensive personal profile component.
+ *
+ * Renders a detailed personal profile section with professional background,
+ * skills showcase, achievements, and interactive CTAs. Features smooth animations,
+ * responsive design, and integrates with Google Tag Manager for analytics tracking.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered AboutMe section
+ *
+ * @example
+ * ```tsx
+ * <AboutMe />
+ * ```
+ */
 export const AboutMe: React.FC = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -74,16 +116,16 @@ export const AboutMe: React.FC = () => {
                 
                 {/* Main image container */}
                 <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl">
-                  <div className="aspect-square rounded-xl overflow-hidden">
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden">
                     <img
                       src={`/profile-image.jpeg?v=${Date.now()}`}
                       alt="Ayush Rai - AI Engineer & Full-Stack Developer"
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition duration-500"
+                      className="w-full h-full object-cover object-center transform group-hover:scale-105 transition duration-500"
                       loading="eager"
                       onError={(e) => {
                         console.error('Image failed to load:', e);
                         // Fallback to a placeholder
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face';
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face&auto=format&q=75';
                       }}
                       onLoad={() => console.log('Profile image loaded successfully')}
                     />

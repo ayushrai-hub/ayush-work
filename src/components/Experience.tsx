@@ -1,9 +1,55 @@
+/**
+ * Experience.tsx — Professional experience timeline component with achievements.
+ *
+ * This component displays Ayush Rai's professional career journey through an interactive,
+ * animated timeline showcasing work experience, achievements, technologies used, and impact metrics.
+ * Features responsive design with alternating timeline layout and smooth scroll animations.
+ *
+ * The component includes:
+ * - Interactive professional timeline with company details
+ * - Achievement highlights and key accomplishments
+ * - Technology skill tags for each role
+ * - Responsive alternating timeline design
+ * - Performance metrics and success statistics
+ * - Visual current position indicators
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Experience from './components/Experience';
+ *
+ * function App() {
+ *   return <Experience />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/Education.tsx} for academic background
+ * @see {@link src/components/Certifications.tsx} for professional credentials
+ * @see {@link src/components/Projects.tsx} for project portfolio
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Briefcase, Calendar, MapPin, TrendingUp } from "lucide-react";
 import CountUp from "react-countup";
 
+/**
+ * Experience — Professional career timeline display component.
+ *
+ * Renders an interactive timeline of professional experience with animated entries,
+ * achievement highlights, and statistical metrics. Provides comprehensive view
+ * of career progression, technical skills development, and professional impact.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Experience section
+ *
+ * @example
+ * ```tsx
+ * <Experience />
+ * ```
+ *
+ * @see {@link src/lib/analytics.ts} for integration tracking
+ */
 const Experience: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -160,7 +206,11 @@ const Experience: React.FC = () => {
               } 
                          ${index % 2 === 1 ? "md:pl-8" : ""}`}
             >
-              <div className="timeline-dot" style={{ top: "2rem" }}></div>
+              <div
+                className="timeline-dot"
+                style={{ top: "2rem" }}
+                role="presentation"
+              ></div>
 
               <div
                 className={`card max-w-2xl ${

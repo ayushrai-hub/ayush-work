@@ -1,8 +1,12 @@
+// Type definitions for GTM
+type GtagParameters = Record<string, string | number | boolean | null | undefined>;
+type GTMEvent = Record<string, unknown>;
+
 // Google Tag Manager utility functions
 declare global {
   interface Window {
-    dataLayer: any[];
-    gtag: (...args: any[]) => void;
+    dataLayer: unknown[];
+    gtag: (...args: [eventName: string, ...rest: unknown[]]) => void;
   }
 }
 
@@ -16,7 +20,7 @@ export const initGTM = () => {
 };
 
 // Push events to GTM dataLayer
-export const gtmPush = (event: Record<string, any>) => {
+export const gtmPush = (event: GTMEvent) => {
   if (typeof window !== 'undefined' && window.dataLayer) {
     window.dataLayer.push(event);
   }
@@ -32,7 +36,7 @@ export const trackPageView = (url: string, title?: string) => {
 };
 
 // Track custom events
-export const trackEvent = (eventName: string, parameters: Record<string, any> = {}) => {
+export const trackEvent = (eventName: string, parameters: GtagParameters = {}) => {
   gtmPush({
     event: eventName,
     ...parameters,

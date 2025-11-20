@@ -95,9 +95,4 @@ describe('App', () => {
     expect(screen.getByText('Header')).toBeInTheDocument();
     expect(screen.getByText('Footer')).toBeInTheDocument();
   });
-
-  it('should include the Footer component', () => {
-    renderApp();
-    expect(screen.getByText('Footer')).toBeInTheDocument();
-  });
 });

@@ -1,6 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { initGA, trackEvent } from '../lib/analytics';
 
+// Google Analytics gtag function type
+interface GtagFunction {
+  (...args: any[]): void;
+}
+
+// Declare global gtag property
+declare global {
+  var gtag: GtagFunction | undefined;
+}
+
 describe('analytics', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -24,11 +34,11 @@ describe('analytics', () => {
 
     it('should initialize GA4 with correct measurement ID', () => {
       // Mock document methods
-      const mockScript = { async: true, src: '', type: 'text/javascript' } as any;
+      const mockScript = { async: true, src: '', type: 'text/javascript' } as HTMLScriptElement;
       const createElementSpy = vi.fn(() => mockScript);
       const appendChildSpy = vi.fn();
 
-      vi.spyOn(document, 'createElement').mockImplementation(createElementSpy as any);
+      vi.spyOn(document, 'createElement').mockImplementation(createElementSpy);
       vi.spyOn(document.head, 'appendChild').mockImplementation(appendChildSpy);
       vi.spyOn(document, 'title', 'get').mockReturnValue('Test Title');
 
@@ -42,25 +52,25 @@ describe('analytics', () => {
   describe('trackEvent', () => {
     it('should not throw error when gtag is not available', () => {
       // Mock window.gtag as undefined
-      const originalGtag = (global as any).gtag;
-      (global as any).gtag = undefined;
+      const originalGtag = global.gtag;
+      global.gtag = undefined;
 
       expect(() => trackEvent('test')).not.toThrow();
 
       // Restore original gtag
-      (global as any).gtag = originalGtag;
+      global.gtag = originalGtag;
     });
 
     it('should call gtag when available', () => {
-      const gtagSpy = vi.fn();
-      (global as any).gtag = gtagSpy;
+      const gtagSpy: GtagFunction = vi.fn();
+      global.gtag = gtagSpy;
 
       trackEvent('test_event', { param: 'value' });
 
       expect(gtagSpy).toHaveBeenCalledWith('event', 'test_event', { param: 'value' });
 
       // Clean up
-      (global as any).gtag = undefined;
+      global.gtag = undefined;
     });
   });
 });

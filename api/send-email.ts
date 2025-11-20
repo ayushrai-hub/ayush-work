@@ -1,39 +1,73 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import sgMail from '@sendgrid/mail';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+// Netlify Functions handler - API route for email sending
+export default async function handler(event: any, context?: any) {
+  // Set CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json',
+  };
+
+  // Only allow POST requests
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ message: 'Method not allowed' }),
+    };
+  }
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: '',
+    };
   }
 
   try {
-    const { name, email, subject, message, service } = req.body;
+    const { name, email, subject, message, service } = JSON.parse(event.body);
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required fields'
-      });
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: 'Missing required fields'
+        }),
+      };
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid email format'
-      });
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: 'Invalid email format'
+        }),
+      };
     }
 
     // Initialize SendGrid
     const sendgridApiKey = process.env.SENDGRID_API_KEY;
     if (!sendgridApiKey) {
       console.error('SENDGRID_API_KEY not configured');
-      return res.status(500).json({
-        success: false,
-        message: 'Email service not configured'
-      });
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: 'Email service not configured'
+        }),
+      };
     }
 
     sgMail.setApiKey(sendgridApiKey);
@@ -75,18 +109,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     };
 
+
     await sgMail.send(msg);
 
-    return res.status(200).json({
-      success: true,
-      message: 'Message sent successfully!'
-    });
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        message: 'Message sent successfully!'
+      }),
+    };
 
   } catch (error) {
     console.error('Email service error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to send message. Please try again later.'
-    });
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        message: 'Failed to send message. Please try again later.'
+      }),
+    };
   }
 }

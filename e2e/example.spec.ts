@@ -5,24 +5,24 @@ test.describe('Portfolio E2E Tests', () => {
     await page.goto('/');
 
     // Check hero section
-    await expect(page.locator('text=Ayush Rai')).toBeVisible();
-    await expect(page.locator('text=AI Engineer & Full-Stack Developer')).toBeVisible();
+    await expect(page.locator('#home h1:has-text("Ayush Rai")')).toBeVisible();
+    await expect(page.locator('#home:has-text("SDE - AI Engineer")')).toBeVisible();
 
     // Check navigation
-    await expect(page.locator('text=About')).toBeVisible();
-    await expect(page.locator('text=Projects')).toBeVisible();
-    await expect(page.locator('text=Contact')).toBeVisible();
+    await expect(page.locator('button:has-text("About Me")')).toBeVisible();
+    await expect(page.locator('button:has-text("Projects")')).toBeVisible();
+    await expect(page.locator('button:has-text("Contact")')).toBeVisible();
   });
 
   test('should navigate to projects section', async ({ page }) => {
     await page.goto('/');
 
     // Click on projects link
-    await page.locator('a[href="#projects"]').click();
+    await page.locator('button:has-text("Projects")').click();
 
     // Check if projects section is visible
     await expect(page.locator('#projects')).toBeVisible();
-    await expect(page.locator('text=My Projects')).toBeVisible();
+    await expect(page.locator('h2:has-text("Featured Projects")')).toBeVisible();
   });
 
   test('should open project demo links in new tab', async ({ page, context }) => {
@@ -48,13 +48,13 @@ test.describe('Portfolio E2E Tests', () => {
     await page.goto('/');
 
     // Navigate to contact section
-    await page.locator('a[href="#contact"]').click();
+    await page.locator('button:has-text("Contact")').click();
 
     // Check contact form exists
     await expect(page.locator('#contact')).toBeVisible();
-    await expect(page.locator('input[placeholder*="name"]')).toBeVisible();
-    await expect(page.locator('input[placeholder*="email"]')).toBeVisible();
-    await expect(page.locator('textarea[placeholder*="message"]')).toBeVisible();
+    await expect(page.locator('#contact input[name="name"]')).toBeVisible();
+    await expect(page.locator('#contact input[name="email"]')).toBeVisible();
+    await expect(page.locator('#contact textarea[name="message"]')).toBeVisible();
   });
 
   test('should be accessible with keyboard navigation', async ({ page }) => {
@@ -75,8 +75,8 @@ test.describe('Portfolio E2E Tests', () => {
     await page.goto('/');
 
     // Check hero section is still visible and readable on mobile
-    await expect(page.locator('text=Ayush Rai')).toBeVisible();
-    await expect(page.locator('text=AI Engineer & Full-Stack Developer')).toBeVisible();
+    await expect(page.locator('#home h1:has-text("Ayush Rai")')).toBeVisible();
+    await expect(page.locator('#home:has-text("SDE - AI Engineer")')).toBeVisible();
   });
 
   test('should have proper meta tags', async ({ page }) => {
@@ -111,7 +111,7 @@ test.describe('Portfolio E2E Tests', () => {
     await page.goto('/');
 
     // Navigate to contact section
-    await page.locator('a[href="#contact"]').click();
+    await page.locator('button:has-text("Contact")').click();
 
     // Try to submit form with empty fields
     const submitButton = page.locator('button[type="submit"], button:has-text("Send")');

@@ -1,11 +1,66 @@
+/**
+ * Logo.tsx — Responsive logo component with size variants and optional text display.
+ *
+ * This component provides a flexible logo display for the Ayush Rai portfolio website,
+ * featuring responsive sizing options and optional text integration. Optimized for
+ * performance with lazy loading and fallback handling for profile images.
+ *
+ * The component includes:
+ * - Three size variants (sm, md, lg) with consistent scaling
+ * - Optional text display for different use contexts
+ * - Image optimization with fallback handling
+ * - Responsive border styling and hover effects
+ * - Accessibility features with proper alt text
+ *
+ * Performance optimizations:
+ * - Optimized image loading with caching
+ * - Responsive image sizing to prevent unnecessary downloads
+ * - Error handling with graceful fallback
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import { Logo } from './components/Logo';
+ *
+ * // Basic logo usage
+ * <Logo />
+ *
+ * // Logo with custom size and text
+ * <Logo size="lg" className="hover:opacity-80" />
+ * ```
+ *
+ * @see {@link src/components/Header.tsx} for primary usage location
+ */
 import React from 'react';
-// import profileImage from '../assets/E232F4CF-1BC6-4BB4-A659-75BD42299F6E_1_105_c.jpeg';
 
+/**
+ * Logo component props interface.
+ */
 interface LogoProps {
+  /** Size variant for the logo (affects both image and text scaling) */
   size?: 'sm' | 'md' | 'lg';
+  /** Additional CSS classes to apply to the logo container */
   className?: string;
 }
 
+/**
+ * Logo — Flexible logo component with responsive sizing.
+ *
+ * Displays the Ayush Rai logo with profile image and optional text,
+ * providing consistent branding across the application. Features
+ * responsive sizing, performance optimizations, and accessibility.
+ *
+ * @component
+ * @param {LogoProps} props - Component props
+ * @returns {JSX.Element} The rendered logo component
+ *
+ * @example
+ * ```tsx
+ * <Logo size="md" />
+ * ```
+ *
+ * @see {@link src/components/Header.tsx} for primary integration
+ */
 export const Logo: React.FC<LogoProps> = ({ size = 'md', className = '' }) => {
   const sizeClasses = {
     sm: 'w-8 h-8',

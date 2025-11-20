@@ -46,9 +46,9 @@ You are a **Senior Software Engineer** with over 10 years of experience in full-
     <section name="hero" priority="critical">Dynamic headlines, animated counters, status indicators</section>
     <section name="about" priority="high">Interactive timeline, personal story</section>
     <section name="experience" priority="high">Role-based experience with metrics dashboard</section>
-    <section name="skills" priority="high">Categorized skills with radar chart visualization</section>
+    <section name="skills" priority="high">Categorized skills</section>
     <section name="projects" priority="critical">Portfolio with live demos, GitHub links, testimonials</section>
-    <section name="education" priority="medium">Academic achievements with GPA visualization</section>
+    <section name="education" priority="medium">Academic achievements</section>
     <section name="certifications" priority="medium">Certification showcase with verification</section>
     <section name="blog" priority="medium">CMS-integrated blog/research section</section>
     <section name="services" priority="low">Service offerings with pricing</section>

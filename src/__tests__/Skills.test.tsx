@@ -46,8 +46,8 @@ describe('Skills Component', () => {
 
   it('renders all skill categories', () => {
     const { container } = render(<Skills />);
-    const skillDivs = container.querySelectorAll('div[data-testid$="-icon"]');
-    expect(skillDivs).toHaveLength(6); // Should have 6 skill categories
+    const skillCategories = container.querySelectorAll('.group.bg-white.dark\\:bg-gray-800');
+    expect(skillCategories).toHaveLength(6); // Should have 6 skill categories
   });
 
   it('has accessible markup for main heading', () => {

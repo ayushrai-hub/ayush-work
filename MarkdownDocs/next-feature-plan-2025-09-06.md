@@ -86,7 +86,6 @@
 ## 🎨 Medium Priority Features (Next Sprint)
 
 ### Enhanced Skills Matrix
-- Implement radar chart visualization
 - Add skills categorization (AI/ML, Web Dev, Tools)
 - Interactive skill level indicators
 - Animated skill progress displays
@@ -98,7 +97,6 @@
 - Client testimonials integration
 
 ### Advanced Visualizations
-- GPA progression charts
 - Certification timeline with animations
 - Experience metrics dashboard
 - Technology usage statistics

@@ -1,9 +1,55 @@
+/**
+ * Hero.tsx — Landing section component with animated introduction and key statistics.
+ *
+ * This component serves as the main landing section of the portfolio website, featuring
+ * a dynamic headline rotator, animated profile image, key statistics with count-up animations,
+ * and prominent call-to-action buttons. Includes social media links and current availability
+ * status. Uses Framer Motion for smooth animations and responsive design for all screen sizes.
+ *
+ * The component includes:
+ * - Dynamic headline rotation showcasing different expertise areas
+ * - Profile image with hover effects and accessibility features
+ * - Key achievement statistics with animated counters
+ * - Social media links and contact information
+ * - Call-to-action buttons for portfolio exploration
+ * - Current availability status indicators
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Hero from './components/Hero';
+ *
+ * function App() {
+ *   return <Hero />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/AboutMe.tsx} for detailed personal introduction
+ * @see {@link src/components/Projects.tsx} for work showcase
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Github, Linkedin, Mail, Phone } from "lucide-react";
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 
+/**
+ * Hero — Main landing section component with animated introduction.
+ *
+ * Renders the primary hero section with dynamic content, statistics, and navigation
+ * to other portfolio sections. Features animated elements, responsive design, and
+ * key portfolio information at a glance.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Hero section
+ *
+ * @example
+ * ```tsx
+ * <Hero />
+ * ```
+ *
+ * @see {@link src/components/AboutMe.tsx} for extended introduction
+ */
 const Hero: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true });
 
@@ -22,7 +68,7 @@ const Hero: React.FC = () => {
       setCurrentHeadline((prev) => (prev + 1) % headlines.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [headlines.length]);
 
   const stats = [
     { value: 2, label: "Years Experience", suffix: "+" },

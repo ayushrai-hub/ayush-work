@@ -43,8 +43,8 @@ describe('Projects Component', () => {
   it('displays project impact stats', () => {
     const { getByText } = render(<Projects />);
     expect(getByText('Project Impact')).toBeInTheDocument();
-    expect(getByText('20+')).toBeInTheDocument();
     expect(getByText('10+')).toBeInTheDocument();
+    expect(getByText('5+')).toBeInTheDocument();
     expect(getByText('100%')).toBeInTheDocument();
   });
 

@@ -1,3 +1,19 @@
+/**
+ * App — The root React component for the portfolio application.
+ *
+ * This component serves as the main entry point, managing routing between the main portfolio page and dedicated detail pages. It implements lazy loading for performance optimization and includes error boundaries to maintain user experience even if sections fail.
+ *
+ * Notes:
+ * - Uses React Router for client-side navigation.
+ * - Initializes Google Analytics on mount via initGA hook.
+ * - All major sections are wrapped in ErrorBoundary for graceful error handling.
+ * - Lazy loads heavy components like Three.js scenes to reduce initial bundle size.
+ *
+ * Relationships:
+ * - Imports components from ./components/* for different sections
+ * - Uses hooks from ./lib/* for analytics
+ * - Renders pages from ./components/pages/*
+ */
 import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -5,6 +21,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ParticleBackground from './components/ParticleBackground';
 import FloatingNav from './components/FloatingNav';
+import ErrorBoundary from './components/ErrorBoundary';
 import { initGA } from './lib/analytics';
 import SEO from './components/SEO';
 import './App.css';
@@ -43,7 +60,9 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-gray-100 relative overflow-x-hidden transition-colors duration-300 safe-area">
         <SEO />
-        <ParticleBackground />
+        <ErrorBoundary context="background particles">
+          <ParticleBackground />
+        </ErrorBoundary>
 
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
@@ -57,33 +76,47 @@ function App() {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <ThreeJSHero />
-                  </Suspense>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <AboutMe />
-                  </Suspense>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Experience />
-                  </Suspense>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Projects />
-                  </Suspense>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Education />
-                  </Suspense>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Skills />
-                  </Suspense>
+                  <ErrorBoundary showUserMessage={true} context="Three.js hero section">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <ThreeJSHero />
+                    </Suspense>
+                  </ErrorBoundary>
+                  <ErrorBoundary showUserMessage={true} context="about section">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <AboutMe />
+                    </Suspense>
+                  </ErrorBoundary>
+                  <ErrorBoundary showUserMessage={true} context="experience section">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Experience />
+                    </Suspense>
+                  </ErrorBoundary>
+                  <ErrorBoundary showUserMessage={true} context="projects section">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Projects />
+                    </Suspense>
+                  </ErrorBoundary>
+                  <ErrorBoundary showUserMessage={true} context="education section">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Education />
+                    </Suspense>
+                  </ErrorBoundary>
+                  <ErrorBoundary showUserMessage={true} context="skills section">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Skills />
+                    </Suspense>
+                  </ErrorBoundary>
                   <Suspense fallback={<LoadingSpinner />}>
                     <Other />
                   </Suspense>
                   <Suspense fallback={<LoadingSpinner />}>
                     <About />
                   </Suspense>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Contact />
-                  </Suspense>
+                  <ErrorBoundary showUserMessage={true} context="contact form">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Contact />
+                    </Suspense>
+                  </ErrorBoundary>
                 </motion.main>
                 <Footer />
               </>

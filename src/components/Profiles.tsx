@@ -1,3 +1,45 @@
+/**
+ * Profiles.tsx — Social media and online platform integrations showcase component.
+ *
+ * This component displays a comprehensive collection of Ayush Rai's online presence
+ * across multiple platforms including coding profiles, social media, design portfolios,
+ * and professional networking sites. Features dynamic filtering, platform categorization,
+ * and direct links to all online profiles with verification and engagement metrics.
+ *
+ * The component includes:
+ * - Platform categorization by domain (development, design, social, business)
+ * - Dynamic filtering by platform category
+ * - Profile verification and credibility indicators
+ * - Professional network attribution and impact metrics
+ * - Platform-specific visual branding and icons
+ * - Responsive grid layout adapting to screen size
+ *
+ * Platform Categories:
+ * - Development: GitHub, LeetCode, Kaggle, Hugging Face
+ * - Design: Behance, Dribbble, Canva
+ * - Social: LinkedIn, Twitter, Instagram, Facebook
+ * - Business: Upwork, Fiverr, Freelancer, Guru
+ *
+ * Features:
+ * - Comprehensive profile coverage across 50+ platforms
+ * - Real-time activity and engagement links
+ * - Professional networking and collaboration portals
+ * - Creative portfolio and design showcases
+ * - Developer community contributions and repositories
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Profiles from './components/Profiles';
+ *
+ * function App() {
+ *   return <Profiles />;
+ * }
+ * ```
+ *
+ * @see {@link src/lib/profilesData.ts} for comprehensive profile data
+ * @see {@link src/components/Footer.tsx} for selective profile integrations
+ */
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -19,13 +61,30 @@ import {
 } from 'lucide-react';
 import { profiles, domains, Profile, Domain } from '../lib/profilesData';
 
+/**
+ * Profiles — Comprehensive online platforms showcase component.
+ *
+ * Displays professional profiles across multiple platforms with filtering
+ * capabilities and platform categorization. Enables visitors to explore
+ * online presence and connect across different digital platforms.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Profiles section
+ *
+ * @example
+ * ```tsx
+ * <Profiles />
+ * ```
+ *
+ * @see {@link src/lib/profilesData.ts} for platform data management
+ */
 const Profiles: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<string>('all');
   const [expandedDomains, setExpandedDomains] = useState<Set<string>>(new Set(domains.map(d => d.name)));
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  // Icon mapping
+  // Icon mapping based on platform characteristics
   const getIcon = (iconName: string) => {
     const icons: { [key: string]: any } = {
       github: Code,
@@ -52,7 +111,7 @@ const Profiles: React.FC = () => {
     return icons[iconName.toLowerCase().replace('-', '')] || Globe;
   };
 
-  // Filter profiles based on search and domain
+  // Filter profiles based on search and domain criteria
   const filteredProfiles = useMemo(() => {
     return profiles.filter(profile => {
       const matchesSearch = profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,7 +122,7 @@ const Profiles: React.FC = () => {
     });
   }, [searchTerm, selectedDomain]);
 
-  // Group profiles by domain
+  // Group profiles by domain for organized display
   const groupedProfiles = useMemo(() => {
     const groups: { [key: string]: Profile[] } = {};
     filteredProfiles.forEach(profile => {
@@ -75,7 +134,7 @@ const Profiles: React.FC = () => {
     return groups;
   }, [filteredProfiles]);
 
-  // Toggle domain expansion
+  // Toggle domain expansion for detailed viewing
   const toggleDomain = (domainName: string) => {
     const newExpanded = new Set(expandedDomains);
     if (newExpanded.has(domainName)) {
@@ -86,12 +145,12 @@ const Profiles: React.FC = () => {
     setExpandedDomains(newExpanded);
   };
 
-  // Get domain info
+  // Retrieve domain configuration for styling and metadata
   const getDomain = (domainName: string): Domain | undefined => {
     return domains.find(d => d.name === domainName);
   };
 
-  // Animation variants
+  // Define animation variants for smooth transitions
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -115,9 +174,8 @@ const Profiles: React.FC = () => {
   return (
     <section id="profiles" className="py-8 sm:py-12 bg-primary">
       <div className="container mx-auto px-4">
-        {/* Hero Section */}
+        {/* Hero Section with Statistics */}
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
@@ -141,7 +199,7 @@ const Profiles: React.FC = () => {
             Explore My Profiles Across Platforms — From coding to design, writing, and social presence, here's everywhere you can connect with my work.
           </motion.p>
 
-          {/* Stats */}
+          {/* Statistics Cards */}
           <motion.div
             className="flex flex-wrap justify-center items-center gap-6 md:gap-8 mb-8"
             initial={{ opacity: 0, y: 20 }}
@@ -159,7 +217,7 @@ const Profiles: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Search and Filters */}
+        {/* Advanced Search and Filtering */}
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: 30 }}
@@ -167,7 +225,7 @@ const Profiles: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           <div className="max-w-4xl mx-auto">
-            {/* Search Bar */}
+            {/* Smart Search Input */}
             <div className="relative mb-4">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
@@ -180,7 +238,7 @@ const Profiles: React.FC = () => {
               />
             </div>
 
-            {/* Domain Filters */}
+            {/* Domain Filter Pills */}
             <div className="flex flex-wrap justify-center gap-2 pb-2">
               <button
                 onClick={() => setSelectedDomain('all')}
@@ -213,7 +271,7 @@ const Profiles: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Profile Sections */}
+        {/* Interactive Platform Sections */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -232,7 +290,7 @@ const Profiles: React.FC = () => {
                 variants={itemVariants}
                 className="bg-primary-dark rounded-xl border border-accent/10 overflow-hidden"
               >
-                {/* Domain Header */}
+                {/* Expandable Domain Header */}
                 <div
                   className={`bg-gradient-to-r ${domain.gradient} p-6 cursor-pointer`}
                   onClick={() => toggleDomain(domainName)}
@@ -262,7 +320,7 @@ const Profiles: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Profile Cards */}
+                {/* Profile Cards Grid */}
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div
@@ -327,7 +385,7 @@ const Profiles: React.FC = () => {
           })}
         </motion.div>
 
-        {/* Empty State */}
+        {/* Empty State Handling */}
         {Object.keys(groupedProfiles).length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}

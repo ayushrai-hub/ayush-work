@@ -1,8 +1,51 @@
+/**
+ * About.tsx — Personal story and core values presentation component.
+ *
+ * This component displays Ayush Rai's personal journey, core values, and professional approach
+ * as a polymath in AI engineering and full-stack development. It features animated sections
+ * showcasing strategic thinking, technical innovation, community leadership, and continuous learning.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import About from './components/About';
+ *
+ * function App() {
+ *   return <About />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/AboutMe.tsx} for detailed personal profile
+ * @see {@link src/components/Hero.tsx} for landing section
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Brain, Code, Users, Lightbulb } from "lucide-react";
 
+/**
+ * About — Main About section component displaying personal story and values.
+ *
+ * Renders an animated section that introduces the user with their professional journey,
+ * core principles, and value proposition. Uses Framer Motion for smooth animations and
+ * React Intersection Observer for performance-optimized animations.
+ *
+ * The component displays:
+ * - Personal story with background and current pursuits
+ * - Core values with icons and descriptions
+ * - Animated entrance effects on scroll
+ *
+ * @component
+ * @returns {JSX.Element} The rendered About section
+ *
+ * @example
+ * ```tsx
+ * <About />
+ * ```
+ *
+ * @see {@link src/lib/types} for shared type definitions
+ * @see {@link src/styles/globals.css} for animation classes
+ */
 const About: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 

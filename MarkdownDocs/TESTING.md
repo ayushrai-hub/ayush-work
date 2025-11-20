@@ -44,6 +44,417 @@ npx playwright test
 npx playwright test --ui
 ```
 
+## E2E Testing Setup Guide
+
+The E2E testing framework uses Playwright to simulate real user interactions across multiple browsers and devices. This section provides step-by-step guidance for setting up and running E2E tests.
+
+### Prerequisites
+
+1. **Node.js**: Version 18 or higher
+2. **Package Manager**: npm or yarn
+3. **Browser Binaries**: Installed automatically by Playwright
+4. **Development Server**: Running on http://localhost:5173
+
+### Installation
+
+E2E dependencies are included in package.json:
+
+```json
+{
+  "@playwright/test": "^1.55.0",
+  "playwright": "^1.55.0"
+}
+```
+
+Install dependencies:
+```bash
+npm install
+```
+
+Install Playwright browsers:
+```bash
+npx playwright install
+```
+
+### Configuration Breakdown
+
+The `playwright.config.ts` file contains the complete E2E setup:
+
+```typescript
+export default defineConfig({
+  // Test directory containing all E2E test files
+  testDir: './e2e',
+
+  // Parallel execution settings
+  fullyParallel: true,  // Run tests in parallel
+
+  // CI/CD settings
+  forbidOnly: !!process.env.CI,  // Prevent .only in CI
+  retries: process.env.CI ? 2 : 0,  // Retry on CI failure
+
+  // Execution settings
+  workers: process.env.CI ? 1 : undefined,  // Single worker in CI
+
+  // Base settings for all tests
+  use: {
+    baseURL: 'http://localhost:5173',  // Test URL
+    trace: 'on-first-retry',           // Capture traces on retry
+  },
+
+  // Browser configurations
+  projects: [
+    // Desktop browsers
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+
+    // Mobile browsers
+    { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
+  ],
+
+  // Development server configuration
+  webServer: {
+    command: 'npm run dev',           // Start dev server
+    url: 'http://localhost:5173',     // Wait for this URL
+    reuseExistingServer: !process.env.CI,  // Reuse server in dev
+  },
+});
+```
+
+### Running E2E Tests
+
+#### Basic Execution
+
+Run all E2E tests:
+```bash
+npx playwright test
+```
+
+Run specific test file:
+```bash
+npx playwright test example.spec.ts
+```
+
+Run tests in specific browser:
+```bash
+npx playwright test --project=chromium
+```
+
+Run tests in debug mode:
+```bash
+npx playwright test --debug
+```
+
+#### Advanced Options
+
+Run tests in headed mode (visible browser):
+```bash
+npx playwright test --headed
+```
+
+Run tests with UI mode (interactive):
+```bash
+npx playwright test --ui
+```
+
+Run tests in specific viewport:
+```bash
+npx playwright test --viewport-size="375,667"
+```
+
+#### Parallel and Sequential Execution
+
+Tests run in parallel by default. To run sequentially:
+```bash
+npx playwright test --workers=1
+```
+
+### Writing E2E Tests
+
+#### Test File Structure
+
+Create `.spec.ts` files in the `e2e/` directory:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('User Journey Tests', () => {
+  test('complete portfolio interaction flow', async ({ page }) => {
+    // Test implementation
+  });
+});
+```
+
+#### Test Patterns
+
+1. **Page Navigation**
+```typescript
+await page.goto('/');
+await expect(page).toHaveURL('http://localhost:5173/');
+```
+
+2. **Element Interaction**
+```typescript
+await page.click('button[type="submit"]');
+await page.fill('input[name="email"]', 'test@example.com');
+```
+
+3. **Assertions**
+```typescript
+await expect(page.locator('text=Success')).toBeVisible();
+await expect(page.locator('.error')).toBeHidden();
+```
+
+4. **Waiting Strategies**
+```typescript
+await page.waitForLoadState('networkidle');  // Wait for network
+await page.waitForSelector('.loaded');       // Wait for element
+await page.waitForTimeout(1000);             // Fixed delay (use sparingly)
+```
+
+#### Examples from Current Tests
+
+**Basic Page Load Test:**
+```typescript
+test('should load homepage and display key elements', async ({ page }) => {
+  await page.goto('/');
+
+  // Check hero section
+  await expect(page.locator('text=Ayush Rai')).toBeVisible();
+
+  // Check navigation menu
+  await expect(page.locator('text=About')).toBeVisible();
+  await expect(page.locator('text=Projects')).toBeVisible();
+  await expect(page.locator('text=Contact')).toBeVisible();
+});
+```
+
+**Form Interaction Test:**
+```typescript
+test('should show contact form and validate input', async ({ page }) => {
+  await page.goto('/');
+
+  // Navigate to contact section
+  await page.locator('a[href="#contact"]').click();
+
+  // Verify form elements
+  await expect(page.locator('#contact')).toBeVisible();
+  await expect(page.locator('input[placeholder*="name"]')).toBeVisible();
+  await expect(page.locator('input[placeholder*="email"]')).toBeVisible();
+  await expect(page.locator('textarea[placeholder*="message"]')).toBeVisible();
+});
+```
+
+**Cross-browser Compatibility Test:**
+```typescript
+test('should work on mobile viewport', async ({ page }) => {
+  // Set mobile viewport
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+
+  // Test mobile-specific behavior
+  await expect(page.locator('text=Ayush Rai')).toBeVisible();
+});
+```
+
+### Debugging E2E Tests
+
+#### Visual Debugging
+
+1. **Screenshots on Failure**
+```typescript
+// Automatic screenshots on failure (configured in playwright.config.ts)
+// Screenshots saved to test-results/
+
+// Manual screenshots
+await page.screenshot({ path: 'debug-screenshot.png' });
+```
+
+2. **Traces and Videos**
+```typescript
+// Enable tracing in config
+trace: 'on-first-retry'
+
+// Playwright UI mode
+npx playwright test --ui
+```
+
+#### Console Debugging
+
+Add debugging statements:
+```typescript
+console.log('Current URL:', page.url());
+console.log('Element count:', await page.locator('.item').count());
+```
+
+#### Step-by-Step Execution
+
+Use `--debug` flag for step-through debugging:
+```bash
+npx playwright test --debug
+```
+
+### CI/CD Integration
+
+#### GitHub Actions Setup
+
+```yaml
+name: E2E Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npx playwright test
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+```
+
+#### Test Results and Reports
+
+- **HTML Report**: `playwright-report/index.html`
+- **JSON Report**: `playwright-report/results.json`
+- **Screenshots**: `test-results/` directory
+- **Traces**: `test-results/trace.zip`
+
+### Performance Testing with E2E
+
+#### Measuring Load Times
+
+```typescript
+test('should load homepage within performance budget', async ({ page }) => {
+  const startTime = Date.now();
+  await page.goto('/');
+  const loadTime = Date.now() - startTime;
+
+  // Assert page loads within 3 seconds
+  expect(loadTime).toBeLessThan(3000);
+
+  // Measure specific resource load times
+  const heroImage = page.locator('img[alt="Hero image"]');
+  await expect(heroImage).toBeVisible();
+
+  const imageLoadTime = await page.evaluate(() => {
+    const img = document.querySelector('img[alt="Hero image"]') as HTMLImageElement;
+    return img.complete ? 0 : Date.now() - performance.now();
+  });
+
+  expect(imageLoadTime).toBeLessThan(2000);
+});
+```
+
+#### Network Conditions Testing
+
+```typescript
+test('should work on slow connections', async ({ page, context }) => {
+  // Simulate slow 3G connection
+  await context.route('**/*', async route => {
+    await new Promise(resolve => setTimeout(resolve, 100)); // Add delay
+    await route.continue();
+  });
+
+  await page.goto('/');
+  // Test that core functionality still works
+});
+```
+
+### Best Practices for E2E Tests
+
+#### Test Organization
+- Group related tests using `test.describe()`
+- Use descriptive test names
+- Keep tests focused on single features
+- Avoid flaky selectors (prefer semantic selectors over brittle CSS/XPath)
+
+#### Selector Strategies
+```typescript
+// Best: Semantic selectors
+page.locator('button[aria-label="Close"]')
+
+// Good: Role-based selectors
+page.getByRole('button', { name: 'Submit' })
+
+// Avoid: Brittle CSS selectors
+page.locator('.btn-primary.large')
+```
+
+#### Waiting Strategies
+```typescript
+// Prefer explicit waits over fixed timeouts
+await expect(page.locator('.results')).toBeVisible();
+
+// Use actionability checks
+await page.click('button:enabled');
+```
+
+#### Test Data Management
+```typescript
+// Use fixtures or factories for test data
+const testUser = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  message: 'Test message content'
+};
+
+await page.fill('input[name="email"]', testUser.email);
+```
+
+#### Cross-browser Considerations
+- Test critical user journeys across all supported browsers
+- Use browser-specific expect assertions when needed
+- Account for rendering differences between browsers
+
+### Troubleshooting Common Issues
+
+#### Flaky Tests
+- **Cause**: Race conditions, animations, dynamic content
+- **Solution**: Use proper wait strategies, avoid fixed timeouts
+
+#### Element Not Found
+- **Cause**: Incorrect selectors, async loading
+- **Solution**: Use semantic selectors, implement proper waits
+
+#### Browser-specific Failures
+- **Cause**: Implementation differences across browsers
+- **Solution**: Add browser-specific handling, check browser support
+
+#### CI Failures
+- **Cause**: Different environment, missing dependencies
+- **Solution**: Ensure proper CI setup, match local environment
+
+### Maintenance
+
+#### Updating Tests
+- Keep tests in sync with application changes
+- Update selectors when UI changes
+- Regularly review and remove obsolete tests
+
+#### Test Coverage
+- Focus E2E tests on critical user journeys
+- Complement with unit tests for component logic
+- Balance test execution time with coverage needs
+
+This E2E setup provides comprehensive coverage of user interactions while maintaining fast execution and reliable results across different environments.
+
 ### Accessibility Tests (integrated with unit tests)
 ```bash
 npm run test:coverage

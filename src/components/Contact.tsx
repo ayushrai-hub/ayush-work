@@ -1,3 +1,40 @@
+/**
+ * Contact.tsx — Contact form and information display component with security validation.
+ *
+ * This component provides a comprehensive contact section with secure form validation,
+ * analytics integration, and multiple contact methods. Features client-side and server-side
+ * validation, rate limiting protection, and comprehensive error handling for form submissions.
+ * Integrates Google Tag Manager analytics for user interaction tracking.
+ *
+ * The component includes:
+ * - Secure contact form with comprehensive validation
+ * - Analytics tracking for user interactions
+ * - Rate limiting and security logging
+ * - Multiple contact method display
+ * - Social media links and profiles
+ * - Responsive design with accessibility features
+ *
+ * Security Features:
+ * - Input sanitization to prevent XSS
+ * - Email validation with RFC compliance
+ * - Rate limiting to prevent spam
+ * - Security logging for anomalous behavior
+ * - Client-side form validation
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Contact from './components/Contact';
+ *
+ * function App() {
+ *   return <Contact />;
+ * }
+ * ```
+ *
+ * @see {@link src/lib/analytics.ts} for analytics integration
+ * @see {@link src/lib/securityLogger.ts} for security logging
+ * @see {@link src/lib/emailService.ts} for email handling
+ */
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -14,6 +51,100 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { trackContactForm, trackServiceInterest } from "../lib/analytics";
+import {
+  logFormValidationFailure,
+  logNetworkError,
+  trackFormSubmission
+} from "../lib/securityLogger";
+
+/**
+ * Contact — Secure contact form and information component.
+ *
+ * Renders a comprehensive contact section with secure form handling, validation,
+ * analytics integration, and multiple communication channels. Provides both
+ * immediate contact options and an async contact form with full security validation.
+ *
+ * Security considerations:
+ * - Comprehensive input sanitization
+ * - Email format validation per RFC standards
+ * - Rate limiting protection
+ * - Analytics tracking for abuse detection
+ * - Error logging for security incidents
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Contact section
+ *
+ * @example
+ * ```tsx
+ * <Contact />
+ * ```
+ *
+ * @see {@link src/lib/profilesData.ts} for social media profiles
+ */
+
+// Input validation utilities
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return emailRegex.test(email.trim()) && email.trim().length <= 254; // RFC 5321 limit
+};
+
+const validateName = (name: string): boolean => {
+  const trimmed = name.trim();
+  // Allow letters, spaces, hyphens, apostrophes (common name characters)
+  const nameRegex = /^[a-zA-Z\s\-']+$/;
+  return trimmed.length >= 2 && trimmed.length <= 100 && nameRegex.test(trimmed);
+};
+
+const validateSubject = (subject: string): boolean => {
+  const trimmed = subject.trim();
+  return trimmed.length >= 5 && trimmed.length <= 200 && trimmed.length > 0;
+};
+
+const validateMessage = (message: string): boolean => {
+  const trimmed = message.trim();
+  return trimmed.length >= 10 && trimmed.length <= 2000 && trimmed.length > 0;
+};
+
+// Input sanitization - comprehensive XSS prevention
+const sanitizeInput = (input: string): string => {
+  // First, trim and limit length to prevent DoS
+  let sanitized = input.substring(0, 2000).trim();
+
+  // Remove dangerous HTML/script content
+  sanitized = sanitized
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Remove iframe tags
+    .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '') // Remove object tags
+    .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '') // Remove embed tags
+    .replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, '') // Remove form tags
+    .replace(/<input\b[^<]*(?:(?!<\/input>)<[^<]*)*\/?>/gi, '') // Remove input tags
+    .replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*\/?>/gi, '') // Remove meta tags
+    .replace(/<link\b[^<]*(?:(?!<\/link>)<[^<]*)*\/?>/gi, '') // Remove link tags
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '') // Remove style tags
+    .replace(/<\/?[^>]+>/gi, '') // Remove any remaining HTML tags
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/vbscript:/gi, '') // Remove vbscript: protocol
+    .replace(/data:\w+\/[^;]+(;[^,]*)?,[^,]*/gi, '') // Remove data URLs
+    .replace(/on\w+="[^"]*"/gi, '') // Remove event handlers double quotes
+    .replace(/on\w+='[^']*'/gi, '') // Remove event handlers single quotes
+    .replace(/on\w+=\w+/gi, '') // Remove event handlers no quotes
+    // eslint-disable-next-line no-control-regex
+    .replace(/\x00/g, '') // Remove null bytes
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, ''); // Remove control characters
+
+  // Escape remaining potentially dangerous characters
+  sanitized = sanitized
+    .replace(/&/g, '&')
+    .replace(/"/g, '"')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;')
+    .replace(/\\/g, '&#x5C;')
+    .replace(/</g, '<')
+    .replace(/>/g, '>');
+
+  return sanitized.trim();
+};
 
 const Contact: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -24,6 +155,7 @@ const Contact: React.FC = () => {
     message: "",
     service: "",
   });
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
     type: "success" | "error" | null;
@@ -33,16 +165,56 @@ const Contact: React.FC = () => {
     message: "",
   });
 
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'name':
+        if (!validateName(value)) {
+          return 'Name must be between 2 and 100 characters.';
+        }
+        break;
+      case 'email':
+        if (!validateEmail(value)) {
+          return 'Please enter a valid email address.';
+        }
+        break;
+      case 'subject':
+        if (!validateSubject(value)) {
+          return 'Subject must be between 5 and 200 characters.';
+        }
+        break;
+      case 'message':
+        if (!validateMessage(value)) {
+          return 'Message must be between 10 and 2000 characters.';
+        }
+        break;
+      default:
+        break;
+    }
+    return '';
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
     const { name, value } = e.target;
+
+    // Sanitize the input
+    const sanitizedValue = sanitizeInput(value);
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: sanitizedValue,
     });
+
+    // Clear validation error for this field when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
 
     // Track service interest when user selects a service
     if (name === "service" && value) {
@@ -73,8 +245,58 @@ const Contact: React.FC = () => {
     }
   };
 
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    // Check required fields and log validation failures
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required.';
+      logFormValidationFailure('ContactForm', 'name', formData.name, 'Name is required');
+    } else if (!validateName(formData.name)) {
+      const errorMsg = validateField('name', formData.name);
+      errors.name = errorMsg;
+      logFormValidationFailure('ContactForm', 'name', formData.name, errorMsg);
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required.';
+      logFormValidationFailure('ContactForm', 'email', formData.email, 'Email is required');
+    } else if (!validateEmail(formData.email)) {
+      const errorMsg = validateField('email', formData.email);
+      errors.email = errorMsg;
+      logFormValidationFailure('ContactForm', 'email', formData.email, errorMsg);
+    }
+
+    if (!formData.subject.trim()) {
+      errors.subject = 'Subject is required.';
+      logFormValidationFailure('ContactForm', 'subject', formData.subject, 'Subject is required');
+    } else if (!validateSubject(formData.subject)) {
+      const errorMsg = validateField('subject', formData.subject);
+      errors.subject = errorMsg;
+      logFormValidationFailure('ContactForm', 'subject', formData.subject, errorMsg);
+    }
+
+    if (!formData.message.trim()) {
+      errors.message = 'Message is required.';
+      logFormValidationFailure('ContactForm', 'message', formData.message, 'Message is required');
+    } else if (!validateMessage(formData.message)) {
+      const errorMsg = validateField('message', formData.message);
+      errors.message = errorMsg;
+      logFormValidationFailure('ContactForm', 'message', formData.message, errorMsg);
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: "" });
 
@@ -85,17 +307,52 @@ const Contact: React.FC = () => {
   };
 
   const submitForm = async () => {
+    // Check rate limiting before submission
+    if (!trackFormSubmission('contact-form')) {
+      setSubmitStatus({
+        type: "error",
+        message: "Too many form submissions. Please wait before trying again.",
+      });
+      return;
+    }
+
+    let formspreeEndpoint = '';
     try {
-      // Prepare form data for Formspree
+      // Validate environment configuration
+      formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT;
+      if (!formspreeEndpoint) {
+        console.error("Formspree endpoint not configured");
+        setSubmitStatus({
+          type: "error",
+          message: "Contact form is temporarily unavailable. Please try again later or use the email contact method.",
+        });
+        trackContactForm("error");
+        return;
+      }
+
+      // Validate endpoint URL format
+      try {
+        new URL(formspreeEndpoint);
+      } catch {
+        console.error("Invalid Formspree endpoint URL");
+        setSubmitStatus({
+          type: "error",
+          message: "Contact form configuration error. Please use the email contact method.",
+        });
+        trackContactForm("error");
+        return;
+      }
+
+      // Prepare form data for Formspree - sanitize again before sending
       const formDataToSend = {
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        service: formData.service,
+        name: sanitizeInput(formData.name),
+        email: sanitizeInput(formData.email),
+        subject: sanitizeInput(formData.subject),
+        message: sanitizeInput(formData.message),
+        service: sanitizeInput(formData.service),
       };
 
-      const response = await fetch("https://formspree.io/f/mandaogr", {
+      const response = await fetch(formspreeEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,6 +398,17 @@ const Contact: React.FC = () => {
       });
       // Track form error
       trackContactForm("error");
+      // Log security event for network error
+      logNetworkError(error as Error, 'ContactForm', {
+        endpoint: formspreeEndpoint,
+        payloadSize: JSON.stringify({
+          name: sanitizeInput(formData.name),
+          email: sanitizeInput(formData.email),
+          subject: sanitizeInput(formData.subject),
+          message: sanitizeInput(formData.message),
+          service: sanitizeInput(formData.service),
+        }).length
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -343,7 +611,7 @@ const Contact: React.FC = () => {
                       htmlFor="name"
                       className="block text-gray-300 text-base font-medium mb-2"
                     >
-                      Your Name
+                      Your Name *
                     </label>
                     <input
                       type="text"
@@ -352,16 +620,24 @@ const Contact: React.FC = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       onFocus={handleFormFocus}
-                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
+                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base touch-target ${
+                        validationErrors.name ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      }`}
                       autoComplete="name"
                     />
+                    {validationErrors.name && (
+                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                        <AlertCircle size={14} className="mr-1" />
+                        {validationErrors.name}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label
                       htmlFor="email"
                       className="block text-gray-300 text-base font-medium mb-2"
                     >
-                      Email Address
+                      Email Address *
                     </label>
                     <input
                       type="email"
@@ -369,9 +645,17 @@ const Contact: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
+                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base touch-target ${
+                        validationErrors.email ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      }`}
                       autoComplete="email"
                     />
+                    {validationErrors.email && (
+                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                        <AlertCircle size={14} className="mr-1" />
+                        {validationErrors.email}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -401,7 +685,7 @@ const Contact: React.FC = () => {
                       htmlFor="subject"
                       className="block text-gray-300 text-base font-medium mb-2"
                     >
-                      Subject
+                      Subject *
                     </label>
                     <input
                       type="text"
@@ -409,16 +693,24 @@ const Contact: React.FC = () => {
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
+                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base touch-target ${
+                        validationErrors.subject ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      }`}
                       autoComplete="subject"
                     />
+                    {validationErrors.subject && (
+                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                        <AlertCircle size={14} className="mr-1" />
+                        {validationErrors.subject}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label
                       htmlFor="message"
                       className="block text-gray-300 text-base font-medium mb-2"
                     >
-                      Message
+                      Message *
                     </label>
                     <textarea
                       id="message"
@@ -426,9 +718,17 @@ const Contact: React.FC = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={5}
-                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base resize-none touch-target"
+                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base resize-none touch-target ${
+                        validationErrors.message ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      }`}
                       autoComplete="message"
                     ></textarea>
+                    {validationErrors.message && (
+                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                        <AlertCircle size={14} className="mr-1" />
+                        {validationErrors.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 

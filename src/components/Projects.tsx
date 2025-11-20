@@ -1,3 +1,41 @@
+/**
+ * Projects.tsx — Featured projects showcase component with live demos and technologies.
+ *
+ * This comprehensive component displays Ayush Rai's key projects through an interactive
+ * card-based layout featuring project descriptions, technologies used, key features, and
+ * live demo links. Includes responsive grid design with smooth animations and achievement
+ * metrics. Projects span multiple domains including web development, AI, and community platforms.
+ *
+ * The component includes:
+ * - Featured project cards with images and descriptions
+ * - Technology stack visualization per project
+ * - Live demo and code repository links
+ * - Key features and impact metrics
+ * - Responsive grid adapting to screen sizes
+ * - Professional project statistics
+ *
+ * Projects showcased:
+ * - Overlay Text Box Extension (Browser Extension)
+ * - Personal Portfolio Website (Web Development)
+ * - Expert-O (AI Innovation Platform)
+ * - Shiksha-Mitra (Community Education Platform)
+ * - Stock Price Analysis Platform (Data Science)
+ * - Iha-By-Himani Art Studio Website (Web Design)
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Projects from './components/Projects';
+ *
+ * function App() {
+ *   return <Projects />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/Skills.tsx} for technologies overview
+ * @see {@link src/components/Experience.tsx} for project context
+ * @see {@link src/assets/} for project images
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -10,7 +48,28 @@ import {
   TrendingUp,
 } from "lucide-react";
 import CountUp from "react-countup";
+import portfolioImage from "../assets/porfolio.jpeg";
+import expertoImage from "../assets/experto.jpeg";
+import shikshMitraImage from "../assets/shikshMitra.png";
+import ihabyhimaniImage from "../assets/ihabyhimani.jpeg";
 
+/**
+ * Projects — Featured projects portfolio showcase component.
+ *
+ * Renders an interactive project portfolio with detailed project cards,
+ * technology stacks, live demos, and achievement metrics. Provides comprehensive
+ * overview of development capabilities across multiple domains and technologies.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Projects section
+ *
+ * @example
+ * ```tsx
+ * <Projects />
+ * ```
+ *
+ * @see {@link src/lib/analytics.ts} for portfolio tracking
+ */
 const Projects: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -66,8 +125,8 @@ const Projects: React.FC = () => {
       impact:
         "Enhancing personal brand through a professional, engaging, and accessible portfolio website",
       github: "https://github.com/ayushrai-hub/ayush-work",
-      demo: "https://ayush-me.netlify.app/",
-      image: "https://images.pexels.com/photos/12498604/pexels-photo-12498604.jpeg",
+      demo: "https://ayush-rai-work.netlify.app/",
+      image: portfolioImage,
     },
     {
       title: "Expert-O",
@@ -96,7 +155,7 @@ const Projects: React.FC = () => {
         "Accelerating India's digital transformation through 5x faster execution and AI-driven innovation",
       github: "https://github.com/ayushrai-hub/ayush-work",
       demo: "https://expert-o.vercel.app/",
-      image: "https://images.pexels.com/photos/8100064/pexels-photo-8100064.jpeg",
+      image: expertoImage,
     },
     {
       title: "Shiksha-Mitra",
@@ -125,7 +184,7 @@ const Projects: React.FC = () => {
         "Fostering community-driven growth and creating a culture of appreciation in education and career development",
       github: "https://github.com/ayushrai-hub/Shiksha-Mitra",
       demo: "https://shiksha-mitra.vercel.app/",
-      image: "https://images.pexels.com/photos/1181414/pexels-photo-1181414.jpeg",
+      image: shikshMitraImage,
     },
     {
       title: "Stock Price Analysis Platform",
@@ -150,8 +209,8 @@ const Projects: React.FC = () => {
       ],
       impact:
         "Enhanced investment decision-making with comprehensive market insights",
-      github: "#",
-      demo: "#",
+      github: "https://github.com/ayushrai-hub/stock-price-analysis",
+      demo: "https://github.com/ayushrai-hub/stock-price-analysis",
       image: "https://images.pexels.com/photos/159888/pexels-photo-159888.jpeg",
     },
     {
@@ -175,10 +234,9 @@ const Projects: React.FC = () => {
         "Mobile-first responsive design",
       ],
       impact: "Increased online presence and client inquiries by 300%",
-      github: "#",
-      demo: "#",
-      image:
-        "https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg",
+      github: "https://github.com/ayushrai-hub/IHA-art-studio",
+      demo: "https://www.ihabyhimani.com/",
+      image: ihabyhimaniImage,
     },
 
   ];
@@ -315,14 +373,14 @@ const Projects: React.FC = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="card text-center">
               <div className="text-4xl font-bold gradient-text mb-2">
-                {inView && <CountUp end={20} duration={2} delay={0.2} />}
+                {inView && <CountUp end={10} duration={2} delay={0.2} />}
                 +
               </div>
               <p className="text-gray-600 dark:text-gray-400">Projects Completed</p>
             </div>
             <div className="card text-center">
               <div className="text-4xl font-bold gradient-text mb-2">
-                {inView && <CountUp end={10} duration={2} delay={0.4} />}
+                {inView && <CountUp end={5} duration={2} delay={0.4} />}
                 +
               </div>
               <p className="text-gray-600 dark:text-gray-400">Happy Clients</p>

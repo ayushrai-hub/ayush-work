@@ -1,8 +1,66 @@
+/**
+ * CommunityLeadership.tsx — Community leadership activities and mentorship showcase component.
+ *
+ * This component showcases Ayush Rai's leadership activities across education, community development,
+ * and mentorship initiatives. Features interactive filtering by leadership categories, detailed
+ * achievement tracking, and impact metrics for community engagement. Includes workshops conducted,
+ * mentorship programs, and community building initiatives with measurable outcomes.
+ *
+ * The component includes:
+ * - Leadership activity cards with detailed achievements
+ * - Category-based filtering (education, government, diversity)
+ * - Impact metrics and measurable outcomes
+ * - Workshop and event showcase
+ * - Community engagement statistics
+ * - Interactive filtering and search capabilities
+ *
+ * Leadership Categories:
+ * - Education: Workshops, mentoring, technical training
+ * - Government: Community outreach and technology programs
+ * - Diversity: Women in tech, social welfare initiatives
+ *
+ * Key Impact Areas:
+ * - Education and skill development (1000+ students impacted)
+ * - Community welfare and social service
+ * - Technical mentorship and career guidance
+ * - Cross-cultural collaboration (Taiwan-India initiatives)
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import CommunityLeadership from './components/CommunityLeadership';
+ *
+ * function App() {
+ *   return <CommunityLeadership />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/Profiles.tsx} for social media integration
+ * @see {@link src/components/Experience.tsx} for professional leadership roles
+ */
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Users, Mic, BookOpen, Heart, Target, Zap, MapPin } from "lucide-react";
 
+/**
+ * CommunityLeadership — Community leadership showcase component.
+ *
+ * Displays comprehensive leadership portfolio including education initiatives,
+ * community engagement, mentorship programs, and impact metrics. Features
+ * category filtering and detailed achievement documentation.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered CommunityLeadership section
+ *
+ * @example
+ * ```tsx
+ * <CommunityLeadership />
+ * ```
+ *
+ * @see {@link src/components/AboutMe.tsx} for personal leadership mention
+ * @see {@link src/components/ExtraCurriculars.tsx} for additional leadership activities
+ */
 const CommunityLeadership: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [activeCategory, setActiveCategory] = useState("all");

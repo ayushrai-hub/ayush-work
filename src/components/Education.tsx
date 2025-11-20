@@ -1,9 +1,50 @@
+/**
+ * Education.tsx — Academic background and educational journey component.
+ *
+ * This component presents a comprehensive view of academic achievements and qualifications
+ * including multiple degrees from different institutions, coursework details, and academic
+ * performance metrics. Features a timeline visualization with responsive design and smooth
+ * animations for enhanced user experience.
+ *
+ * The component includes:
+ * - Educational timeline with degree information
+ * - Coursework details and academic performance
+ * - Responsive timeline design with alternating layout
+ * - Animation effects on scroll
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Education from './components/Education';
+ *
+ * function App() {
+ *   return <Education />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/Experience.tsx} for professional experience
+ * @see {@link src/components/Certifications.tsx} for professional certifications
+ */
  import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { GraduationCap, Calendar, Award, BookOpen } from "lucide-react";
 
-
+/**
+ * Education — Academic background display component.
+ *
+ * Renders an interactive educational timeline showcasing academic achievements,
+ * qualifications, and coursework. Features alternating timeline layout with
+ * smooth animations and responsive design for optimal viewing experience.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Education section
+ *
+ * @example
+ * ```tsx
+ * <Education />
+ * ```
+ */
 const Education: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 

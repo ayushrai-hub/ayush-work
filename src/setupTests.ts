@@ -3,6 +3,57 @@ import "@testing-library/jest-dom";
 import { vi } from "vitest";
 import "jest-axe/extend-expect";
 
+// Type definitions for test mocks
+interface MockCanvasContext {
+  fillRect: ReturnType<typeof vi.fn>;
+  clearRect: ReturnType<typeof vi.fn>;
+  getImageData: ReturnType<typeof vi.fn>;
+  putImageData: ReturnType<typeof vi.fn>;
+  createImageData: ReturnType<typeof vi.fn>;
+  setTransform: ReturnType<typeof vi.fn>;
+  drawImage: ReturnType<typeof vi.fn>;
+  save: ReturnType<typeof vi.fn>;
+  fillText: ReturnType<typeof vi.fn>;
+  strokeRect: ReturnType<typeof vi.fn>;
+  beginPath: ReturnType<typeof vi.fn>;
+  moveTo: ReturnType<typeof vi.fn>;
+  lineTo: ReturnType<typeof vi.fn>;
+  stroke: ReturnType<typeof vi.fn>;
+  fill: ReturnType<typeof vi.fn>;
+  arc: ReturnType<typeof vi.fn>;
+  measureText: ReturnType<typeof vi.fn>;
+  clip: ReturnType<typeof vi.fn>;
+  canvas: HTMLCanvasElement;
+  globalAlpha: number;
+  globalCompositeOperation: GlobalCompositeOperation;
+}
+
+
+
+interface MotionProps {
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  [key: string]: unknown;
+}
+
+interface R3FProps {
+  children?: React.ReactNode;
+  [key: string]: unknown;
+}
+
+interface DreiProps {
+  children?: React.ReactNode;
+  [key: string]: unknown;
+}
+
+interface LucideIconProps {
+  size?: number | string;
+  color?: string;
+  className?: string;
+  [key: string]: unknown;
+}
+
 // Setup global mocks for jsdom
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
@@ -54,7 +105,11 @@ const mockGetContext = vi.fn((contextType: string) => {
   return null;
 });
 
-(HTMLCanvasElement.prototype as any).getContext = mockGetContext;
+// Properly type the mock getContext method
+Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+  writable: true,
+  value: mockGetContext,
+});
 
 // Mock chart.js with proper scale registration
 vi.mock("chart.js", () => {
@@ -128,29 +183,30 @@ vi.mock("chart.js", () => {
 
 // Mock React Helmet
 vi.mock("react-helmet-async", () => ({
-  Helmet: ({ children }: any) => children,
-  HelmetProvider: ({ children }: any) => children,
+  Helmet: ({ children }: React.PropsWithChildren) => children,
+  HelmetProvider: ({ children }: React.PropsWithChildren) => children,
 }));
 
 
 
 // Mock lucide-react icons with partial mock using importOriginal
 vi.mock('lucide-react', async (importOriginal) => {
-  const actual = await importOriginal() as any;
+  const actual = await importOriginal<Record<string, unknown>>();
   const createIconMock = (name: string) => {
-    return ({ className, ...props }: { className?: string; [key: string]: any }) => {
+    return (props: LucideIconProps) => {
+      const { className, ...otherProps } = props;
       const testId = `${name.toLowerCase()}-icon`;
       return React.createElement('div', {
         'data-testid': testId,
         className,
-        ...props,
+        ...otherProps,
       });
     };
   };
 
-  return new Proxy(actual, {
+  return new Proxy(actual as Record<string, unknown>, {
     get(target, prop) {
-      if (prop in target) {
+      if (typeof prop === 'string' && prop in target) {
         return target[prop];
       }
       // Auto-mock any icon component
@@ -165,9 +221,13 @@ vi.mock('lucide-react', async (importOriginal) => {
 // Mock next/image
 vi.mock('next/image', () => ({
   __esModule: true,
-  default: (props: any) => {
+  default: (props: Record<string, unknown>) => {
     const img = document.createElement('img');
-    Object.assign(img, props);
+    // Safely assign properties that exist on HTMLImageElement
+    if (typeof props.src === 'string') img.src = props.src;
+    if (typeof props.alt === 'string') img.alt = props.alt;
+    if (typeof props.width === 'number') img.width = props.width;
+    if (typeof props.height === 'number') img.height = props.height;
     return img;
   },
 }));
@@ -222,7 +282,7 @@ vi.mock('framer-motion', async () => {
 
   // Create motion component factory
   const createMotionComponent = (elementType: string) => {
-    return ({ children, ...props }: any) => React.createElement(elementType, props, children);
+    return ({ children, ...props }: MotionProps) => React.createElement(elementType, props, children);
   };
 
   // Create motion object with common HTML elements
@@ -260,7 +320,7 @@ vi.mock('framer-motion', async () => {
   });
 
   return {
-    ...(actual as any),
+    ...(actual as Record<string, unknown>),
     motion: motionProxy,
     AnimatePresence: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   };
@@ -279,7 +339,7 @@ vi.mock('react-intersection-observer', () => ({
 // Mock react-countup
 vi.mock("react-countup", () => ({
   __esModule: true,
-  default: vi.fn(({ end }: any) => end?.toString() || "0"),
+  default: vi.fn(({ end }: { end?: number }) => end?.toString() || "0"),
 }));
 
 // Mock @sendgrid/mail for API tests
@@ -290,11 +350,11 @@ vi.mock("@sendgrid/mail", () => ({
 
 // Mock requestAnimationFrame
 global.requestAnimationFrame = vi.fn((cb) => {
-  return setTimeout(cb, 16) as any;
+  return setTimeout(cb, 16) as unknown as number;
 });
 
 global.cancelAnimationFrame = vi.fn((id) => {
-  clearTimeout(id as any);
+  clearTimeout(id as unknown as NodeJS.Timeout);
 });
 
 // Mock Three.js
@@ -345,7 +405,7 @@ vi.mock('three', () => ({
 // Mock @react-three/fiber
 vi.mock('@react-three/fiber', () => ({
   __esModule: true,
-  Canvas: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'canvas', ...props }, children),
+  Canvas: ({ children, ...props }: R3FProps) => React.createElement('div', { 'data-testid': 'canvas', ...props }, children),
   useFrame: vi.fn(),
   useThree: vi.fn(() => ({
     camera: {

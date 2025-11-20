@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { vi } from 'vitest';
 import CommunityLeadership from '../components/CommunityLeadership';
@@ -29,12 +29,12 @@ describe('CommunityLeadership', () => {
 
   it('renders all leadership activities by default', () => {
     render(<CommunityLeadership />);
-    expect(screen.getByText('TMF Taiwan Ministry of Foreign Affairs')).toBeInTheDocument();
+    expect(screen.getByText('Tech Innovation Hub Coordinator')).toBeInTheDocument();
     expect(screen.getByText('Google Developer Student Club Lead')).toBeInTheDocument();
-    expect(screen.getByText('Women Techmakers Regional Lead')).toBeInTheDocument();
+    expect(screen.getByText('Digital Skills Training Coordinator')).toBeInTheDocument();
     expect(screen.getByText('Microsoft Learn Student Ambassador')).toBeInTheDocument();
     expect(screen.getByText('Open Source Workshop Series')).toBeInTheDocument();
-    expect(screen.getByText('Smart City Bhopal Youth Council')).toBeInTheDocument();
+    expect(screen.getByText('Community Tech Outreach Program')).toBeInTheDocument();
   });
 
   it('filters activities by category when clicked', () => {
@@ -43,11 +43,10 @@ describe('CommunityLeadership', () => {
     fireEvent.click(educationButton);
 
     expect(screen.getByText('Google Developer Student Club Lead')).toBeInTheDocument();
+    expect(screen.getByText('Digital Skills Training Coordinator')).toBeInTheDocument();
     expect(screen.getByText('Microsoft Learn Student Ambassador')).toBeInTheDocument();
     expect(screen.getByText('Open Source Workshop Series')).toBeInTheDocument();
-    expect(screen.queryByText('TMF Taiwan Ministry of Foreign Affairs')).not.toBeInTheDocument();
-    expect(screen.queryByText('Women Techmakers Regional Lead')).not.toBeInTheDocument();
-    expect(screen.queryByText('Smart City Bhopal Youth Council')).not.toBeInTheDocument();
+    expect(screen.queryByText('Community Tech Outreach Program')).not.toBeInTheDocument();
   });
 
   it('renders workshops and events section', () => {
@@ -80,10 +79,10 @@ describe('CommunityLeadership', () => {
     expect(educationButton).toHaveClass('bg-accent text-primary shadow-lg');
   });
 
-  it('displays activity achievements and impact', () => {
+  it('displays activity achievements', () => {
     render(<CommunityLeadership />);
-    expect(screen.getByText('Led 15+ cross-cultural technology exchange programs')).toBeInTheDocument();
-    expect(screen.getByText('Strengthened Taiwan-India technological partnerships')).toBeInTheDocument();
+    expect(screen.getByText('Established university-wide innovation programs')).toBeInTheDocument();
+    expect(screen.getByText('Mentored 100+ students in emerging technologies')).toBeInTheDocument();
   });
 
   it('renders correctly with empty filtered results', () => {

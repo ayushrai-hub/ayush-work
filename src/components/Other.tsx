@@ -1,7 +1,70 @@
+/**
+ * Other.tsx — Page routing component for specialized content sections.
+ *
+ * This component provides navigation to additional portfolio pages and specialized content areas
+ * not included in the main homepage sections. Features a clean dropdown interface for exploring
+ * research, leadership, certifications, and professional services pages with descriptive previews.
+ *
+ * The component includes:
+ * - Dropdown navigation interface with expandable sections
+ * - Page previews with icons and descriptions
+ * - Direct routing to specialized content areas
+ * - Responsive design adapting to different screen sizes
+ * - Accessibility features for keyboard and screen reader users
+ *
+ * Navigation Structure:
+ * - Research: Academic and technical research projects
+ * - Leadership: Community leadership and mentorship activities
+ * - Certifications: Professional credentials and qualifications
+ * - Services: Detailed service offerings and expertise areas
+ * - Extra-curriculars: Personal development and community involvement
+ *
+ * User Experience Features:
+ * - Collapsible interface to reduce visual clutter
+ * - Icon-based navigation for quick recognition
+ * - Preview descriptions for informed navigation choices
+ * - Smooth transitions and hover effects
+ *
+ * Accessibility Implementation:
+ * - Keyboard navigation support for dropdown interactions
+ * - Screen reader compatible with proper ARIA labels
+ * - Semantic HTML structure with proper heading hierarchy
+ * - Focus management for interactive elements
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Other from './components/Other';
+ *
+ * function SpecializedContent() {
+ *   return <Other />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/Header.tsx} for primary navigation
+ * @see {@link src/components/FloatingNav.tsx} for floating navigation alternative
+ */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ExternalLink } from 'lucide-react';
 
+/**
+ * Other — Specialized page navigation component.
+ *
+ * Provides organized access to additional portfolio content areas
+ * through an interactive dropdown interface with previews and
+ * descriptions for informed navigation choices.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered navigation component
+ *
+ * @example
+ * ```tsx
+ * <Other />
+ * ```
+ *
+ * @see {@link src/App.tsx} for router integration
+ */
 const Other: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -45,7 +108,7 @@ const Other: React.FC = () => {
           </p>
         </div>
 
-        {/* Dropdown Navigation */}
+        {/* Interactive dropdown navigation */}
         <div className="max-w-md mx-auto mb-12">
           <div className="relative">
             <button
@@ -78,7 +141,7 @@ const Other: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Overview Cards */}
+        {/* Alternative card-based navigation */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {otherPages.map((page, index) => (
             <Link

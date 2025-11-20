@@ -33,8 +33,6 @@
 ### P1 - High Priority (Week 3-6)
 | Feature | Rationale | Risk | Effort |
 |---------|-----------|------|--------|
-| GPA Chart (Education) | Missing core visualization | Low | Medium |
-| Radar Chart (Skills) | Key domain expertise showcase | Low | High |
 | Project Testimonials | Enhances credibility | Low | Medium |
 | Missing Core Sections | Essential PRD compliance | Medium | High |
 | CMS Integration | Enables dynamic content | Medium | High |
@@ -101,8 +99,6 @@ Complete all PRD-required core sections and basic visualizations
 
 #### Deliverables
 1. **Chart Implementations**
-   - GPA progression chart (Education)
-   - Skills radar chart (Domain Expertise)
    - Experience metrics dashboard
    - Interactive chart components
 

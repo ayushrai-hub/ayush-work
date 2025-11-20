@@ -1,20 +1,92 @@
+/**
+ * SEO.tsx — Search engine optimization component with structured data support.
+ *
+ * This component provides comprehensive SEO metadata management for the React application.
+ * Dynamically generates meta tags, OpenGraph data, Twitter cards, and structured data (JSON-LD)
+ * based on current route and provided props. Integrates with react-helmet-async for server-side
+ * rendering compatibility and optimizes for search engines and social media platforms.
+ *
+ * The component includes:
+ * - Dynamic meta tag generation (title, description, keywords)
+ * - OpenGraph and Twitter Card support for social sharing
+ * - JSON-LD structured data for rich search results
+ * - Route-aware SEO defaults for different pages
+ * - Server-side rendering compatibility with React Helmet
+ * - Automatic canonical URL generation
+ *
+ * SEO Features:
+ * - Route-based meta content generation
+ * - Schema.org structured data integration
+ * - Social media preview optimization
+ * - Mobile and desktop meta tag handling
+ * - Favicon and icon management
+ *
+ * Search Engine Optimization:
+ * - Google search console support
+ * - Bing webmaster tools compatibility
+ * - Mobile-friendly meta viewport
+ * - Canonical URL management
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import SEO from './components/SEO';
+ *
+ * // Custom SEO for a project page
+ * <SEO
+ *   title="AI Chatbot Project"
+ *   description="Revolutionary AI-powered chatbot with natural language processing"
+ *   keywords="AI, chatbot, NLP, machine learning"
+ * />
+ * ```
+ *
+ * @see {@link src/lib/seo.ts} for structured data schemas
+ * @see {@link src/constants/seo.ts} for default SEO configuration
+ */
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
-import {
-  defaultSEO,
-  structuredData,
-  organizationStructuredData,
-} from "../lib/seo";
+import { structuredData, organizationStructuredData } from "../lib/seo";
+import { defaultSEO } from "../constants/seo";
 
+/**
+ * Props for the SEO component.
+ */
 interface SEOProps {
+  /** Optional custom page title */
   title?: string;
+  /** Optional custom page description */
   description?: string;
+  /** Optional custom keywords meta tag */
   keywords?: string;
+  /** Optional custom OpenGraph image URL */
   image?: string;
+  /** Optional custom canonical URL */
   url?: string;
 }
 
+/**
+ * SEO — Search engine optimization component with structured data.
+ *
+ * Provides comprehensive SEO metadata, social media cards, and structured data
+ * for optimal search engine visibility and social sharing. Automatically adapts
+ * content based on current route and allows override through props.
+ *
+ * @component
+ * @param {SEOProps} props - SEO configuration props
+ * @returns {JSX.Element} Helmet component with SEO metadata
+ *
+ * @example
+ * ```tsx
+ * <SEO
+ *   title="Custom Page Title"
+ *   description="Custom description for search engines"
+ *   keywords="keyword1, keyword2, keyword3"
+ * />
+ * ```
+ *
+ * @see {@link src/pages/} for route-specific SEO integration
+ */
 const SEO: React.FC<SEOProps> = ({
   title,
   description,

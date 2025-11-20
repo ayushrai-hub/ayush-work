@@ -1,8 +1,67 @@
+/**
+ * ExtraCurriculars.tsx — Extracurricular activities and achievements showcase component.
+ *
+ * This component displays Ayush Rai's extracurricular activities spanning social welfare,
+ * performing arts, events organization, and community service. Features categorized
+ * activities with detailed descriptions, impact metrics, and skills developed through
+ * each initiative. Provides a comprehensive view of personal development outside academics
+ * and professional work, showcasing leadership and community engagement.
+ *
+ * The component includes:
+ * - Activity categorization (Events, Social Work, Drama, Leadership)
+ * - Impact assessment and measurable outcomes for each activity
+ * - Skills development tracking and competency building
+ * - Timeline and duration tracking for activities
+ * - Verification status and credibility indicators
+ * - Community engagement statistics and reach metrics
+ *
+ * Activity Categories:
+ * - Events: Organization and management of community events
+ * - Social Work: Community service and welfare initiatives
+ * - Drama: Performing arts and cultural activities
+ * - Leadership: Leadership roles and organizational contributions
+ *
+ * Impact Areas:
+ * - Social welfare and community betterment
+ * - Cultural enrichment and arts engagement
+ * - Leadership skill development and organizational management
+ * - Cross-functional collaboration and team building
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import ExtraCurriculars from './components/ExtraCurriculars';
+ *
+ * function App() {
+ *   return <ExtraCurriculars />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/CommunityLeadership.tsx} for community leadership initiatives
+ * @see {@link src/components/AboutMe.tsx} for personal profile integration
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Heart, Users, Trophy, BookOpen, Code, Calendar, ExternalLink, CheckCircle } from "lucide-react";
+import { Heart, Users, BookOpen, Calendar, ExternalLink, CheckCircle } from "lucide-react";
 
+/**
+ * ExtraCurriculars — Extracurricular activities showcase component.
+ *
+ * Displays comprehensive extracurricular achievements and activities across
+ * multiple domains including social service, arts, events, and leadership.
+ * Features categorization, impact metrics, and skills development tracking.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered ExtraCurriculars section
+ *
+ * @example
+ * ```tsx
+ * <ExtraCurriculars />
+ * ```
+ *
+ * @see {@link src/components/About.tsx} for personal story context
+ */
 const ExtraCurriculars: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 

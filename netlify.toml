@@ -1,0 +1,24 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  node_bundler = "esbuild"
+  directory = "api"
+
+[redirects]
+  # SPA fallback - redirect all routes to index.html for client-side routing
+  /*    /index.html   200
+
+[[plugins]]
+  # Netlify Analytics (optional - remove if not needed)
+  package = "@netlify/plugin-analytics"
+
+# Environment variables (set these in Netlify dashboard)
+# SENDGRID_API_KEY=your_sendgrid_api_key_here
+# CONTACT_EMAIL=ayushrai0211@gmail.com
+# FROM_EMAIL=noreply@ayush-rai-work.netlify.app
+
+# Build settings
+[build.environment]
+  NODE_VERSION = "18"

@@ -25,7 +25,6 @@
 ## Education Hub
 
 - [x] Create a dual-degree component with expandable details.
-- [ ] Implement a GPA progression chart using a charting library (e.g., Chart.js).
 - [x] Integrate academic achievements and honors.
 
 ## Professional Experience
@@ -36,7 +35,6 @@
 ## Skills Matrix
 
 - [x] Create a categorized list for technical skills (AI/ML, Web Dev, etc.).
-- [ ] Develop a visual representation for the domain expertise radar chart.
 - [x] Integrate non-technical and managerial skills.
 
 ## Projects Portfolio
@@ -71,7 +69,6 @@
 
 ## Domain Expertise
 
-- [ ] Implement radar chart visualization of expertise.
 - [ ] Display current learning areas dynamically.
 
 ## Services & Offerings

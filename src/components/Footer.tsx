@@ -24,7 +24,7 @@ import {
   Trophy,
   Link as LinkIcon
 } from 'lucide-react';
-import { profiles, domains } from '../lib/profilesData';
+import { profiles } from '../lib/profilesData';
 import { useGTM } from '../hooks/useGTM';
 
 const Footer: React.FC = () => {
@@ -72,6 +72,7 @@ const Footer: React.FC = () => {
    * @returns The React component for the specified icon, or Globe as fallback
    */
   const getIcon = (iconName: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const icons: Record<string, React.ComponentType<any>> = {
       github: Github,
       linkedin: Linkedin,
@@ -248,7 +249,7 @@ const Footer: React.FC = () => {
             >
               <h4 className="font-semibold mb-3 text-gray-300 text-sm">Top Platforms</h4>
               <div className="space-y-2">
-                {Object.entries(filteredGroupedProfiles).slice(0, 2).flatMap(([domainName, domainProfiles]) => {
+                {Object.entries(filteredGroupedProfiles).slice(0, 2).flatMap(([_domainName, domainProfiles]) => { // eslint-disable-line @typescript-eslint/no-unused-vars
                   return domainProfiles.map((profile) => {
                     const IconComponent = getIcon(profile.icon);
                     return (
@@ -278,10 +279,7 @@ const Footer: React.FC = () => {
               >
                 <h4 className="font-semibold mb-3 text-gray-300 text-sm">More Platforms</h4>
                 <div className="flex flex-wrap gap-2">
-                  {Object.entries(filteredGroupedProfiles).slice(2).flatMap(([domainName, domainProfiles]) => {
-                    const domain = domains.find(d => d.name === domainName);
-                    if (!domain) return [];
-
+                  {Object.entries(filteredGroupedProfiles).slice(2).flatMap(([_domainName, domainProfiles]) => { // eslint-disable-line @typescript-eslint/no-unused-vars
                     return domainProfiles.map((profile) => {
                       const IconComponent = getIcon(profile.icon);
                       return (

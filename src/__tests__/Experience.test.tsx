@@ -101,6 +101,6 @@ describe('Experience', () => {
   it('renders with correct structure for timelines and cards', () => {
     const { container } = render(<Experience />);
     const cards = container.querySelectorAll('.card');
-    expect(cards.length).toBe(6);
+    expect(cards.length).toBe(10); // 6 experience cards + 4 metric cards
   });
 });

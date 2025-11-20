@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -8,6 +8,11 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [workDropdownOpen, setWorkDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const workDropdownButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const workDropdownRef = useRef<HTMLDivElement>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,6 +24,126 @@ const Header: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Helper function to get all focusable elements within a container
+  const getFocusableElements = (container: HTMLElement | null) => {
+    if (!container) return [];
+    const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    return Array.from(container.querySelectorAll(focusableSelectors)).filter(
+      (el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden')
+    ) as HTMLElement[];
+  };
+
+  // Focus trapping for mobile menu
+  useEffect(() => {
+    let currentFocusedElement: HTMLElement | null = null;
+
+    if (isMenuOpen && mobileMenuRef.current) {
+      currentFocusedElement = document.activeElement as HTMLElement;
+
+      // Focus first focusable element in mobile menu
+      const focusableElements = getFocusableElements(mobileMenuRef.current);
+      if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+      }
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setIsMenuOpen(false);
+          setWorkDropdownOpen(false);
+          if (menuButtonRef.current) {
+            menuButtonRef.current.focus();
+          }
+          return;
+        }
+
+        if (e.key === 'Tab') {
+          const focusableElements = getFocusableElements(mobileMenuRef.current);
+          if (focusableElements.length === 0) return;
+
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+
+          if (e.shiftKey) {
+            // Shift + Tab: cycle backward
+            if (document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            }
+          } else {
+            // Tab: cycle forward
+            if (document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        if (currentFocusedElement && currentFocusedElement.focus) {
+          currentFocusedElement.focus();
+        }
+      };
+    }
+  }, [isMenuOpen]);
+
+  // Focus trapping for work dropdown (desktop)
+  useEffect(() => {
+    let currentFocusedElement: HTMLElement | null = null;
+
+    if (workDropdownOpen && workDropdownRef.current) {
+      currentFocusedElement = document.activeElement as HTMLElement;
+
+      // Focus first focusable element in work dropdown
+      const focusableElements = getFocusableElements(workDropdownRef.current);
+      if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+      }
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setWorkDropdownOpen(false);
+          if (workDropdownButtonRef.current) {
+            workDropdownButtonRef.current.focus();
+          }
+          return;
+        }
+
+        if (e.key === 'Tab') {
+          const focusableElements = getFocusableElements(workDropdownRef.current);
+          if (focusableElements.length === 0) return;
+
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+
+          if (e.shiftKey) {
+            // Shift + Tab: cycle backward
+            if (document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            }
+          } else {
+            // Tab: cycle forward
+            if (document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        if (currentFocusedElement && currentFocusedElement.focus) {
+          currentFocusedElement.focus();
+        }
+      };
+    }
+  }, [workDropdownOpen]);
 
   // Handle navigation to sections
   const handleSectionNavigation = (sectionId: string) => {
@@ -99,6 +224,7 @@ const Header: React.FC = () => {
               >
                 {item.isDropdown ? (
                   <button
+                    ref={workDropdownButtonRef}
                     onClick={() => setWorkDropdownOpen(!workDropdownOpen)}
                     className="text-gray-700 dark:text-gray-300 hover:text-accent transition-colors duration-300 flex items-center"
                   >
@@ -145,6 +271,7 @@ const Header: React.FC = () => {
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle />
             <button
+              ref={menuButtonRef}
               className="touch-target text-gray-700 dark:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle navigation menu"
@@ -157,6 +284,7 @@ const Header: React.FC = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.div
+            ref={mobileMenuRef}
             className="md:hidden mt-4 bg-white dark:bg-primary-dark rounded-lg p-4 shadow-lg"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -226,6 +354,7 @@ const Header: React.FC = () => {
         {/* Work Dropdown for Desktop */}
         {workDropdownOpen && (
           <motion.div
+            ref={workDropdownRef}
             className="hidden md:block absolute top-full right-0 mt-2 bg-white dark:bg-primary-dark/95 backdrop-blur-md rounded-lg shadow-lg p-4 min-w-[280px] border border-gray-200 dark:border-gray-700"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

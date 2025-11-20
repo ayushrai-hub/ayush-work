@@ -1,25 +1,71 @@
+/**
+ * ThreeJSHero.tsx — 3D enhanced hero section with Three.js integration and fallback handling.
+ *
+ * This component provides an immersive hero section that combines 2D content with optional
+ * Three.js 3D environments. Features graceful WebGL detection, loading states, error boundaries,
+ * and progressive enhancement with fallback content. Optimized for performance with mobile
+ * device considerations and battery life preservation.
+ *
+ * The component includes:
+ * - Dynamic headline transitions with rotating text animation
+ * - Profile image display with professional presentation
+ * - Call-to-action buttons (Resume download, View Work, Connect)
+ * - Social media integration with accessible links
+ * - Optional Three.js background scene with particle effects
+ * - Progressive enhancement for devices without WebGL support
+ *
+ * Performance Features:
+ * - WebGL availability detection before Three.js initialization
+ * - Graceful fallback to standard hero layout without 3D elements
+ * - Mobile device optimization (3D disabled on battery-constrained devices)
+ * - Error boundary integration for Three.js failures
+ *
+ * Accessibility Considerations:
+ * - Semantic HTML structure with proper heading hierarchy
+ * - Screen reader compatible with aria-labels and descriptions
+ * - Keyboard navigation support for all interactive elements
+ * - High contrast color alternatives for gradient text
+ *
+ * Content Strategy:
+ * - Headline rotation showcasing key expertise areas
+ * - Professional biography with current focus and expertise
+ * - Multiple call-to-action options (passive to aggressive conversion)
+ * - Social proof through professional profile links
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import ThreeJSHero from './components/ThreeJSHero';
+ *
+ * function HomePage() {
+ *   return <ThreeJSHero />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/ThreeJSContent.tsx} for 3D scene implementation
+ * @see {@link src/components/ErrorBoundary.tsx} for error handling wrapper
+ */
 import React, { Suspense, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import {
-  Sphere,
-  Box,
-  Octahedron,
-  Float,
-  MeshDistortMaterial,
-  PresentationControls,
-} from "@react-three/drei";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
-import * as THREE from "three";
-import ErrorBoundary from "./ErrorBoundary";
 
+// Dynamic import for performance optimization
+const ThreeJSContent = React.lazy(() =>
+  import('./ThreeJSContent').then(module => ({ default: module.ThreeJSContent }))
+);
+
+/**
+ * Headlines for animated rotation
+ */
 const headlines = [
   "SDE - AI Engineer | Generative AI Specialist",
   "Full-Stack Developer | Data Science Enthusiast",
   "Product Builder | Lifelong learner",
 ];
 
-// WebGL availability check
+/**
+ * WebGL availability detection utility
+ */
 const isWebGLAvailable = () => {
   try {
     const canvas = document.createElement('canvas');
@@ -30,155 +76,23 @@ const isWebGLAvailable = () => {
   }
 };
 
-// Floating geometric shapes component
-function FloatingShapes() {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.1;
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      {/* Primary floating sphere */}
-      <Float speed={1.4} rotationIntensity={2} floatIntensity={0.5}>
-        <Sphere position={[-1, 0, 0]} args={[0.8, 32, 32]}>
-          <MeshDistortMaterial
-            color="#6366f1"
-            attach="material"
-            distort={0.3}
-            speed={2}
-            roughness={0}
-          />
-        </Sphere>
-      </Float>
-
-      {/* Secondary octahedron */}
-      <Float speed={1.8} rotationIntensity={1.5} floatIntensity={0.8}>
-        <Octahedron position={[1.5, 1, -1]} args={[0.6]}>
-          <MeshDistortMaterial
-            color="#a855f7"
-            attach="material"
-            distort={0.2}
-            speed={1.5}
-            roughness={0.1}
-          />
-        </Octahedron>
-      </Float>
-
-      {/* Tertiary cube */}
-      <Float speed={2.2} rotationIntensity={1} floatIntensity={0.6}>
-        <Box position={[-1.5, -1, 1]} args={[0.7, 0.7, 0.7]}>
-          <MeshDistortMaterial
-            color="#f59e0b"
-            attach="material"
-            distort={0.1}
-            speed={1.2}
-            roughness={0.2}
-          />
-        </Box>
-      </Float>
-
-      {/* Smaller floating elements */}
-      <Float speed={3} rotationIntensity={3} floatIntensity={1}>
-        <Sphere position={[2, -1.5, 0.5]} args={[0.3, 16, 16]}>
-          <meshStandardMaterial color="#10b981" />
-        </Sphere>
-      </Float>
-
-      <Float speed={2.5} rotationIntensity={2.5} floatIntensity={0.8}>
-        <Octahedron position={[-2, 1.5, -0.5]} args={[0.4]}>
-          <meshStandardMaterial color="#ef4444" />
-        </Octahedron>
-      </Float>
-    </group>
-  );
-}
-
-// Interactive camera controls
-function CameraRig() {
-  const { camera, mouse } = useThree();
-
-  useFrame(() => {
-    // Subtle camera movement based on mouse position
-    camera.position.x = THREE.MathUtils.lerp(
-      camera.position.x,
-      mouse.x * 0.5,
-      0.05
-    );
-    camera.position.y = THREE.MathUtils.lerp(
-      camera.position.y,
-      mouse.y * 0.5,
-      0.05
-    );
-    camera.lookAt(0, 0, 0);
-  });
-
-  return null;
-}
-
-// Three.js Canvas with error handling
-function ThreeJSContent() {
-  const [webGLError, setWebGLError] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!isWebGLAvailable()) {
-      setWebGLError(true);
-    }
-  }, []);
-
-  if (webGLError) {
-    return null; // Don't render Canvas if WebGL is not available
-  }
-
-  return (
-    <ErrorBoundary>
-      <Canvas
-        camera={{
-          position: [0, 0, 5],
-          fov: 75,
-          near: 0.1,
-          far: 1000,
-        }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-        }}
-      >
-        {/* Lighting */}
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-        <pointLight
-          position={[-10, -10, -10]}
-          intensity={0.5}
-          color="#6366f1"
-        />
-
-        {/* Presentation controls for interactivity */}
-        <PresentationControls
-          global
-          config={{ mass: 2, tension: 500 }}
-          snap={{ mass: 4, tension: 1500 }}
-          rotation={[0, 0.3, 0]}
-          polar={[-Math.PI / 3, Math.PI / 3]}
-          azimuth={[-Math.PI / 1.4, Math.PI / 2]}
-        >
-          <Suspense fallback={null}>
-            <FloatingShapes />
-          </Suspense>
-        </PresentationControls>
-
-        <CameraRig />
-      </Canvas>
-    </ErrorBoundary>
-  );
-}
-
+/**
+ * ThreeJSHero — 3D enhanced hero section with progressive enhancement.
+ *
+ * Provides an immersive landing section with optional 3D graphics and
+ * animated content. Features graceful degradation for devices without
+ * WebGL support and optimized performance for mobile devices.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered hero section
+ *
+ * @example
+ * ```tsx
+ * <ThreeJSHero />
+ * ```
+ *
+ * @see {@link src/components/Hero.tsx} for standard hero fallback
+ */
 const ThreeJSHero: React.FC = () => {
   const [currentHeadline, setCurrentHeadline] = React.useState(0);
   const [webGLAvailable, setWebGLAvailable] = React.useState(true);
@@ -197,17 +111,17 @@ const ThreeJSHero: React.FC = () => {
   return (
     <section id="home">
       <div className="relative w-full min-h-[60vh] md:h-[95vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
-        {/* Background overlay */}
+        {/* Background overlay for content readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50/90 via-white/95 to-blue-50/90 dark:from-blue-900/90 dark:via-gray-900/95 dark:to-blue-900/90 z-10" />
 
-        {/* Three.js Canvas - Hidden on mobile for performance and if WebGL not available */}
+        {/* Three.js canvas with mobile optimization */}
         {webGLAvailable && (
           <div className="absolute inset-0 hidden md:block">
             <ThreeJSContent />
           </div>
         )}
 
-        {/* Content overlay */}
+        {/* Main content overlay */}
         <div className="relative z-20 flex items-center justify-center min-h-[60vh] md:h-[95vh] px-4 py-8 md:py-0">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -215,15 +129,17 @@ const ThreeJSHero: React.FC = () => {
             transition={{ duration: 1, delay: 0.5 }}
             className="text-center max-w-4xl w-full"
           >
+            {/* Profile section */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold mb-4 md:mb-6 text-gray-800 dark:text-white leading-tight"
             >
-              <span className="text-blue-600">Ayush Rai</span>
+              Ayush Rai
             </motion.h1>
 
+            {/* Animated headline carousel */}
             <motion.div
               key={currentHeadline}
               initial={{ opacity: 0, y: 20 }}
@@ -237,6 +153,7 @@ const ThreeJSHero: React.FC = () => {
               </p>
             </motion.div>
 
+            {/* Professional biography */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -248,6 +165,7 @@ const ThreeJSHero: React.FC = () => {
               transformative solutions.
             </motion.p>
 
+            {/* Action buttons with multiple conversion paths */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -276,7 +194,7 @@ const ThreeJSHero: React.FC = () => {
               </a>
             </motion.div>
 
-            {/* Social Media Links */}
+            {/* Social media links for credibility and connection */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -297,7 +215,7 @@ const ThreeJSHero: React.FC = () => {
                 href="https://linkedin.com/in/ayushrai02"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover;scale-110"
+                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >

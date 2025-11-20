@@ -1,8 +1,54 @@
+/**
+ * Certifications.tsx — Professional certifications showcase component.
+ *
+ * This component displays a comprehensive collection of professional certifications
+ * earned across multiple domains including cloud computing, cybersecurity, machine
+ * learning, and leadership. Features interactive categorization, verified credentials
+ * with links, and achievement statistics.
+ *
+ * The component includes:
+ * - Certification cards with detailed information
+ * - Category-based filtering and overview
+ * - Verification links to credential sources
+ * - Achievement metrics and statistics
+ * - Responsive grid layout with animations
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Certifications from './components/Certifications';
+ *
+ * function App() {
+ *   return <Certifications />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/Experience.tsx} for professional experience
+ * @see {@link src/components/Education.tsx} for academic background
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Award, Calendar, ExternalLink, CheckCircle } from "lucide-react";
 
+/**
+ * Certifications — Professional certifications display component.
+ *
+ * Renders an interactive certifications showcase with filtering capabilities,
+ * detailed credential information, and achievement metrics. Displays certifications
+ * across multiple categories with verification links and enables users to explore
+ * professional development journey.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Certifications section
+ *
+ * @example
+ * ```tsx
+ * <Certifications />
+ * ```
+ *
+ * @see {@link src/lib/profilesData.ts} for external profile data
+ */
 const Certifications: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 

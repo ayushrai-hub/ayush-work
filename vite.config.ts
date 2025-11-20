@@ -1,4 +1,18 @@
-// @ts-ignore - Include test config for Vitest
+/**
+ * Vite configuration — Configures build tool for development, testing, and production builds.
+ *
+ * This file sets up Vite with React plugin, optimizes dependencies, configures Vitest for testing, and defines build optimizations for production.
+ *
+ * Special flags and options:
+ * - exclude from optimizeDeps: lucide-react (to avoid bundling issues)
+ * - manualChunks in build: separates large libraries (Three.js, Framer Motion, etc.) to improve loading performance
+ * - sourcemap: disabled for production security (set to true for debugging)
+ * - terserOptions: compress removes console and debugger in production
+ * - Vitest: uses jsdom, global test API, includes coverage
+ *
+ * Environment variables consumed: None directly, but can be accessed in code
+ * Overridden by hosting provider: build settings may be altered in Netlify/Vercel UI
+ */
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -15,11 +29,12 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],
+    exclude: ['e2e/**/*.ts', 'node_modules/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.d.ts', 'src/__tests__/**', 'src/setupTests.ts', 'src/main.tsx'],
+      exclude: ['src/**/*.d.ts', 'src/__tests__/**', 'src/setupTests.ts', 'src/main.tsx', 'e2e/**'],
     },
   },
   build: {

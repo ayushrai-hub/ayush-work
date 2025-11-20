@@ -64,7 +64,7 @@ Portfolio-specific React components (17 components total):
 - **Hero Sections**: `Hero.tsx`, `ThreeJSHero.tsx` (alternative hero with 3D effects)
 - **Core Content**: `About.tsx`, `Education.tsx`, `Experience.tsx`, `Skills.tsx`, `Research.tsx`, `Certifications.tsx`
 - **Project Showcase**: `Projects.tsx`, `ProjectTestimonials.tsx`
-- **Interactive Elements**: `SkillsRadarChart.tsx`, `GPAChart.tsx`, `ParticleBackground.tsx`
+- **Interactive Elements**: `SkillsRadarChart.tsx`, `ParticleBackground.tsx`
 - **Profile & Contact**: `Profiles.tsx`, `Contact.tsx`, `Services.tsx`, `CommunityLeadership.tsx`
 - **SEO**: `SEO.tsx` for meta tag management
 

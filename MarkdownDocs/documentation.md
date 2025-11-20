@@ -99,10 +99,9 @@ This document serves as a **planner and technical reference** for the developmen
 
 ## 5. Planner Checklist (High-Level)
 
-- [ ] Hero Section with animated counters & particle system.  
-- [ ] About Me timeline & personality showcase.  
-- [ ] Education Hub with GPA progression chart.  
-- [ ] Skills Matrix + Domain Expertise radar chart.  
+- [ ] Hero Section with animated counters & particle system.
+- [ ] About Me timeline & personality showcase.
+- [ ] Skills Matrix.
 - [ ] Projects Portfolio (cards + repos + testimonials).  
 - [ ] Certifications & Achievements timeline.  
 - [ ] Blog/Research integration with Headless CMS.  

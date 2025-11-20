@@ -12,14 +12,14 @@ describe('Footer', () => {
     expect(screen.getByText(/© \d{4} Ayush Rai/)).toBeInTheDocument();
   });
 
-  it('contains expected links', () => {
+  it('contains expected navigation buttons', () => {
     render(
       <BrowserRouter>
         <Footer />
       </BrowserRouter>
     );
-    expect(screen.getByText('About Me')).toBeInTheDocument();
-    expect(screen.getByText('Projects')).toBeInTheDocument();
-    expect(screen.getByText('Experience')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /About Me/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Projects/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Experience/ })).toBeInTheDocument();
   });
 });

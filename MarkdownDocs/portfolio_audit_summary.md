@@ -10,7 +10,7 @@ This document provides a comprehensive audit of the Ayush Rai portfolio website,
 - **Hero Section**: ThreeJSHero with particle background
 - **About & Experience**: Complete sections with animations
 - **Education**: Dual-degree showcase with CGPA display
-- **Skills**: Categorized skills matrix (no radar chart)
+- **Skills**: Categorized skills matrix
 - **Projects**: Portfolio with live demos and GitHub links
 - **Certifications**: Showcase with verification links (no timeline)
 - **Contact**: Form with serverless backend
@@ -32,26 +32,22 @@ This document provides a comprehensive audit of the Ayush Rai portfolio website,
 
 ### ❌ **Deprecated/Removed Features**
 - **Radar Chart**: Implemented but not used in app (SkillsRadarChart.tsx exists)
-- **GPA Progression Chart**: Not implemented (no GPAChart.tsx)
 - **Achievement Timeline**: Not implemented (Certifications show grid, not timeline)
 
 ## Documentation Updates Made
 
 ### Files Updated
 1. **MarkdownDocs/prd.md**
-   - Removed radar chart visualization
-   - Removed GPA progression chart
+   - Removed achievement timeline
    - Removed achievement timeline
    - Updated tech stack to React + Vite
 
 2. **MarkdownDocs/plan.md**
    - Removed radar chart references
-   - Removed GPA chart references
    - Updated tech stack references
 
 3. **MarkdownDocs/readme.md**
    - Removed radar chart visualization
-   - Removed GPA chart references
    - Updated tech stack to React + Vite
    - Updated project structure
 

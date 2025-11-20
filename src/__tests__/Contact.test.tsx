@@ -21,7 +21,7 @@ describe('Contact Form with Formspree', () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ ok: true, success: true }),
-    } as any);
+    } as Partial<Response>);
   });
 
   it('should render the contact section', () => {
@@ -56,7 +56,7 @@ describe('Contact Form with Formspree', () => {
     fetchMock.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ ok: true }),
-    } as any);
+    } as Partial<Response>);
 
     render(<Contact />);
 
@@ -74,7 +74,7 @@ describe('Contact Form with Formspree', () => {
 
     // Check that fetch was called with correct Formspree endpoint and data
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://formspree.io/f/mandaogr',
+      'https://formspree.io/f/mandaogr', // Environment variable value
       expect.objectContaining({
         method: 'POST',
         headers: {
@@ -95,7 +95,7 @@ describe('Contact Form with Formspree', () => {
     fetchMock.mockResolvedValueOnce({
       ok: false,
       status: 400,
-    } as any);
+    } as Partial<Response>);
 
     render(<Contact />);
 
@@ -117,7 +117,7 @@ describe('Contact Form with Formspree', () => {
     fetchMock.mockResolvedValueOnce({
       ok: false,
       status: 429,
-    } as any);
+    } as Partial<Response>);
 
     render(<Contact />);
 
@@ -139,7 +139,7 @@ describe('Contact Form with Formspree', () => {
     fetchMock.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ ok: true }),
-    } as any);
+    } as Partial<Response>);
 
     render(<Contact />);
 
@@ -166,5 +166,31 @@ describe('Contact Form with Formspree', () => {
       expect(subjectInput).toHaveValue('');
       expect(messageInput).toHaveValue('');
     });
+  });
+
+  it('should handle missing Formspree endpoint environment variable', async () => {
+    // Temporarily delete the environment variable
+    const originalEnv = import.meta.env.VITE_FORMSPREE_ENDPOINT;
+    // Use type assertion only for this test manipulation
+    delete (import.meta.env as Record<string, unknown>)['VITE_FORMSPREE_ENDPOINT'];
+
+    render(<Contact />);
+
+    fireEvent.change(screen.getByLabelText(/Your Name/), { target: { value: 'Test User' } });
+    fireEvent.change(screen.getByLabelText(/Email Address/), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByLabelText(/Subject/), { target: { value: 'Test subject' } });
+    fireEvent.change(screen.getByLabelText(/Message/), { target: { value: 'Test message' } });
+
+    const submitButton = screen.getByRole('button', { name: /Send Message/ });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Contact form is temporarily unavailable. Please try again later or use the email contact method.')).toBeInTheDocument();
+    });
+
+    // Restore environment variable
+    (import.meta.env as Record<string, unknown>).VITE_FORMSPREE_ENDPOINT = originalEnv;
+
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

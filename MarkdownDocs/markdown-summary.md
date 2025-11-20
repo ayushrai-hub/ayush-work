@@ -49,7 +49,7 @@ This document summarizes 19 documents in the MarkdownDocs directory, covering va
 1. **Contact Form Backend**: Missing serverless function integration
 2. **Google Analytics**: Placeholder only, real GA4 tracking needed
 3. **Bundle Size**: Increased to 402KB (73KB added from dependencies)
-4. **Advanced Visualizations**: Missing GPA charts, radar charts, and client testimonials
+4. **Advanced Visualizations**: Missing client testimonials
 5. **CMS Integration**: No headless CMS connection for dynamic content
 
 ## 4. Implementation Strategy Insights
@@ -97,8 +97,6 @@ This document summarizes 19 documents in the MarkdownDocs directory, covering va
 - Optimize bundle size (remove 73KB added dependencies)
 
 ### Short-term Goals (Phase 2)
-- Add GPA progression charts
-- Implement skills radar chart
 - Add client testimonials
 - Connect headless CMS
 

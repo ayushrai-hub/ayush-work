@@ -1,3 +1,41 @@
+/**
+ * Services.tsx — Professional services offering display component with detailed service categories.
+ *
+ * This component showcases Ayush Rai's professional services across multiple domains including
+ * AI/ML development, web development, data science, community management, technical consultation,
+ * and rapid prototyping. Features detailed service descriptions, pricing information, expected
+ * duration, and key benefits. Includes responsive design with smooth animations and service category
+ * differentiation.
+ *
+ * The component includes:
+ * - Six core service categories with detailed offerings
+ * - Pricing and duration estimates
+ * - Service features and what's included
+ * - Responsive card-based layout
+ * - Benefit highlighting and value propositions
+ *
+ * Service Categories:
+ * - AI & Machine Learning Development
+ * - Full-Stack Web Development
+ * - Data Science & Analytics
+ * - Community Management & Strategy
+ * - Technical Consultation & Training
+ * - Rapid Prototyping & MVP Services
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import Services from './components/Services';
+ *
+ * function App() {
+ *   return <Services />;
+ * }
+ * ```
+ *
+ * @see {@link src/components/Contact.tsx} for service inquiry forms
+ * @see {@link src/components/Projects.tsx} for service implementation examples
+ * @see {@link src/components/Experience.tsx} for service delivery experience
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -12,6 +50,23 @@ import {
   Star,
 } from "lucide-react";
 
+/**
+ * Services — Professional services showcase component.
+ *
+ * Renders a comprehensive service offerings display with detailed categories,
+ * pricing information, features, and value propositions. Enables potential clients
+ * to explore available services and understand offerings across different domains.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Services section
+ *
+ * @example
+ * ```tsx
+ * <Services />
+ * ```
+ *
+ * @see {@link src/lib/analytics.ts} for service interest tracking
+ */
 const Services: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 

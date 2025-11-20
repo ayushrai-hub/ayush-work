@@ -17,11 +17,25 @@ describe('ErrorBoundary', () => {
     };
 
     render(
-      <ErrorBoundary>
+      <ErrorBoundary showUserMessage={true}>
         <ThrowError />
       </ErrorBoundary>
     );
 
-    expect(screen.getByText('Something went wrong.')).toBeInTheDocument();
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+  });
+
+  it('renders null when there is an error and showUserMessage is false', () => {
+    const ThrowError = () => {
+      throw new Error('Test error');
+    };
+
+    const { container } = render(
+      <ErrorBoundary showUserMessage={false}>
+        <ThrowError />
+      </ErrorBoundary>
+    );
+
+    expect(container.firstChild).toBeNull();
   });
 });
