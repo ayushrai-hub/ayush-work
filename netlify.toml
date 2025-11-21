@@ -12,10 +12,6 @@
   to = "/index.html"
   status = 200
 
-[[plugins]]
-  # Netlify Analytics (optional - remove if not needed)
-  package = "@netlify/plugin-analytics"
-
 # Environment variables (set these in Netlify dashboard)
 # SENDGRID_API_KEY=your_sendgrid_api_key_here
 # CONTACT_EMAIL=ayushrai0211@gmail.com
