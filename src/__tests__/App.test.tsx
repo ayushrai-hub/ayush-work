@@ -29,7 +29,7 @@ import { vi } from 'vitest';
  * The GTM provider handles Google Tag Manager integration for tracking and analytics,
  * which is not needed for basic component structure validation.
  */
-vi.mock('../components/GTMProvider', () => ({
+vi.mock('../components/layout/GTMProvider', () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>
 }));
 

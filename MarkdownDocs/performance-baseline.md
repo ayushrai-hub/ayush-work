@@ -69,7 +69,7 @@
 ### Lazy Loading Implementation (`App.tsx`)
 ```javascript
 // Lazy load heavy components
-const ThreeJSHero = lazy(() => import('./components/ThreeJSHero'));
+const ThreeJSHero = lazy(() => import('./components/backgrounds/ThreeJSHero'));
 const ProjectTestimonials = lazy(() => import('./components/ProjectTestimonials'));
 
 // Suspense wrapper

@@ -72,7 +72,7 @@ export const Logo: React.FC<LogoProps> = ({ size = 'md', className = '' }) => {
     <div className={`flex items-center space-x-3 ${className}`}>
       <div className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-blue-500 shadow-lg`}>
         <img
-          src={`/profile-image.jpeg?v=${Date.now()}`}
+          src={`/IMG_0029.jpeg?v=${Date.now()}`}
           alt="Ayush Rai"
           className="w-full h-full object-cover"
           loading="eager"

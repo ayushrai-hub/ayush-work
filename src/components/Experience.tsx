@@ -173,55 +173,47 @@ const Experience: React.FC = () => {
   ];
 
   return (
-    <section id="experience" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
+    <section id="experience" className="py-8 md:py-10 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             Professional <span className="text-secondary dark:text-secondary-400">Experience</span>
           </h2>
-          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-20 h-0.5 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-4"></div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Career Journey Across AI, Web Development, and Leadership
           </p>
         </motion.div>
 
         {/* Experience Timeline */}
         <div className="relative">
-          <div className="timeline-line h-full"></div>
-
           {experiences.map((exp, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.15 }}
-              className={`relative mb-8 ${
+              className={`relative mb-6 ${
                 index % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-right"
               } 
                          ${index % 2 === 1 ? "md:pl-8" : ""}`}
             >
               <div
-                className="timeline-dot"
-                style={{ top: "2rem" }}
-                role="presentation"
-              ></div>
-
-              <div
                 className={`card max-w-2xl ${
                   index % 2 === 1 ? "md:ml-auto" : ""
-                } ml-12 md:ml-0`}
+                }`}
               >
-                <div className="flex flex-wrap items-center justify-between mb-4">
-                  <div className="flex items-center mb-2 md:mb-0">
-                    <Briefcase className="text-accent mr-3" size={24} />
+                <div className="flex flex-wrap items-center justify-between mb-3">
+                  <div className="flex items-center mb-1.5 md:mb-0">
+                    <Briefcase className="text-accent mr-2" size={18} />
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-semibold
+                      className={`px-2 py-0.5 rounded-full text-xs font-semibold
                       ${
                         exp.type === "Full-time"
                           ? "bg-accent/20 text-accent"
@@ -235,58 +227,58 @@ const Experience: React.FC = () => {
                       {exp.type}
                     </span>
                   </div>
-                  <span className={`font-semibold ${exp.isCurrent ? 'text-accent' : 'text-gray-600 dark:text-gray-400'}`}>
+                  <span className={`font-semibold text-xs ${exp.isCurrent ? 'text-accent' : 'text-gray-600 dark:text-gray-400'}`}>
                     {exp.isCurrent ? 'Current' : 'Ended'}
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">
+                <h3 className="text-lg md:text-xl font-bold mb-1.5 text-gray-800 dark:text-white">
                   {exp.title}
                 </h3>
-                <p className="text-secondary font-semibold mb-3">
+                <p className="text-secondary dark:text-secondary font-semibold mb-2 text-sm">
                   {exp.company}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-4 mb-4 text-gray-600 dark:text-gray-400 text-sm">
+                <div className="flex flex-wrap items-center gap-3 mb-3 text-gray-600 dark:text-gray-400 text-xs">
                   <div className="flex items-center">
-                    <Calendar size={16} className="mr-2" />
+                    <Calendar size={12} className="mr-1.5" />
                     {exp.duration}
                   </div>
                   <div className="flex items-center">
-                    <MapPin size={16} className="mr-2" />
+                    <MapPin size={12} className="mr-1.5" />
                     {exp.location}
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <div className="flex items-center mb-3">
-                    <TrendingUp size={16} className="mr-2 text-accent" />
-                    <span className="text-gray-800 dark:text-white font-semibold">
-                      Key Achievements:
+                <div className="mb-3">
+                  <div className="flex items-center mb-2">
+                    <TrendingUp size={12} className="mr-1.5 text-accent" />
+                    <span className="text-gray-800 dark:text-white font-semibold text-xs">
+                      Achievements:
                     </span>
                   </div>
-                  <ul className="space-y-2">
-                    {exp.achievements.map((achievement, achievementIndex) => (
+                  <ul className="space-y-1">
+                    {exp.achievements.slice(0, 3).map((achievement, achievementIndex) => (
                       <li
                         key={achievementIndex}
-                        className="text-gray-700 dark:text-gray-300 flex items-start"
+                        className="text-gray-700 dark:text-gray-300 flex items-start text-xs"
                       >
-                        <span className="text-accent mr-2 mt-1">•</span>
-                        {achievement}
+                        <span className="text-accent mr-1.5 mt-0.5">•</span>
+                        <span className="leading-tight">{achievement}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="mt-4">
-                  <p className="text-gray-800 dark:text-white font-semibold mb-3">
-                    Technologies Used:
+                <div className="mt-3">
+                  <p className="text-gray-800 dark:text-white font-semibold mb-2 text-xs">
+                    Technologies:
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.technologies.map((tech, techIndex) => (
+                  <div className="flex flex-wrap gap-1.5">
+                    {exp.technologies.slice(0, 4).map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="px-3 py-1 bg-gray-100 dark:bg-primary rounded-full text-sm text-gray-700 dark:text-gray-300 border border-accent/20"
+                        className="px-2 py-0.5 bg-gray-100 dark:bg-primary rounded-md text-xs text-gray-700 dark:text-gray-300 border border-secondary/30 dark:border-accent/20"
                       >
                         {tech}
                       </span>
@@ -295,14 +287,14 @@ const Experience: React.FC = () => {
                 </div>
 
                 {exp.link && (
-                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                     <a
                       href={exp.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 bg-secondary text-primary rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm"
+                      className="inline-flex items-center px-3 py-1.5 bg-secondary text-primary rounded-md font-medium hover:bg-secondary/80 transition-colors text-xs"
                     >
-                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clipRule="evenodd" />
                       </svg>
                       View Resources
@@ -318,38 +310,35 @@ const Experience: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="mt-8"
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-6"
         >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
-            Experience Metrics
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={2} duration={2} delay={0.2} />}
                 +
               </div>
-              <p className="text-gray-600 dark:text-gray-400">Years Experience</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Years</p>
             </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={2} duration={2} delay={0.4} />}
               </div>
-              <p className="text-gray-600 dark:text-gray-400">Companies</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Companies</p>
             </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={3} duration={2} delay={0.6} />}
               </div>
-              <p className="text-gray-600 dark:text-gray-400">Industries</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Industries</p>
             </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={100} duration={2} delay={0.8} />}
                 %
               </div>
-              <p className="text-gray-600 dark:text-gray-400">Success Rate</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Success</p>
             </div>
           </div>
         </motion.div>

@@ -277,7 +277,7 @@ export default App;
 ### Phase 4: Navigation Updates
 
 #### 4.1 Update Header Component
-Modify `src/components/Header.tsx` to include navigation to Other page:
+Modify `src/components/layout/Header.tsx` to include navigation to Other page:
 
 ```tsx
 // Add to navigation items
@@ -293,7 +293,7 @@ Ensure footer navigation includes links to the new routes.
 ### Phase 5: SEO and Performance Optimization
 
 #### 5.1 Update SEO Component
-Modify `src/components/SEO.tsx` to handle dynamic meta tags based on route:
+Modify `src/components/layout/SEO.tsx` to handle dynamic meta tags based on route:
 
 ```tsx
 import { useLocation } from 'react-router-dom';

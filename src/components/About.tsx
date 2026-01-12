@@ -77,32 +77,32 @@ const About: React.FC = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
+    <section id="about" className="py-8 md:py-10 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             My <span className="text-secondary dark:text-secondary-400">Story</span>
           </h2>
-          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-20 h-0.5 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-4"></div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             The Polymath's Journey
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h3 className="text-3xl font-bold mb-6 text-secondary dark:text-secondary-400">My Story</h3>
-            <div className="space-y-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+            <h3 className="text-xl md:text-2xl font-bold mb-4 text-secondary dark:text-secondary-400">My Story</h3>
+            <div className="space-y-3 text-gray-600 dark:text-gray-300 text-sm md:text-base leading-relaxed">
               <p>
                 I'm a technology enthusiast with a unique blend of technical
                 expertise and strategic thinking. I graduated in 2024 from LNCT
@@ -116,12 +116,12 @@ const About: React.FC = () => {
                 journey spans across AI/ML development, full-stack web
                 development, data science, and community leadership.
               </p>
-              <blockquote className="mt-4 text-gray-600 dark:text-gray-300 italic text-lg leading-relaxed">
+              <blockquote className="mt-3 text-gray-600 dark:text-gray-300 italic text-sm md:text-base leading-relaxed border-l-2 border-secondary dark:border-secondary-400 pl-3">
                 "Technology should amplify human potential, not replace it. As a
                 polymath, I bridge the gap between different domains to create
                 holistic solutions that address real-world challenges."
               </blockquote>
-              <cite className="block mt-2 text-secondary-500 dark:text-secondary-400 font-semibold">
+              <cite className="block mt-2 text-secondary-500 dark:text-secondary-400 font-semibold text-xs md:text-sm">
                 - Ayush Rai
               </cite>
             </div>
@@ -132,25 +132,25 @@ const About: React.FC = () => {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <h3 className="text-3xl font-bold mb-6 text-secondary dark:text-secondary-400">
+            <h3 className="text-xl md:text-2xl font-bold mb-4 text-secondary dark:text-secondary-400">
               Core Values & Approach
             </h3>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-3 md:gap-4">
               {values.map((value, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                  className="bg-glass rounded-2xl p-6 border border-accent/20"
+                  className="card border border-secondary/20 dark:border-accent/20"
                 >
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-secondary to-accent rounded-full mb-4">
-                    <value.icon size={24} className="text-primary" />
+                  <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-secondary to-accent rounded-full mb-3">
+                    <value.icon size={18} className="text-white" />
                   </div>
-                  <h4 className="text-lg font-bold mb-3 text-gray-800 dark:text-white">
+                  <h4 className="text-base font-bold mb-2 text-gray-800 dark:text-white">
                     {value.title}
                   </h4>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{value.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">{value.description}</p>
                 </motion.div>
               ))}
             </div>

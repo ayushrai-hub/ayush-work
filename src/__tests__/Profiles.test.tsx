@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
-import Footer from '../components/Footer';
+import Footer from '../components/layout/Footer';
 import * as profilesData from '../lib/profilesData';
 
 // Mock IntersectionObserver

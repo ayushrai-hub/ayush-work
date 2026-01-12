@@ -11,7 +11,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
-import GTMProvider from "./components/GTMProvider.tsx";
+import GTMProvider from "./components/layout/GTMProvider.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 import App from "./App.tsx";
 import "./index.css";

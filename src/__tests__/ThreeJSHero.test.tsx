@@ -15,11 +15,11 @@ vi.mock('react', async () => {
 });
 
 // Mock ThreeJSContent before importing ThreeJSHero
-vi.mock('../components/ThreeJSContent', () => ({
+vi.mock('../components/backgrounds/ThreeJSContent', () => ({
   ThreeJSContent: () => null,
 }));
 
-import ThreeJSHero from '../components/ThreeJSHero';
+import ThreeJSHero from '../components/backgrounds/ThreeJSHero';
 
 // Mock component props interfaces
 interface MockMotionProps {
@@ -71,8 +71,8 @@ vi.mock('react', async () => {
 });
 
 // Mock the isWebGLAvailable function
-vi.mock('../components/ThreeJSHero', async () => {
-  const actual = await vi.importActual('../components/ThreeJSHero');
+vi.mock('../components/backgrounds/ThreeJSHero', async () => {
+  const actual = await vi.importActual('../components/backgrounds/ThreeJSHero');
   return {
     ...actual,
     isWebGLAvailable: vi.fn(() => false),

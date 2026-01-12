@@ -140,9 +140,9 @@ This audit examines a React/TypeScript/Vite-based personal portfolio website. Th
 |------|---------|-----------|----------------|-----------------------------|
 | `src/App.tsx` | Main application component with routing and lazy loading | 77 | 1-77 | Clean routing, proper lazy loading for performance. Warning: Multiple nested Suspense boundaries could cause waterfalls. |
 | `src/components/Contact.tsx` | Contact form with validation and submission | 422 | 1-422 | **Critical:** Massive component violating SRP. No client-side validation. Hardcoded API endpoint. Race condition in analytics. Missing input sanitization. |
-| `src/components/ThreeJSHero.tsx` | Hero section with 3D graphics and animations | 283 | 1-283 | Complex but well-structured. WebGL detection works. Syntax error in CSS class. Large for single component. |
+| `src/components/backgrounds/ThreeJSHero.tsx` | Hero section with 3D graphics and animations | 283 | 1-283 | Complex but well-structured. WebGL detection works. Syntax error in CSS class. Large for single component. |
 | `src/lib/analytics.ts` | Analytics tracking utilities | 85 | 1-85 | Proper event tracking. Missing proper TypeScript interfaces for GA events. |
-| `src/utils/gtm.ts` | Google Tag Manager utilities | 45 | 1-45 | Basic GTM integration. Needs proper typing. |
+| `src/lib/gtm.ts` | Google Tag Manager utilities | 45 | 1-45 | Basic GTM integration. Needs proper typing. |
 | `vite.config.ts` | Build configuration and optimizations | 48 | 1-48 | Good chunking strategy but Three.js bundle is excessive (981KB). Build performance acceptable. |
 
 ## Performance Analysis
@@ -366,7 +366,7 @@ This audit examines a React/TypeScript/Vite-based personal portfolio website. Th
   **Severity:** Medium
   **Fix:** Use Web Vitals type definitions
 
-- **File:** `src/components/ErrorBoundary.tsx`
+- **File:** `src/components/layout/ErrorBoundary.tsx`
   **Issues:** Explicit `any` in error handling (line 22)
   **Severity:** Medium
   **Fix:** Define ErrorBoundary error type
@@ -376,7 +376,7 @@ This audit examines a React/TypeScript/Vite-based personal portfolio website. Th
   **Severity:** Medium
   **Fix:** Type GTM event data structures
 
-- **File:** `src/utils/gtm.ts`
+- **File:** `src/lib/gtm.ts`
   **Issues:** 4 explicit `any` types in GTM utils
   **Severity:** Medium
   **Fix:** Define Google Tag Manager types
@@ -392,12 +392,12 @@ This audit examines a React/TypeScript/Vite-based personal portfolio website. Th
   **Severity:** Info
   **Fix:** Remove unused imports
 
-- **File:** `src/components/ThemeToggle.tsx`
+- **File:** `src/components/ui/ThemeToggle.tsx`
   **Issues:** Unused 'Monitor' import
   **Severity:** Info
   **Fix:** Remove unused import
 
-- **File:** `src/components/Footer.tsx`
+- **File:** `src/components/layout/Footer.tsx`
   **Issues:** Unused 'domainName' variable
   **Severity:** Info
   **Fix:** Remove or use variable
@@ -409,7 +409,7 @@ This audit examines a React/TypeScript/Vite-based personal portfolio website. Th
   **Fix:** Add 'headlines.length' to dependency array
 
 ### Fast Refresh Warnings
-- **Component Exports:** `src/components/SEO.tsx`, `src/contexts/ThemeContext.tsx`
+- **Component Exports:** `src/components/layout/SEO.tsx`, `src/contexts/ThemeContext.tsx`
   **Issues:** Exporting constants disables fast refresh
   **Severity:** Info
   **Fix:** Consider separate files for constants

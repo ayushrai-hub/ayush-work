@@ -1,5 +1,0 @@
-- [x] Fix ParticleBackground tests (canvas role img query, requestAnimationFrame)
-- [x] Fix Profiles tests (mock ChevronUp, ChevronDown icons)
-- [x] Fix Projects tests (text broken into multiple elements)
-- [x] Fix Services tests (mock Clock icon)
-- [x] Fix Skills tests (mock Cloud icon)

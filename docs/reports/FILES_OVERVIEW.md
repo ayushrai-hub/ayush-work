@@ -53,17 +53,22 @@ This is a modern React/TypeScript portfolio website for Ayush Rai, featuring a *
 | `src/components/Services.tsx` | Professional services offering display | None → services grid with pricing | What's included, pricing, duration estimates | `src/App.tsx` |
 | `src/components/Skills.tsx` | Technical skills visualization | None → skills grid with categories | Multiple skill categories with interactive elements | `src/App.tsx` |
 | `src/components/Hero.tsx` | Landing section with animations and CTAs | None → main hero section | Responsive design, smooth animations, profile image | `src/App.tsx` |
-| `src/components/Header.tsx` | Navigation header with mobile menu | Current route → navigation links | Dropdown menus, theme toggle, mobile responsiveness | `src/App.tsx` |
-| `src/components/Footer.tsx` | Site footer with social links and profiles | None → footer navigation | Multiple social platforms, profile links, back-to-top | `src/App.tsx`, `src/lib/profilesData.ts` |
-| `src/components/ParticleBackground.tsx` | Animated particle background effect | None → canvas-based animation | WebGL fallback, performance optimization, mobile disabled | `src/App.tsx` |
-| `src/components/ThemeToggle.tsx` | Dark/light theme toggle component | User preference → theme state update | Smooth animations, localStorage persistence | `src/contexts/ThemeContext.tsx` |
-| `src/components/SEO.tsx` | Search engine optimization component | SEO props → meta tags | Dynamic OpenGraph, Twitter cards, structured data | `src/App.tsx` |
-| `src/components/Logo.tsx` | Reusable logo component with sizing options | Size props → logo display | Responsive sizing, optional text display | `src/components/Header.tsx` |
-| `src/components/ErrorBoundary.tsx` | React error boundary for graceful error handling | React errors → fallback UI | Three.js error handling, security logging | All component files |
+**Layout Components** (`src/components/layout/`):
+| `src/components/layout/Header.tsx` | Navigation header with mobile menu | Current route → navigation links | Dropdown menus, theme toggle, mobile responsiveness | `src/App.tsx` |
+| `src/components/layout/Footer.tsx` | Site footer with social links and profiles | None → footer navigation | Multiple social platforms, profile links, back-to-top | `src/App.tsx`, `src/lib/profilesData.ts` |
+| `src/components/layout/SEO.tsx` | Search engine optimization component | SEO props → meta tags | Dynamic OpenGraph, Twitter cards, structured data | `src/App.tsx` |
+| `src/components/layout/ErrorBoundary.tsx` | React error boundary for graceful error handling | React errors → fallback UI | Three.js error handling, security logging | All component files |
+| `src/components/layout/GTMProvider.tsx` **✓ Documented** | Google Tag Manager integration provider | GTM config → analytics tracking | Environment-based configuration, error handling | `src/main.tsx` |
 
-| `src/components/GTMProvider.tsx` **✓ Documented** | Google Tag Manager integration provider | GTM config → analytics tracking | Environment-based configuration, error handling | `src/App.tsx` |
-| `src/components/ThreeJSContent.tsx` | Three.js 3D scene component | None → rendered 3D graphics | WebGL requirement, mobile performance considerations | `src/components/ThreeJSHero.tsx` |
-| `src/components/ThreeJSHero.tsx` | 3D enhanced hero section | None → animated hero with 3D elements | WebGL availability check, fallback handling | `src/App.tsx` |
+**UI Components** (`src/components/ui/`):
+| `src/components/ui/FloatingNav.tsx` | Floating navigation component | None → floating nav links | Smooth animations, scroll-based positioning | `src/App.tsx` |
+| `src/components/ui/ThemeToggle.tsx` | Dark/light theme toggle component | User preference → theme state update | Smooth animations, localStorage persistence | `src/components/layout/Header.tsx`, `src/contexts/ThemeContext.tsx` |
+| `src/components/ui/Logo.tsx` | Reusable logo component with sizing options | Size props → logo display | Responsive sizing, optional text display | Available for use in Header |
+
+**Background Components** (`src/components/backgrounds/`):
+| `src/components/backgrounds/ParticleBackground.tsx` | Animated particle background effect | None → canvas-based animation | WebGL fallback, performance optimization, mobile disabled | `src/App.tsx` |
+| `src/components/backgrounds/ThreeJSHero.tsx` | 3D enhanced hero section | None → animated hero with 3D elements | WebGL availability check, fallback handling | `src/App.tsx` |
+| `src/components/backgrounds/ThreeJSContent.tsx` | Three.js 3D scene component | None → rendered 3D graphics | WebGL requirement, mobile performance considerations | `src/components/backgrounds/ThreeJSHero.tsx` |
 
 ### 📁 `src/hooks/` — Important (Custom React Hooks)
 | File | Purpose | Inputs / Outputs | Environment / Notes | Consumers / Related |
@@ -84,10 +89,10 @@ This is a modern React/TypeScript portfolio website for Ayush Rai, featuring a *
 |------|---------|-------------------|-------------------|-------------------|
 | `src/contexts/ThemeContext.tsx` | Theme state management context | Theme preference → global theme state | Dark/light mode, localStorage persistence | Theme toggle component |
 
-### ❓ Unsorted / Pending Documentation
-- `src/components/pages/` subdirectory (paginated components)
-- `src/components/FloatingNav.tsx`, `src/components/Other.tsx`
-- `src/components/CommunityLeadership.tsx`, `src/components/ExtraCurriculars.tsx`, `src/components/Profiles.tsx`
+### 📁 Additional Content Components
+- `src/components/pages/` - Page components for dedicated routes (ResearchPage, LeadershipPage, CertificationsPage, ServicesPage, ExtraCurricularsPage)
+- `src/components/Other.tsx` - Navigation component for specialized content sections
+- `src/components/CommunityLeadership.tsx`, `src/components/ExtraCurriculars.tsx`, `src/components/Profiles.tsx` - Content showcase components
 
 ---
 

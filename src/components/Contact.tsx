@@ -475,37 +475,37 @@ const Contact: React.FC = () => {
   ];
 
   return (
-    <section id="contact" className="py-12 bg-white dark:bg-gray-800">
+    <section id="contact" className="py-8 md:py-10 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-10"
+          className="text-center mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-3">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             Let's Work <span className="text-blue-600">Together</span>
           </h2>
-          <div className="w-16 h-1 bg-blue-600 mx-auto rounded-full mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-20 h-0.5 bg-blue-600 mx-auto rounded-full mb-4"></div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Ready to bring your ideas to life? Let's discuss your project and
             create something amazing together.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
           {/* Contact Information */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h3 className="text-2xl font-bold mb-6 gradient-text">
+            <h3 className="text-xl md:text-2xl font-bold mb-4 gradient-text">
               Get In Touch
             </h3>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3 mb-4">
               {contactInfo.map((info, index) => (
                 <motion.div
                   key={index}
@@ -514,14 +514,14 @@ const Contact: React.FC = () => {
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                   className="flex items-center group"
                 >
-                  <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-secondary to-accent rounded-lg mr-3 group-hover:scale-110 transition-transform">
-                    <info.icon size={24} className="text-primary" />
+                  <div className="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-secondary to-accent rounded-md mr-3 group-hover:scale-110 transition-transform">
+                    <info.icon size={18} className="text-white" />
                   </div>
                   <div>
-                    <h4 className="text-white font-semibold">{info.title}</h4>
+                    <h4 className="text-gray-800 dark:text-white font-semibold text-sm">{info.title}</h4>
                     <a
                       href={info.link}
-                      className="text-gray-400 hover:text-accent transition-colors"
+                      className="text-gray-600 dark:text-gray-400 hover:text-secondary dark:hover:text-accent transition-colors text-sm"
                     >
                       {info.value}
                     </a>
@@ -535,27 +535,27 @@ const Contact: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="bg-glass rounded-xl p-4 border border-accent/20 mb-6"
+              className="bg-gray-50 dark:bg-gray-800/80 rounded-lg p-3 border border-gray-200 dark:border-gray-700 mb-4"
             >
-              <h4 className="text-lg font-bold mb-3 text-accent">
+              <h4 className="text-base font-bold mb-2 text-secondary dark:text-accent">
                 Current Availability
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex items-center">
-                  <span className="w-2.5 h-2.5 bg-green-400 rounded-full mr-2"></span>
-                  <span className="text-green-400">
+                  <span className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mr-2"></span>
+                  <span className="text-green-600 dark:text-green-400 text-sm">
                     Available for new projects
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <span className="w-3 h-3 bg-blue-400 rounded-full mr-3"></span>
-                  <span className="text-blue-400">
+                  <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mr-2"></span>
+                  <span className="text-blue-600 dark:text-blue-400 text-sm">
                     Open to full-time opportunities
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <span className="w-3 h-3 bg-yellow-400 rounded-full mr-3"></span>
-                  <span className="text-yellow-400">Quick response time</span>
+                  <span className="w-2 h-2 bg-yellow-500 dark:bg-yellow-400 rounded-full mr-2"></span>
+                  <span className="text-yellow-600 dark:text-yellow-400 text-sm">Quick response time</span>
                 </div>
               </div>
             </motion.div>
@@ -565,25 +565,25 @@ const Contact: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 1.0 }}
-              className="mb-6"
+              className="mb-4"
             >
-              <h4 className="text-lg font-bold mb-4 text-white">
+              <h4 className="text-base font-bold mb-3 text-gray-800 dark:text-white">
                 Connect With Me
               </h4>
-              <div className="flex space-x-4">
+              <div className="flex space-x-3">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={index}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center w-10 h-10 bg-primary-dark border border-accent/20 rounded-lg hover:border-accent hover:bg-accent/10 transition-all group"
+                    className="flex items-center justify-center w-9 h-9 bg-gray-100 dark:bg-primary-dark border border-gray-200 dark:border-accent/20 rounded-md hover:border-secondary dark:hover:border-accent hover:bg-secondary/10 dark:hover:bg-accent/10 transition-all group"
                     whileHover={{ scale: 1.1 }}
                     title={social.name}
                   >
                     <social.icon
-                      size={20}
-                      className="text-gray-400 group-hover:text-accent transition-colors"
+                      size={18}
+                      className="text-gray-600 dark:text-gray-400 group-hover:text-secondary dark:group-hover:text-accent transition-colors"
                     />
                   </motion.a>
                 ))}
@@ -598,18 +598,18 @@ const Contact: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-white">
+              <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-800 dark:text-white">
                 Send Me a Message
               </h3>
               <form
                 onSubmit={handleSubmit}
-                className="space-y-4"
+                className="space-y-3"
               >
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-gray-300 text-base font-medium mb-2"
+                      className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1.5"
                     >
                       Your Name *
                     </label>
@@ -620,8 +620,8 @@ const Contact: React.FC = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       onFocus={handleFormFocus}
-                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base touch-target ${
-                        validationErrors.name ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target ${
+                        validationErrors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
                       }`}
                       autoComplete="name"
                     />
@@ -635,7 +635,7 @@ const Contact: React.FC = () => {
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-gray-300 text-base font-medium mb-2"
+                      className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1.5"
                     >
                       Email Address *
                     </label>
@@ -645,8 +645,8 @@ const Contact: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base touch-target ${
-                        validationErrors.email ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target ${
+                        validationErrors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
                       }`}
                       autoComplete="email"
                     />
@@ -660,7 +660,7 @@ const Contact: React.FC = () => {
                   <div>
                     <label
                       htmlFor="service"
-                      className="block text-gray-300 text-base font-medium mb-2"
+                      className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1.5"
                     >
                       Service Interest
                     </label>
@@ -669,7 +669,7 @@ const Contact: React.FC = () => {
                       name="service"
                       value={formData.service}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-primary-dark border border-gray-600 rounded-lg focus:border-accent focus:outline-none text-white text-base touch-target"
+                      className="w-full px-3 py-2 bg-white dark:bg-primary-dark border border-gray-300 dark:border-gray-600 rounded-md focus:border-secondary dark:focus:border-accent focus:outline-none text-gray-900 dark:text-white text-sm touch-target"
                     >
                       <option value="">Select a service</option>
                       <option value="ai-ml">AI & Machine Learning</option>
@@ -683,7 +683,7 @@ const Contact: React.FC = () => {
                   <div>
                     <label
                       htmlFor="subject"
-                      className="block text-gray-300 text-base font-medium mb-2"
+                      className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1.5"
                     >
                       Subject *
                     </label>
@@ -693,8 +693,8 @@ const Contact: React.FC = () => {
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base touch-target ${
-                        validationErrors.subject ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target ${
+                        validationErrors.subject ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
                       }`}
                       autoComplete="subject"
                     />
@@ -708,7 +708,7 @@ const Contact: React.FC = () => {
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-gray-300 text-base font-medium mb-2"
+                      className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1.5"
                     >
                       Message *
                     </label>
@@ -717,9 +717,9 @@ const Contact: React.FC = () => {
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
-                      rows={5}
-                      className={`w-full px-4 py-3 bg-primary-dark border rounded-lg focus:outline-none text-white text-base resize-none touch-target ${
-                        validationErrors.message ? 'border-red-500' : 'border-gray-600 focus:border-accent'
+                      rows={4}
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm resize-none touch-target ${
+                        validationErrors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
                       }`}
                       autoComplete="message"
                     ></textarea>
@@ -737,7 +737,7 @@ const Contact: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`flex items-start p-4 rounded-lg ${
+                    className={`flex items-start p-3 rounded-md ${
                       submitStatus.type === "success"
                         ? "bg-green-500/10 border border-green-500/20"
                         : "bg-red-500/10 border border-red-500/20"
@@ -769,7 +769,7 @@ const Contact: React.FC = () => {
                           type="button"
                           onClick={handleRetry}
                           disabled={isSubmitting}
-                          className="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="mt-2 px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           Try Again
                         </button>
@@ -782,18 +782,18 @@ const Contact: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full touch-target bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group text-base"
+                  className="w-full touch-target bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 px-3 rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group text-xs"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Sending...
                     </div>
                   ) : (
                     <>
                       <Send
-                        size={20}
-                        className="mr-2 group-hover:translate-x-1 transition-transform"
+                        size={14}
+                        className="mr-1.5 group-hover:translate-x-1 transition-transform"
                       />
                       Send Message
                     </>
@@ -809,7 +809,7 @@ const Contact: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="text-center mt-10"
+          className="text-center mt-6 md:mt-8"
         >
           <div className="bg-glass rounded-xl p-6 border border-accent/20">
             <h3 className="text-2xl font-bold mb-3 gradient-text">
@@ -820,18 +820,30 @@ const Contact: React.FC = () => {
               need AI solutions, web development, or strategic consultation,
               let's discuss how we can work together.
             </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <a href="mailto:ayushrai0211@gmail.com" className="touch-target btn-primary text-sm px-4 py-3 flex items-center justify-center">
-                <Mail size={16} className="mr-1.5" />
+            <div className="flex flex-wrap justify-center gap-2">
+              <a href="mailto:ayushrai0211@gmail.com" className="touch-target btn-primary text-xs px-2.5 py-1 flex items-center justify-center">
+                <Mail size={14} className="mr-1.5" />
                 Email Me
               </a>
-              <a href="tel:+917440567944" className="touch-target btn-secondary text-sm px-4 py-3 flex items-center justify-center">
-                <Phone size={16} className="mr-1.5" />
+              <a href="tel:+917440567944" className="touch-target btn-secondary text-xs px-2.5 py-1 flex items-center justify-center">
+                <Phone size={14} className="mr-1.5" />
                 Call Now
               </a>
-              <a href="https://calendly.com/ayushrai0211" target="_blank" rel="noopener noreferrer" className="touch-target btn-secondary text-sm px-4 py-3 flex items-center justify-center">
-                <Calendar size={16} className="mr-1.5" />
+              <a href="https://calendly.com/ayushrai0211" target="_blank" rel="noopener noreferrer" className="touch-target btn-secondary text-xs px-2.5 py-1 flex items-center justify-center">
+                <Calendar size={14} className="mr-1.5" />
                 Schedule Call
+              </a>
+              <a href="https://cal.com/ayush-rai-02" target="_blank" rel="noopener noreferrer" className="touch-target btn-secondary text-xs px-2.5 py-1 flex items-center justify-center">
+                <Calendar size={14} className="mr-1.5" />
+                Book via cal
+              </a>
+              <a href="https://topmate.io/ayush_rai02/" target="_blank" rel="noopener noreferrer" className="touch-target bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs px-2.5 py-1 rounded-md flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg">
+                <Calendar size={14} className="mr-1.5" />
+                Book via Topmate
+              </a>
+              <a href="https://buymeacoffee.com/ayush_rai02" target="_blank" rel="noopener noreferrer" className="touch-target bg-yellow-500 hover:bg-yellow-400 text-gray-900 text-xs px-2.5 py-1 rounded-md flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg font-semibold">
+                <span className="mr-1.5 text-xs">☕</span>
+                Buy Me a Coffee
               </a>
             </div>
           </div>

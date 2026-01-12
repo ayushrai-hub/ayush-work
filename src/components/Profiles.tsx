@@ -172,7 +172,7 @@ const Profiles: React.FC = () => {
   };
 
   return (
-    <section id="profiles" className="py-8 sm:py-12 bg-primary">
+    <section id="profiles" className="py-8 md:py-10 bg-primary">
       <div className="container mx-auto px-4">
         {/* Hero Section with Statistics */}
         <motion.div

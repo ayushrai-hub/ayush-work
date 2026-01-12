@@ -31,7 +31,7 @@
  */
 import { Component, ReactNode } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { logSecurityEvent } from '../lib/securityLogger';
+import { logSecurityEvent } from '../../lib/securityLogger';
 
 /**
  * Props for the ErrorBoundary component.

@@ -44,9 +44,9 @@
  * @see {@link src/components/Header.tsx} for primary navigation
  * @see {@link src/components/FloatingNav.tsx} for floating navigation alternative
  */
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 /**
  * Other — Specialized page navigation component.
@@ -66,96 +66,65 @@ import { ChevronDown, ExternalLink } from 'lucide-react';
  * @see {@link src/App.tsx} for router integration
  */
 const Other: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const otherPages = [
     {
       title: 'Research',
       path: '/research',
-      description: 'Research projects and academic achievements',
+      description: 'Research projects',
       icon: '🔬'
     },
     {
       title: 'Leadership',
       path: '/leadership',
-      description: 'Community leadership and mentorship activities',
+      description: 'Community leadership',
       icon: '👥'
     },
     {
       title: 'Certifications',
       path: '/certifications',
-      description: 'Professional certifications and credentials',
+      description: 'Certifications',
       icon: '🏆'
     },
     {
       title: 'Services',
       path: '/services',
-      description: 'Professional services and consulting offerings',
+      description: 'Services & Solutions',
       icon: '💼'
+    },
+    {
+      title: 'Extra-curriculars',
+      path: '/extracurriculars',
+      description: 'Extra-curriculars',
+      icon: '🎯'
     }
   ];
 
   return (
-    <section className="py-12 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+    <section id="work" className="py-8 md:py-10 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+        <div className="text-center mb-4">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-2">
             Work <span className="text-blue-600">Pages</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Explore specialized content areas through dedicated pages
+          <div className="w-16 h-0.5 bg-blue-600 mx-auto rounded-full mb-3"></div>
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
+            Explore specialized content areas
           </p>
         </div>
 
-        {/* Interactive dropdown navigation */}
-        <div className="max-w-md mx-auto mb-12">
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 text-left flex items-center justify-between hover:border-blue-500 transition-colors"
-            >
-              <span className="text-gray-700 dark:text-gray-300">Select a page to explore</span>
-              <ChevronDown className={`transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
-                {otherPages.map((page, index) => (
-                  <Link
-                    key={index}
-                    to={page.path}
-                    className="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg transition-colors"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    <span className="text-2xl mr-3">{page.icon}</span>
-                    <div>
-                      <div className="font-semibold text-gray-800 dark:text-white">{page.title}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{page.description}</div>
-                    </div>
-                    <ExternalLink className="ml-auto text-gray-400" size={16} />
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Alternative card-based navigation */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Compact button grid */}
+        <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mx-auto">
           {otherPages.map((page, index) => (
             <Link
               key={index}
               to={page.path}
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700 hover:border-blue-300"
+              className="inline-flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all text-sm md:text-base group"
             >
-              <div className="text-3xl mb-3">{page.icon}</div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">{page.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">{page.description}</p>
-              <div className="flex items-center text-blue-400 hover:text-blue-500">
-                <span className="text-sm font-medium">Explore</span>
-                <ExternalLink className="ml-2" size={14} />
-              </div>
+              <span className="text-base md:text-lg mr-1.5 md:mr-2">{page.icon}</span>
+              <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                {page.title}
+              </span>
+              <ExternalLink className="ml-1.5 md:ml-2 text-gray-400 group-hover:text-blue-500 transition-colors" size={12} />
             </Link>
           ))}
         </div>

@@ -46,8 +46,8 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
-import { structuredData, organizationStructuredData } from "../lib/seo";
-import { defaultSEO } from "../constants/seo";
+import { structuredData, organizationStructuredData } from "../../lib/seo";
+import { defaultSEO } from "../../constants/seo";
 
 /**
  * Props for the SEO component.

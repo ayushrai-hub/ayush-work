@@ -94,7 +94,7 @@ const Hero: React.FC = () => {
         >
           <div className="w-32 h-32 md:w-40 md:h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-accent shadow-xl">
             <img
-              src="/profile-image.jpeg"
+              src="/IMG_0029.jpeg"
               alt="Ayush Rai"
               className="w-full h-full object-cover"
             />
@@ -143,7 +143,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
+          className="flex flex-wrap justify-center gap-4 mb-6"
         >
           <a
             href="https://linkedin.com/in/ayushrai02"
@@ -170,7 +170,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex flex-wrap justify-center gap-4 mb-16"
+          className="flex flex-wrap justify-center gap-4 mb-8"
         >
           <a href="#contact" className="btn-primary">
             Let's Work Together
@@ -193,7 +193,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.0 }}
-          className="flex justify-center space-x-6 mb-20"
+          className="flex justify-center space-x-6 mb-8"
         >
           <a
             href="mailto:ayushrai0211@gmail.com"
@@ -235,7 +235,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8"
         >
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
@@ -255,22 +255,22 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.5 }}
-          className="flex flex-wrap justify-center gap-4 mb-16"
+          className="flex flex-wrap justify-center gap-4 mb-8"
         >
-          <span className="flex items-center bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm">
+          <span className="flex items-center bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-sm border border-green-200 dark:border-green-500/20">
             🟢 Available for Freelance Projects
           </span>
-          <span className="flex items-center bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm">
+          <span className="flex items-center bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-sm border border-blue-200 dark:border-blue-500/20">
             🔵 Open to Full-time Opportunities
           </span>
-          <span className="flex items-center bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-sm">
+          <span className="flex items-center bg-yellow-100 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full text-sm border border-yellow-200 dark:border-yellow-500/20">
             🟡 Actively Learning: Advanced AI/ML
           </span>
         </motion.div>
       </div>
 
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-accent"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-secondary dark:text-accent"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >

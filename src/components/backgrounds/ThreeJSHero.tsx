@@ -110,7 +110,7 @@ const ThreeJSHero: React.FC = () => {
 
   return (
     <section id="home">
-      <div className="relative w-full min-h-[60vh] md:h-[95vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+      <div className="relative w-full min-h-[50vh] md:h-[85vh] overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
         {/* Background overlay for content readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50/90 via-white/95 to-blue-50/90 dark:from-blue-900/90 dark:via-gray-900/95 dark:to-blue-900/90 z-10" />
 
@@ -122,7 +122,7 @@ const ThreeJSHero: React.FC = () => {
         )}
 
         {/* Main content overlay */}
-        <div className="relative z-20 flex items-center justify-center min-h-[60vh] md:h-[95vh] px-4 py-8 md:py-0">
+        <div className="relative z-20 flex items-center justify-center min-h-[50vh] md:h-[85vh] px-4 py-6 md:py-0">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold mb-4 md:mb-6 text-gray-800 dark:text-white leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 text-gray-800 dark:text-white leading-tight"
             >
               Ayush Rai
             </motion.h1>
@@ -146,9 +146,9 @@ const ThreeJSHero: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="min-h-[4rem] md:min-h-[5rem] flex items-center justify-center mb-6 md:mb-8"
+              className="min-h-[3rem] md:min-h-[3.5rem] flex items-center justify-center mb-4 md:mb-5"
             >
-              <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed text-center">
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed text-center">
                 {headlines[currentHeadline]}
               </p>
             </motion.div>
@@ -158,7 +158,7 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.1 }}
-              className="text-base md:text-lg text-gray-500 dark:text-gray-400 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed px-4"
+              className="text-sm md:text-base text-gray-500 dark:text-gray-400 mb-6 md:mb-8 max-w-xl mx-auto leading-relaxed px-4"
             >
               Exploring the intersection of artificial intelligence, web
               technologies, and innovative problem-solving to create
@@ -170,25 +170,25 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.3 }}
-              className="flex flex-col sm:flex-row gap-8 md:gap-12 justify-center items-center px-8 py-6"
+              className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4 py-4"
             >
               <a
                 href="https://drive.google.com/file/d/1EjIs-sIQrmHf0vRoQ9pTiDM_4M5x_P2p/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="touch-target btn-primary px-6 md:px-8 py-3 md:py-4 text-base md:text-lg w-full sm:w-auto text-center"
+                className="touch-target btn-primary px-4 py-2 text-sm md:text-base w-full sm:w-auto text-center"
               >
                 Download Resume
               </a>
               <a
                 href="#projects"
-                className="touch-target btn-primary px-6 md:px-8 py-3 md:py-4 text-base md:text-lg w-full sm:w-auto text-center"
+                className="touch-target btn-primary px-4 py-2 text-sm md:text-base w-full sm:w-auto text-center"
               >
                 View My Work
               </a>
               <a
                 href="#contact"
-                className="touch-target btn-secondary px-6 md:px-8 py-3 md:py-4 text-base md:text-lg w-full sm:w-auto text-center"
+                className="touch-target btn-secondary px-4 py-2 text-sm md:text-base w-full sm:w-auto text-center"
               >
                 Let's Connect
               </a>
@@ -199,35 +199,35 @@ const ThreeJSHero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.5 }}
-              className="flex justify-center items-center space-x-6 mt-8"
+              className="flex justify-center items-center space-x-4 mt-6"
             >
               <motion.a
                 href="https://github.com/ayushrai-hub"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
+                className="p-2 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:scale-110"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Github size={24} className="text-gray-300 hover:text-white" />
+                <Github size={20} className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" />
               </motion.a>
               <motion.a
                 href="https://linkedin.com/in/ayushrai02"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
+                className="p-2 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:scale-110"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Linkedin size={24} className="text-gray-300 hover:text-white" />
+                <Linkedin size={20} className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" />
               </motion.a>
               <motion.a
                 href="mailto:ayushrai0211@gmail.com"
-                className="p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110"
+                className="p-2 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-all duration-300 hover:scale-110"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Mail size={24} className="text-gray-300 hover:text-white" />
+                <Mail size={20} className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" />
               </motion.a>
             </motion.div>
           </motion.div>

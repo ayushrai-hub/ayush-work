@@ -111,6 +111,15 @@ export const profiles: Profile[] = [
     domain: 'data-science'
   },
   {
+    id: 'opentrain-ai',
+    name: 'OpenTrain AI',
+    url: 'https://www.opentrain.ai/profile/ayush-r-5',
+    icon: 'robot',
+    category: 'AI/ML Platform',
+    description: 'AI data labeling and machine learning projects',
+    domain: 'data-science'
+  },
+  {
     id: 'data-science-portfolio',
     name: 'Data Science Portfolio',
     url: 'https://www.datascienceportfol.io/ayushrai0211',
@@ -222,6 +231,33 @@ export const profiles: Profile[] = [
     icon: 'briefcase',
     category: 'Freelance Network',
     description: 'Connect with top-tier clients and projects',
+    domain: 'professional'
+  },
+  {
+    id: 'expert360',
+    name: 'Expert360',
+    url: 'https://app.expert360.com/profile/776c3e9214',
+    icon: 'briefcase',
+    category: 'Freelance Network',
+    description: 'Connect with expert consultants and projects',
+    domain: 'professional'
+  },
+  {
+    id: 'opentakshashila',
+    name: 'OpenTakshashila',
+    url: 'https://opentakshashila.net/members/35694678',
+    icon: 'briefcase',
+    category: 'Professional Network',
+    description: 'Connect with professionals and opportunities',
+    domain: 'professional'
+  },
+  {
+    id: 'cal-com',
+    name: 'Cal.com',
+    url: 'https://cal.com/ayush-rai-02',
+    icon: 'calendar',
+    category: 'Scheduling',
+    description: 'Schedule a meeting with me',
     domain: 'professional'
   },
   {

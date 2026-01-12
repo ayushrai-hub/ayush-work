@@ -96,57 +96,51 @@ const Education: React.FC = () => {
   ];
 
   return (
-    <section id="education" className="py-12 bg-white dark:bg-gray-800">
+    <section id="education" className="py-8 md:py-10 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             <span className="text-blue-600">Education</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-20 h-0.5 bg-blue-600 mx-auto rounded-full mb-4"></div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Academic Excellence & Continuous Learning Journey
           </p>
         </motion.div>
 
         <div className="relative">
-          {/* Timeline Line */}
-          <div className="timeline-line h-full"></div>
-
           {education.map((edu, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className={`relative mb-8 ${
+              className={`relative mb-6 ${
                 index % 2 === 0 ? "md:mr-8" : "md:ml-8 md:text-right"
               } 
                          ${index % 2 === 1 ? "md:pl-8" : ""}`}
             >
-              {/* Timeline Dot */}
-              <div className="timeline-dot" style={{ top: "2rem" }}></div>
-
               <div
                 className={`card max-w-2xl ${
                   index % 2 === 1 ? "md:ml-auto" : ""
-                } ml-12 md:ml-0`}
+                }`}
               >
-                <div className="flex items-center mb-4">
-                  <GraduationCap className="text-accent mr-3" size={24} />
+                <div className="flex items-center mb-3">
+                  <GraduationCap className="text-secondary dark:text-accent mr-2" size={18} />
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-semibold
+                    className={`px-2 py-0.5 rounded-full text-xs font-semibold
                     ${
                       edu.type === "primary"
-                        ? "bg-accent/20 text-accent"
+                        ? "bg-accent/20 dark:bg-accent/20 text-accent dark:text-accent"
                         : edu.type === "secondary"
-                        ? "bg-secondary/20 text-secondary"
-                        : "bg-tertiary/20 text-purple-300"
+                        ? "bg-secondary/20 dark:bg-secondary/20 text-secondary dark:text-secondary"
+                        : "bg-tertiary/20 dark:bg-tertiary/20 text-tertiary dark:text-purple-300"
                     }`}
                   >
                     {edu.type === "primary"
@@ -157,36 +151,36 @@ const Education: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-bold mb-2 text-white">
+                <h3 className="text-lg md:text-xl font-bold mb-1.5 text-gray-800 dark:text-white">
                   {edu.degree}
                 </h3>
-                <p className="text-secondary font-semibold mb-3">
+                <p className="text-secondary dark:text-secondary font-semibold mb-2 text-sm">
                   {edu.institution}
                 </p>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 text-gray-400">
+                <div className="grid md:grid-cols-2 gap-2 mb-3 text-gray-600 dark:text-gray-400 text-xs">
                   <div className="flex items-center">
-                    <Calendar size={16} className="mr-2" />
+                    <Calendar size={12} className="mr-1.5" />
                     {edu.duration}
                   </div>
                   <div className="flex items-center">
-                    <Award size={16} className="mr-2" />
+                    <Award size={12} className="mr-1.5" />
                     {edu.cgpa || edu.percentage}
                   </div>
                 </div>
 
-                <div className="mt-4">
-                  <div className="flex items-center mb-3">
-                    <BookOpen size={16} className="mr-2 text-accent" />
-                    <span className="text-white font-semibold">
-                      Key Coursework:
+                <div className="mt-3">
+                  <div className="flex items-center mb-2">
+                    <BookOpen size={12} className="mr-1.5 text-secondary dark:text-accent" />
+                    <span className="text-gray-800 dark:text-white font-semibold text-xs">
+                      Coursework:
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {edu.coursework.map((course, courseIndex) => (
+                  <div className="flex flex-wrap gap-1.5">
+                    {edu.coursework.slice(0, 6).map((course, courseIndex) => (
                       <span
                         key={courseIndex}
-                        className="px-3 py-1 bg-primary-dark rounded-full text-sm text-gray-300"
+                        className="px-2 py-0.5 bg-gray-100 dark:bg-primary-dark rounded-md text-xs text-gray-700 dark:text-gray-300"
                       >
                         {course}
                       </span>

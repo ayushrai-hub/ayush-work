@@ -7,7 +7,7 @@ import {
   trackDownload,
   trackExternalLink,
   trackScrollDepth,
-} from '../utils/gtm';
+} from '../lib/gtm';
 
 export const useGTM = () => {
   const trackPage = useCallback((url?: string, title?: string) => {

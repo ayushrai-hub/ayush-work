@@ -17,17 +17,17 @@
 import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import ParticleBackground from './components/ParticleBackground';
-import FloatingNav from './components/FloatingNav';
-import ErrorBoundary from './components/ErrorBoundary';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import ParticleBackground from './components/backgrounds/ParticleBackground';
+import FloatingNav from './components/ui/FloatingNav';
+import ErrorBoundary from './components/layout/ErrorBoundary';
 import { initGA } from './lib/analytics';
-import SEO from './components/SEO';
+import SEO from './components/layout/SEO';
 import './App.css';
 
 // Lazy load heavy components
-const ThreeJSHero = lazy(() => import('./components/ThreeJSHero'));
+const ThreeJSHero = lazy(() => import('./components/backgrounds/ThreeJSHero'));
 const About = lazy(() => import('./components/About'));
 const AboutMe = lazy(() => import('./components/AboutMe'));
 const Education = lazy(() => import('./components/Education'));
@@ -35,6 +35,7 @@ const Experience = lazy(() => import('./components/Experience'));
 const Skills = lazy(() => import('./components/Skills'));
 const Other = lazy(() => import('./components/Other'));
 const Projects = lazy(() => import('./components/Projects'));
+const Products = lazy(() => import('./components/Products'));
 const Contact = lazy(() => import('./components/Contact'));
 
 // Import page components directly (no lazy loading)
@@ -94,6 +95,11 @@ function App() {
                   <ErrorBoundary showUserMessage={true} context="projects section">
                     <Suspense fallback={<LoadingSpinner />}>
                       <Projects />
+                    </Suspense>
+                  </ErrorBoundary>
+                  <ErrorBoundary showUserMessage={true} context="products section">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Products />
                     </Suspense>
                   </ErrorBoundary>
                   <ErrorBoundary showUserMessage={true} context="education section">

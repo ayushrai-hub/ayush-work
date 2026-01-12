@@ -1,6 +1,6 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { vi } from 'vitest';
-import ParticleBackground from '../components/ParticleBackground';
+import ParticleBackground from '../components/backgrounds/ParticleBackground';
 
 describe('ParticleBackground', () => {
   beforeEach(() => {

@@ -101,37 +101,37 @@ const Skills: React.FC = () => {
   ];
 
   return (
-    <section id="skills" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
+    <section id="skills" className="py-8 md:py-10 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             Multi-Disciplinary <span className="text-secondary dark:text-secondary-400">Skills</span>
           </h2>
-          <div className="w-16 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-4"></div>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <div className="w-20 h-0.5 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-4"></div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Technical Expertise Across Multiple Domains
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * categoryIndex }}
-              className="group bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group card hover:-translate-y-1"
             >
-              <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3 bg-gradient-to-r ${category.color}`}>
-                <category.icon size={20} className="text-white" />
+              <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg mb-2 bg-gradient-to-r ${category.color}`}>
+                <category.icon size={18} className="text-white" />
               </div>
-              <h3 className="text-lg font-bold mb-3 text-gray-800 dark:text-white">
+              <h3 className="text-base font-bold mb-2 text-gray-800 dark:text-white">
                 {category.title}
               </h3>
               <div className="flex flex-wrap gap-1.5">
@@ -144,7 +144,7 @@ const Skills: React.FC = () => {
                       duration: 0.3,
                       delay: 0.1 * categoryIndex + 0.03 * skillIndex,
                     }}
-                    className="px-2 py-1 bg-gray-50 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-secondary/10 dark:hover:bg-gray-600 hover:text-secondary dark:hover:text-secondary transition-colors"
                   >
                     {skill}
                   </motion.span>

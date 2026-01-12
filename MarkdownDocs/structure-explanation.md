@@ -59,14 +59,33 @@ The main application code organized into clear modules:
 - `index.css`: Base CSS and utility styles
 
 #### Components (`src/components/`)
-Portfolio-specific React components (17 components total):
-- **Header Section**: `Header.tsx`
-- **Hero Sections**: `Hero.tsx`, `ThreeJSHero.tsx` (alternative hero with 3D effects)
-- **Core Content**: `About.tsx`, `Education.tsx`, `Experience.tsx`, `Skills.tsx`, `Research.tsx`, `Certifications.tsx`
-- **Project Showcase**: `Projects.tsx`, `ProjectTestimonials.tsx`
-- **Interactive Elements**: `SkillsRadarChart.tsx`, `ParticleBackground.tsx`
-- **Profile & Contact**: `Profiles.tsx`, `Contact.tsx`, `Services.tsx`, `CommunityLeadership.tsx`
-- **SEO**: `SEO.tsx` for meta tag management
+Portfolio-specific React components organized into subdirectories:
+
+**Layout Components** (`src/components/layout/`):
+- `Header.tsx` - Navigation header with mobile menu
+- `Footer.tsx` - Site footer with social links and profiles
+- `SEO.tsx` - Search engine optimization and meta tag management
+- `ErrorBoundary.tsx` - React error boundary for graceful error handling
+- `GTMProvider.tsx` - Google Tag Manager integration provider
+
+**UI Components** (`src/components/ui/`):
+- `FloatingNav.tsx` - Floating navigation component
+- `ThemeToggle.tsx` - Dark/light theme toggle component
+- `Logo.tsx` - Reusable logo component with sizing options
+
+**Background Components** (`src/components/backgrounds/`):
+- `ParticleBackground.tsx` - Animated particle background effect
+- `ThreeJSHero.tsx` - Hero section with 3D graphics and animations
+- `ThreeJSContent.tsx` - Three.js 3D scene component
+
+**Content Components** (`src/components/`):
+- **Hero Sections**: `Hero.tsx`
+- **Core Content**: `About.tsx`, `AboutMe.tsx`, `Education.tsx`, `Experience.tsx`, `Skills.tsx`
+- **Project Showcase**: `Projects.tsx`
+- **Profile & Contact**: `Profiles.tsx`, `Contact.tsx`, `Services.tsx`, `CommunityLeadership.tsx`, `ExtraCurriculars.tsx`, `Research.tsx`, `Certifications.tsx`, `Other.tsx`
+
+**Page Components** (`src/components/pages/`):
+- `ResearchPage.tsx`, `LeadershipPage.tsx`, `CertificationsPage.tsx`, `ServicesPage.tsx`, `ExtraCurricularsPage.tsx`
 
 #### Library Modules (`src/lib/`)
 Reusable utilities and services:

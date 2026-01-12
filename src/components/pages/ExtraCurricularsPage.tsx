@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../Header';
-import Footer from '../Footer';
+import Header from '../layout/Header';
+import Footer from '../layout/Footer';
 import ExtraCurriculars from '../ExtraCurriculars';
 import { ArrowLeft } from 'lucide-react';
 
@@ -17,9 +17,9 @@ const ExtraCurricularsPage: React.FC = () => {
         <div className="container mx-auto px-4 py-6">
           <Link
             to="/"
-            className="inline-flex items-center text-secondary hover:text-secondary-600 dark:text-secondary-400 dark:hover:text-secondary-300 transition-colors mb-8 px-4 py-2 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-900/20"
+            className="inline-flex items-center text-secondary hover:text-secondary-600 dark:text-secondary-400 dark:hover:text-secondary-300 transition-colors mb-4 px-3 py-1.5 rounded-md hover:bg-secondary-50 dark:hover:bg-secondary-900/20 text-sm"
           >
-            <ArrowLeft size={16} className="mr-2" />
+            <ArrowLeft size={14} className="mr-1.5" />
             Back to Home
           </Link>
         </div>

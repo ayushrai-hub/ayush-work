@@ -90,8 +90,8 @@ export const AboutMe: React.FC = () => {
   };
 
   return (
-    <section id="aboutme" className="py-12 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
-      <div className="container mx-auto px-6">
+    <section id="aboutme" className="py-8 md:py-10 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+      <div className="container mx-auto px-4 md:px-6">
         <motion.div
           ref={ref}
           variants={containerVariants}
@@ -100,14 +100,14 @@ export const AboutMe: React.FC = () => {
           className="max-w-6xl mx-auto"
         >
           {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center mb-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-4">
+          <motion.div variants={itemVariants} className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
               About <span className="text-blue-600">Me</span>
             </h2>
-            <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full"></div>
+            <div className="w-20 h-0.5 bg-blue-600 mx-auto rounded-full mb-4"></div>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
             {/* Profile Image Section */}
             <motion.div variants={itemVariants} className="relative">
               <div className="relative group">
@@ -118,7 +118,7 @@ export const AboutMe: React.FC = () => {
                 <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl">
                   <div className="aspect-[3/4] rounded-xl overflow-hidden">
                     <img
-                      src={`/profile-image.jpeg?v=${Date.now()}`}
+                      src={`/IMG_0029.jpeg?v=${Date.now()}`}
                       alt="Ayush Rai - AI Engineer & Full-Stack Developer"
                       className="w-full h-full object-cover object-center transform group-hover:scale-105 transition duration-500"
                       loading="eager"
@@ -150,17 +150,17 @@ export const AboutMe: React.FC = () => {
             {/* Content Section */}
             <motion.div variants={itemVariants} className="space-y-6">
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                <h3 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
                   AI Engineer, Developer & Polymath
                 </h3>
                 
-                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                   I'm a passionate <strong>AI Engineer</strong> and <strong>Full-Stack Developer </strong> 
                   specializing in <strong>RLHF (Reinforcement Learning from Human Feedback)</strong>, 
                   <strong>Generative AI</strong>, and cutting-edge web technologies.
                 </p>
 
-                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                   Currently pursuing dual degrees from <strong>LNCTS Bhopal</strong> and 
                   <strong>IIT Madras</strong>, I combine academic excellence with practical 
                   industry experience to create innovative solutions.
@@ -168,31 +168,31 @@ export const AboutMe: React.FC = () => {
               </div>
 
               {/* Key highlights */}
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                  <div className="text-2xl font-bold text-blue-600 mb-1">2+</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
+              <div className="grid grid-cols-2 gap-3 md:gap-4 mt-6">
+                <div className="bg-white dark:bg-gray-800 p-3 md:p-4 rounded-lg shadow-sm dark:shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">2+</div>
+                  <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
                 </div>
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                  <div className="text-2xl font-bold text-green-600 mb-1">20+</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Projects Completed</div>
+                <div className="bg-white dark:bg-gray-800 p-3 md:p-4 rounded-lg shadow-sm dark:shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400 mb-1">20+</div>
+                  <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Projects Completed</div>
                 </div>
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                  <div className="text-2xl font-bold text-purple-600 mb-1">AI/ML</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Specialization</div>
+                <div className="bg-white dark:bg-gray-800 p-3 md:p-4 rounded-lg shadow-sm dark:shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="text-xl md:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">AI/ML</div>
+                  <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Specialization</div>
                 </div>
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                  <div className="text-2xl font-bold text-orange-600 mb-1">Full-Stack</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Development</div>
+                <div className="bg-white dark:bg-gray-800 p-3 md:p-4 rounded-lg shadow-sm dark:shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="text-xl md:text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">Full-Stack</div>
+                  <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Development</div>
                 </div>
               </div>
 
               {/* Skills tags */}
-              <div className="flex flex-wrap gap-2 mt-6">
+              <div className="flex flex-wrap gap-2 mt-4">
                 {['Python', 'React', 'TypeScript', 'AI/ML', 'LLMs', 'RLHF', 'Data Science', 'Cloud'].map((skill) => (
                   <span
                     key={skill}
-                    className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium"
+                    className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs font-medium"
                   >
                     {skill}
                   </span>
@@ -200,10 +200,10 @@ export const AboutMe: React.FC = () => {
               </div>
 
               {/* CTA Buttons */}
-              <div className="pt-6 flex flex-col sm:flex-row gap-4">
+              <div className="pt-4 flex flex-col sm:flex-row gap-3">
                 <button 
                   onClick={handleConnectClick}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-600 dark:to-purple-600 text-white px-6 py-2 rounded-md font-semibold hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-700 dark:hover:to-purple-700 transform hover:scale-105 transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-800 text-sm"
                 >
                   Let's Connect
                 </button>
@@ -211,7 +211,7 @@ export const AboutMe: React.FC = () => {
                   href="https://calendly.com/ayushrai0211"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:from-green-700 hover:to-blue-700 transform hover:scale-105 transition duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 text-center"
+                  className="bg-gradient-to-r from-green-600 to-blue-600 dark:from-green-600 dark:to-blue-600 text-white px-6 py-2 rounded-md font-semibold hover:from-green-700 hover:to-blue-700 dark:hover:from-green-700 dark:hover:to-blue-700 transform hover:scale-105 transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-300 dark:focus:ring-green-800 text-center text-sm"
                 >
                   Schedule Call
                 </a>

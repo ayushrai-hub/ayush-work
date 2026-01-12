@@ -124,7 +124,7 @@ const Research: React.FC = () => {
   ];
 
   return (
-    <section id="research" className="py-12 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+    <section id="research" className="py-8 md:py-10 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
       <div className="container mx-auto px-4">
         {/* Research Projects */}
         <motion.div
@@ -132,12 +132,12 @@ const Research: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2 text-center">
             Research <span className="text-blue-600">Projects</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-8"></div>
+          <div className="w-20 h-0.5 bg-blue-600 mx-auto rounded-full mb-4"></div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {researchProjects.map((project, index) => (
@@ -148,31 +148,31 @@ const Research: React.FC = () => {
                 transition={{ duration: 0.8, delay: 1.0 + index * 0.1 }}
                 className="card"
               >
-                <div className="flex items-center mb-4">
-                  <Microscope className="text-secondary mr-3" size={24} />
-                  <span className="px-2 py-1 bg-secondary/20 text-secondary rounded text-xs font-semibold">
+                <div className="flex items-center mb-3">
+                  <Microscope className="text-secondary dark:text-secondary mr-2" size={18} />
+                  <span className="px-2 py-0.5 bg-secondary/20 dark:bg-secondary/20 text-secondary dark:text-secondary rounded text-xs font-semibold">
                     {project.funding}
                   </span>
                 </div>
 
-                <h4 className="text-lg font-bold mb-2 text-white">
+                <h4 className="text-base font-bold mb-1.5 text-gray-800 dark:text-white">
                   {project.title}
                 </h4>
-                <p className="text-sm text-gray-400 mb-3">{project.duration}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{project.duration}</p>
 
-                <p className="text-sm text-gray-300 mb-4">
+                <p className="text-xs text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
                   {project.description}
                 </p>
 
-                <div className="mb-4">
-                  <h5 className="text-sm font-semibold text-accent mb-2">
+                <div className="mb-3">
+                  <h5 className="text-xs font-semibold text-secondary dark:text-accent mb-1.5">
                     Technologies:
                   </h5>
                   <div className="flex flex-wrap gap-1">
                     {project.technologies.map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="px-2 py-1 bg-primary-dark rounded text-xs text-gray-300"
+                        className="px-1.5 py-0.5 bg-gray-100 dark:bg-primary-dark rounded-md text-xs text-gray-700 dark:text-gray-300"
                       >
                         {tech}
                       </span>
@@ -180,8 +180,8 @@ const Research: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="border-t border-gray-600 pt-4">
-                  <p className="text-sm text-green-400 italic">
+                <div className="border-t border-gray-200 dark:border-gray-600 pt-3">
+                  <p className="text-xs text-green-600 dark:text-green-400 italic leading-tight">
                     "{project.outcomes}"
                   </p>
                 </div>
@@ -196,12 +196,12 @@ const Research: React.FC = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 1.2 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2 text-center">
             Awards & <span className="text-blue-600">Achievements</span>
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full mb-8"></div>
+          <div className="w-20 h-0.5 bg-blue-600 mx-auto rounded-full mb-4"></div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {achievements.map((achievement, index) => (
               <motion.div
                 key={index}
@@ -210,20 +210,20 @@ const Research: React.FC = () => {
                 transition={{ duration: 0.8, delay: 1.4 + index * 0.1 }}
                 className="card"
               >
-                <div className="flex items-center mb-3">
-                  <Award className="text-accent mr-3" size={20} />
-                  <span className="text-accent font-bold">
+                <div className="flex items-center mb-2">
+                  <Award className="text-secondary dark:text-accent mr-2" size={16} />
+                  <span className="text-secondary dark:text-accent font-bold text-sm">
                     {achievement.year}
                   </span>
                 </div>
 
-                <h4 className="text-lg font-bold mb-2 text-white">
+                <h4 className="text-base font-bold mb-1.5 text-gray-800 dark:text-white">
                   {achievement.title}
                 </h4>
-                <p className="text-sm text-secondary mb-3">
+                <p className="text-xs text-secondary dark:text-secondary mb-2">
                   {achievement.organization}
                 </p>
-                <p className="text-sm text-gray-300">
+                <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
                   {achievement.description}
                 </p>
               </motion.div>

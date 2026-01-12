@@ -170,27 +170,26 @@ const Services: React.FC = () => {
   ];
 
   return (
-    <section id="services" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
+    <section id="services" className="py-8 md:py-10 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             <span className="text-secondary">Services</span> & Solutions
           </h2>
-          <div className="w-24 h-1 bg-secondary mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Comprehensive technical and strategic solutions for your business
-            needs
+          <div className="w-20 h-0.5 bg-secondary mx-auto rounded-full mb-4"></div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Comprehensive technical and strategic solutions for your business needs
           </p>
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           {services.map((service, index) => (
             <motion.div
               key={index}
@@ -199,54 +198,54 @@ const Services: React.FC = () => {
               transition={{ duration: 0.8, delay: index * 0.1 }}
               className="card group hover:border-accent/40"
             >
-              <div className="flex items-center mb-6">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-secondary to-accent rounded-lg mr-4 group-hover:scale-110 transition-transform">
-                  <service.icon size={24} className="text-primary" />
+              <div className="flex items-center mb-3">
+                <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-secondary to-accent rounded-md mr-3 group-hover:scale-110 transition-transform">
+                  <service.icon size={18} className="text-white" />
                 </div>
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold
+                  className={`px-2 py-0.5 rounded-full text-xs font-semibold
                   ${
                     service.category === "Technical"
-                      ? "bg-accent/20 text-accent"
+                      ? "bg-accent/20 dark:bg-accent/20 text-accent dark:text-accent"
                       : service.category === "Strategic"
-                      ? "bg-secondary/20 text-secondary"
-                      : "bg-tertiary/20 text-purple-300"
+                      ? "bg-secondary/20 dark:bg-secondary/20 text-secondary dark:text-secondary"
+                      : "bg-tertiary/20 dark:bg-tertiary/20 text-tertiary dark:text-purple-300"
                   }`}
                 >
                   {service.category}
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-accent transition-colors">
+              <h3 className="text-lg font-bold mb-2 text-gray-800 dark:text-white group-hover:text-secondary dark:group-hover:text-accent transition-colors">
                 {service.title}
               </h3>
-              <p className="text-gray-400 mb-6 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm leading-relaxed">
                 {service.description}
               </p>
 
-              <div className="mb-6">
-                <h4 className="text-white font-semibold mb-3">
-                  What's Included:
+              <div className="mb-3">
+                <h4 className="text-gray-800 dark:text-white font-semibold mb-2 text-xs">
+                  Included:
                 </h4>
-                <ul className="space-y-2">
-                  {service.features.map((feature, featureIndex) => (
+                <ul className="space-y-1">
+                  {service.features.slice(0, 4).map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="text-gray-400 text-sm flex items-start"
+                      className="text-gray-600 dark:text-gray-400 text-xs flex items-start"
                     >
-                      <span className="text-accent mr-2 mt-1">✓</span>
-                      {feature}
+                      <span className="text-secondary dark:text-accent mr-1.5 mt-0.5">✓</span>
+                      <span className="leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="flex items-center justify-between text-sm border-t border-gray-700 pt-4">
+              <div className="flex items-center justify-between text-xs border-t border-gray-200 dark:border-gray-700 pt-2.5">
                 <div className="flex items-center text-secondary">
-                  <Clock size={16} className="mr-1" />
+                  <Clock size={12} className="mr-1" />
                   {service.duration}
                 </div>
-                <div className="text-accent font-bold">{service.pricing}</div>
+                <div className="text-secondary dark:text-accent font-bold text-xs">{service.pricing}</div>
               </div>
             </motion.div>
           ))}
@@ -256,58 +255,57 @@ const Services: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 1.0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-6"
         >
-          <h3 className="text-3xl font-bold text-center mb-12 gradient-text">
-            Why Choose My Services
-          </h3>
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-accent to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap size={32} className="text-primary" />
+              <div className="w-12 h-12 bg-gradient-to-r from-accent to-secondary rounded-full flex items-center justify-center mx-auto mb-2">
+                <Zap size={20} className="text-primary" />
               </div>
-              <h4 className="text-xl font-bold mb-2 text-white">
+              <h4 className="text-sm font-bold mb-1 text-gray-800 dark:text-white">
                 Fast Delivery
               </h4>
-              <p className="text-gray-400 text-sm">
-                Quick turnaround without compromising quality
+              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                Quick turnaround
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-secondary to-tertiary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star size={32} className="text-primary" />
+              <div className="w-12 h-12 bg-gradient-to-r from-secondary to-tertiary rounded-full flex items-center justify-center mx-auto mb-2">
+                <Star size={20} className="text-white" />
               </div>
-              <h4 className="text-xl font-bold mb-2 text-white">
+              <h4 className="text-sm font-bold mb-1 text-gray-800 dark:text-white">
                 Premium Quality
               </h4>
-              <p className="text-gray-400 text-sm">
-                Production-ready solutions with best practices
+              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                Production-ready
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-tertiary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users size={32} className="text-primary" />
+              <div className="w-12 h-12 bg-gradient-to-r from-tertiary to-accent rounded-full flex items-center justify-center mx-auto mb-2">
+                <Users size={20} className="text-white" />
               </div>
-              <h4 className="text-xl font-bold mb-2 text-white">
-                Dedicated Support
+              <h4 className="text-sm font-bold mb-1 text-gray-800 dark:text-white">
+                Support
               </h4>
-              <p className="text-gray-400 text-sm">
-                Ongoing support and maintenance included
+              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                Ongoing maintenance
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-accent to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lightbulb size={32} className="text-primary" />
+              <div className="w-12 h-12 bg-gradient-to-r from-accent to-secondary rounded-full flex items-center justify-center mx-auto mb-2">
+                <Lightbulb size={20} className="text-white" />
               </div>
-              <h4 className="text-xl font-bold mb-2 text-white">
-                Innovation Focus
+              <h4 className="text-sm font-bold mb-1 text-gray-800 dark:text-white">
+                Innovation
               </h4>
-              <p className="text-gray-400 text-sm">
-                Cutting-edge technologies and approaches
+              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                Cutting-edge tech
               </p>
             </div>
           </div>
         </motion.div>
+
       </div>
     </section>
   );

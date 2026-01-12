@@ -45,7 +45,6 @@ import {
   Calendar,
   Code,
   Users,
-  TrendingUp,
 } from "lucide-react";
 import CountUp from "react-countup";
 import portfolioImage from "../assets/porfolio.jpeg";
@@ -246,70 +245,70 @@ const Projects: React.FC = () => {
   ];
 
   return (
-    <section id="projects" className="py-12 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
+    <section id="projects" className="py-8 md:py-10 bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900 dark:to-secondary-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             Featured <span className="text-secondary dark:text-secondary-400">Projects</span>
           </h2>
-          <div className="w-24 h-1 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="w-20 h-0.5 bg-secondary dark:bg-secondary-400 mx-auto rounded-full mb-4"></div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Technical Excellence Across Multiple Domains
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 mb-6">
           {projects.map((project, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className="card group hover:scale-[1.02] transition-transform duration-300"
+              className="card group hover:scale-[1.01] transition-transform duration-300"
             >
-              <div className="relative overflow-hidden rounded-lg mb-4 md:mb-6">
+              <div className="relative overflow-hidden rounded-lg mb-3">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="responsive-img w-full h-32 md:h-40 object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="responsive-img w-full h-24 md:h-28 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-secondary font-semibold text-sm">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-secondary font-semibold text-xs">
                   {project.category}
                 </span>
-                <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
-                  <Calendar size={16} className="mr-1" />
+                <div className="flex items-center text-gray-600 dark:text-gray-400 text-xs">
+                  <Calendar size={12} className="mr-1" />
                   {project.duration}
                 </div>
               </div>
 
-              <h3 className="text-2xl font-bold mb-3 text-gray-800 dark:text-white">
+              <h3 className="text-lg md:text-xl font-bold mb-2 text-gray-800 dark:text-white">
                 {project.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm leading-relaxed">
                 {project.description}
               </p>
 
-              <div className="mb-4">
-                <div className="flex items-center mb-2">
-                  <Code size={16} className="mr-2 text-accent" />
-                  <span className="text-gray-800 dark:text-white font-semibold">
-                    Technologies:
+              <div className="mb-3">
+                <div className="flex items-center mb-1.5">
+                  <Code size={12} className="mr-1.5 text-secondary dark:text-accent" />
+                  <span className="text-gray-800 dark:text-white font-semibold text-xs">
+                    Tech:
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, techIndex) => (
+                <div className="flex flex-wrap gap-1.5">
+                  {project.technologies.slice(0, 4).map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className="px-2 py-1 bg-gray-100 dark:bg-primary rounded text-xs text-gray-700 dark:text-gray-300 border border-accent/20"
+                      className="px-1.5 py-0.5 bg-gray-100 dark:bg-primary rounded-md text-xs text-gray-700 dark:text-gray-300 border border-secondary/30 dark:border-accent/20"
                     >
                       {tech}
                     </span>
@@ -317,48 +316,40 @@ const Projects: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mb-4">
-                <div className="flex items-center mb-2">
-                  <Users size={16} className="mr-2 text-secondary" />
-                  <span className="text-gray-800 dark:text-white font-semibold">
-                    Key Features:
+              <div className="mb-3">
+                <div className="flex items-center mb-1.5">
+                  <Users size={12} className="mr-1.5 text-secondary dark:text-secondary" />
+                  <span className="text-gray-800 dark:text-white font-semibold text-xs">
+                    Features:
                   </span>
                 </div>
-                <ul className="space-y-1">
-                  {project.features.slice(0, 3).map((feature, featureIndex) => (
+                <ul className="space-y-0.5">
+                  {project.features.slice(0, 2).map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="text-gray-600 dark:text-gray-400 text-sm flex items-start"
+                      className="text-gray-600 dark:text-gray-400 text-xs flex items-start"
                     >
-                      <span className="text-accent mr-2 mt-1">•</span>
-                      {feature}
+                      <span className="text-secondary dark:text-accent mr-1.5 mt-0.5">•</span>
+                      <span className="leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="mb-6">
-                <div className="flex items-center mb-2">
-                  <TrendingUp size={16} className="mr-2 text-tertiary" />
-                  <span className="text-gray-800 dark:text-white font-semibold">Impact:</span>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">{project.impact}</p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="flex gap-2 mt-3">
                 <a
                   href={project.github}
-                  className="touch-target flex items-center justify-center px-4 py-2 bg-gray-800 dark:bg-primary hover:bg-gray-700 dark:hover:bg-gray-800 rounded-lg text-white transition-colors text-sm"
+                  className="touch-target flex items-center justify-center px-3 py-1.5 bg-gray-800 dark:bg-primary hover:bg-gray-700 dark:hover:bg-gray-700 rounded-md text-white transition-colors text-xs flex-1 shadow-sm"
                 >
-                  <Github size={16} className="mr-2" />
+                  <Github size={12} className="mr-1.5" />
                   Code
                 </a>
                 <a
                   href={project.demo}
-                  className="touch-target flex items-center justify-center px-4 py-2 bg-gradient-to-r from-secondary to-accent text-primary rounded-lg font-semibold hover:shadow-lg transition-shadow text-sm"
+                  className="touch-target flex items-center justify-center px-3 py-1.5 bg-gradient-to-r from-secondary to-accent dark:from-secondary dark:to-accent text-primary rounded-md font-medium hover:shadow-md transition-shadow text-xs flex-1"
                 >
-                  <ExternalLink size={16} className="mr-2" />
-                  Live Demo
+                  <ExternalLink size={12} className="mr-1.5" />
+                  Demo
                 </a>
               </div>
             </motion.div>
@@ -369,36 +360,34 @@ const Projects: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-6"
         >
-          <h3 className="text-3xl font-bold text-center mb-8 gradient-text">
-            Project Impact
-          </h3>
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">
+          <div className="grid md:grid-cols-4 gap-3 md:gap-4">
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={10} duration={2} delay={0.2} />}
                 +
               </div>
-              <p className="text-gray-600 dark:text-gray-400">Projects Completed</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Projects</p>
             </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={5} duration={2} delay={0.4} />}
                 +
               </div>
-              <p className="text-gray-600 dark:text-gray-400">Happy Clients</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Clients</p>
             </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={100} duration={2} delay={0.6} />}
                 %
               </div>
-              <p className="text-gray-600 dark:text-gray-400">Success Rate</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Success</p>
             </div>
-            <div className="card text-center">
-              <div className="text-4xl font-bold gradient-text mb-2">24/7</div>
-              <p className="text-gray-600 dark:text-gray-400">Support</p>
+            <div className="card text-center py-3">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">24/7</div>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">Support</p>
             </div>
           </div>
         </motion.div>

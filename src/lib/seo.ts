@@ -7,7 +7,7 @@ export const structuredData = {
   "jobTitle": "AI & Full-Stack Developer",
   "description": "Experienced AI/ML Engineer and Full-Stack Developer specializing in React, Python, and machine learning",
   "url": "https://ayush-me.netlify.app",
-  "image": "/profile-image.jpeg",
+  "image": "/IMG_0029.jpeg",
   "sameAs": [
     "https://github.com/ayushrai-hub",
     "https://linkedin.com/in/ayushrai02"
@@ -42,6 +42,6 @@ export const organizationStructuredData = {
   "@type": "Organization",
   "name": "Ayush Rai Portfolio",
   "url": "https://ayush-me.netlify.app",
-  "logo": "/profile-image.jpeg",
+  "logo": "/IMG_0029.jpeg",
   "description": "Professional portfolio of Ayush Rai - AI & Full-Stack Developer"
 };

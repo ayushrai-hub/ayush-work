@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "../ui/ThemeToggle";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -179,6 +179,7 @@ const Header: React.FC = () => {
     { label: "About Me", href: "#aboutme", isRoute: false },
     { label: "Experience", href: "#experience", isRoute: false },
     { label: "Projects", href: "#projects", isRoute: false },
+    { label: "Products", href: "#products", isRoute: false },
     { label: "Education", href: "#education", isRoute: false },
     { label: "Skills", href: "#skills", isRoute: false },
     { label: "Work", href: "#work", isRoute: false, isDropdown: true },
@@ -189,7 +190,7 @@ const Header: React.FC = () => {
     <motion.header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-primary-dark/95 dark:bg-primary-dark/95 bg-white/95 backdrop-blur-md shadow-lg"
+          ? "bg-white/95 dark:bg-primary-dark/95 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-gray-700"
           : "bg-transparent"
       }`}
       initial={{ y: -100 }}
@@ -204,9 +205,9 @@ const Header: React.FC = () => {
           >
             <Link to="/">
               <img
-                src="/profile-image.jpeg"
+                src="/IMG_0029.jpeg"
                 alt="Ayush Rai"
-                className="w-10 h-10 rounded-full object-cover border-2 border-accent cursor-pointer hover:border-accent/80 transition-colors"
+                className="w-10 h-10 rounded-full object-cover border-2 border-secondary dark:border-accent cursor-pointer hover:border-secondary-600 dark:hover:border-accent/80 transition-colors"
               />
             </Link>
           </motion.div>
@@ -226,7 +227,7 @@ const Header: React.FC = () => {
                   <button
                     ref={workDropdownButtonRef}
                     onClick={() => setWorkDropdownOpen(!workDropdownOpen)}
-                    className="text-gray-700 dark:text-gray-300 hover:text-accent transition-colors duration-300 flex items-center"
+                    className="text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors duration-300 flex items-center"
                   >
                     {item.label}
                     <ChevronDown className={`ml-1 transform transition-transform ${workDropdownOpen ? 'rotate-180' : ''}`} size={16} />
@@ -240,8 +241,8 @@ const Header: React.FC = () => {
                         navigate(item.href);
                       }
                     }}
-                    className={`text-gray-700 dark:text-gray-300 hover:text-accent transition-colors duration-300 ${
-                      location.pathname === item.href ? 'text-accent' : ''
+                    className={`text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors duration-300 ${
+                      location.pathname === item.href ? 'text-secondary dark:text-accent' : ''
                     }`}
                   >
                     {item.label}
@@ -249,7 +250,7 @@ const Header: React.FC = () => {
                 ) : (
                   <button
                     onClick={() => handleSectionNavigation(item.href.substring(1))}
-                    className="text-gray-700 dark:text-gray-300 hover:text-accent transition-colors duration-300"
+                    className="text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors duration-300"
                   >
                     {item.label}
                   </button>
@@ -285,7 +286,7 @@ const Header: React.FC = () => {
         {isMenuOpen && (
           <motion.div
             ref={mobileMenuRef}
-            className="md:hidden mt-4 bg-white dark:bg-primary-dark rounded-lg p-4 shadow-lg"
+            className="md:hidden mt-4 bg-white dark:bg-primary-dark rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             transition={{ duration: 0.3 }}
@@ -302,8 +303,8 @@ const Header: React.FC = () => {
                       }
                       setIsMenuOpen(false);
                     }}
-                    className={`block py-2 text-gray-700 dark:text-gray-300 hover:text-accent transition-colors text-left w-full ${
-                      location.pathname === item.href ? 'text-accent' : ''
+                    className={`block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors text-left w-full ${
+                      location.pathname === item.href ? 'text-secondary dark:text-accent' : ''
                     }`}
                   >
                     {item.label}
@@ -312,7 +313,7 @@ const Header: React.FC = () => {
                   <div>
                     <button
                       onClick={() => setWorkDropdownOpen(!workDropdownOpen)}
-                      className="block py-2 text-gray-700 dark:text-gray-300 hover:text-accent transition-colors flex items-center w-full"
+                      className="block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors flex items-center w-full"
                     >
                       {item.label}
                       <ChevronDown className={`ml-1 transform transition-transform ${workDropdownOpen ? 'rotate-180' : ''}`} size={16} />
@@ -323,7 +324,7 @@ const Header: React.FC = () => {
                           <Link
                             key={workItem.label}
                             to={workItem.href}
-                            className="block py-1 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors text-sm"
+                            className="block py-1 text-gray-600 dark:text-gray-400 hover:text-secondary dark:hover:text-accent transition-colors text-sm"
                             onClick={() => {
                               setIsMenuOpen(false);
                               setWorkDropdownOpen(false);
@@ -341,7 +342,7 @@ const Header: React.FC = () => {
                       handleSectionNavigation(item.href.substring(1));
                       setIsMenuOpen(false);
                     }}
-                    className="block py-2 text-gray-700 dark:text-gray-300 hover:text-accent transition-colors text-left w-full"
+                    className="block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors text-left w-full"
                   >
                     {item.label}
                   </button>
@@ -370,7 +371,7 @@ const Header: React.FC = () => {
                 >
                   <span className="text-2xl mr-3">{item.icon}</span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-accent">{item.label}</span>
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent">{item.label}</span>
                     <span className="text-xs text-gray-600 dark:text-gray-400">{item.description}</span>
                   </div>
                 </Link>
