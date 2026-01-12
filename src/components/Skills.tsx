@@ -126,12 +126,16 @@ const Skills: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * categoryIndex }}
-              className="group card hover:-translate-y-1"
+              className="group card"
             >
-              <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg mb-2 bg-gradient-to-r ${category.color}`}>
+              <motion.div 
+                className={`inline-flex items-center justify-center w-10 h-10 rounded-lg mb-2 bg-gradient-to-r ${category.color}`}
+                whileHover={{ scale: 1.15, rotate: 5 }}
+                transition={{ duration: 0.2 }}
+              >
                 <category.icon size={18} className="text-white" />
-              </div>
-              <h3 className="text-base font-bold mb-2 text-gray-800 dark:text-white">
+              </motion.div>
+              <h3 className="text-base font-bold mb-2 text-gray-800 dark:text-white group-hover:text-secondary dark:group-hover:text-accent transition-colors duration-300">
                 {category.title}
               </h3>
               <div className="flex flex-wrap gap-1.5">
@@ -144,7 +148,8 @@ const Skills: React.FC = () => {
                       duration: 0.3,
                       delay: 0.1 * categoryIndex + 0.03 * skillIndex,
                     }}
-                    className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-secondary/10 dark:hover:bg-gray-600 hover:text-secondary dark:hover:text-secondary transition-colors"
+                    className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-secondary/10 dark:hover:bg-gray-600 hover:text-secondary dark:hover:text-secondary transition-all duration-300 cursor-default"
+                    whileHover={{ scale: 1.1, y: -2 }}
                   >
                     {skill}
                   </motion.span>

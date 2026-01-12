@@ -31,8 +31,8 @@ export const domains: Domain[] = [
   },
   {
     name: 'data-science',
-    color: 'bg-green-500',
-    gradient: 'from-green-500 to-emerald-500',
+    color: 'bg-blue-500',
+    gradient: 'from-blue-500 to-blue-600',
     description: 'Data analysis and machine learning platforms'
   },
   {
@@ -216,6 +216,15 @@ export const profiles: Profile[] = [
     domain: 'professional'
   },
   {
+    id: 'orcid',
+    name: 'ORCID',
+    url: 'https://orcid.org/0009-0005-7341-7856',
+    icon: 'globe',
+    category: 'Research Identifier',
+    description: 'My academic and research profile',
+    domain: 'professional'
+  },
+  {
     id: 'salesforce-trailblazer',
     name: 'Salesforce Trailblazer',
     url: 'https://www.salesforce.com/trailblazer/ayushr02',
@@ -363,6 +372,15 @@ export const profiles: Profile[] = [
   },
 
   // Social Media
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    url: 'https://www.youtube.com/@ayush_rai02',
+    icon: 'youtube',
+    category: 'Video Content',
+    description: 'Watch my tutorials, projects, and tech content',
+    domain: 'social'
+  },
   {
     id: 'twitter',
     name: 'Twitter / X',

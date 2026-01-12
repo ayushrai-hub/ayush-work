@@ -128,7 +128,7 @@ const CommunityLeadership: React.FC = () => {
         "Reached 50K+ students through online content",
       ],
       impact: "Accelerated Microsoft's developer ecosystem growth",
-      color: "from-green-600 to-teal-400",
+      color: "from-blue-600 to-blue-400",
     },
     {
       id: 5,
@@ -301,7 +301,7 @@ const CommunityLeadership: React.FC = () => {
                     activity.category === "government"
                       ? "bg-blue-500/20 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400"
                       : activity.category === "education"
-                      ? "bg-green-500/20 dark:bg-green-500/20 text-green-600 dark:text-green-400"
+                      ? "bg-blue-500/20 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400"
                       : activity.category === "diversity"
                       ? "bg-pink-500/20 dark:bg-pink-500/20 text-pink-600 dark:text-pink-400"
                       : "bg-purple-500/20 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400"

@@ -166,7 +166,7 @@ const Products: React.FC = () => {
                       ${
                         product.type === "DPI"
                           ? "bg-blue-500/20 text-blue-400"
-                          : "bg-green-500/20 text-green-400"
+                          : "bg-blue-500/20 text-blue-400"
                       }`}
                     >
                       {product.type}
@@ -215,7 +215,7 @@ const Products: React.FC = () => {
               {product.solution && (
                 <div className="mb-3">
                   <div className="flex items-center mb-1.5">
-                    <CheckCircle2 size={14} className="mr-1.5 text-green-400" />
+                    <CheckCircle2 size={14} className="mr-1.5 text-blue-400" />
                     <span className="text-gray-800 dark:text-white font-semibold text-xs">
                       Approach
                     </span>

@@ -196,12 +196,16 @@ const Services: React.FC = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className="card group hover:border-accent/40"
+              className="card group"
             >
               <div className="flex items-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-secondary to-accent rounded-md mr-3 group-hover:scale-110 transition-transform">
+                <motion.div 
+                  className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-secondary to-accent rounded-md mr-3"
+                  whileHover={{ scale: 1.15, rotate: 5 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <service.icon size={18} className="text-white" />
-                </div>
+                </motion.div>
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-semibold
                   ${

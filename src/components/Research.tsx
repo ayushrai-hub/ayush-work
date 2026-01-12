@@ -181,7 +181,7 @@ const Research: React.FC = () => {
                 </div>
 
                 <div className="border-t border-gray-200 dark:border-gray-600 pt-3">
-                  <p className="text-xs text-green-600 dark:text-green-400 italic leading-tight">
+                  <p className="text-xs text-blue-600 dark:text-blue-400 italic leading-tight">
                     "{project.outcomes}"
                   </p>
                 </div>

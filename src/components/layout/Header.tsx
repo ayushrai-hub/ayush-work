@@ -227,10 +227,11 @@ const Header: React.FC = () => {
                   <button
                     ref={workDropdownButtonRef}
                     onClick={() => setWorkDropdownOpen(!workDropdownOpen)}
-                    className="text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors duration-300 flex items-center"
+                    className="relative text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-all duration-300 flex items-center px-2 py-1 group"
                   >
                     {item.label}
-                    <ChevronDown className={`ml-1 transform transition-transform ${workDropdownOpen ? 'rotate-180' : ''}`} size={16} />
+                    <ChevronDown className={`ml-1 transform transition-transform duration-300 ${workDropdownOpen ? 'rotate-180' : ''}`} size={16} />
+                    <span className="absolute bottom-0 left-0 h-0.5 bg-secondary dark:bg-accent w-0 group-hover:w-full transition-all duration-300" />
                   </button>
                 ) : item.isRoute ? (
                   <button
@@ -241,18 +242,22 @@ const Header: React.FC = () => {
                         navigate(item.href);
                       }
                     }}
-                    className={`text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors duration-300 ${
+                    className={`relative text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-all duration-300 px-2 py-1 group ${
                       location.pathname === item.href ? 'text-secondary dark:text-accent' : ''
                     }`}
                   >
                     {item.label}
+                    <span className={`absolute bottom-0 left-0 h-0.5 bg-secondary dark:bg-accent transition-all duration-300 ${
+                      location.pathname === item.href ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`} />
                   </button>
                 ) : (
                   <button
                     onClick={() => handleSectionNavigation(item.href.substring(1))}
-                    className="text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors duration-300"
+                    className="relative text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-all duration-300 px-2 py-1 group"
                   >
                     {item.label}
+                    <span className="absolute bottom-0 left-0 h-0.5 bg-secondary dark:bg-accent w-0 group-hover:w-full transition-all duration-300" />
                   </button>
                 )}
               </motion.div>
@@ -273,11 +278,16 @@ const Header: React.FC = () => {
             <ThemeToggle />
             <button
               ref={menuButtonRef}
-              className="touch-target text-gray-700 dark:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="touch-target text-gray-700 dark:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 hover:scale-110 active:scale-95"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle navigation menu"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <motion.div
+                animate={{ rotate: isMenuOpen ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </motion.div>
             </button>
           </div>
         </div>
@@ -303,10 +313,13 @@ const Header: React.FC = () => {
                       }
                       setIsMenuOpen(false);
                     }}
-                    className={`block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors text-left w-full ${
+                    className={`relative block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-all duration-300 text-left w-full group pl-2 ${
                       location.pathname === item.href ? 'text-secondary dark:text-accent' : ''
                     }`}
                   >
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-secondary dark:bg-accent transition-all duration-300 group-hover:h-full rounded-r ${
+                      location.pathname === item.href ? 'h-full' : ''
+                    }" />
                     {item.label}
                   </button>
                 ) : item.isDropdown ? (
@@ -324,12 +337,13 @@ const Header: React.FC = () => {
                           <Link
                             key={workItem.label}
                             to={workItem.href}
-                            className="block py-1 text-gray-600 dark:text-gray-400 hover:text-secondary dark:hover:text-accent transition-colors text-sm"
+                            className="relative block py-1 text-gray-600 dark:text-gray-400 hover:text-secondary dark:hover:text-accent transition-all duration-300 text-sm pl-6 group"
                             onClick={() => {
                               setIsMenuOpen(false);
                               setWorkDropdownOpen(false);
                             }}
                           >
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-0.5 bg-secondary dark:bg-accent transition-all duration-300 group-hover:w-4" />
                             {workItem.icon} {workItem.label}
                           </Link>
                         ))}
@@ -342,8 +356,9 @@ const Header: React.FC = () => {
                       handleSectionNavigation(item.href.substring(1));
                       setIsMenuOpen(false);
                     }}
-                    className="block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-colors text-left w-full"
+                    className="relative block py-2 text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent transition-all duration-300 text-left w-full group pl-2"
                   >
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-secondary dark:bg-accent transition-all duration-300 group-hover:h-full rounded-r" />
                     {item.label}
                   </button>
                 )}
@@ -366,12 +381,12 @@ const Header: React.FC = () => {
                 <Link
                   key={item.label}
                   to={item.href}
-                  className="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                  className="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-all duration-300 group hover:translate-x-1 hover:shadow-md"
                   onClick={() => setWorkDropdownOpen(false)}
                 >
-                  <span className="text-2xl mr-3">{item.icon}</span>
+                  <span className="text-2xl mr-3 transition-transform duration-300 group-hover:scale-110">{item.icon}</span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-accent">{item.label}</span>
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 group-hover:text-secondary dark:group-hover:text-accent transition-colors duration-300">{item.label}</span>
                     <span className="text-xs text-gray-600 dark:text-gray-400">{item.description}</span>
                   </div>
                 </Link>

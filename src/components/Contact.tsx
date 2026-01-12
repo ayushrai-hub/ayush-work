@@ -521,9 +521,12 @@ const Contact: React.FC = () => {
                     <h4 className="text-gray-800 dark:text-white font-semibold text-sm">{info.title}</h4>
                     <a
                       href={info.link}
-                      className="text-gray-600 dark:text-gray-400 hover:text-secondary dark:hover:text-accent transition-colors text-sm"
+                      className="text-gray-600 dark:text-gray-400 hover:text-secondary dark:hover:text-accent transition-colors text-sm inline-block group"
                     >
-                      {info.value}
+                      <span className="relative">
+                        {info.value}
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary dark:bg-accent group-hover:w-full transition-all duration-300" />
+                      </span>
                     </a>
                   </div>
                 </motion.div>
@@ -542,8 +545,8 @@ const Contact: React.FC = () => {
               </h4>
               <div className="space-y-1.5">
                 <div className="flex items-center">
-                  <span className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mr-2"></span>
-                  <span className="text-green-600 dark:text-green-400 text-sm">
+                  <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mr-2"></span>
+                  <span className="text-blue-600 dark:text-blue-400 text-sm">
                     Available for new projects
                   </span>
                 </div>
@@ -620,16 +623,22 @@ const Contact: React.FC = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       onFocus={handleFormFocus}
-                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target ${
-                        validationErrors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target transition-all duration-300 ${
+                        validationErrors.name 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent focus:ring-2 focus:ring-secondary/20 dark:focus:ring-accent/20'
                       }`}
                       autoComplete="name"
                     />
                     {validationErrors.name && (
-                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                      <motion.p 
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-1 text-sm text-red-400 flex items-center"
+                      >
                         <AlertCircle size={14} className="mr-1" />
                         {validationErrors.name}
-                      </p>
+                      </motion.p>
                     )}
                   </div>
                   <div>
@@ -645,16 +654,23 @@ const Contact: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target ${
-                        validationErrors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
+                      onFocus={handleFormFocus}
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target transition-all duration-300 ${
+                        validationErrors.email 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent focus:ring-2 focus:ring-secondary/20 dark:focus:ring-accent/20'
                       }`}
                       autoComplete="email"
                     />
                     {validationErrors.email && (
-                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                      <motion.p 
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-1 text-sm text-red-400 flex items-center"
+                      >
                         <AlertCircle size={14} className="mr-1" />
                         {validationErrors.email}
-                      </p>
+                      </motion.p>
                     )}
                   </div>
                   <div>
@@ -669,7 +685,8 @@ const Contact: React.FC = () => {
                       name="service"
                       value={formData.service}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-white dark:bg-primary-dark border border-gray-300 dark:border-gray-600 rounded-md focus:border-secondary dark:focus:border-accent focus:outline-none text-gray-900 dark:text-white text-sm touch-target"
+                      onFocus={handleFormFocus}
+                      className="w-full px-3 py-2 bg-white dark:bg-primary-dark border border-gray-300 dark:border-gray-600 rounded-md focus:border-secondary dark:focus:border-accent focus:outline-none focus:ring-2 focus:ring-secondary/20 dark:focus:ring-accent/20 text-gray-900 dark:text-white text-sm touch-target transition-all duration-300"
                     >
                       <option value="">Select a service</option>
                       <option value="ai-ml">AI & Machine Learning</option>
@@ -693,16 +710,23 @@ const Contact: React.FC = () => {
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target ${
-                        validationErrors.subject ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
+                      onFocus={handleFormFocus}
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm touch-target transition-all duration-300 ${
+                        validationErrors.subject 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent focus:ring-2 focus:ring-secondary/20 dark:focus:ring-accent/20'
                       }`}
                       autoComplete="subject"
                     />
                     {validationErrors.subject && (
-                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                      <motion.p 
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-1 text-sm text-red-400 flex items-center"
+                      >
                         <AlertCircle size={14} className="mr-1" />
                         {validationErrors.subject}
-                      </p>
+                      </motion.p>
                     )}
                   </div>
                   <div>
@@ -717,17 +741,24 @@ const Contact: React.FC = () => {
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
+                      onFocus={handleFormFocus}
                       rows={4}
-                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm resize-none touch-target ${
-                        validationErrors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent'
+                      className={`w-full px-3 py-2 bg-white dark:bg-primary-dark border rounded-md focus:outline-none text-gray-900 dark:text-white text-sm resize-none touch-target transition-all duration-300 ${
+                        validationErrors.message 
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          : 'border-gray-300 dark:border-gray-600 focus:border-secondary dark:focus:border-accent focus:ring-2 focus:ring-secondary/20 dark:focus:ring-accent/20'
                       }`}
                       autoComplete="message"
                     ></textarea>
                     {validationErrors.message && (
-                      <p className="mt-1 text-sm text-red-400 flex items-center">
+                      <motion.p 
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-1 text-sm text-red-400 flex items-center"
+                      >
                         <AlertCircle size={14} className="mr-1" />
                         {validationErrors.message}
-                      </p>
+                      </motion.p>
                     )}
                   </div>
                 </div>
@@ -739,26 +770,38 @@ const Contact: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className={`flex items-start p-3 rounded-md ${
                       submitStatus.type === "success"
-                        ? "bg-green-500/10 border border-green-500/20"
+                        ? "bg-blue-500/10 border border-blue-500/20"
                         : "bg-red-500/10 border border-red-500/20"
                     }`}
                   >
                     {submitStatus.type === "success" ? (
-                      <CheckCircle
-                        className="text-green-400 mr-3 flex-shrink-0 mt-0.5"
-                        size={20}
-                      />
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                      >
+                        <CheckCircle
+                          className="text-blue-400 mr-3 flex-shrink-0 mt-0.5"
+                          size={20}
+                        />
+                      </motion.div>
                     ) : (
-                      <AlertCircle
-                        className="text-red-400 mr-3 flex-shrink-0 mt-0.5"
-                        size={20}
-                      />
+                      <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                      >
+                        <AlertCircle
+                          className="text-red-400 mr-3 flex-shrink-0 mt-0.5"
+                          size={20}
+                        />
+                      </motion.div>
                     )}
                     <div className="flex-1">
                       <p
                         className={`text-sm ${
                           submitStatus.type === "success"
-                            ? "text-green-400"
+                            ? "text-blue-400"
                             : "text-red-400"
                         }`}
                       >
@@ -769,7 +812,7 @@ const Contact: React.FC = () => {
                           type="button"
                           onClick={handleRetry}
                           disabled={isSubmitting}
-                          className="mt-2 px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="mt-2 px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
                         >
                           Try Again
                         </button>
@@ -782,7 +825,9 @@ const Contact: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full touch-target bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 px-3 rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group text-xs"
+                  className={`w-full touch-target bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 px-3 rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group text-xs relative overflow-hidden ${
+                    isSubmitting ? 'loading' : 'hover:scale-105 active:scale-95'
+                  }`}
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center">

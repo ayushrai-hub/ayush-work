@@ -107,7 +107,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold mb-3">
             Hi, I'm <span className="gradient-text">Ayush Rai</span>
           </h1>
 
@@ -117,9 +117,9 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="h-12 flex items-center justify-center"
+            className="h-10 flex items-center justify-center"
           >
-            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
               {headlines[currentHeadline]}
             </p>
           </motion.div>
@@ -129,7 +129,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-8 max-w-4xl mx-auto leading-relaxed"
+          className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-4 max-w-4xl mx-auto leading-relaxed"
         >
           Polymath with strategic approach across AI, web development, data
           science, and community leadership. Currently specializing in RLHF and
@@ -143,24 +143,24 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap justify-center gap-4 mb-6"
+          className="flex flex-wrap justify-center gap-2 mb-4"
         >
           <a
             href="https://linkedin.com/in/ayushrai02"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary flex items-center gap-2"
+            className="btn-primary flex items-center gap-1.5 text-xs px-3 py-1.5"
           >
-            <Linkedin size={20} />
+            <Linkedin size={14} />
             LinkedIn
           </a>
           <a
             href="https://github.com/ayushrai-hub"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-secondary flex items-center gap-2"
+            className="btn-secondary flex items-center gap-1.5 text-xs px-3 py-1.5"
           >
-            <Github size={20} />
+            <Github size={14} />
             GitHub
           </a>
         </motion.div>
@@ -170,19 +170,19 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex flex-wrap justify-center gap-4 mb-8"
+          className="flex flex-wrap justify-center gap-2 mb-4"
         >
-          <a href="#contact" className="btn-primary">
+          <a href="#contact" className="btn-primary text-xs px-3 py-1.5">
             Let's Work Together
           </a>
-          <a href="#projects" className="btn-secondary">
+          <a href="#projects" className="btn-secondary text-xs px-3 py-1.5">
             View My Work
           </a>
           <a
             href="https://drive.google.com/file/d/1EjIs-sIQrmHf0vRoQ9pTiDM_4M5x_P2p/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-outline"
+            className="btn-outline text-xs px-3 py-1.5"
           >
             Download Resume
           </a>
@@ -193,39 +193,39 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.0 }}
-          className="flex justify-center space-x-6 mb-8"
+          className="flex justify-center space-x-4 mb-4"
         >
           <a
             href="mailto:ayushrai0211@gmail.com"
-            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-2 rounded-full hover:bg-accent/10"
             title="Email"
           >
-            <Mail size={24} />
+            <Mail size={18} />
           </a>
           <a
             href="tel:+917440567944"
-            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-2 rounded-full hover:bg-accent/10"
             title="Phone"
           >
-            <Phone size={24} />
+            <Phone size={18} />
           </a>
           <a
             href="https://github.com/ayushrai-hub"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-2 rounded-full hover:bg-accent/10"
             title="GitHub"
           >
-            <Github size={24} />
+            <Github size={18} />
           </a>
           <a
             href="https://linkedin.com/in/ayushrai02"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-3 rounded-full hover:bg-accent/10"
+            className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors p-2 rounded-full hover:bg-accent/10"
             title="LinkedIn"
           >
-            <Linkedin size={24} />
+            <Linkedin size={18} />
           </a>
         </motion.div>
 
@@ -235,17 +235,17 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 mb-4"
         >
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">
+              <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && (
                   <CountUp end={stat.value} duration={2} delay={index * 0.2} />
                 )}
                 {stat.suffix}
               </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">{stat.label}</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">{stat.label}</p>
             </div>
           ))}
         </motion.div>
@@ -255,26 +255,26 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.5 }}
-          className="flex flex-wrap justify-center gap-4 mb-8"
+          className="flex flex-wrap justify-center gap-2 mb-4"
         >
-          <span className="flex items-center bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-sm border border-green-200 dark:border-green-500/20">
-            🟢 Available for Freelance Projects
+          <span className="flex items-center bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-2.5 py-0.5 rounded-full text-xs border border-blue-200 dark:border-blue-500/20">
+            🔵 Available for Freelance Projects
           </span>
-          <span className="flex items-center bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-sm border border-blue-200 dark:border-blue-500/20">
+          <span className="flex items-center bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-2.5 py-0.5 rounded-full text-xs border border-blue-200 dark:border-blue-500/20">
             🔵 Open to Full-time Opportunities
           </span>
-          <span className="flex items-center bg-yellow-100 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full text-sm border border-yellow-200 dark:border-yellow-500/20">
+          <span className="flex items-center bg-yellow-100 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-2.5 py-0.5 rounded-full text-xs border border-yellow-200 dark:border-yellow-500/20">
             🟡 Actively Learning: Advanced AI/ML
           </span>
         </motion.div>
       </div>
 
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-secondary dark:text-accent"
+        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-secondary dark:text-accent"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <ChevronDown size={32} />
+        <ChevronDown size={24} />
       </motion.div>
     </section>
   );

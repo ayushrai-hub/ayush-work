@@ -140,7 +140,7 @@ const Certifications: React.FC = () => {
     {
       name: "Data Science",
       count: 1,
-      color: "bg-green-500/20 text-green-400",
+      color: "bg-blue-500/20 text-blue-400",
     },
     { name: "Leadership", count: 1, color: "bg-yellow-500/20 text-yellow-400" },
   ];
@@ -203,7 +203,7 @@ const Certifications: React.FC = () => {
                 <div className="flex items-center">
                   <Award className="text-secondary dark:text-accent mr-2" size={18} />
                   {cert.verified && (
-                    <CheckCircle className="text-green-600 dark:text-green-400" size={16} />
+                    <CheckCircle className="text-blue-600 dark:text-blue-400" size={16} />
                   )}
                 </div>
                 <span className="text-xs text-gray-600 dark:text-gray-400 px-2 py-0.5 bg-gray-100 dark:bg-primary-dark rounded">

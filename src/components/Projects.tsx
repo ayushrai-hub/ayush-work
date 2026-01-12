@@ -79,7 +79,7 @@ const Projects: React.FC = () => {
       category: "Browser Extension & Web Development",
       duration: "2024 - Present",
       description:
-        "A Chrome browser extension that provides an overlay text box to simulate typing into text fields on any webpage. This tool enables users to input text through a clean interface and have it automatically typed character-by-character into target fields, making it ideal for filling out forms with repetitive content, testing user inputs, or avoiding problematic input fields.",
+        "A Chrome browser extension providing an overlay text box to simulate typing into any webpage's text fields. Enables character-by-character typing simulation through a clean interface, ideal for form filling, testing, and accessibility. Features resizable overlay, start/stop controls, and universal website compatibility.",
       technologies: [
         "JavaScript",
         "HTML",
@@ -105,7 +105,7 @@ const Projects: React.FC = () => {
       category: "Web Development & Design",
       duration: "2024 - Present",
       description:
-        "A modern, single-page personal portfolio website designed to showcase my expertise as a polymath across Generative AI, Web Development, and Data Science. The portfolio includes interactive sections for About Me, Skills, Projects, Education, Experience, Certifications, Blog, and Contact, with a strong focus on performance, accessibility, and SEO. It also integrates animations, dynamic resume downloads, and a serverless contact form to create a professional, engaging, and interactive user experience.",
+        "A modern single-page portfolio showcasing expertise across Generative AI, Web Development, and Data Science. Features interactive sections for About Me, Skills, Projects, Education, Experience, Certifications, and Contact. Built with strong focus on performance, accessibility, SEO, animations, and serverless contact form integration.",
       technologies: [
         "Next.js",
         "React",
@@ -133,7 +133,7 @@ const Projects: React.FC = () => {
       category: "AI & Digital Innovation",
       duration: "2024 - Present",
       description:
-        "Expert-O is a visionary collective of polymaths in India that blends technology, design, strategy, and AI-driven workflows to deliver transformative digital solutions. It positions itself as an elite tribe of multi-disciplinary innovators who execute 5x faster by leveraging AI augmentation and cross-domain expertise. The platform showcases their mission, values, services, portfolio, pricing models, thought leadership, and recruitment process, with a goal to reshape India's digital future.",
+        "A visionary collective of polymaths in India blending technology, design, strategy, and AI-driven workflows to deliver transformative digital solutions. An elite tribe of multi-disciplinary innovators executing 5x faster through AI augmentation and cross-domain expertise. The platform showcases mission, services, portfolio, pricing, thought leadership, and recruitment to reshape India's digital future.",
       technologies: [
         "Next.js",
         "React",
@@ -162,7 +162,7 @@ const Projects: React.FC = () => {
       category: "Community & Education Platform",
       duration: "2024 - Present",
       description:
-        "Shiksha-Mitra is a collaborative learning and acknowledgement platform designed to help peers support and recognize each other's growth in career and education. It provides an ecosystem where learners, professionals, and mentors can exchange resources, acknowledge progress, and celebrate milestones. The project emphasizes community-driven growth, building a culture of appreciation and collective success in the academic and professional journey.",
+        "A collaborative learning and acknowledgement platform helping peers support and recognize each other's growth in career and education. Provides an ecosystem where learners, professionals, and mentors exchange resources, acknowledge progress, and celebrate milestones. Emphasizes community-driven growth and building a culture of appreciation in academic and professional journeys.",
       technologies: [
         "Next.js",
         "React",
@@ -216,7 +216,7 @@ const Projects: React.FC = () => {
       category: "Enterprise Portfolio & Leadership",
       duration: "2024",
       description:
-        "A premium professional portfolio website crafted for a UK-based industry leader, showcasing over 17 years of expertise in driving large-scale technology transformation. The site highlights a proven track record in enterprise architecture, digital innovation, and strategic leadership, presented through a refined, modern design. Built with strong emphasis on credibility, performance, and user experience, it effectively communicates the client's achievements, capabilities, and thought leadership within the global technology landscape.",
+        "A premium professional portfolio for a UK-based industry leader showcasing 17+ years of expertise in large-scale technology transformation. Highlights proven track record in enterprise architecture, digital innovation, and strategic leadership through refined modern design. Built with emphasis on credibility, performance, and user experience to effectively communicate achievements and thought leadership.",
       technologies: [
         "React",
         "TypeScript",
@@ -270,14 +270,15 @@ const Projects: React.FC = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className="card group hover:scale-[1.01] transition-transform duration-300"
+              className="card group"
             >
               <div className="relative overflow-hidden rounded-lg mb-3">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="responsive-img w-full h-24 md:h-28 object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="responsive-img w-full h-24 md:h-28 object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               <div className="flex items-center justify-between mb-2">
@@ -290,7 +291,7 @@ const Projects: React.FC = () => {
                 </div>
               </div>
 
-              <h3 className="text-lg md:text-xl font-bold mb-2 text-gray-800 dark:text-white">
+              <h3 className="text-lg md:text-xl font-bold mb-2 text-gray-800 dark:text-white group-hover:text-secondary dark:group-hover:text-accent transition-colors duration-300">
                 {project.title}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm leading-relaxed">
@@ -308,7 +309,7 @@ const Projects: React.FC = () => {
                   {project.technologies.slice(0, 4).map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className="px-1.5 py-0.5 bg-gray-100 dark:bg-primary rounded-md text-xs text-gray-700 dark:text-gray-300 border border-secondary/30 dark:border-accent/20"
+                      className="px-1.5 py-0.5 bg-gray-100 dark:bg-primary rounded-md text-xs text-gray-700 dark:text-gray-300 border border-secondary/30 dark:border-accent/20 transition-all duration-300 hover:border-secondary dark:hover:border-accent hover:scale-105"
                     >
                       {tech}
                     </span>
@@ -339,17 +340,22 @@ const Projects: React.FC = () => {
               <div className="flex gap-2 mt-3">
                 <a
                   href={project.github}
-                  className="touch-target flex items-center justify-center px-3 py-1.5 bg-gray-800 dark:bg-primary hover:bg-gray-700 dark:hover:bg-gray-700 rounded-md text-white transition-colors text-xs flex-1 shadow-sm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="touch-target flex items-center justify-center px-3 py-1.5 bg-gray-800 dark:bg-primary hover:bg-gray-700 dark:hover:bg-gray-700 rounded-md text-white transition-all duration-300 text-xs flex-1 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group"
                 >
-                  <Github size={12} className="mr-1.5" />
+                  <Github size={12} className="mr-1.5 transition-transform duration-300 group-hover:rotate-12" />
                   Code
                 </a>
                 <a
                   href={project.demo}
-                  className="touch-target flex items-center justify-center px-3 py-1.5 bg-gradient-to-r from-secondary to-accent dark:from-secondary dark:to-accent text-primary rounded-md font-medium hover:shadow-md transition-shadow text-xs flex-1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="touch-target flex items-center justify-center px-3 py-1.5 bg-gradient-to-r from-secondary to-accent dark:from-secondary dark:to-accent text-primary rounded-md font-medium hover:shadow-lg transition-all duration-300 text-xs flex-1 hover:scale-105 active:scale-95 group relative overflow-hidden"
                 >
-                  <ExternalLink size={12} className="mr-1.5" />
-                  Demo
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <ExternalLink size={12} className="mr-1.5 relative z-10 transition-transform duration-300 group-hover:rotate-12" />
+                  <span className="relative z-10">Demo</span>
                 </a>
               </div>
             </motion.div>
@@ -364,31 +370,43 @@ const Projects: React.FC = () => {
           className="mt-6"
         >
           <div className="grid md:grid-cols-4 gap-3 md:gap-4">
-            <div className="card text-center py-3">
+            <motion.div 
+              className="card text-center py-3 hover:scale-105 transition-transform duration-300 cursor-default"
+              whileHover={{ y: -4 }}
+            >
               <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={10} duration={2} delay={0.2} />}
                 +
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">Projects</p>
-            </div>
-            <div className="card text-center py-3">
+            </motion.div>
+            <motion.div 
+              className="card text-center py-3 hover:scale-105 transition-transform duration-300 cursor-default"
+              whileHover={{ y: -4 }}
+            >
               <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={5} duration={2} delay={0.4} />}
                 +
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">Clients</p>
-            </div>
-            <div className="card text-center py-3">
+            </motion.div>
+            <motion.div 
+              className="card text-center py-3 hover:scale-105 transition-transform duration-300 cursor-default"
+              whileHover={{ y: -4 }}
+            >
               <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {inView && <CountUp end={100} duration={2} delay={0.6} />}
                 %
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">Success</p>
-            </div>
-            <div className="card text-center py-3">
+            </motion.div>
+            <motion.div 
+              className="card text-center py-3 hover:scale-105 transition-transform duration-300 cursor-default"
+              whileHover={{ y: -4 }}
+            >
               <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">24/7</div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">Support</p>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>

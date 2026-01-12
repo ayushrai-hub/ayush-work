@@ -157,7 +157,7 @@ const ExtraCurriculars: React.FC = () => {
   ];
 
   return (
-    <section id="extracurriculars" className="py-8 md:py-10 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900 dark:to-blue-900">
+    <section id="extracurriculars" className="py-8 md:py-10 bg-gradient-to-br from-blue-50 to-blue-50 dark:from-blue-900 dark:to-blue-900">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -167,9 +167,9 @@ const ExtraCurriculars: React.FC = () => {
           className="text-center mb-6"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
-            <span className="text-green-600">Extra-Curricular</span> Activities
+            <span className="text-blue-600">Extra-Curricular</span> Activities
           </h2>
-          <div className="w-20 h-0.5 bg-green-600 mx-auto rounded-full mb-4"></div>
+          <div className="w-20 h-0.5 bg-blue-600 mx-auto rounded-full mb-4"></div>
           <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Beyond academics and work - passions, causes, and experiences that shape my journey
           </p>
@@ -218,7 +218,7 @@ const ExtraCurriculars: React.FC = () => {
                   {activity.category === "Drama" && <BookOpen className="text-secondary dark:text-accent mr-2" size={18} />}
                   {activity.category === "Leadership" && <Users className="text-secondary dark:text-accent mr-2" size={18} />}
                   {activity.verified && (
-                    <CheckCircle className="text-green-600 dark:text-green-400" size={16} />
+                    <CheckCircle className="text-blue-600 dark:text-blue-400" size={16} />
                   )}
                 </div>
                 <span className="text-xs text-gray-600 dark:text-gray-400 px-2 py-0.5 bg-gray-100 dark:bg-primary-dark rounded">
@@ -243,7 +243,7 @@ const ExtraCurriculars: React.FC = () => {
                 <p className="text-gray-800 dark:text-white font-semibold mb-1.5 text-xs">
                   Impact:
                 </p>
-                <p className="text-green-600 dark:text-green-400 text-xs mb-2 leading-tight">
+                <p className="text-blue-600 dark:text-blue-400 text-xs mb-2 leading-tight">
                   {activity.impact}
                 </p>
                 <p className="text-gray-800 dark:text-white font-semibold mb-1.5 text-xs">

@@ -23,7 +23,8 @@ import {
   Edit,
   Trophy,
   Link as LinkIcon,
-  Calendar
+  Calendar,
+  Youtube
 } from 'lucide-react';
 import { profiles } from '../../lib/profilesData';
 import { useGTM } from '../../hooks/useGTM';
@@ -80,6 +81,7 @@ const Footer: React.FC = () => {
       twitter: Twitter,
       instagram: Instagram,
       facebook: Facebook,
+      youtube: Youtube,
       code: Code,
       award: Trophy,
       'bar-chart-2': BarChart3,
@@ -129,6 +131,12 @@ const Footer: React.FC = () => {
       url: 'https://www.instagram.com/ayush_rai02/',
       icon: Instagram,
       color: 'hover:text-pink-500'
+    },
+    {
+      name: 'YouTube',
+      url: 'https://www.youtube.com/@ayush_rai02',
+      icon: Youtube,
+      color: 'hover:text-red-500'
     },
     {
       name: 'GitHub',
@@ -217,12 +225,13 @@ const Footer: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => handleExternalLink(social.url, social.name)}
-                        className={`p-1.5 bg-gray-800/50 hover:bg-gray-800 rounded transition-all duration-300 ${social.color}`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
+                        className={`p-1.5 bg-gray-800/50 hover:bg-gray-800 rounded transition-all duration-300 ${social.color} relative overflow-hidden group`}
+                        whileHover={{ scale: 1.15, rotate: 5 }}
+                        whileTap={{ scale: 0.9 }}
                         title={social.name}
                       >
-                        <IconComponent size={14} />
+                        <IconComponent size={14} className="relative z-10" />
+                        <span className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </motion.a>
                     );
                   })}
@@ -243,9 +252,15 @@ const Footer: React.FC = () => {
                   <button
                     key={link.name}
                     onClick={() => handleSectionNavigation(link.href)}
-                    className="text-gray-400 hover:text-white transition-colors text-xs text-left hover:bg-gray-800/30 px-1.5 py-0.5 rounded"
+                    className="text-gray-400 hover:text-white transition-all duration-300 text-xs text-left hover:bg-gray-800/30 px-1.5 py-0.5 rounded relative group"
                   >
-                    {link.name}
+                    <span className="relative z-10">
+                      <span className="relative inline-block">
+                        {link.name}
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary dark:bg-accent group-hover:w-full transition-all duration-300" />
+                      </span>
+                    </span>
+                    <span className="absolute left-0 top-0 bottom-0 w-0 bg-gray-800/30 group-hover:w-full transition-all duration-300 rounded" />
                   </button>
                 ))}
               </div>
@@ -270,10 +285,15 @@ const Footer: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => handleExternalLink(profile.url, profile.name)}
-                        className="flex items-center space-x-1.5 text-gray-400 hover:text-white transition-colors group text-xs"
+                        className="flex items-center space-x-1.5 text-gray-400 hover:text-white transition-all duration-300 group text-xs hover:translate-x-1"
                       >
-                        <IconComponent size={12} className="flex-shrink-0" />
-                        <span className="group-hover:underline truncate">{profile.name}</span>
+                        <IconComponent size={12} className="flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+                        <span className="truncate relative inline-block">
+                          <span className="relative">
+                            {profile.name}
+                            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary dark:bg-accent group-hover:w-full transition-all duration-300" />
+                          </span>
+                        </span>
                       </a>
                     );
                   });
@@ -303,8 +323,13 @@ const Footer: React.FC = () => {
                           onClick={() => handleExternalLink(profile.url, profile.name)}
                           className="flex items-center space-x-1 text-gray-400 hover:text-white transition-colors group text-xs"
                         >
-                          <IconComponent size={12} className="flex-shrink-0" />
-                          <span className="group-hover:underline truncate">{profile.name}</span>
+                          <IconComponent size={12} className="flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+                          <span className="truncate relative inline-block">
+                            <span className="relative">
+                              {profile.name}
+                              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary dark:bg-accent group-hover:w-full transition-all duration-300" />
+                            </span>
+                          </span>
                         </a>
                       );
                     });
@@ -323,27 +348,31 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2">
               {bottomPlatformLinks.map((platform) => (
-                <a
+                  <a
                   key={platform.name}
                   href={platform.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleExternalLink(platform.url, platform.name)}
-                  className="text-gray-400 hover:text-accent transition-colors text-xs flex items-center space-x-0.5 group px-1.5 py-0.5 rounded hover:bg-gray-800/30"
+                  className="text-gray-400 hover:text-accent transition-all duration-300 text-xs flex items-center space-x-0.5 group px-1.5 py-0.5 rounded hover:bg-gray-800/30 relative"
                 >
-                  <span>{platform.name}</span>
-                  <ExternalLink size={10} className="group-hover:translate-x-0.5 transition-transform opacity-70" />
+                  <span className="relative z-10">{platform.name}</span>
+                  <ExternalLink size={10} className="group-hover:translate-x-1 group-hover:scale-110 transition-all duration-300 opacity-70 group-hover:opacity-100" />
+                  <span className="absolute inset-0 bg-gray-800/30 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
               ))}
             </div>
           </div>
-          <button
+          <motion.button
             onClick={scrollToTop}
-            className="fixed bottom-6 right-6 bg-secondary hover:bg-secondary-600 text-white p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-50"
+            className="fixed bottom-6 right-6 bg-secondary hover:bg-secondary-600 text-white p-2 rounded-full shadow-lg transition-all duration-300 z-50 relative overflow-hidden group"
             aria-label="Back to top"
+            whileHover={{ scale: 1.15, y: -2 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <ArrowUp size={14} />
-          </button>
+            <ArrowUp size={14} className="relative z-10" />
+            <span className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </motion.button>
         </div>
       </div>
     </footer>
