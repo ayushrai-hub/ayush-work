@@ -4,6 +4,14 @@ Personal website for **Ayush Rai** — not a résumé dump, not a freelancing la
 
 Live content lives in `src/content/` (TypeScript modules). Edit those files to update the site without touching layouts.
 
+## Deploy & legacy site
+
+- **Production track:** `main` (this digital-home rebuild)
+- **Old portfolio SPA preserved on:** branch [`archive/portfolio-spa-2026`](https://github.com/ayushrai-hub/ayush-work/tree/archive/portfolio-spa-2026) and tag `legacy-portfolio-spa`
+- Details: [`docs/preserving-old-site.md`](docs/preserving-old-site.md)
+
+Hosts: Netlify (`netlify.toml` → `dist`) and/or Vercel (`vercel.json` Vite config). SPA fallback is configured so client routes work.
+
 ## Stack
 
 - Vite + React 18 + TypeScript
