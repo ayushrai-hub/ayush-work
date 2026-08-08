@@ -1,47 +1,44 @@
-
+import { person } from "../content";
 
 export const structuredData = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Ayush Rai",
-  "jobTitle": "AI & Full-Stack Developer",
-  "description": "Experienced AI/ML Engineer and Full-Stack Developer specializing in React, Python, and machine learning",
-  "url": "https://ayush-me.netlify.app",
-  "image": "/IMG_0029.jpeg",
-  "sameAs": [
-    "https://github.com/ayushrai-hub",
-    "https://linkedin.com/in/ayushrai02"
-  ],
-  "knowsAbout": [
+  name: person.name,
+  jobTitle: "AI-focused software engineer",
+  description: person.tagline,
+  url: person.siteUrl,
+  image: `${person.siteUrl}/IMG_0029.jpeg`,
+  sameAs: person.sameAs,
+  knowsAbout: [
     "Artificial Intelligence",
-    "Machine Learning",
-    "Deep Learning",
+    "Generative AI",
+    "RLHF",
+    "Software Engineering",
+    "Product Development",
+    "TypeScript",
     "Python",
     "React",
-    "JavaScript",
-    "TypeScript",
-    "Web Development",
-    "Data Science",
-    "Computer Vision"
   ],
-  "address": {
+  address: {
     "@type": "PostalAddress",
-    "addressLocality": "Bhopal",
-    "addressCountry": "IN"
+    addressLocality: "Bhopal",
+    addressCountry: "IN",
   },
-  "contactPoint": {
+  contactPoint: {
     "@type": "ContactPoint",
-    "telephone": "+91-7440567944",
-    "email": "ayushrai0211@gmail.com",
-    "contactType": "Professional"
-  }
+    email: person.email,
+    contactType: "Professional",
+  },
 };
 
 export const organizationStructuredData = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Ayush Rai Portfolio",
-  "url": "https://ayush-me.netlify.app",
-  "logo": "/IMG_0029.jpeg",
-  "description": "Professional portfolio of Ayush Rai - AI & Full-Stack Developer"
+  "@type": "WebSite",
+  name: "Ayush Rai",
+  url: person.siteUrl,
+  description: person.tagline,
+  author: {
+    "@type": "Person",
+    name: person.name,
+  },
 };

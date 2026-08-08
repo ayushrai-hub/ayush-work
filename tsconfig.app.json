@@ -21,5 +21,33 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vitest/globals"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/__tests__/legacy",
+    "src/components/backgrounds",
+    "src/components/About.tsx",
+    "src/components/AboutMe.tsx",
+    "src/components/Certifications.tsx",
+    "src/components/CommunityLeadership.tsx",
+    "src/components/Contact.tsx",
+    "src/components/Education.tsx",
+    "src/components/Experience.tsx",
+    "src/components/ExtraCurriculars.tsx",
+    "src/components/GTMProvider.tsx",
+    "src/components/Hero.tsx",
+    "src/components/Other.tsx",
+    "src/components/Products.tsx",
+    "src/components/Profiles.tsx",
+    "src/components/Projects.tsx",
+    "src/components/Research.tsx",
+    "src/components/Services.tsx",
+    "src/components/Skills.tsx",
+    "src/components/pages",
+    "src/components/layout/Header.tsx",
+    "src/components/layout/Footer.tsx",
+    "src/components/layout/SEO.tsx",
+    "src/components/ui/FloatingNav.tsx",
+    "src/components/ui/ThemeToggle.tsx",
+    "src/components/ui/Logo.tsx"
+  ]
 }

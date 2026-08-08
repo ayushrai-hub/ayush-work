@@ -23,21 +23,15 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Check if window is available (browser environment)
+    // Light-first editorial default; only honor an explicit user choice.
     if (typeof window === 'undefined') {
       return 'light';
     }
 
     try {
-      // Check localStorage first, then system preference
-      const savedTheme = localStorage.getItem('theme') as Theme;
-      if (savedTheme) {
+      const savedTheme = localStorage.getItem('theme') as Theme | null;
+      if (savedTheme === 'light' || savedTheme === 'dark') {
         return savedTheme;
-      }
-
-      // Check system preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
       }
     } catch (error) {
       console.warn('Theme context: Could not access localStorage', error);

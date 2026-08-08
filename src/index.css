@@ -2,170 +2,148 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fluid Typography */
-html {
-  font-size: clamp(14px, 2.5vw, 18px);
+:root {
+  --bg: #f3f2f0;
+  --bg-elevated: #faf9f7;
+  --ink: #1a1a1a;
+  --ink-muted: #5c5a57;
+  --ink-faint: #8a8782;
+  --rule: #d4d0c8;
+  --accent: #2c5f4e;
+  --accent-soft: #e4efe9;
+  --signal: #9a3412;
+  --focus: #1d4ed8;
 }
 
-/* Container Strategy */
-.container-fluid {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 2rem);
-  width: 100%;
+.dark {
+  --bg: #161615;
+  --bg-elevated: #1e1e1c;
+  --ink: #f0eee8;
+  --ink-muted: #a8a59e;
+  --ink-faint: #7a776f;
+  --rule: #3a3834;
+  --accent: #7eb89a;
+  --accent-soft: #24352e;
+  --signal: #e07a4a;
+  --focus: #93c5fd;
 }
 
-/* Touch Targets */
-.touch-target {
-  min-height: 44px;
-  min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.touch-target:active {
-  transform: scale(0.95);
-  transition: transform 0.1s ease;
-}
-
-/* Responsive Images */
-.responsive-img {
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-}
-
-/* Safe Areas for Mobile */
-@supports (padding: max(0px)) {
-  .safe-area {
-    padding-left: max(1rem, env(safe-area-inset-left));
-    padding-right: max(1rem, env(safe-area-inset-right));
-  }
-}
-
-/* Performance Optimizations */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Grid Systems */
-.grid-responsive {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 480px) {
-  .grid-responsive {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .grid-responsive {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .grid-responsive {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Hide horizontal scroll */
-html, body {
-  overflow-x: hidden;
-}
-
-/* Focus styles for accessibility */
-.focus-visible:focus-visible {
-  outline: 2px solid #265CD2;
-  outline-offset: 2px;
-}
-
-/* Enhanced Link Animations - Removed global underline to prevent conflicts */
-
-/* Form Input Enhancements */
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-textarea,
-select {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(38, 92, 210, 0.1);
-  transform: translateY(-1px);
-}
-
-/* Icon Hover Animations */
-.icon-hover {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.icon-hover:hover {
-  transform: scale(1.1) rotate(5deg);
-}
-
-/* Smooth Scroll Behavior */
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
+@layer base {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
   }
-  
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    background-image:
+      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(44, 95, 78, 0.06), transparent 50%),
+      radial-gradient(ellipse 80% 60% at -10% 100%, rgba(154, 52, 18, 0.04), transparent 45%);
+    min-height: 100vh;
+  }
+
+  .dark body,
+  .dark {
+    background-image:
+      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(126, 184, 154, 0.08), transparent 50%),
+      radial-gradient(ellipse 80% 60% at -10% 100%, rgba(224, 122, 74, 0.05), transparent 45%);
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink font-semibold tracking-tight;
+    text-wrap: balance;
+  }
+
+  a {
+    @apply transition-colors duration-200;
   }
 }
 
-/* Loading Spinner */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
+@layer components {
+  .site-shell {
+    @apply mx-auto w-full max-w-site px-5 sm:px-8 lg:px-10;
   }
-  to {
-    transform: rotate(360deg);
+
+  .prose-site {
+    @apply max-w-measure text-base leading-relaxed text-ink-muted sm:text-lg;
   }
-}
 
-.spinner {
-  animation: spin 0.6s linear infinite;
-}
+  .prose-site p + p {
+    @apply mt-4;
+  }
 
-/* Stagger Animation Utilities */
-.stagger-item {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
+  .label {
+    @apply font-mono text-xs uppercase tracking-label text-ink-faint;
+  }
 
-.stagger-item.visible {
-  opacity: 1;
-  transform: translateY(0);
+  .rule {
+    @apply border-t border-rule;
+  }
+
+  .link-underline {
+    @apply text-ink underline decoration-rule underline-offset-4 hover:decoration-accent hover:text-accent;
+  }
+
+  .link-accent {
+    @apply text-accent underline underline-offset-4;
+    text-decoration-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .link-accent:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink text-paper-elevated hover:bg-accent;
+  }
+
+  .btn-secondary {
+    @apply btn border border-rule bg-transparent text-ink hover:border-ink;
+  }
+
+  .btn-ghost {
+    @apply btn text-ink-muted hover:text-ink;
+  }
+
+  .meta-row {
+    @apply flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-ink-faint;
+  }
+
+  .page-section {
+    @apply py-16 md:py-24;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-ink focus:px-4 focus:py-2 focus:text-paper-elevated;
+  }
 }

@@ -7,9 +7,11 @@ interface SEOMetadata {
 }
 
 export const defaultSEO: SEOMetadata = {
-  title: "Ayush Rai - AI & Full-Stack Developer Portfolio",
-  description: "Experienced AI/ML Engineer and Full-Stack Developer specializing in React, Python, and machine learning. Explore my projects, skills, and get in touch for your next project.",
-  keywords: "AI, Machine Learning, React, Python, Full-Stack Developer, Data Science, Web Development, Portfolio, Profiles, Ayush Rai, Connect, Socials",
+  title: "Ayush Rai",
+  description:
+    "Ayush Rai — AI-focused software engineer in Bhopal. Work across products, systems, research notes, and experiments. Digital home, not a brochure.",
+  keywords:
+    "Ayush Rai, AI engineer, software, products, research, Bhopal, RLHF, Open Framework, personal site",
   image: "/IMG_0029.jpeg",
-  url: "https://ayush-me.netlify.app"
+  url: "https://ayush-me.netlify.app",
 };

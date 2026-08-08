@@ -3,33 +3,6 @@ import "@testing-library/jest-dom";
 import { vi } from "vitest";
 import "jest-axe/extend-expect";
 
-// Type definitions for test mocks
-interface MockCanvasContext {
-  fillRect: ReturnType<typeof vi.fn>;
-  clearRect: ReturnType<typeof vi.fn>;
-  getImageData: ReturnType<typeof vi.fn>;
-  putImageData: ReturnType<typeof vi.fn>;
-  createImageData: ReturnType<typeof vi.fn>;
-  setTransform: ReturnType<typeof vi.fn>;
-  drawImage: ReturnType<typeof vi.fn>;
-  save: ReturnType<typeof vi.fn>;
-  fillText: ReturnType<typeof vi.fn>;
-  strokeRect: ReturnType<typeof vi.fn>;
-  beginPath: ReturnType<typeof vi.fn>;
-  moveTo: ReturnType<typeof vi.fn>;
-  lineTo: ReturnType<typeof vi.fn>;
-  stroke: ReturnType<typeof vi.fn>;
-  fill: ReturnType<typeof vi.fn>;
-  arc: ReturnType<typeof vi.fn>;
-  measureText: ReturnType<typeof vi.fn>;
-  clip: ReturnType<typeof vi.fn>;
-  canvas: HTMLCanvasElement;
-  globalAlpha: number;
-  globalCompositeOperation: GlobalCompositeOperation;
-}
-
-
-
 interface MotionProps {
   children?: React.ReactNode;
   className?: string;
@@ -38,11 +11,6 @@ interface MotionProps {
 }
 
 interface R3FProps {
-  children?: React.ReactNode;
-  [key: string]: unknown;
-}
-
-interface DreiProps {
   children?: React.ReactNode;
   [key: string]: unknown;
 }

@@ -1,0 +1,55 @@
+import type { Education } from "./types";
+
+export const education: Education[] = [
+  {
+    slug: "lncts-btech-cse",
+    degree: "B.Tech Computer Science Engineering",
+    institution: "Lakshmi Narain College of Technology and Science",
+    location: "Bhopal, India",
+    start: "2020-09",
+    end: "2024-07",
+    grade: "8.47/10.0 CGPA",
+    coursework: [
+      "Operating Systems",
+      "Database Management Systems",
+      "Computer Networks",
+      "Data Structures & Algorithms",
+      "Software Engineering",
+      "Computer Architecture",
+    ],
+  },
+  {
+    slug: "iitm-bs-data-science",
+    degree: "BS Data Science and Applications",
+    institution: "Indian Institute of Technology Madras",
+    location: "Chennai / Online",
+    start: "2021",
+    end: "2024",
+    grade: "6.86/10.0 CGPA",
+    coursework: [
+      "Statistics",
+      "Computational Thinking",
+      "DBMS",
+      "Advanced Mathematics",
+      "Machine Learning",
+      "Data Analytics",
+    ],
+    note: "Pursued in parallel with B.Tech. Confirm current enrollment status if site copy says 'pursuing'.",
+  },
+  {
+    slug: "mission-higher-secondary",
+    degree: "Higher Secondary (PCM)",
+    institution: "Mission English Higher Secondary School",
+    location: "Seoni, India",
+    start: "2019",
+    end: "2020",
+    grade: "78.2%",
+    coursework: [
+      "Physics",
+      "Chemistry",
+      "Mathematics",
+      "English",
+      "Computer Science",
+    ],
+  },
+];

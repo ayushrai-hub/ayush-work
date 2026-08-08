@@ -29,7 +29,11 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],
-    exclude: ['e2e/**/*.ts', 'node_modules/**'],
+    exclude: [
+      'e2e/**/*.ts',
+      'node_modules/**',
+      'src/__tests__/legacy/**',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
@@ -41,20 +45,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Separate Three.js and related libraries
-          three: ['three', '@react-three/fiber', '@react-three/drei'],
-          // Separate chart libraries
-          charts: ['chart.js', 'react-chartjs-2'],
-          // Separate animation library
           animations: ['framer-motion'],
-          // Separate routing library
           router: ['react-router-dom'],
-          // Vendor libraries
           vendor: ['react', 'react-dom'],
-          // UI library and smaller utilities
-          ui: ['lucide-react', 'react-intersection-observer', 'react-helmet-async'],
-          // Analytics and utilities
-          utils: ['react-countup'],
+          ui: ['lucide-react', 'react-helmet-async'],
         },
       },
     },

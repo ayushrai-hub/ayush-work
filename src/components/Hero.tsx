@@ -29,7 +29,7 @@
  */
 import React from "react";
 import { motion } from "framer-motion";
-import { ChevronDown, Github, Linkedin, Mail, Phone } from "lucide-react";
+import { ChevronDown, Github, Globe, Linkedin, Mail, Phone } from "lucide-react";
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 
@@ -162,6 +162,15 @@ const Hero: React.FC = () => {
           >
             <Github size={14} />
             GitHub
+          </a>
+          <a
+            href="https://thelifeofayush.vercel.app/sites/www/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline flex items-center gap-1.5 text-xs px-3 py-1.5"
+          >
+            <Globe size={14} />
+            MyLifeOS
           </a>
         </motion.div>
 

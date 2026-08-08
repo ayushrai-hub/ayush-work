@@ -1,144 +1,103 @@
-/**
- * App — The root React component for the portfolio application.
- *
- * This component serves as the main entry point, managing routing between the main portfolio page and dedicated detail pages. It implements lazy loading for performance optimization and includes error boundaries to maintain user experience even if sections fail.
- *
- * Notes:
- * - Uses React Router for client-side navigation.
- * - Initializes Google Analytics on mount via initGA hook.
- * - All major sections are wrapped in ErrorBoundary for graceful error handling.
- * - Lazy loads heavy components like Three.js scenes to reduce initial bundle size.
- *
- * Relationships:
- * - Imports components from ./components/* for different sections
- * - Uses hooks from ./lib/* for analytics
- * - Renders pages from ./components/pages/*
- */
-import { useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
-import ParticleBackground from './components/backgrounds/ParticleBackground';
-import FloatingNav from './components/ui/FloatingNav';
-import ErrorBoundary from './components/layout/ErrorBoundary';
-import { initGA } from './lib/analytics';
-import SEO from './components/layout/SEO';
-import './App.css';
+import { Suspense, lazy, useEffect } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+import SiteLayout from "./components/site/SiteLayout";
+import { initGA } from "./lib/analytics";
 
-// Lazy load heavy components
-const ThreeJSHero = lazy(() => import('./components/backgrounds/ThreeJSHero'));
-const About = lazy(() => import('./components/About'));
-const AboutMe = lazy(() => import('./components/AboutMe'));
-const Education = lazy(() => import('./components/Education'));
-const Experience = lazy(() => import('./components/Experience'));
-const Skills = lazy(() => import('./components/Skills'));
-const Other = lazy(() => import('./components/Other'));
-const Projects = lazy(() => import('./components/Projects'));
-const Products = lazy(() => import('./components/Products'));
-const Contact = lazy(() => import('./components/Contact'));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const WorkPage = lazy(() => import("./pages/WorkPage"));
+const WorkDetailPage = lazy(() => import("./pages/WorkDetailPage"));
+const ProductsPage = lazy(() => import("./pages/ProductsPage"));
+const ProductDetailPage = lazy(() => import("./pages/ProductDetailPage"));
+const ProductLogPage = lazy(() => import("./pages/ProductLogPage"));
+const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
+const ResearchPage = lazy(() => import("./pages/ResearchPage"));
+const ResearchDetailPage = lazy(() => import("./pages/ResearchDetailPage"));
+const WritingPage = lazy(() => import("./pages/WritingPage"));
+const WritingDetailPage = lazy(() => import("./pages/WritingDetailPage"));
+const NotesPage = lazy(() => import("./pages/NotesPage"));
+const NoteDetailPage = lazy(() => import("./pages/NoteDetailPage"));
+const NowPage = lazy(() => import("./pages/NowPage"));
+const IdeasPage = lazy(() => import("./pages/IdeasPage"));
+const PrinciplesPage = lazy(() => import("./pages/PrinciplesPage"));
+const TimelinePage = lazy(() => import("./pages/TimelinePage"));
+const EducationPage = lazy(() => import("./pages/EducationPage"));
+const LeadershipPage = lazy(() => import("./pages/LeadershipPage"));
+const RecognitionPage = lazy(() => import("./pages/RecognitionPage"));
+const ElsewherePage = lazy(() => import("./pages/ElsewherePage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const ArchivePage = lazy(() => import("./pages/ArchivePage"));
+const UsesPage = lazy(() => import("./pages/UsesPage"));
+const ResumePage = lazy(() => import("./pages/ResumePage"));
+const DesignSystemPage = lazy(() => import("./pages/DesignSystemPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
-// Import page components directly (no lazy loading)
-import ResearchPage from './components/pages/ResearchPage';
-import LeadershipPage from './components/pages/LeadershipPage';
-import CertificationsPage from './components/pages/CertificationsPage';
-import ServicesPage from './components/pages/ServicesPage';
-import ExtraCurricularsPage from './components/pages/ExtraCurricularsPage';
+function PageFallback() {
+  return (
+    <div className="site-shell py-24" role="status" aria-live="polite">
+      <p className="font-mono text-sm text-ink-faint">Loading…</p>
+    </div>
+  );
+}
 
-// Loading component for Suspense fallback
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center min-h-[200px]">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
-  </div>
-);
-
-function App() {
+export default function App() {
   useEffect(() => {
     initGA();
   }, []);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-gray-100 relative overflow-x-hidden transition-colors duration-300 safe-area">
-        <SEO />
-        <ErrorBoundary context="background particles">
-          <ParticleBackground />
-        </ErrorBoundary>
+    <BrowserRouter>
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
+          <Route element={<SiteLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="work" element={<WorkPage />} />
+            <Route path="work/:slug" element={<WorkDetailPage />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="products/:slug" element={<ProductDetailPage />} />
+            <Route path="products/:slug/log" element={<ProductLogPage />} />
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="research" element={<ResearchPage />} />
+            <Route path="research/:slug" element={<ResearchDetailPage />} />
+            <Route path="writing" element={<WritingPage />} />
+            <Route path="writing/:slug" element={<WritingDetailPage />} />
+            <Route path="notes" element={<NotesPage />} />
+            <Route path="notes/:slug" element={<NoteDetailPage />} />
+            <Route path="now" element={<NowPage />} />
+            <Route path="ideas" element={<IdeasPage />} />
+            <Route path="principles" element={<PrinciplesPage />} />
+            <Route path="timeline" element={<TimelinePage />} />
+            <Route path="education" element={<EducationPage />} />
+            <Route path="leadership" element={<LeadershipPage />} />
+            <Route path="recognition" element={<RecognitionPage />} />
+            <Route path="elsewhere" element={<ElsewherePage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="archive" element={<ArchivePage />} />
+            <Route path="uses" element={<UsesPage />} />
+            <Route path="resume" element={<ResumePage />} />
+            <Route path="design-system" element={<DesignSystemPage />} />
 
-        <Suspense fallback={<LoadingSpinner />}>
-          <Routes>
-            {/* Main Portfolio Page */}
-            <Route path="/" element={
-              <>
-                <Header />
-                <FloatingNav />
-                <motion.main
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <ErrorBoundary showUserMessage={true} context="Three.js hero section">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <ThreeJSHero />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <ErrorBoundary showUserMessage={true} context="about section">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <AboutMe />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <ErrorBoundary showUserMessage={true} context="experience section">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Experience />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <ErrorBoundary showUserMessage={true} context="projects section">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Projects />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <ErrorBoundary showUserMessage={true} context="products section">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Products />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <ErrorBoundary showUserMessage={true} context="education section">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Education />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <ErrorBoundary showUserMessage={true} context="skills section">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Skills />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Other />
-                  </Suspense>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <About />
-                  </Suspense>
-                  <ErrorBoundary showUserMessage={true} context="contact form">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Contact />
-                    </Suspense>
-                  </ErrorBoundary>
-                </motion.main>
-                <Footer />
-              </>
-            } />
+            {/* Legacy redirects */}
+            <Route path="services" element={<Navigate to="/contact" replace />} />
+            <Route
+              path="certifications"
+              element={<Navigate to="/recognition" replace />}
+            />
+            <Route
+              path="extracurriculars"
+              element={<Navigate to="/leadership" replace />}
+            />
 
-            {/* Dedicated Pages */}
-            <Route path="/research" element={<ResearchPage />} />
-            <Route path="/leadership" element={<LeadershipPage />} />
-            <Route path="/certifications" element={<CertificationsPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/extracurriculars" element={<ExtraCurricularsPage />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </Router>
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 }
-
-export default App;
