@@ -7,14 +7,14 @@ export default function EducationPage() {
     <>
       <PageSEO
         title="Education"
-        description="Degrees and coursework — factual list."
+        description="Education and learning — factual list."
         path="/education"
       />
       <div className="site-shell page-section">
         <PageHeader
           label="Education"
           title="Schooling"
-          dek="Factual record — degrees, periods, grades when verified."
+          dek="Formal education and selected learning, with dates and grades where applicable."
         />
         <ul className="max-w-measure space-y-10">
           {education.map((ed) => (
