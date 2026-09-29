@@ -26,7 +26,7 @@ export const education: Education[] = [
     start: "",
     end: "",
     coursework: ["Statistics", "Programming", "Machine learning", "Data analysis"],
-    note: "Learning and exploratory projects in data science, including AI-assisted agricultural advisory ideas. No degree or current enrollment claim.",
+    note: "Explored statistics, programming, and machine learning through data science coursework and early agricultural advisory project ideas.",
   },
   {
     slug: "mission-higher-secondary",
