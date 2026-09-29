@@ -147,7 +147,7 @@ export const timeline: TimelineEntry[] = [
     date: "2025-08",
     endDate: "present",
     kind: "role",
-    title: "Generative AI Engineer — Outlier",
+    title: "AI evaluation contributor (contract) — Outlier",
     summary: "Part-time LLM dataset and evaluation workflows.",
     relatedSlug: "outlier-genai",
   },
