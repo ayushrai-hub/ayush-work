@@ -11,7 +11,7 @@ export const person: Person = {
   tagline:
     "I build software and AI systems that try to be useful in the real world — civil society tooling, education platforms, and careful model evaluation.",
   positioning:
-    "I'm an AI-focused software engineer based in Bhopal. Day to day I work on RLHF-style evaluation and generative AI workflows, and on the side I ship products and client sites — from an early Digital Public Infrastructure concept for NGOs to education and agrotech MVPs. I care more about clear problem framing and shipped learning than about sounding futuristic.",
+    "I'm an AI-focused software engineer based in Bhopal. My work includes contract evaluation for frontier-lab programs and building AI products, and on the side I ship products and client sites — from an early Digital Public Infrastructure concept for NGOs to education and agrotech MVPs. I care more about clear problem framing and shipped learning than about sounding futuristic.",
   siteUrl: "https://ayush-me.netlify.app",
   resumeUrl:
     "https://drive.google.com/file/d/1JdAckW6i057eYNpdRVLYDMFp2Xo5vyJs/view?usp=sharing",
