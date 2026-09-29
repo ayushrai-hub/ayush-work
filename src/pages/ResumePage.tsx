@@ -74,9 +74,11 @@ export default function ResumePage() {
               <li key={ed.slug}>
                 <h3 className="font-medium text-ink">{ed.degree}</h3>
                 <p className="text-sm text-ink-muted">
-                  {ed.institution} · {ed.start} – {ed.end}
+                  {ed.institution}
+                  {ed.start && ed.end ? ` · ${ed.start} – ${ed.end}` : ""}
                   {ed.grade ? ` · ${ed.grade}` : ""}
                 </p>
+                {ed.note && <p className="text-sm text-ink-muted">{ed.note}</p>}
               </li>
             ))}
           </ul>
