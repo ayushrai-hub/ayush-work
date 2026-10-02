@@ -13,5 +13,5 @@ export const defaultSEO: SEOMetadata = {
   keywords:
     "Ayush Rai, AI engineer, software, products, research, Bhopal, RLHF, Open Framework, personal site",
   image: "/IMG_0029.jpeg",
-  url: "https://ayush-me.netlify.app",
+  url: "https://www.ayushrai.site",
 };
