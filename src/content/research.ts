@@ -13,7 +13,7 @@ export const research: ResearchItem[] = [
       "Exploring how satellite imagery, soil/weather signals, and models might support farming recommendations — early prototype work, not a deployed national system.",
     period: "2024-01 – present",
     context:
-      "Tied to learning under the IIT Madras BS Data Science track. Scope has been exploratory rather than a formal lab publication.",
+      "Exploratory project work, not a formal lab publication.",
     methods: [
       "Computer vision / imagery pipelines (exploratory)",
       "Sensor and weather data fusion (partial)",
@@ -24,7 +24,7 @@ export const research: ResearchItem[] = [
       "Built toward a working prototype path. Earlier portfolio text claimed '20+ farmers' and '85% accuracy' — those numbers are not verified here and should not be cited until confirmed.",
     disclaimer:
       "Not a peer-reviewed paper. Treat as an investigation/experiment log.",
-    fundingNote: "Mentioned in older materials as IIT Madras BS Program context — confirm framing before grant-style claims.",
+    fundingNote: "No funding claim verified.",
     needsConfirmation: [
       "Farmer pilot count",
       "Prediction accuracy figures",

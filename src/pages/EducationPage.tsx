@@ -7,14 +7,14 @@ export default function EducationPage() {
     <>
       <PageSEO
         title="Education"
-        description="Degrees and coursework — factual list."
+        description="Education and learning — factual list."
         path="/education"
       />
       <div className="site-shell page-section">
         <PageHeader
           label="Education"
           title="Schooling"
-          dek="Factual record — degrees, periods, grades when verified."
+          dek="Formal education and selected learning, with dates and grades where applicable."
         />
         <ul className="max-w-measure space-y-10">
           {education.map((ed) => (
@@ -24,17 +24,15 @@ export default function EducationPage() {
                 {ed.institution}
                 {ed.location ? ` · ${ed.location}` : ""}
               </p>
-              <p className="meta-row mt-2">
-                <span>
-                  {ed.start} – {ed.end}
-                </span>
+              {(ed.start || ed.end || ed.grade) && <p className="meta-row mt-2">
+                {(ed.start || ed.end) && <span>{ed.start} – {ed.end}</span>}
                 {ed.grade && (
                   <>
                     <span aria-hidden="true">·</span>
                     <span>{ed.grade}</span>
                   </>
                 )}
-              </p>
+              </p>}
               {ed.coursework && ed.coursework.length > 0 && (
                 <p className="mt-3 text-sm text-ink-faint">
                   {ed.coursework.join(" · ")}

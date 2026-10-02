@@ -7,15 +7,14 @@ export const experience: Experience[] = [
     organization: "FoCDoT Technologies Pvt. Ltd",
     location: "Remote",
     start: "2024-04",
-    end: "present",
+    end: "2025-08",
     type: "full-time",
-    current: true,
+    current: false,
     narrative:
-      "I work on AI engineering with a focus on reinforcement learning from human feedback (RLHF) style workflows — evaluating model behavior, improving reliability on technical tasks, and tightening feedback loops for generative systems. The day-to-day is less 'demo magic' and more careful judgment on outputs, STEM-heavy task analysis, and iteration with evaluation criteria.",
+      "I worked on AI engineering and technical evaluation at FoCDoT from April 2024 to August 2025. The work involved reviewing model outputs against evaluation criteria and analyzing coding and STEM tasks.",
     highlights: [
       "RLHF-oriented evaluation and model reliability work",
       "STEM and coding-task analysis for generative systems",
-      "Ongoing collaboration across AI data / evaluation ecosystems",
     ],
     technologies: [
       "Python",
@@ -24,15 +23,10 @@ export const experience: Experience[] = [
       "LLM evaluation",
       "STEM analysis",
     ],
-    // Older copy: "Collaborated with industry leaders: Turing, OpenAI, ScaleAI, Outlier"
-    // Softened — vendor/client brand proximity ≠ public partnership claim
-    needsConfirmation: [
-      "Public characterization of relationships with Turing, OpenAI, Scale AI, and similar orgs — confirm what can be named vs. general ecosystem work",
-    ],
   },
   {
     slug: "outlier-genai",
-    title: "Generative AI Engineer",
+    title: "AI evaluation contributor (contract)",
     organization: "Outlier",
     location: "Remote",
     start: "2025-08",
@@ -40,10 +34,11 @@ export const experience: Experience[] = [
     type: "part-time",
     current: true,
     narrative:
-      "Alongside FoCDoT, I contribute to generative AI workflows at Outlier — dataset quality for LLM training, prompting strategies for Python/JavaScript tasks, and review loops that catch brittle model behavior. It is hands-on evaluation and improvement work, not a keynote role.",
+      "Through Outlier, I have contributed to generative AI evaluation workflows — dataset quality for LLM training, prompting strategies for Python/JavaScript tasks, and review loops that catch brittle model behavior. It is hands-on evaluation and improvement work, not a keynote role.",
     highlights: [
       "LLM training dataset and optimization workflows",
       "Prompting strategies for Python / JavaScript tasks",
+      "Evaluation work for frontier-lab programs (contract)",
       "Code review, testing, and debugging of model outputs",
     ],
     technologies: [
@@ -53,26 +48,6 @@ export const experience: Experience[] = [
       "Prompt engineering",
       "ML tooling",
     ],
-  },
-  {
-    slug: "rasor-iitm",
-    title: "Web Developer",
-    organization: "RaSoR — IIT Madras",
-    location: "Chennai, India",
-    start: "2023-12",
-    end: "2024-06",
-    type: "internship",
-    current: false,
-    narrative:
-      "I built and maintained responsive web surfaces for research-related initiatives — collaborating with research teams on documentation and keeping platforms current. Good practice in shipping under research constraints rather than product marketing timelines.",
-    highlights: [
-      "Responsive web apps for research initiatives",
-      "Technical documentation with research teams",
-      "Maintenance of existing research web platforms",
-    ],
-    technologies: ["React", "TypeScript", "Node.js", "Web development"],
-    // Exact end month was "Ended" in UI — approximate if needed
-    needsConfirmation: ["Exact end date of internship"],
   },
   {
     slug: "uipath-champion",
@@ -112,29 +87,7 @@ export const experience: Experience[] = [
     technologies: ["Salesforce", "CRM", "Cloud", "Apex"],
     link: "https://drive.google.com/file/d/1WQIAEc7387yi-bh6Eq4LqtCZd4RnGqR7/view?usp=sharing",
   },
-  {
-    slug: "kanha-webops",
-    title: "WebOps Member",
-    organization: "Kanha House, IIT Madras",
-    location: "Chennai, India",
-    start: "2022-09",
-    end: "2023-07",
-    type: "part-time",
-    current: false,
-    narrative:
-      "I helped run house digital infrastructure — website updates, social content, and tech support for events. Small ops work teaches ownership: if the site is wrong, people notice quickly.",
-    highlights: [
-      "House website and digital maintenance",
-      "Social / content coordination",
-      "Technical support for house events",
-    ],
-    technologies: [
-      "Web development",
-      "Content ops",
-      "Social media management",
-    ],
-    link: "https://drive.google.com/file/d/1Q5uEpe9Q3XrGR_FBpy3pbxzZZRYUk2VG/view?usp=sharing",
-  },
+
 ];
 
 export const currentExperience = experience.filter((e) => e.current);

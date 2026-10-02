@@ -26,16 +26,6 @@ export const leadership: LeadershipItem[] = [
     skills: ["Community outreach", "Volunteering", "Teamwork"],
   },
   {
-    slug: "beyond-the-words",
-    title: "Organizer — Beyond The Words",
-    organization: "IIT Madras",
-    period: "2022-04 – 2022-05",
-    category: "events",
-    narrative:
-      "Helped organize an open mic at IIT Madras — logistics, coordination, and making sure the room actually worked on the day.",
-    skills: ["Event ops", "Communication", "Team management"],
-  },
-  {
     slug: "mun-lnct",
     title: "Core member — Model United Nations",
     organization: "LNCT Group of Colleges, Bhopal",
@@ -44,16 +34,6 @@ export const leadership: LeadershipItem[] = [
     narrative:
       "Core organizing for the college MUN — outreach, coordination, and conference operations for an international-relations simulation.",
     skills: ["Leadership", "Sales/outreach", "Operations", "Communication"],
-  },
-  {
-    slug: "speak-up-tara",
-    title: "Chorus — Speak Up Tara (Drama Aayam)",
-    organization: "IIT Madras",
-    period: "2022-11 – 2022-12",
-    category: "drama",
-    narrative:
-      "Performed as chorus in a drama production. Not a tech line on the CV — it still taught rehearsal discipline and ensemble work.",
-    skills: ["Performance", "Teamwork", "Communication"],
   },
   {
     slug: "curious-org",
@@ -106,17 +86,6 @@ export const leadership: LeadershipItem[] = [
     skills: ["Workshop delivery", "Mentoring", "RPA"],
     link: "https://drive.google.com/file/d/1Nx4TJZIvOUrA12zj0JuXeZGHhDgBDCPp/view?usp=sharing",
   },
-  {
-    slug: "kanha-webops-leadership",
-    title: "WebOps member",
-    organization: "Kanha House, IIT Madras",
-    period: "2022-09 – 2023-07",
-    category: "tech",
-    narrative:
-      "House WebOps — site, content, and event tech support. Overlaps with professional experience entry; listed here for community context.",
-    skills: ["Web ops", "Content", "Event tech"],
-    link: "https://drive.google.com/file/d/1Q5uEpe9Q3XrGR_FBpy3pbxzZZRYUk2VG/view?usp=sharing",
-  },
 ];
 
 /**
@@ -126,7 +95,6 @@ export const leadership: LeadershipItem[] = [
 export const leadershipNeedsConfirmation: string[] = [
   "Google Developer Student Club Lead — '200+ developers', '50+ workshops', '95% satisfaction', '1000+ students'",
   "Microsoft Learn Student Ambassador — '50K+ students reached', Azure hackathons as regional ambassador",
-  "Tech Innovation Hub Coordinator — '$30K+ funding', '100+ mentees', generic university center",
   "Digital Skills Training Coordinator — '200+ trainees', '15+ partner orgs'",
   "Open Source Workshop Series — '25+ workshops', '500+ contributors'",
   "Community Tech Outreach with local government — program ownership claims",

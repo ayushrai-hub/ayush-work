@@ -39,7 +39,7 @@ export const projects: Project[] = [
     ],
     links: {
       github: "https://github.com/ayushrai-hub/ayush-work",
-      demo: "https://ayush-me.netlify.app",
+      demo: "https://www.ayushrai.site",
     },
   },
   {

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /design-system
 
-Sitemap: https://ayush-me.netlify.app/sitemap.xml
+Sitemap: https://www.ayushrai.site/sitemap.xml
