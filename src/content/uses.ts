@@ -60,7 +60,7 @@ export const uses: UseItem[] = [
   {
     name: "Netlify",
     category: "hosting",
-    notes: "This site (ayush-me.netlify.app) and some client deploys.",
+    notes: "This site (www.ayushrai.site) and some client deploys.",
   },
   {
     name: "Vercel",
