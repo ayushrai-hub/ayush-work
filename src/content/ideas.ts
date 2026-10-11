@@ -1,7 +1,7 @@
 import type { Idea } from "./types";
 
 /**
- * Ideas derived from real work themes — not startup Mad Libs.
+ * Ideas derived from real work themes, not startup Mad Libs.
  */
 export const ideas: Idea[] = [
   {
@@ -40,7 +40,7 @@ export const ideas: Idea[] = [
     status: "exploring",
     theme: "RLHF / evaluation",
     summary:
-      "Make evaluation criteria for code tasks explicit — correctness, edge cases, security smell — so feedback isn't vibes-only.",
+      "Make evaluation criteria for code tasks explicit, correctness, edge cases, security smell, so feedback isn't vibes-only.",
     why: "Day job RLHF work depends on judgment quality more than model name-dropping.",
     nextStep: "Write a one-page rubric for Python/JS tasks used in review.",
   },

@@ -1,5 +1,5 @@
 /**
- * Education.tsx — Academic background and educational journey component.
+ * Education.tsx, Academic background and educational journey component.
  *
  * This component presents a comprehensive view of academic achievements and qualifications
  * including multiple degrees from different institutions, coursework details, and academic
@@ -31,7 +31,7 @@ import { useInView } from "react-intersection-observer";
 import { GraduationCap, Calendar, Award, BookOpen } from "lucide-react";
 
 /**
- * Education — Academic background display component.
+ * Education, Academic background display component.
  *
  * Renders an interactive educational timeline showcasing academic achievements,
  * qualifications, and coursework. Features alternating timeline layout with

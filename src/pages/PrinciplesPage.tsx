@@ -14,11 +14,11 @@ export default function PrinciplesPage() {
         <PageHeader
           label="Principles"
           title="How I try to work"
-          dek="Statements with practice notes — not posters."
+          dek="Statements with practice notes, not posters."
         />
         <ol className="max-w-measure space-y-10">
           {principles.map((p, i) => (
-            <li key={p.slug} className="border-t border-rule pt-8">
+            <li id={p.slug} key={p.slug} className="scroll-mt-24 border-t border-rule pt-8">
               <p className="font-mono text-xs text-ink-faint mb-2">
                 {String(i + 1).padStart(2, "0")}
               </p>

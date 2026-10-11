@@ -1,7 +1,7 @@
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
-import { education, experience, person } from "../content";
+import { education, experience, pageUpdatedAt, person } from "../content";
 
 export default function ResumePage() {
   return (
@@ -16,6 +16,7 @@ export default function ResumePage() {
           label="Resume"
           title="Summary export"
           dek="A short on-site digest. Prefer the PDF for applications."
+          updated={pageUpdatedAt("resume")}
         />
 
         <p className="mb-10 flex flex-wrap gap-3">
@@ -48,7 +49,7 @@ export default function ResumePage() {
             {experience.map((role) => (
               <li key={role.slug}>
                 <h3 className="font-display text-lg text-ink">
-                  {role.title} — {role.organization}
+                  {role.title} · {role.organization}
                 </h3>
                 <p className="meta-row mt-1">
                   <span>

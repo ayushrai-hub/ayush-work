@@ -1,7 +1,7 @@
 import type { RecognitionItem } from "./types";
 
 /**
- * Certifications from Certifications.tsx — featured vs archive.
+ * Certifications from Certifications.tsx, featured vs archive.
  * No vanity "100% verified" stats here; links are Drive-hosted copies.
  */
 export const recognition: RecognitionItem[] = [
@@ -12,7 +12,7 @@ export const recognition: RecognitionItem[] = [
     date: "2023-07-04",
     category: "Cybersecurity",
     description:
-      "Cybersecurity operations fundamentals — threat analysis, incident response, and monitoring concepts.",
+      "Cybersecurity operations fundamentals, threat analysis, incident response, and monitoring concepts.",
     skills: [
       "Network security",
       "Incident response",

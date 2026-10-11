@@ -1,5 +1,5 @@
 /**
- * AboutMe.tsx — Detailed personal profile component with analytics integration.
+ * AboutMe.tsx, Detailed personal profile component with analytics integration.
  *
  * This component provides an in-depth personal profile section featuring professional background,
  * skills showcase, key achievements, and interactive call-to-action buttons. It integrates
@@ -32,7 +32,7 @@ import { useInView } from 'react-intersection-observer';
 import { useGTM } from '../hooks/useGTM';
 
 /**
- * AboutMe — Comprehensive personal profile component.
+ * AboutMe, Comprehensive personal profile component.
  *
  * Renders a detailed personal profile section with professional background,
  * skills showcase, achievements, and interactive CTAs. Features smooth animations,

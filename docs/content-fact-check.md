@@ -154,3 +154,22 @@ See `questions-for-ayush.md` for the decision list. Highest blockers:
 3. Leadership dollar/reach claims  
 4. Iha-By-Himani 300%  
 5. Phone publication preference (default: private)
+
+---
+
+## 13. Flagship products (October 2026)
+
+Full audit: `docs/flagship-products-audit.md`.
+
+| Claim | Status | Notes |
+| --- | --- | --- |
+| The Open Framework public site is a Vite/React prototype with mock auth | VERIFIED | Repository README, `package.json`, `AuthContext.tsx`. Not Next.js, NestJS, Spring Boot, PostgreSQL, or Kubernetes. |
+| The Open Framework is deployed national infrastructure or partnered with ministries | REMOVE | Live prototype copy shows illustrative figures and partner names. Do not repeat them. |
+| AGENYRA foundation / search / distribution / network / intelligence stages | VERIFIED as labels | From `src/content/status.ts` in AGENYRA_product. Private product-graph code is not in that public repo. |
+| AGENYRA waitlist admin, tokens, service-role key | PRIVATE | Do not publish. |
+| MedVoice safety rules and phase status | VERIFIED as documentation | `docs/product/PRODUCT_OVERVIEW.md` dated 2026-08-25. |
+| MedVoice production speech, Android field app, live ERP, warehouse deployment | REMOVE | Documented as partial, planned, or blocked. |
+| MedVoice public demo URL | UNVERIFIED | None added. |
+| MedVoice commit-level personal authorship | UNVERIFIED | Sampled commits are authored as MedVoice Agent. |
+| 26 Aug 2026 MedVoice commit mentioning Tally, Razorpay, e-invoice, Supabase | UNVERIFIED against the overview | Not promoted to implemented. |
+

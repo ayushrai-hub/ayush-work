@@ -8,6 +8,7 @@ import {
   education,
   experience,
   leadership,
+  pageUpdatedAt,
   person,
 } from "../content";
 
@@ -24,6 +25,7 @@ export default function AboutPage() {
           label="About"
           title={person.name}
           dek={person.tagline}
+          updated={pageUpdatedAt("about")}
         />
 
         <div className="mt-10 grid items-start gap-10 md:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] md:gap-14">
@@ -46,7 +48,7 @@ export default function AboutPage() {
           <Prose>
             <p>{person.positioning}</p>
             <p className="mt-4">
-              Based in {person.location}. Day work leans toward AI evaluation and
+              I work remotely. Day work leans toward AI evaluation and
               generative systems; evenings and weekends go to products, client
               sites, and careful notes on what actually shipped.
             </p>
@@ -57,7 +59,7 @@ export default function AboutPage() {
           <SectionHeading title="Where I’ve been working" />
           <ul className="space-y-8 max-w-measure">
             {experience.map((role) => (
-              <li key={role.slug} className="border-t border-rule pt-6">
+              <li id={role.slug} key={role.slug} className="scroll-mt-24 border-t border-rule pt-6">
                 <h3 className="font-display text-xl text-ink">{role.title}</h3>
                 <p className="meta-row mt-1">
                   <span>{role.organization}</span>
@@ -131,7 +133,11 @@ export default function AboutPage() {
           <SectionHeading title="Capabilities" />
           <ul className="space-y-8">
             {capabilities.map((cap) => (
-              <li key={cap.domain} className="max-w-measure">
+              <li
+                id={`capability-${cap.domain.toLowerCase()}`}
+                key={cap.domain}
+                className="scroll-mt-24 max-w-measure"
+              >
                 <h3 className="font-display text-lg text-ink">{cap.domain}</h3>
                 <p className="mt-2 text-ink-muted leading-relaxed">
                   {cap.summary}

@@ -1,19 +1,32 @@
 /**
- * Content layer — single source of truth for Ayush Rai's digital home.
+ * Content layer, single source of truth for Ayush Rai's digital home.
  * Import from `@/content` or `../content` rather than hardcoding copy in components.
  */
 
 export * from "./types";
 
+export { siteMeta, formatUpdated, pageUpdatedAt } from "./siteMeta";
 export { person } from "./person";
 export { now } from "./now";
 export { work, selectedWork, getWorkBySlug } from "./work";
-export { products, getProductBySlug } from "./products";
+export {
+  products,
+  getProductBySlug,
+  featuredProducts,
+  productsByCategory,
+  otherProductsByCategory,
+  productCategoryLabels,
+  productStageLabels,
+} from "./products";
 export {
   projects,
   activeProjects,
   archivedProjects,
   getProjectBySlug,
+  projectsByCategory,
+  projectsByType,
+  projectCategoryLabels,
+  projectTypeLabels,
 } from "./projects";
 export {
   research,

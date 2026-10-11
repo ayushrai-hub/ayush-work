@@ -1,5 +1,5 @@
 /**
- * Skills.tsx — Technical skills visualization component with categorized display.
+ * Skills.tsx, Technical skills visualization component with categorized display.
  *
  * This component presents Ayush Rai's technical expertise across multiple domains
  * through an interactive grid layout showcasing distinct skill categories with icons
@@ -32,7 +32,7 @@ import { useInView } from "react-intersection-observer";
 import { Code, Brain, Database, Cloud, Users, Lightbulb } from "lucide-react";
 
 /**
- * Skills — Technical skills visualization component.
+ * Skills, Technical skills visualization component.
  *
  * Renders an interactive skills showcase with categorized expertise areas,
  * featuring animated skill tags, responsive grid layout, and smooth hover effects.

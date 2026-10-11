@@ -1,5 +1,5 @@
 /**
- * GTMProvider.tsx — Google Tag Manager integration provider component.
+ * GTMProvider.tsx, Google Tag Manager integration provider component.
  *
  * This component provides Google Tag Manager (GTM) integration for the entire React application.
  * Dynamically loads GTM script, initializes dataLayer, and provides seamless analytics tracking.
@@ -46,7 +46,7 @@ interface GTMProviderProps {
 }
 
 /**
- * GTMProvider — Google Tag Manager integration provider.
+ * GTMProvider, Google Tag Manager integration provider.
  *
  * Provides GTM integration for the entire React application with
  * dynamic script loading, dataLayer initialization, and environment-aware

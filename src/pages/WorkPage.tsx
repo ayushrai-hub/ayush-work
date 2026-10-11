@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import WorkRow from "../components/editorial/WorkRow";
-import { work, type WorkType } from "../content";
+import { work, pageUpdatedAt, type WorkType } from "../content";
 
 const FILTERS: Array<{ label: string; value: WorkType | "all" }> = [
   { label: "All", value: "all" },
@@ -25,7 +25,7 @@ export default function WorkPage() {
     <>
       <PageSEO
         title="Work"
-        description="Selected and indexed work — products, projects, client sites, and experiments."
+        description="Selected and indexed work, products, projects, client sites, and experiments."
         path="/work"
       />
       <div className="site-shell page-section">
@@ -33,6 +33,7 @@ export default function WorkPage() {
           label="Work"
           title="Index"
           dek="Case studies and shipped systems. Fewer items, clearer roles."
+          updated={pageUpdatedAt("work")}
         />
 
         <div

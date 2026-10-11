@@ -1,5 +1,5 @@
 /**
- * Type declarations — Extends global types for Vite and Google Analytics.
+ * Type declarations, Extends global types for Vite and Google Analytics.
  *
  * This module augments the global Window interface to include the gtag function for Google Analytics tracking, allowing TypeScript to recognize it without external type packages.
  *

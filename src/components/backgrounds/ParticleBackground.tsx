@@ -1,5 +1,5 @@
 /**
- * ParticleBackground.tsx — Animated particle system background component with performance optimizations.
+ * ParticleBackground.tsx, Animated particle system background component with performance optimizations.
  *
  * This component creates a dynamic, animated particle system using HTML5 Canvas and requestAnimationFrame.
  * Features WebGL availability checks, responsive canvas sizing, and performance optimizations for mobile devices.
@@ -39,7 +39,7 @@
 import React, { useEffect, useRef } from "react";
 
 /**
- * ParticleBackground — Animated canvas particle system component.
+ * ParticleBackground, Animated canvas particle system component.
  *
  * Creates a visually appealing particle background with animated nodes
  * and connection lines. Optimized for performance with mobile detection

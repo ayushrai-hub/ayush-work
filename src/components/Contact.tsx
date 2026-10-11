@@ -1,5 +1,5 @@
 /**
- * Contact.tsx — Contact form and information display component with security validation.
+ * Contact.tsx, Contact form and information display component with security validation.
  *
  * This component provides a comprehensive contact section with secure form validation,
  * analytics integration, and multiple contact methods. Features client-side and server-side
@@ -58,7 +58,7 @@ import {
 } from "../lib/securityLogger";
 
 /**
- * Contact — Secure contact form and information component.
+ * Contact, Secure contact form and information component.
  *
  * Renders a comprehensive contact section with secure form handling, validation,
  * analytics integration, and multiple communication channels. Provides both
@@ -436,7 +436,7 @@ const Contact: React.FC = () => {
     {
       icon: MapPin,
       title: "Location",
-      value: "Bhopal, India (Remote Available)",
+      value: "Remote",
       link: "#",
     },
     {

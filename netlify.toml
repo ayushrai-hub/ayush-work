@@ -6,17 +6,199 @@
   node_bundler = "esbuild"
   directory = "api"
 
+# Versioned project routes land on the existing projects function.
+# These rules are ahead of the /api/* splat so they match first.
 [[redirects]]
-  # SPA fallback - redirect all routes to index.html for client-side routing
+  from = "/api/v1/projects/:slug"
+  to = "/.netlify/functions/projects?slug=:slug"
+  status = 200
+
+[[redirects]]
+  from = "/api/v1/projects"
+  to = "/.netlify/functions/projects"
+  status = 200
+
+[[redirects]]
+  from = "/api/v1/compare"
+  to = "/.netlify/functions/projects"
+  status = 200
+
+# API before the SPA fallback. Existing static files are not forced aside.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Content negotiation for agents that send Accept: text/markdown.
+# Direct *.md URLs do not need these rules; Netlify serves those files as-is.
+# force is set so a prerendered HTML file can yield to its Markdown twin.
+[[redirects]]
+  from = "/"
+  to = "/index.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/work/*"
+  to = "/work/:splat.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/products/*"
+  to = "/products/:splat.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/research/*"
+  to = "/research/:splat.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/writing/*"
+  to = "/writing/:splat.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/notes/*"
+  to = "/notes/:splat.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/about"
+  to = "/about.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/projects"
+  to = "/projects.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/now"
+  to = "/now.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/ideas"
+  to = "/ideas.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/principles"
+  to = "/principles.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/timeline"
+  to = "/timeline.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/education"
+  to = "/education.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/leadership"
+  to = "/leadership.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/recognition"
+  to = "/recognition.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/elsewhere"
+  to = "/elsewhere.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/contact"
+  to = "/contact.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/archive"
+  to = "/archive.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/uses"
+  to = "/uses.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/resume"
+  to = "/resume.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+[[redirects]]
+  from = "/developers"
+  to = "/developers.md"
+  status = 200
+  force = true
+  conditions = {Accept = ["text/markdown"]}
+
+# SPA fallback for client routes. force stays off so prerendered HTML,
+# Markdown twins, llms.txt, the sitemap, and other real files win.
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Environment variables (set these in Netlify dashboard)
-# SENDGRID_API_KEY=your_sendgrid_api_key_here
-# CONTACT_EMAIL=ayushrai0211@gmail.com
-# FROM_EMAIL=noreply@ayush-rai-work.netlify.app
+[[headers]]
+  for = "/**/*.md"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+    Vary = "Accept"
 
-# Build settings
+[[headers]]
+  for = "/index.md"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+    Vary = "Accept"
+
 [build.environment]
   NODE_VERSION = "18"

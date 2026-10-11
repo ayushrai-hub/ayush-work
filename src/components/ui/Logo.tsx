@@ -1,5 +1,5 @@
 /**
- * Logo.tsx — Responsive logo component with size variants and optional text display.
+ * Logo.tsx, Responsive logo component with size variants and optional text display.
  *
  * This component provides a flexible logo display for the Ayush Rai portfolio website,
  * featuring responsive sizing options and optional text integration. Optimized for
@@ -44,7 +44,7 @@ interface LogoProps {
 }
 
 /**
- * Logo — Flexible logo component with responsive sizing.
+ * Logo, Flexible logo component with responsive sizing.
  *
  * Displays the Ayush Rai logo with profile image and optional text,
  * providing consistent branding across the application. Features

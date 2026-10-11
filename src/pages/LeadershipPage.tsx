@@ -7,7 +7,7 @@ export default function LeadershipPage() {
     <>
       <PageSEO
         title="Leadership"
-        description="Grounded community and extracurricular roles — evidence over inflation."
+        description="Grounded community and extracurricular roles, evidence over inflation."
         path="/leadership"
       />
       <div className="site-shell page-section">
@@ -18,7 +18,7 @@ export default function LeadershipPage() {
         />
         <ul className="max-w-measure space-y-10">
           {leadership.map((item) => (
-            <li key={item.slug} className="border-t border-rule pt-6">
+            <li id={item.slug} key={item.slug} className="scroll-mt-24 border-t border-rule pt-6">
               <h2 className="font-display text-xl text-ink">{item.title}</h2>
               <p className="meta-row mt-1">
                 <span>{item.organization}</span>

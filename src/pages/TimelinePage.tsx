@@ -36,7 +36,7 @@ export default function TimelinePage() {
         <PageHeader
           label="Timeline"
           title="The long arc"
-          dek="A chronological spine — cautious summaries, not a roadmap chrome."
+          dek="A chronological spine, cautious summaries, not a roadmap chrome."
         />
         <ol className="max-w-measure border-l border-rule pl-6 space-y-8">
           {sorted.map((entry) => {

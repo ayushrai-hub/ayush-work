@@ -61,6 +61,16 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
     onOpenSearch();
   }, [onOpenSearch]);
 
+  const agentParams = new URLSearchParams(location.search);
+  const agentOn = agentParams.get("agent") === "1";
+  if (agentOn) agentParams.delete("agent");
+  else agentParams.set("agent", "1");
+  const agentSearch = agentParams.toString();
+  const agentTo = {
+    pathname: location.pathname,
+    search: agentSearch ? `?${agentSearch}` : "",
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b border-rule/80 bg-paper/90 backdrop-blur-md">
       <div className="site-shell flex h-14 items-center justify-between gap-4 md:h-16">
@@ -117,6 +127,12 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
         </nav>
 
         <div className="flex items-center gap-1">
+          <Link
+            to={agentTo}
+            className="btn-ghost hidden px-2 text-sm sm:inline"
+          >
+            {agentOn ? "Human view" : "Agent view"}
+          </Link>
           <button
             type="button"
             onClick={openSearch}
@@ -183,6 +199,13 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
             >
               Search
             </button>
+            <Link
+              to={agentTo}
+              className="rounded-sm px-2 py-2.5 text-base text-ink-muted"
+              onClick={() => setMobileOpen(false)}
+            >
+              {agentOn ? "Human view" : "Agent view"}
+            </Link>
           </nav>
         </div>
       )}

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import EmptyNote from "../components/editorial/EmptyNote";
-import { now } from "../content";
+import { now, pageUpdatedAt } from "../content";
 
 function NowList({ title, items }: { title: string; items: string[] }) {
   return (
@@ -30,7 +30,8 @@ export default function NowPage() {
         <PageHeader
           label="Now"
           title="What I’m focused on"
-          dek={`Living status. Last updated ${now.lastUpdated}.`}
+          dek="Living status page. Change the bullets when reality changes."
+          updated={pageUpdatedAt("now")}
         />
 
         <NowList title="Working on" items={now.workingOn} />

@@ -15,7 +15,7 @@ export default function NotesPage() {
         <PageHeader
           label="Notes"
           title="Short form"
-          dek="Learning, observation, process, reflection — grounded in real work."
+          dek="Learning, observation, process, reflection, grounded in real work."
         />
         <ul className="border-b border-rule">
           {notes.map((n) => (

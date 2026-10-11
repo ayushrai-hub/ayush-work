@@ -1,6 +1,6 @@
-# Ayush Rai — digital home
+# Ayush Rai, digital home
 
-Personal website for **Ayush Rai** — not a résumé dump, not a freelancing landing page. A structured archive of work, products, research notes, ideas, and how he thinks.
+Personal website for **Ayush Rai**, not a résumé dump, not a freelancing landing page. A structured archive of work, products, research notes, ideas, and how he thinks.
 
 Live content lives in `src/content/` (TypeScript modules). Edit those files to update the site without touching layouts.
 
@@ -57,18 +57,31 @@ npm test
 | `/contact` | Intent-based contact |
 | `/archive`, `/uses`, `/resume` | Archive, tools, résumé |
 | `/design-system` | Internal tokens (not in nav) |
+| `/developers` | Public notes for Markdown, search, and the project API |
 
 Legacy redirects: `/services` → `/contact`, `/certifications` → `/recognition`, `/extracurriculars` → `/leadership`.
+
+## Agent-readable surfaces
+
+The human site and the machine surfaces read `src/content/`. Details are in `docs/agent-readiness-audit.md` and `docs/agent-readiness-report.md`.
+
+- Markdown twins: `/index.md`, `/about.md`, `/work/the-open-framework.md`, and the other pages listed in `/llms.txt`
+- Search: `GET /api/search?q=` (lexical, shared with the on-site dialog)
+- Projects: `GET /api/v1/projects`, `GET /api/v1/projects/:slug`, `GET /api/v1/compare?slugs=a,b`
+- Spec: `/openapi.json`, `/AGENTS.md`, `/SKILL.md`
+- Local MCP: `npm run mcp` (stdio only)
+
+Homepage role view (`?audience=`) reorders existing sections. Agent view (`?agent=1`) shows the page Markdown. Neither query is meant for the sitemap.
 
 ## Content & strategy docs
 
 See `docs/`:
 
-- `site-audit.md` — what existed and what changed
-- `personal-positioning.md` — coherent narrative
-- `information-architecture.md` — route decisions
-- `content-fact-check.md` — claims needing confirmation
-- `questions-for-ayush.md` — open questions
+- `site-audit.md`, what existed and what changed
+- `personal-positioning.md`, coherent narrative
+- `information-architecture.md`, route decisions
+- `content-fact-check.md`, claims needing confirmation
+- `questions-for-ayush.md`, open questions
 - `design-system.md`, `content-style.md`, `seo-strategy.md`, `migration-plan.md`
 
 ## Privacy

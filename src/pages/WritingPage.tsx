@@ -11,7 +11,7 @@ export default function WritingPage() {
     <>
       <PageSEO
         title="Writing"
-        description="Essays and notes. On-site writing is still thin — Medium remains the hub for now."
+        description="Essays and notes. On-site writing is still thin, Medium remains the hub for now."
         path="/writing"
       />
       <div className="site-shell page-section">

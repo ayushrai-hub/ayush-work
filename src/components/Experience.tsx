@@ -1,5 +1,5 @@
 /**
- * Experience.tsx — Professional experience timeline component with achievements.
+ * Experience.tsx, Professional experience timeline component with achievements.
  *
  * This component displays Ayush Rai's professional career journey through an interactive,
  * animated timeline showcasing work experience, achievements, technologies used, and impact metrics.
@@ -34,7 +34,7 @@ import { Briefcase, Calendar, MapPin, TrendingUp } from "lucide-react";
 import CountUp from "react-countup";
 
 /**
- * Experience — Professional career timeline display component.
+ * Experience, Professional career timeline display component.
  *
  * Renders an interactive timeline of professional experience with animated entries,
  * achievement highlights, and statistical metrics. Provides comprehensive view

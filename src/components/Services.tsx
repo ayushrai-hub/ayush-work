@@ -1,5 +1,5 @@
 /**
- * Services.tsx — Professional services offering display component with detailed service categories.
+ * Services.tsx, Professional services offering display component with detailed service categories.
  *
  * This component showcases Ayush Rai's professional services across multiple domains including
  * AI/ML development, web development, data science, community management, technical consultation,
@@ -51,7 +51,7 @@ import {
 } from "lucide-react";
 
 /**
- * Services — Professional services showcase component.
+ * Services, Professional services showcase component.
  *
  * Renders a comprehensive service offerings display with detailed categories,
  * pricing information, features, and value propositions. Enables potential clients

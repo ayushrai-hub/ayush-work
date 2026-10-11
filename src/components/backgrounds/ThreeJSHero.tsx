@@ -1,5 +1,5 @@
 /**
- * ThreeJSHero.tsx — 3D enhanced hero section with Three.js integration and fallback handling.
+ * ThreeJSHero.tsx, 3D enhanced hero section with Three.js integration and fallback handling.
  *
  * This component provides an immersive hero section that combines 2D content with optional
  * Three.js 3D environments. Features graceful WebGL detection, loading states, error boundaries,
@@ -77,7 +77,7 @@ const isWebGLAvailable = () => {
 };
 
 /**
- * ThreeJSHero — 3D enhanced hero section with progressive enhancement.
+ * ThreeJSHero, 3D enhanced hero section with progressive enhancement.
  *
  * Provides an immersive landing section with optional 3D graphics and
  * animated content. Features graceful degradation for devices without

@@ -1,5 +1,5 @@
 /**
- * Products.tsx — Products showcase component featuring DPI and commercial products.
+ * Products.tsx, Products showcase component featuring DPI and commercial products.
  *
  * This component displays Ayush Rai's key products including Digital Public Infrastructure
  * (DPI) projects and commercial applications. Features detailed product descriptions,
@@ -41,7 +41,7 @@ import {
 } from "lucide-react";
 
 /**
- * Products — Products portfolio showcase component.
+ * Products, Products portfolio showcase component.
  *
  * Renders an interactive products portfolio with detailed product cards,
  * technology stacks, live demos, and impact metrics. Provides comprehensive
@@ -80,7 +80,7 @@ const Products: React.FC = () => {
       solution: [
         "Enables coordination, consent-based visibility, compliance readiness, and trust",
         "Respects regulatory sensitivity, fear of audits, and low-digital maturity contexts",
-        "Does not control civil society—enables it",
+        "Does not control civil societyenables it",
       ],
       techStack: {
         frontend: "Next.js, TypeScript (strict), Tailwind + design tokens, Radix UI",
@@ -98,7 +98,7 @@ const Products: React.FC = () => {
       category: "Agrotech Brand Website (MVP)",
       status: "In Progress",
       description:
-        "A modern, multi-page agrotech website for an organic mushroom and spawn cultivation brand. Designed as a content-driven, SEO-first MVP to showcase products, services, expert profile, and training programs—while being future-ready for B2B commerce and e-commerce expansion.",
+        "A modern, multi-page agrotech website for an organic mushroom and spawn cultivation brand. Designed as a content-driven, SEO-first MVP to showcase products, services, expert profile, and training programswhile being future-ready for B2B commerce and e-commerce expansion.",
       overview: [
         "Multi-page responsive marketing site",
         "CMS-managed products, services, blogs & gallery",

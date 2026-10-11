@@ -19,10 +19,9 @@ export const structuredData = {
     "Python",
     "React",
   ],
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Bhopal",
-    addressCountry: "IN",
+  workLocation: {
+    "@type": "Place",
+    name: person.location,
   },
   contactPoint: {
     "@type": "ContactPoint",

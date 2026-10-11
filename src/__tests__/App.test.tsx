@@ -1,5 +1,5 @@
 /**
- * App component smoke test — new SiteLayout shell.
+ * App component smoke test, new SiteLayout shell.
  */
 import { render, screen, waitFor } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
@@ -64,6 +64,8 @@ describe("App", () => {
     });
     // Logo / brand in header + footer positioning
     expect(screen.getAllByText("Ayush Rai").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Remote").length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByText(/Bhopal/i)).not.toBeInTheDocument();
     expect(
       screen.getByText(/continuously evolving/i)
     ).toBeInTheDocument();

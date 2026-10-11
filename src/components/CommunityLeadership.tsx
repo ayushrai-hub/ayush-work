@@ -1,5 +1,5 @@
 /**
- * CommunityLeadership.tsx — Community leadership activities and mentorship showcase component.
+ * CommunityLeadership.tsx, Community leadership activities and mentorship showcase component.
  *
  * This component showcases Ayush Rai's leadership activities across education, community development,
  * and mentorship initiatives. Features interactive filtering by leadership categories, detailed
@@ -44,7 +44,7 @@ import { useInView } from "react-intersection-observer";
 import { Users, Mic, BookOpen, Heart, Target, Zap, MapPin } from "lucide-react";
 
 /**
- * CommunityLeadership — Community leadership showcase component.
+ * CommunityLeadership, Community leadership showcase component.
  *
  * Displays comprehensive leadership portfolio including education initiatives,
  * community engagement, mentorship programs, and impact metrics. Features

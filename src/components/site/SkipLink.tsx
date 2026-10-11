@@ -1,5 +1,5 @@
 /**
- * SkipLink — keyboard users jump past chrome to main content.
+ * SkipLink, keyboard users jump past chrome to main content.
  */
 export default function SkipLink() {
   return (

@@ -7,18 +7,18 @@ export default function IdeasPage() {
     <>
       <PageSEO
         title="Ideas"
-        description="Ideas in progress — seeds, explorations, and builds tied to real themes."
+        description="Ideas in progress, seeds, explorations, and builds tied to real themes."
         path="/ideas"
       />
       <div className="site-shell page-section">
         <PageHeader
           label="Ideas"
           title="In the hopper"
-          dek="Derived from real work themes — not startup Mad Libs."
+          dek="Derived from real work themes, not startup Mad Libs."
         />
         <ul className="border-b border-rule">
           {ideas.map((idea) => (
-            <li key={idea.slug} className="border-t border-rule py-6">
+            <li id={idea.slug} key={idea.slug} className="scroll-mt-24 border-t border-rule py-6">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h2 className="font-display text-xl text-ink">{idea.title}</h2>
                 <span className="font-mono text-xs uppercase tracking-label text-ink-faint">

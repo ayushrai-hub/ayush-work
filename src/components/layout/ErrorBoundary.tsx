@@ -1,5 +1,5 @@
 /**
- * ErrorBoundary.tsx — React error boundary component for graceful error handling.
+ * ErrorBoundary.tsx, React error boundary component for graceful error handling.
  *
  * This component provides comprehensive error boundary functionality for React applications,
  * catching JavaScript errors anywhere in the component tree, logging them, and displaying
@@ -58,7 +58,7 @@ interface State {
 }
 
 /**
- * ErrorBoundary — React error boundary component for graceful error handling.
+ * ErrorBoundary, React error boundary component for graceful error handling.
  *
  * Catches and handles React errors gracefully, preventing application crashes.
  * Implements security logging for error incidents and provides configurable

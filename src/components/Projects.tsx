@@ -1,5 +1,5 @@
 /**
- * Projects.tsx — Featured projects showcase component with live demos and technologies.
+ * Projects.tsx, Featured projects showcase component with live demos and technologies.
  *
  * This comprehensive component displays Ayush Rai's key projects through an interactive
  * card-based layout featuring project descriptions, technologies used, key features, and
@@ -54,7 +54,7 @@ import ihabyhimaniImage from "../assets/ihabyhimani.jpeg";
 import prafulImage from "../assets/prafful.png";
 
 /**
- * Projects — Featured projects portfolio showcase component.
+ * Projects, Featured projects portfolio showcase component.
  *
  * Renders an interactive project portfolio with detailed project cards,
  * technology stacks, live demos, and achievement metrics. Provides comprehensive

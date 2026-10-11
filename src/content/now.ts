@@ -8,8 +8,10 @@ export const now: NowStatus = {
   lastUpdated: "2026-08-08",
   workingOn: [
     "RLHF / generative AI evaluation work at FoCDoT (and related Outlier workflows)",
-    "The Open Framework — early DPI concept and site for India's civil society ecosystem",
-    "AyushMushrooms — agrotech brand MVP (content, leads, future shop readiness)",
+    "The Open Framework, a public front-end prototype for civil-society coordination",
+    "AyushMushrooms, agrotech brand MVP (content, leads, future shop readiness)",
+    "AGENYRA, a distribution layer for AI products, still early and stage-labeled",
+    "MedVoice, voice-assisted wholesale billing with deterministic tax and confirmation",
   ],
   researching: [
     "Consent, verification, and trust patterns for NGO / donor discovery (Open Framework)",
@@ -19,11 +21,11 @@ export const now: NowStatus = {
   learning: [
     "Stricter product thinking around DPI-like systems (auditability, RBAC, longevity)",
     // TODO: confirm current course / book
-    "Deeper NestJS / Spring Boot tradeoffs for institutional backends",
+    "Where a model must stop in a billing workflow, and where a product stage label has to stay narrow",
   ],
   thinking: [
     "How to talk about AI work without borrowing other orgs' brand names as status",
-    "What 'selected work' should mean on a personal site — fewer items, clearer roles",
+    "What 'selected work' should mean on a personal site, fewer items, clearer roles",
     "Keeping research notes honest: investigation ≠ publication",
   ],
   reading: [
@@ -34,7 +36,7 @@ export const now: NowStatus = {
   priorities: [
     "Ship and document real systems over polishing vanity copy",
     "Keep public claims cautious and evidence-linked",
-    "Grow Open Framework and AyushMushrooms with clear next milestones",
+    "Keep Open Framework, AGENYRA, and MedVoice stage boundaries visible as they move",
     "Write short notes from product and AI eval learnings",
   ],
 };

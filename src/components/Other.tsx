@@ -1,5 +1,5 @@
 /**
- * Other.tsx — Page routing component for specialized content sections.
+ * Other.tsx, Page routing component for specialized content sections.
  *
  * This component provides navigation to additional portfolio pages and specialized content areas
  * not included in the main homepage sections. Features a clean dropdown interface for exploring
@@ -49,7 +49,7 @@ import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 
 /**
- * Other — Specialized page navigation component.
+ * Other, Specialized page navigation component.
  *
  * Provides organized access to additional portfolio content areas
  * through an interactive dropdown interface with previews and

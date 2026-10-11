@@ -1,6 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { searchIndex } from "../../content";
+import { searchPortfolio } from "../../lib/agent/search";
 
 interface SearchDialogProps {
   open: boolean;
@@ -30,23 +30,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
     };
   }, [open, onClose]);
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return searchIndex.slice(0, 8);
-    return searchIndex
-      .filter((item) => {
-        const hay = [
-          item.title,
-          item.summary,
-          item.type,
-          ...item.tags,
-        ]
-          .join(" ")
-          .toLowerCase();
-        return hay.includes(q);
-      })
-      .slice(0, 12);
-  }, [query]);
+  const results = useMemo(() => searchPortfolio(query), [query]);
 
   if (!open) return null;
 

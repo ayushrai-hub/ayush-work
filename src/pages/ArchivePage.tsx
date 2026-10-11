@@ -14,7 +14,7 @@ export default function ArchivePage() {
         <PageHeader
           label="Archive"
           title="Earlier selves"
-          dek="Not deleted — de-emphasized. Pointers to older homes and retired claims."
+          dek="Not deleted, de-emphasized. Pointers to older homes and retired claims."
         />
         <ul className="max-w-measure space-y-6 border-b border-rule">
           {archive.map((item) => (

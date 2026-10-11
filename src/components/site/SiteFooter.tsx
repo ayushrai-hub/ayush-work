@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { now, person } from "../../content";
+import { formatUpdated, now, person, siteMeta } from "../../content";
 
 const FOOTER_LINKS = [
   { to: "/work", label: "Work" },
@@ -28,6 +28,12 @@ export default function SiteFooter() {
               {link.label}
             </Link>
           ))}
+          <Link to="/developers" className="link-underline text-sm">
+            Developers
+          </Link>
+          <a href="/llms.txt" className="link-underline text-sm">
+            llms.txt
+          </a>
         </nav>
 
         <div className="mt-8 meta-row gap-x-4">
@@ -36,9 +42,17 @@ export default function SiteFooter() {
           </a>
           <span aria-hidden="true">·</span>
           <span>{person.location}</span>
-          <span aria-hidden="true">·</span>
-          <span>Updated {now.lastUpdated}</span>
         </div>
+
+        <p className="mt-4 font-mono text-xs text-ink-faint">
+          <time dateTime={siteMeta.siteUpdatedAt}>
+            Site info updated {formatUpdated(siteMeta.siteUpdatedAt)}
+          </time>
+          <span aria-hidden="true"> · </span>
+          <time dateTime={now.lastUpdated}>
+            Now page {formatUpdated(now.lastUpdated)}
+          </time>
+        </p>
 
         <p className="mt-8 text-sm text-ink-faint italic max-w-measure">
           This site is continuously evolving, like the work it documents.
