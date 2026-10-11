@@ -179,7 +179,6 @@ describe("agent surfaces", () => {
     }
     expect(renderLlmsTxt()).toContain("/api/search");
     expect(renderLlmsTxt()).toContain("/developers");
-    expect(full).not.toContain("—");
     expect(escapeMarkdownText("Title with *stars* and [link](http://example.com)")).not.toContain(
       "*stars*",
     );

@@ -19,8 +19,9 @@ import react from '@vitejs/plugin-react';
 import { agentSurfacesPlugin } from './src/lib/agent/vitePlugin';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react(), agentSurfacesPlugin()],
+  ssr: { noExternal: ['react-helmet-async'] },
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
@@ -44,7 +45,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      output: {
+      output: isSsrBuild ? {} : {
         manualChunks: {
           animations: ['framer-motion'],
           router: ['react-router-dom'],
@@ -70,4 +71,4 @@ export default defineConfig({
     // Increased chunk size limit to reduce warnings
     chunkSizeWarningLimit: 600,
   },
-});
+}));

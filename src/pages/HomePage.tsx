@@ -101,23 +101,6 @@ export default function HomePage() {
                 LinkedIn
               </a>
               <a
-                href={person.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-underline"
-              >
-                Resume
-              </a>
-              <a
-                href={person.resumeDownloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-underline"
-                download="AyushRai.pdf"
-              >
-                Download
-              </a>
-              <a
                 href={`mailto:${person.email}`}
                 className="link-underline"
               >

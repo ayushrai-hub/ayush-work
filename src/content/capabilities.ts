@@ -115,7 +115,7 @@ export const capabilities: Capability[] = [
   {
     domain: "Leadership",
     summary:
-      "Grounded community and campus roles, teaching, events, and WebOps, without inflated reach metrics.",
+      "Grounded community and campus roles, teaching and events, without inflated reach metrics.",
     skills: [
       {
         name: "Workshop & champion work",
@@ -123,15 +123,11 @@ export const capabilities: Capability[] = [
       },
       {
         name: "Event organization",
-        evidenceSlugs: ["beyond-the-words", "mun-lnct", "hack2skill"],
+        evidenceSlugs: ["mun-lnct", "hack2skill"],
       },
       {
         name: "Education volunteering",
         evidenceSlugs: ["bachpanshala", "we-care", "raahat"],
-      },
-      {
-        name: "Campus WebOps",
-        evidenceSlugs: ["kanha-webops", "kanha-webops-leadership"],
       },
     ],
   },

@@ -46,13 +46,8 @@ function PageFallback() {
   );
 }
 
-export default function App() {
-  useEffect(() => {
-    initGA();
-  }, []);
-
+export function AppRoutes() {
   return (
-    <BrowserRouter>
       <Suspense fallback={<PageFallback />}>
         <Routes>
           <Route element={<SiteLayout />}>
@@ -100,6 +95,17 @@ export default function App() {
           </Route>
         </Routes>
       </Suspense>
+  );
+}
+
+export default function App() {
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

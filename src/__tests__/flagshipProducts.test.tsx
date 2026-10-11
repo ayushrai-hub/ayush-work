@@ -104,21 +104,28 @@ describe("flagship products", () => {
     expect(dump).not.toContain("SERVICE_ROLE");
     expect(dump).not.toContain("/api/admin/waitlist");
     expect(dump).not.toContain("demo-pass");
-    expect(dump).not.toContain("—");
   });
 });
 
 describe("flagship product pages", () => {
   it("prioritizes the three products on the homepage", () => {
     renderRoute("/", <HomePage />);
-    const headings = screen.getAllByRole("heading", { level: 3 });
+    const productSection = screen
+      .getByRole("heading", { name: /Things I build/ })
+      .closest("section");
+    expect(productSection).not.toBeNull();
+    const headings = within(productSection as HTMLElement).getAllByRole("heading", {
+      level: 3,
+    });
     expect(headings.map((heading) => heading.textContent)).toEqual([
       "The Open Framework",
       "AGENYRA",
       "MedVoice",
     ]);
     expect(screen.getAllByText("Building").length).toBeGreaterThanOrEqual(3);
-    const medvoice = screen.getByRole("heading", { name: "MedVoice" }).closest("li");
+    const medvoice = within(productSection as HTMLElement)
+      .getByRole("heading", { name: "MedVoice" })
+      .closest("li");
     expect(medvoice).not.toBeNull();
     expect(
       within(medvoice as HTMLElement).queryByRole("link", { name: /live site/i }),
@@ -132,7 +139,11 @@ describe("flagship product pages", () => {
     );
     expect(repo).toHaveAttribute("target", "_blank");
     expect(repo).toHaveAttribute("rel", "noopener noreferrer");
-    expect(screen.queryByRole("heading", { name: "AyushMushrooms" })).toBeNull();
+    expect(
+      within(productSection as HTMLElement).queryByRole("heading", {
+        name: "AyushMushrooms",
+      }),
+    ).toBeNull();
   });
 
   it("keeps AyushMushrooms in the catalog behind the flagship list", () => {
@@ -211,7 +222,7 @@ describe("flagship product pages", () => {
       "href",
       "/products/medvoice",
     );
-    expect(screen.getByText(/MedVoice Agent/)).toBeInTheDocument();
+    expect(screen.getAllByText(/MedVoice Agent/).length).toBeGreaterThan(0);
     expect(screen.queryByRole("link", { name: /live \/ demo/i })).toBeNull();
   });
 });

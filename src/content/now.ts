@@ -5,11 +5,11 @@ import type { NowStatus } from "./types";
  * TODO placeholders are intentional where details are not yet confirmed.
  */
 export const now: NowStatus = {
-  lastUpdated: "2026-08-08",
+  lastUpdated: "2026-09-29",
   workingOn: [
-    "RLHF / generative AI evaluation work at FoCDoT (and related Outlier workflows)",
-    "The Open Framework, a public front-end prototype for civil-society coordination",
-    "AyushMushrooms, agrotech brand MVP (content, leads, future shop readiness)",
+    "Independent AI evaluation and product building (FoCDoT role ended August 2025)",
+    "The Open Framework — early DPI concept and site for India's civil society ecosystem",
+    "AyushMushrooms — agrotech brand MVP (content, leads, future shop readiness)",
     "AGENYRA, a distribution layer for AI products, still early and stage-labeled",
     "MedVoice, voice-assisted wholesale billing with deterministic tax and confirmation",
   ],

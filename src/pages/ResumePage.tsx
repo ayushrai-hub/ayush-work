@@ -1,7 +1,7 @@
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
-import { education, experience, pageUpdatedAt, person } from "../content";
+import { education, experience, person } from "../content";
 
 export default function ResumePage() {
   return (
@@ -15,29 +15,8 @@ export default function ResumePage() {
         <PageHeader
           label="Resume"
           title="Summary export"
-          dek="A short on-site digest. Prefer the PDF for applications."
-          updated={pageUpdatedAt("resume")}
+          dek="A short on-site digest. A refreshed PDF will be linked here once it is updated."
         />
-
-        <p className="mb-10 flex flex-wrap gap-3">
-          <a
-            href={person.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary"
-          >
-            Open resume
-          </a>
-          <a
-            href={person.resumeDownloadUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-secondary"
-            download="AyushRai.pdf"
-          >
-            Download PDF
-          </a>
-        </p>
 
         <Prose className="mb-10">
           <p>{person.positioning}</p>
@@ -49,7 +28,7 @@ export default function ResumePage() {
             {experience.map((role) => (
               <li key={role.slug}>
                 <h3 className="font-display text-lg text-ink">
-                  {role.title} · {role.organization}
+                  {role.title} — {role.organization}
                 </h3>
                 <p className="meta-row mt-1">
                   <span>
@@ -75,9 +54,11 @@ export default function ResumePage() {
               <li key={ed.slug}>
                 <h3 className="font-medium text-ink">{ed.degree}</h3>
                 <p className="text-sm text-ink-muted">
-                  {ed.institution} · {ed.start} – {ed.end}
+                  {ed.institution}
+                  {ed.start && ed.end ? ` · ${ed.start} – ${ed.end}` : ""}
                   {ed.grade ? ` · ${ed.grade}` : ""}
                 </p>
+                {ed.note && <p className="text-sm text-ink-muted">{ed.note}</p>}
               </li>
             ))}
           </ul>
