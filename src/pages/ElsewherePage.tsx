@@ -52,7 +52,7 @@ export default function ElsewherePage() {
     <>
       <PageSEO
         title="Elsewhere"
-        description="Profiles across code, research, writing, and community — no phone numbers."
+        description="Profiles across code, research, writing, and community, no phone numbers."
         path="/elsewhere"
       />
       <div className="site-shell py-10 md:py-14">
@@ -62,7 +62,7 @@ export default function ElsewherePage() {
             On the internet
           </h1>
           <p className="mt-2 text-sm text-ink-muted leading-relaxed">
-            Identity map — primary first, the rest by category.
+            Identity map: primary first, the rest by category.
           </p>
         </header>
 

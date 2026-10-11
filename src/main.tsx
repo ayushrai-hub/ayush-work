@@ -1,5 +1,5 @@
 /**
- * Main entry point — Initializes and mounts the React application.
+ * Main entry point, Initializes and mounts the React application.
  *
  * This module sets up the root React renderer, wrapping the app with all necessary providers for theme, GTM, and SEO. It uses createRoot for React 18 concurrent features.
  *

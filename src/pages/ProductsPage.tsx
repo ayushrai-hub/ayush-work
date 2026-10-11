@@ -1,48 +1,138 @@
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
-import { products } from "../content";
+import {
+  featuredProducts,
+  otherProductsByCategory,
+  pageUpdatedAt,
+  productCategoryLabels,
+  productStageLabels,
+  type Product,
+} from "../content";
+
+function ProductRow({ product }: { product: Product }) {
+  return (
+    <li className="border-b border-rule py-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+        <h3 className="font-display text-2xl text-ink">
+          <Link
+            to={`/products/${product.slug}`}
+            className="hover:text-accent"
+          >
+            {product.title}
+          </Link>
+        </h3>
+        <p className="meta-row">
+          <span>{productStageLabels[product.stage]}</span>
+          <span aria-hidden="true">·</span>
+          <span>{productCategoryLabels[product.category]}</span>
+        </p>
+      </div>
+      <p className="mt-2 max-w-measure text-ink-muted leading-relaxed">
+        {product.summary}
+      </p>
+      {product.stageExplanation && (
+        <p className="mt-2 max-w-measure text-sm text-ink-faint leading-relaxed">
+          {product.stageExplanation}
+        </p>
+      )}
+      <p className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+        <Link
+          to={`/products/${product.slug}`}
+          className="link-accent"
+          aria-label={`${product.title} product detail`}
+        >
+          Product detail
+        </Link>
+        {product.demoUrl && (
+          <a
+            href={product.demoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-accent"
+            aria-label={`${product.title} live site`}
+          >
+            Live site
+          </a>
+        )}
+        {product.githubUrl && (
+          <a
+            href={product.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-accent"
+            aria-label={`${product.title} source repository`}
+          >
+            Source repository
+          </a>
+        )}
+        {product.log.length > 0 && (
+          <Link
+            to={`/products/${product.slug}/log`}
+            className="link-accent"
+            aria-label={`${product.title} build log`}
+          >
+            Build log
+          </Link>
+        )}
+      </p>
+    </li>
+  );
+}
 
 export default function ProductsPage() {
+  const featured = featuredProducts();
+  const groups = otherProductsByCategory();
+
   return (
     <>
       <PageSEO
         title="Products"
-        description="Products and MVPs — architecture, open questions, and build logs."
+        description="Flagship products in progress, plus earlier MVPs. Stages stay specific: building, experimental, and MVP are not the same claim."
         path="/products"
       />
       <div className="site-shell page-section">
         <PageHeader
           label="Products"
           title="Things I build"
-          dek="Living products with stages, audiences, and unfinished edges kept visible."
+          dek="Three flagship products first. Earlier work stays in the catalog. Stages describe what exists, not a percent complete."
+          updated={pageUpdatedAt("products")}
         />
-        <ul className="border-b border-rule">
-          {products.map((p) => (
-            <li key={p.slug} className="border-t border-rule py-6">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <Link
-                  to={`/products/${p.slug}`}
-                  className="font-display text-2xl text-ink hover:text-accent"
-                >
-                  {p.title}
-                </Link>
-                <span className="font-mono text-xs uppercase tracking-label text-ink-faint">
-                  {p.stage}
-                </span>
-              </div>
-              <p className="mt-2 max-w-measure text-ink-muted leading-relaxed">
-                {p.summary}
-              </p>
-              <Link
-                to={`/products/${p.slug}/log`}
-                className="link-accent text-sm mt-3 inline-block"
+
+        <section aria-labelledby="featured-products">
+          <h2 id="featured-products" className="label mb-4 border-b border-rule pb-2">
+            Flagship
+          </h2>
+          <ul>
+            {featured.map((product) => (
+              <ProductRow key={product.slug} product={product} />
+            ))}
+          </ul>
+        </section>
+
+        {groups.length > 0 && (
+          <div className="mt-12 space-y-12">
+            <h2 className="label">Also in the catalog</h2>
+            {groups.map((group) => (
+              <section
+                key={group.category}
+                aria-labelledby={`product-cat-${group.category}`}
               >
-                Build log →
-              </Link>
-            </li>
-          ))}
-        </ul>
+                <h3
+                  id={`product-cat-${group.category}`}
+                  className="label mb-4 border-b border-rule pb-2"
+                >
+                  {group.label}
+                </h3>
+                <ul>
+                  {group.items.map((product) => (
+                    <ProductRow key={product.slug} product={product} />
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

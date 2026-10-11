@@ -1,5 +1,5 @@
 /**
- * Research.tsx — Academic research projects and achievements showcase component.
+ * Research.tsx, Academic research projects and achievements showcase component.
  *
  * This component displays Ayush Rai's research contributions spanning AI/ML, IoT, and
  * educational technology domains. Features academic project details, research impact metrics,
@@ -36,7 +36,7 @@ import { useInView } from "react-intersection-observer";
 import { Microscope, Award } from "lucide-react";
 
 /**
- * Research — Academic research showcase component.
+ * Research, Academic research showcase component.
  *
  * Displays comprehensive research portfolio including AI/ML projects,
  * IoT implementations, and academic achievements. Features detailed

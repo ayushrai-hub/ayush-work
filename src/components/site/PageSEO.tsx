@@ -10,6 +10,8 @@ interface PageSEOProps {
   noIndex?: boolean;
   /** Emit Person JSON-LD (home only) */
   personSchema?: boolean;
+  /** Extra JSON-LD object for this page. Ratings and offers are not inferred. */
+  jsonLd?: Record<string, unknown>;
 }
 
 export default function PageSEO({
@@ -19,6 +21,7 @@ export default function PageSEO({
   image = defaultSEO.image,
   noIndex = false,
   personSchema = false,
+  jsonLd: extraJsonLd,
 }: PageSEOProps) {
   const pageTitle = title ? `${title} · Ayush Rai` : "Ayush Rai";
   const canonical = `${person.siteUrl}${path === "/" ? "/" : path}`;
@@ -34,10 +37,9 @@ export default function PageSEO({
         url: person.siteUrl,
         email: person.email,
         jobTitle: "AI-focused software engineer",
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Bhopal",
-          addressCountry: "IN",
+        workLocation: {
+          "@type": "Place",
+          name: person.location,
         },
         sameAs: person.sameAs,
       }
@@ -63,6 +65,9 @@ export default function PageSEO({
 
       {jsonLd && (
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      )}
+      {extraJsonLd && (
+        <script type="application/ld+json">{JSON.stringify(extraJsonLd)}</script>
       )}
     </Helmet>
   );

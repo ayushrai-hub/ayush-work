@@ -25,5 +25,5 @@ export const writing: WritingItem[] = [
   },
 ];
 
-/** Empty on-site essays intentionally — structure ready */
+/** Empty on-site essays intentionally, structure ready */
 export const onSiteWriting: WritingItem[] = [];

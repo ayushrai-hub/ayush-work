@@ -1,6 +1,6 @@
 import type { SearchItem } from "./types";
 import { person } from "./person";
-import { work } from "./work";
+import { getWorkBySlug, work } from "./work";
 import { products } from "./products";
 import { projects } from "./projects";
 import { research } from "./research";
@@ -16,8 +16,8 @@ import { elsewhereProfiles } from "./elsewhere";
 import { capabilities } from "./capabilities";
 
 /**
- * Flat searchable items for client-side search.
- * href values are route hints — wire to the real router when pages exist.
+ * Flat searchable items. href values match routes in src/App.tsx.
+ * Projects with a case study link to /work/:slug. Others link to /projects#slug.
  */
 export function buildSearchIndex(): SearchItem[] {
   const items: SearchItem[] = [
@@ -49,7 +49,13 @@ export function buildSearchIndex(): SearchItem[] {
       type: "product",
       summary: p.summary,
       href: `/products/${p.slug}`,
-      tags: [p.stage, ...p.audience],
+      tags: [
+        p.stage,
+        p.category,
+        ...(p.featured ? ["featured"] : []),
+        ...(p.descriptors ?? []),
+        ...p.audience,
+      ],
     });
   }
 
@@ -59,7 +65,10 @@ export function buildSearchIndex(): SearchItem[] {
       title: p.title,
       type: "project",
       summary: p.summary,
-      href: `/projects/${p.slug}`,
+      href:
+        p.relatedWorkSlug && getWorkBySlug(p.relatedWorkSlug)
+          ? `/work/${p.relatedWorkSlug}`
+          : `/projects#${p.slug}`,
       tags: [p.type, p.status, ...(p.archive ? ["archive"] : []), ...p.technologies],
     });
   }
@@ -81,7 +90,7 @@ export function buildSearchIndex(): SearchItem[] {
       title: `${e.title} · ${e.organization}`,
       type: "experience",
       summary: e.narrative.slice(0, 180) + (e.narrative.length > 180 ? "…" : ""),
-      href: `/experience#${e.slug}`,
+      href: `/about#${e.slug}`,
       tags: [e.type, e.organization, ...(e.current ? ["current"] : []), ...e.technologies],
     });
   }
@@ -184,7 +193,7 @@ export function buildSearchIndex(): SearchItem[] {
       title: cap.domain,
       type: "capability",
       summary: cap.summary,
-      href: `/capabilities#${cap.domain.toLowerCase()}`,
+      href: `/about#capability-${cap.domain.toLowerCase()}`,
       tags: ["capability", ...cap.skills.map((s) => s.name)],
     });
   }

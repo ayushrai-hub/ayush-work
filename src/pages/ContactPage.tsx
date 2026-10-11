@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
-import { person } from "../content";
+import { pageUpdatedAt, person } from "../content";
 import EmailService from "../lib/emailService";
 
 const INTENTS = [
@@ -64,7 +64,8 @@ export default function ContactPage() {
         <PageHeader
           label="Contact"
           title="Get in touch"
-          dek="Pick an intent, write a short note. No hire-me spam required."
+          dek="Pick an intent, write a short note. Usual reply time: <24 hrs."
+          updated={pageUpdatedAt("contact")}
         />
 
         <Prose className="mb-10">
@@ -80,9 +81,9 @@ export default function ContactPage() {
               rel="noopener noreferrer"
               className="link-accent"
             >
-              Cal.com
+              Calendly
             </a>
-            .
+            . I usually reply within {person.responseTime}.
           </p>
         </Prose>
 

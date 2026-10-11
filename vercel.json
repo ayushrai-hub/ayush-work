@@ -4,7 +4,31 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/api/v1/projects/:slug",
+      "destination": "/api/projects?slug=:slug"
+    },
+    {
+      "source": "/api/v1/projects",
+      "destination": "/api/projects"
+    },
+    {
+      "source": "/api/v1/compare",
+      "destination": "/api/projects"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept", "value": "text/markdown" }],
+      "missing": [{ "type": "header", "key": "accept", "value": "text/html" }],
+      "destination": "/index.md"
+    },
+    {
+      "source": "/((?!api/)(?!.*\\.[A-Za-z0-9]+$).+)",
+      "has": [{ "type": "header", "key": "accept", "value": "text/markdown" }],
+      "missing": [{ "type": "header", "key": "accept", "value": "text/html" }],
+      "destination": "/$1.md"
+    },
+    {
+      "source": "/((?!api/)(?!.*\\.[A-Za-z0-9]+$).*)",
       "destination": "/index.html"
     }
   ],
@@ -27,6 +51,19 @@
         {
           "key": "Strict-Transport-Security",
           "value": "max-age=31536000; includeSubDomains; preload"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.md)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept"
         }
       ]
     }

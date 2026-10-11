@@ -1,22 +1,41 @@
-import { Link } from "react-router-dom";
+import { Fragment } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import PageSEO from "../components/site/PageSEO";
 import SectionHeading from "../components/editorial/SectionHeading";
 import WorkRow from "../components/editorial/WorkRow";
 import Prose from "../components/editorial/Prose";
+import RoleSelector from "../components/site/RoleSelector";
 import {
+  featuredProducts,
+  formatUpdated,
   ideas,
   now,
+  pageUpdatedAt,
   person,
   principles,
-  products,
+  productCategoryLabels,
+  productStageLabels,
   research,
   selectedWork,
   writing,
 } from "../content";
+import UpdatedMeta from "../components/editorial/UpdatedMeta";
+import {
+  HOME_SECTION_ORDER,
+  parseAudience,
+  rankWorkForAudience,
+  type HomeSectionId,
+} from "../lib/agent/audiences";
 
 export default function HomePage() {
   const reduceMotion = useReducedMotion();
+  const [params] = useSearchParams();
+  const audience = parseAudience(params.get("audience"));
+  const rankedWork = rankWorkForAudience(audience, selectedWork);
+  const sectionOrder = HOME_SECTION_ORDER[audience];
+  const sectionNumber = (id: HomeSectionId) =>
+    String(sectionOrder.indexOf(id) + 1).padStart(2, "0");
   const fade = reduceMotion
     ? {}
     : {
@@ -33,6 +52,7 @@ export default function HomePage() {
         description={person.tagline}
         path="/"
         personSchema
+        noIndex={Boolean(params.get("audience"))}
       />
 
       <section className="site-shell page-section pt-16 md:pt-24">
@@ -55,6 +75,11 @@ export default function HomePage() {
               <span aria-hidden="true">·</span>
               <span>AI + software + products</span>
             </p>
+            <UpdatedMeta
+              date={pageUpdatedAt("home")}
+              label="Info updated"
+              className="mt-3"
+            />
             <nav
               className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm"
               aria-label="Primary links"
@@ -80,6 +105,14 @@ export default function HomePage() {
                 className="link-underline"
               >
                 Email
+              </a>
+              <a
+                href={person.primaryProfiles.cal}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline"
+              >
+                Calendly
               </a>
             </nav>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -120,8 +153,8 @@ export default function HomePage() {
         <SectionHeading number="00" title="Go deeper" />
         <Prose>
           <p>
-            If you’d like to read more — who I am, what I’ve built, how the work
-            connects — these are the best places to start.
+            If you’d like to read more about who I am, what I’ve built, and how
+            the work connects, these are the best places to start.
           </p>
         </Prose>
         <ul className="mt-8 max-w-measure divide-y divide-rule border-y border-rule">
@@ -200,9 +233,16 @@ export default function HomePage() {
         </ul>
       </section>
 
+      <div className="site-shell border-t border-rule pt-10">
+        <RoleSelector />
+      </div>
+
+      {sectionOrder.map((id) => (
+        <Fragment key={id}>
+          {id === "now" && (
       <section className="site-shell page-section border-t border-rule">
         <SectionHeading
-          number="01"
+          number={sectionNumber("now")}
           title="Now"
           link={{ to: "/now", label: "Full now →" }}
         />
@@ -214,47 +254,109 @@ export default function HomePage() {
           ))}
         </ul>
         <p className="mt-4 font-mono text-xs text-ink-faint">
-          Updated {now.lastUpdated}
+          <time dateTime={now.lastUpdated}>
+            Now section updated {formatUpdated(now.lastUpdated)}
+          </time>
         </p>
       </section>
-
+          )}
+          {id === "work" && (
       <section className="site-shell page-section border-t border-rule">
         <SectionHeading
-          number="02"
+          number={sectionNumber("work")}
           title="Selected work"
           link={{ to: "/work", label: "All work →" }}
         />
         <ul className="border-b border-rule">
-          {selectedWork.map((item) => (
+          {rankedWork.map((item) => (
             <WorkRow key={item.slug} item={item} />
           ))}
         </ul>
       </section>
+          )}
+          {id === "products" && (
 
       <section className="site-shell page-section border-t border-rule">
         <SectionHeading
-          number="03"
+          number={sectionNumber("products")}
           title="Things I build"
           link={{ to: "/products", label: "Products →" }}
         />
-        <ul className="space-y-6 max-w-measure">
-          {products.slice(0, 3).map((p) => (
-            <li key={p.slug}>
-              <Link
-                to={`/products/${p.slug}`}
-                className="font-display text-xl text-ink hover:text-accent"
-              >
-                {p.title}
-              </Link>
-              <p className="mt-1 text-ink-muted leading-relaxed">{p.summary}</p>
+        <ul className="border-b border-rule">
+          {featuredProducts().map((p) => (
+            <li key={p.slug} className="border-t border-rule py-6">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                <h3 className="font-display text-2xl text-ink">
+                  <Link
+                    to={`/products/${p.slug}`}
+                    className="hover:text-accent"
+                  >
+                    {p.title}
+                  </Link>
+                </h3>
+                <p className="meta-row">
+                  <span>{productStageLabels[p.stage]}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{productCategoryLabels[p.category]}</span>
+                </p>
+              </div>
+              <p className="mt-2 max-w-measure text-ink-muted leading-relaxed">
+                {p.summary}
+              </p>
+              {p.descriptors && p.descriptors.length > 0 && (
+                <p className="meta-row mt-2">
+                  {p.descriptors.map((descriptor, index) => (
+                    <span key={descriptor}>
+                      {index > 0 && (
+                        <span aria-hidden="true" className="mx-2">
+                          ·
+                        </span>
+                      )}
+                      {descriptor}
+                    </span>
+                  ))}
+                </p>
+              )}
+              <p className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                <Link
+                  to={`/products/${p.slug}`}
+                  className="link-accent"
+                  aria-label={`${p.title} product detail`}
+                >
+                  Product detail
+                </Link>
+                {p.demoUrl && (
+                  <a
+                    href={p.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-accent"
+                    aria-label={`${p.title} live site`}
+                  >
+                    Live site
+                  </a>
+                )}
+                {p.githubUrl && (
+                  <a
+                    href={p.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-accent"
+                    aria-label={`${p.title} source repository`}
+                  >
+                    Source repository
+                  </a>
+                )}
+              </p>
             </li>
           ))}
         </ul>
       </section>
-
+          )}
+          {id === "research" && (
       <section className="site-shell page-section border-t border-rule">
         <SectionHeading
-          number="04"
+          number={sectionNumber("research")}
           title="Things I think about"
           link={{ to: "/research", label: "Research →" }}
         />
@@ -290,12 +392,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+          )}
+          {id === "journey" && (
       <section className="site-shell page-section border-t border-rule">
-        <SectionHeading number="05" title="Journey" />
+        <SectionHeading number={sectionNumber("journey")} title="Journey" />
         <Prose>
           <p>
-            Education, roles, and side paths — the long arc rather than a résumé
+            Education, roles, and side paths, the long arc rather than a résumé
             dump.
           </p>
         </Prose>
@@ -308,10 +411,11 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
-
+          )}
+          {id === "writing" && (
       <section className="site-shell page-section border-t border-rule">
         <SectionHeading
-          number="06"
+          number={sectionNumber("writing")}
           title="Writing"
           link={{ to: "/writing", label: "Writing →" }}
         />
@@ -337,11 +441,11 @@ export default function HomePage() {
           ))}
         </ul>
       </section>
-
-      {pullQuote && (
+          )}
+          {id === "principles" && pullQuote && (
         <section className="site-shell page-section border-t border-rule">
           <SectionHeading
-            number="07"
+            number={sectionNumber("principles")}
             title="Principles"
             link={{ to: "/principles", label: "All principles →" }}
           />
@@ -350,29 +454,40 @@ export default function HomePage() {
               “{pullQuote.statement}”
             </p>
             <footer className="mt-3 text-sm text-ink-faint">
-              — {pullQuote.title}
+              {pullQuote.title}
             </footer>
           </blockquote>
         </section>
-      )}
-
+          )}
+          {id === "contact" && (
       <section className="site-shell page-section border-t border-rule pb-24">
-        <SectionHeading number="08" title="Say hello" />
+        <SectionHeading number={sectionNumber("contact")} title="Say hello" />
         <Prose>
           <p>
-            For work, products, research, or a quiet hello — email works best.
-            No sales pitch required.
+            For work, products, research, or a quiet hello, email works best.
+            Usual reply time: {person.responseTime}.
           </p>
         </Prose>
         <div className="mt-6 flex flex-wrap gap-4">
           <a href={`mailto:${person.email}`} className="btn-primary">
             {person.email}
           </a>
-          <Link to="/contact" className="btn-secondary">
+          <a
+            href={person.primaryProfiles.cal}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary"
+          >
+            Book on Calendly
+          </a>
+          <Link to="/contact" className="btn-ghost">
             Contact options
           </Link>
         </div>
       </section>
+          )}
+        </Fragment>
+      ))}
     </>
   );
 }

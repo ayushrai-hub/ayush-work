@@ -1,5 +1,5 @@
 /**
- * SEO.tsx — Search engine optimization component with structured data support.
+ * SEO.tsx, Search engine optimization component with structured data support.
  *
  * This component provides comprehensive SEO metadata management for the React application.
  * Dynamically generates meta tags, OpenGraph data, Twitter cards, and structured data (JSON-LD)
@@ -66,7 +66,7 @@ interface SEOProps {
 }
 
 /**
- * SEO — Search engine optimization component with structured data.
+ * SEO, Search engine optimization component with structured data.
  *
  * Provides comprehensive SEO metadata, social media cards, and structured data
  * for optimal search engine visibility and social sharing. Automatically adapts

@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { archivedRecognition, featuredRecognition } from "../content";
 
 export default function RecognitionPage() {
   const [showArchive, setShowArchive] = useState(false);
+
+  useEffect(() => {
+    const id = window.location.hash.replace("#", "");
+    if (id && archivedRecognition.some((item) => item.slug === id)) {
+      setShowArchive(true);
+    }
+  }, []);
 
   return (
     <>
@@ -17,12 +24,12 @@ export default function RecognitionPage() {
         <PageHeader
           label="Recognition"
           title="Certificates & awards"
-          dek="Featured first. Archive available on request — no vanity strip."
+          dek="Featured first. Archive available on request, no vanity strip."
         />
 
         <ul className="max-w-measure space-y-8">
           {featuredRecognition.map((r) => (
-            <li key={r.slug} className="border-t border-rule pt-6">
+            <li id={r.slug} key={r.slug} className="scroll-mt-24 border-t border-rule pt-6">
               <h2 className="font-display text-xl text-ink">{r.title}</h2>
               <p className="meta-row mt-1">
                 <span>{r.issuer}</span>
@@ -56,18 +63,16 @@ export default function RecognitionPage() {
             >
               {showArchive ? "Hide archive" : `Show archive (${archivedRecognition.length})`}
             </button>
-            {showArchive && (
-              <ul className="mt-6 max-w-measure space-y-6">
+            <ul hidden={!showArchive} className="mt-6 max-w-measure space-y-6">
                 {archivedRecognition.map((r) => (
-                  <li key={r.slug}>
+                  <li id={r.slug} key={r.slug} className="scroll-mt-24">
                     <h3 className="font-medium text-ink">{r.title}</h3>
                     <p className="text-sm text-ink-muted">
                       {r.issuer} · {r.date}
                     </p>
                   </li>
                 ))}
-              </ul>
-            )}
+            </ul>
           </div>
         )}
       </div>

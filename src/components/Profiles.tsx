@@ -1,5 +1,5 @@
 /**
- * Profiles.tsx — Social media and online platform integrations showcase component.
+ * Profiles.tsx, Social media and online platform integrations showcase component.
  *
  * This component displays a comprehensive collection of Ayush Rai's online presence
  * across multiple platforms including coding profiles, social media, design portfolios,
@@ -62,7 +62,7 @@ import {
 import { profiles, domains, Profile, Domain } from '../lib/profilesData';
 
 /**
- * Profiles — Comprehensive online platforms showcase component.
+ * Profiles, Comprehensive online platforms showcase component.
  *
  * Displays professional profiles across multiple platforms with filtering
  * capabilities and platform categorization. Enables visitors to explore
@@ -196,7 +196,7 @@ const Profiles: React.FC = () => {
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Explore My Profiles Across Platforms — From coding to design, writing, and social presence, here's everywhere you can connect with my work.
+            Explore My Profiles Across Platforms, From coding to design, writing, and social presence, here's everywhere you can connect with my work.
           </motion.p>
 
           {/* Statistics Cards */}

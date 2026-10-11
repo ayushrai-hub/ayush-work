@@ -1,7 +1,7 @@
 import type { ArchiveItem } from "./types";
 
 /**
- * Pointers to early / lesser / superseded work — not deleted, just de-emphasized.
+ * Pointers to early / lesser / superseded work, not deleted, just de-emphasized.
  */
 export const archive: ArchiveItem[] = [
   {
@@ -24,7 +24,7 @@ export const archive: ArchiveItem[] = [
   {
     slug: "linktree",
     title: "Linktree",
-    summary: "Link aggregator — superseded by this digital home.",
+    summary: "Link aggregator, superseded by this digital home.",
     year: 2023,
     pointer: "https://linktr.ee/ayush_rai02",
   },

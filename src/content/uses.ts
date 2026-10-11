@@ -40,7 +40,7 @@ export const uses: UseItem[] = [
     name: "Next.js",
     category: "framework",
     notes:
-      "Used on Open Framework, AyushMushrooms, Shiksha-Mitra, Expert-O, and related apps — not this Vite portfolio.",
+      "Used on Open Framework, AyushMushrooms, Shiksha-Mitra, Expert-O, and related apps, not this Vite portfolio.",
   },
   {
     name: "Tailwind CSS",

@@ -3,7 +3,7 @@ import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import MetaList from "../components/editorial/MetaList";
-import { getWorkBySlug } from "../content";
+import { getWorkBySlug, products } from "../content";
 
 function yearLabel(start: number, end?: number | "present") {
   if (!end || end === start) return String(start);
@@ -75,9 +75,20 @@ export default function WorkDetailPage() {
                 rel="noopener noreferrer"
                 className="link-accent"
               >
-                GitHub
+                Source repository
               </a>
             )}
+            {products
+              .filter((product) => product.relatedWorkSlug === item.slug)
+              .map((product) => (
+                <Link
+                  key={product.slug}
+                  to={`/products/${product.slug}`}
+                  className="link-accent"
+                >
+                  Product page
+                </Link>
+              ))}
           </p>
         )}
 

@@ -1,5 +1,5 @@
 /**
- * Certifications.tsx — Professional certifications showcase component.
+ * Certifications.tsx, Professional certifications showcase component.
  *
  * This component displays a comprehensive collection of professional certifications
  * earned across multiple domains including cloud computing, cybersecurity, machine
@@ -32,7 +32,7 @@ import { useInView } from "react-intersection-observer";
 import { Award, Calendar, ExternalLink, CheckCircle } from "lucide-react";
 
 /**
- * Certifications — Professional certifications display component.
+ * Certifications, Professional certifications display component.
  *
  * Renders an interactive certifications showcase with filtering capabilities,
  * detailed credential information, and achievement metrics. Displays certifications

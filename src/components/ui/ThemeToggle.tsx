@@ -1,5 +1,5 @@
 /**
- * ThemeToggle.tsx — Theme toggle component for dark/light mode switching.
+ * ThemeToggle.tsx, Theme toggle component for dark/light mode switching.
  *
  * This component provides a smooth animated toggle for switching between dark and light themes.
  * Features smooth animations, accessibility support, and integrates with the global theme context.
@@ -34,7 +34,7 @@ import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 /**
- * ThemeToggle — Animated theme toggle component.
+ * ThemeToggle, Animated theme toggle component.
  *
  * Provides an interactive button to switch between light and dark themes
  * with smooth animations and accessibility features. Integrates with the

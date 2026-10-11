@@ -1,5 +1,5 @@
 /**
- * Hero.tsx — Landing section component with animated introduction and key statistics.
+ * Hero.tsx, Landing section component with animated introduction and key statistics.
  *
  * This component serves as the main landing section of the portfolio website, featuring
  * a dynamic headline rotator, animated profile image, key statistics with count-up animations,
@@ -34,7 +34,7 @@ import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 
 /**
- * Hero — Main landing section component with animated introduction.
+ * Hero, Main landing section component with animated introduction.
  *
  * Renders the primary hero section with dynamic content, statistics, and navigation
  * to other portfolio sections. Features animated elements, responsive design, and

@@ -8,7 +8,7 @@ export default function ResearchPage() {
     <>
       <PageSEO
         title="Research"
-        description="Notes, investigations, and experiments — not peer-reviewed publications."
+        description="Notes, investigations, and experiments, not peer-reviewed publications."
         path="/research"
       />
       <div className="site-shell page-section">

@@ -1,5 +1,5 @@
 /**
- * Analytics utilities — Provides Google Analytics 4 integration for user tracking.
+ * Analytics utilities, Provides Google Analytics 4 integration for user tracking.
  *
  * This module initializes GA4, tracks page views, and handles various custom events for portfolio interactions. It ensures client-side only execution and provides reusable functions for consistent tracking.
  *

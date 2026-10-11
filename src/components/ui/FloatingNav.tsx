@@ -1,5 +1,5 @@
 /**
- * FloatingNav.tsx — Floating navigation component with expandable page sections.
+ * FloatingNav.tsx, Floating navigation component with expandable page sections.
  *
  * This component provides a floating navigation menu that appears on scroll, offering
  * quick access to page sections with hover tooltips and expanded labels. Features
@@ -49,7 +49,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 /**
- * FloatingNav — Floating navigation with section quick-access.
+ * FloatingNav, Floating navigation with section quick-access.
  *
  * Provides a compact, floating navigation menu that appears on scroll,
  * offering quick access to main page sections with tooltips and smooth

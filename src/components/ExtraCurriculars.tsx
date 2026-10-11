@@ -1,5 +1,5 @@
 /**
- * ExtraCurriculars.tsx — Extracurricular activities and achievements showcase component.
+ * ExtraCurriculars.tsx, Extracurricular activities and achievements showcase component.
  *
  * This component displays Ayush Rai's extracurricular activities spanning social welfare,
  * performing arts, events organization, and community service. Features categorized
@@ -46,7 +46,7 @@ import { useInView } from "react-intersection-observer";
 import { Heart, Users, BookOpen, Calendar, ExternalLink, CheckCircle } from "lucide-react";
 
 /**
- * ExtraCurriculars — Extracurricular activities showcase component.
+ * ExtraCurriculars, Extracurricular activities showcase component.
  *
  * Displays comprehensive extracurricular achievements and activities across
  * multiple domains including social service, arts, events, and leadership.

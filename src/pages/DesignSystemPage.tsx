@@ -45,14 +45,14 @@ export default function DesignSystemPage() {
         <section className="mb-16">
           <h2 className="label mb-4">Typography</h2>
           <p className="font-display text-4xl text-ink mb-4">
-            Source Serif 4 — display
+            Source Serif 4 · display
           </p>
           <p className="font-sans text-lg text-ink-muted mb-4">
-            Source Sans 3 — body and UI. The quick brown fox jumps over the lazy
+            Source Sans 3 · body and UI. The quick brown fox jumps over the lazy
             dog.
           </p>
           <p className="font-mono text-sm text-ink-faint">
-            IBM Plex Mono — labels · dates · 2026-08-08
+            IBM Plex Mono · labels · dates · 2026-08-08
           </p>
         </section>
 

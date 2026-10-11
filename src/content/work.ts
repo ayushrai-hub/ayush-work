@@ -1,7 +1,7 @@
 import type { WorkItem } from "./types";
 
 /**
- * Selected work case studies — rewrite of older generic portfolio copy.
+ * Selected work case studies, rewrite of older generic portfolio copy.
  * Soften or omit unverified impact metrics.
  */
 export const work: WorkItem[] = [
@@ -10,50 +10,143 @@ export const work: WorkItem[] = [
     title: "The Open Framework",
     type: "product",
     summary:
-      "An early Digital Public Infrastructure concept for India's NGOs, donors, talent, and policy stakeholders — focused on coordination and trust, not control.",
+      "How I framed a civil-society coordination layer, and why the public prototype cannot be described as the infrastructure it points at.",
     problem:
-      "Civil society orgs often operate in silos. Donors struggle with credible discovery, talent has a hard time entering the sector, and compliance / verification remain fragmented.",
+      "NGOs, donors, talent, and institutions need discovery that carries verification and consent with it. A directory without those constraints recreates the trust problem it claims to solve.",
     context:
-      "I started this as a long-horizon product: a federated, consent-driven public utility rather than a typical SaaS landing page. The live site is an MVP narrative and architecture sketch, not a national deployment.",
-    role: "Founder / product lead — framing, architecture direction, and front-end MVP.",
+      "The audience is civil-society operators, donors, people looking for sector work, and oversight institutions. The repository was created on 26 Dec 2025. The live site is a visitable prototype of that idea.",
+    role:
+      "I set the direction and published the prototype. When I reviewed the repository, most commits were attributed to the Lovable bot. The ayushrai-hub commits remove that branding and record the Vercel setup. I am not claiming authorship of a production verification service.",
     thinking:
-      "Treat seriousness like DigiLocker or UPI as a bar for institutional design (longevity, audits, low digital maturity), without claiming functional equivalence. Prefer consent and progressive verification over growth hacks.",
+      "Verification, consent, governance, and an audit trail have to be product requirements before any backend is chosen. Naming NestJS, Spring Boot, PostgreSQL, or Kubernetes in the portfolio would describe a design wish, not this repository. DigiLocker or UPI can be a seriousness bar for institutional design. They are not a claim of equivalence.",
     execution:
-      "Shipped a Next.js / TypeScript site that explains the problem, approach, and stack direction (NestJS or Spring Boot, PostgreSQL, OAuth/RBAC, audit logs, cloud-agnostic infra). Kept the tone infrastructural, not startup-pitchy.",
+      "The shipped artifact is a Vite, React, and TypeScript app with Tailwind, shadcn/ui, React Router, and TanStack Query. Sign-in stores a mock user in localStorage. Screens cover NGO, donor, and talent entry, governance, and a registry search. None of those screens talk to a verification service.",
     outcome:
-      "Public concept site live; architecture and open questions documented. Adoption and policy outcomes are not claimed — this is still early.",
+      "The concept site is public at the-open-frameworks.vercel.app, and the source is public. It is not deployed infrastructure, and it has no evidenced institutional adoption. The live copy still shows illustrative scale figures and partner names. Those are prototype text.",
     lessons: [
-      "DPI language invites skepticism; specificity about what is / isn't built matters.",
-      "Trust and compliance constraints should shape the architecture from day one.",
+      "A wide clickable prototype teaches the journeys, and it also makes unfinished systems look operational.",
+      "Architecture claims have to name the file that implements them. This repo implements a front end.",
     ],
     status: "in-progress",
     selected: true,
-    yearStart: 2024,
+    yearStart: 2025,
     yearEnd: "present",
     technologies: [
-      "Next.js",
+      "Vite",
+      "React",
       "TypeScript",
       "Tailwind CSS",
-      "PostgreSQL",
-      "OAuth 2.0",
-      "Docker",
+      "React Router",
+      "TanStack Query",
     ],
     links: {
       demo: "https://the-open-frameworks.vercel.app/",
+      github: "https://github.com/ayushrai-hub/the-open-framework",
     },
     relatedSlugs: ["the-open-framework"],
+    needsConfirmation: [
+      "The public prototype includes illustrative scale, partner, and operational-status copy that the repository does not support.",
+      "No institutional partner or deployment is documented.",
+    ],
+  },
+  {
+    slug: "agenyra",
+    title: "AGENYRA",
+    type: "product",
+    summary:
+      "Why a distribution layer for AI products has to start as structured data, and why the public repo only proves the site that says so.",
+    problem:
+      "People cannot reliably discover, understand, evaluate, and reach AI products. Marketing pages and keyword lists collapse task, inputs, deployment, and cost into adjectives.",
+    context:
+      "AGENYRA is aimed at people with a task and at builders who should describe a product once. The public site, agenyra.space, went up with the repository on 29 Sep 2026. It is a waitlist and an explanation, not an open catalog.",
+    role:
+      "I built the public Next.js site, the waitlist, and the stage model in AGENYRA_product. The site describes a private build for taxonomy, profiles, search, and builder onboarding. That build is not in the public repository, so this note does not walk through its code.",
+    thinking:
+      "Discovery and distribution are different jobs. Search can run over structured fields before any product is placed inside another tool or agent. Intent-aware matching is a research question until a system does it. I kept the stage vocabulary in one module so a feature cannot quietly become 'launched'.",
+    execution:
+      "The public app is Next.js 16, React 19, and Tailwind CSS v4 on Vercel. Waitlist rows go to Supabase through server-side access, with row-level security and no client key. The product model on the site is six stages: discover, understand, classify, match, distribute, and measure. Foundation work is marked building. Structured search is experimental. Distribution is exploring. Network capabilities are planned. Contextual intelligence is research.",
+    outcome:
+      "Visitors can read the model and join a waitlist. They cannot search a public product graph, and the site says the private build is not open. No usage, customer, or revenue figures are part of this write-up.",
+    lessons: [
+      "A stage enum is a product decision. Without it, the homepage and the roadmap drift apart.",
+      "Publishing the ambition early is useful only if the repository boundary stays visible: this repo is the site, not the matcher.",
+    ],
+    status: "in-progress",
+    selected: true,
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "Vercel",
+    ],
+    links: {
+      demo: "https://agenyra.space/",
+      github: "https://github.com/ayushrai-hub/AGENYRA_product",
+    },
+    relatedSlugs: ["agenyra"],
+    needsConfirmation: [
+      "Behavior of the private product graph is taken from the public site's own stage copy, not from code in AGENYRA_product.",
+    ],
+  },
+  {
+    slug: "medvoice",
+    title: "MedVoice",
+    type: "product",
+    summary:
+      "How a wholesale billing workflow can accept speech without letting a model decide the medicine, the price, or the tax.",
+    problem:
+      "At a pharmaceutical wholesaler, the person on the floor speaks or writes a line and someone else types the invoice. Look-alike names, strengths, and pack sizes make a silent guess expensive.",
+    context:
+      "The users are floor workers, plus the owners, accountants, and managers who have to stand behind GST invoices. MedVoice is meant to sit beside Marg, Busy, or Tally, not replace them in the first version. The repository was created on 3 Aug 2026. There is no public demo.",
+    role:
+      "The repository is under my GitHub account. Commits I sampled are attributed to MedVoice Agent, not to a personal git author, so I am not using commit messages as a diary of what I typed. The reasoning below follows the product and safety documents in MedVoiceERP.",
+    thinking:
+      "The engineering constraint is the product. Speech is an input. Medicine identity comes from the tenant catalog. Ambiguity forces a confirmation. Quantity, price, and tax stay on deterministic code. An invoice write has to be idempotent, and a failed ERP sync cannot be shown as a completed sale.",
+    execution:
+      "The repo is a pnpm monorepo. Domain code and a NestJS API implement matching, order state, confirmation, integer-paise GST on the voice path, and in-memory idempotent invoicing. A Next.js admin can search the demo catalog, list orders, and inspect voice sessions without raw audio. Mock and CSV ERP adapters exist. The Android worker is a Kotlin scaffold with a push-to-talk recorder. Speech defaults to a mock provider. Postgres and Redis are prepared. The API still runs on an in-memory demo catalog unless that wiring is finished.",
+    outcome:
+      "The documented founding loop can run locally with mock speech and fixture medicines. A real warehouse catalog, production speech, a field-ready Android app, stock reservation, invoice PDFs, and live ERP posting are still ahead. The stack choice is explicitly provisional.",
+    lessons: [
+      "In a billing system, the model's job ends at a candidate list.",
+      "A local mock loop is real engineering, and it is not a deployment. The docs are right to keep those sentences apart.",
+    ],
+    status: "in-progress",
+    selected: true,
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: [
+      "TypeScript",
+      "NestJS",
+      "Next.js",
+      "Kotlin",
+      "PostgreSQL",
+      "Redis",
+    ],
+    links: {
+      github: "https://github.com/ayushrai-hub/MedVoiceERP",
+    },
+    relatedSlugs: ["medvoice"],
+    needsConfirmation: [
+      "Which portions were written by me versus coding agents. Sampled commits use the author name MedVoice Agent.",
+      "A 26 Aug 2026 commit message mentions Supabase, Tally, Razorpay, and e-invoice work that the 25 Aug 2026 product overview still lists as incomplete. I did not promote those names to done.",
+      "No public demo URL has been verified.",
+    ],
   },
   {
     slug: "ayushmushrooms",
     title: "AyushMushrooms",
     type: "product",
     summary:
-      "A content-first agrotech brand site for organic mushroom and spawn cultivation — marketing, expert profile, and lead capture, with room to grow into B2B commerce.",
+      "A content-first agrotech brand site for organic mushroom and spawn cultivation, marketing, expert profile, and lead capture, with room to grow into B2B commerce.",
     problem:
       "Specialty agritech brands often need a credible web presence that can collect leads and educate buyers without jumping straight into a heavy e-commerce build.",
     context:
       "Built as an SEO-aware multi-page MVP: products, services, training, and contact flows. Designed so a CMS and shop can land later without a rewrite.",
-    role: "Product engineer — structure, implementation, and lead/CRM-oriented architecture.",
+    role: "Product engineer, structure, implementation, and lead/CRM-oriented architecture.",
     thinking:
       "Separate brand storytelling from commerce. Optimize for clarity and lead quality first; keep login and shop as staged readiness, not fake completeness.",
     execution:
@@ -86,10 +179,10 @@ export const work: WorkItem[] = [
     summary:
       "A collaborative learning platform where peers share resources, acknowledge progress, and support each other's career and education journeys.",
     problem:
-      "Learning is social, but most tools optimize for courses or feeds — not for mutual recognition and resource exchange among peers.",
+      "Learning is social, but most tools optimize for courses or feeds, not for mutual recognition and resource exchange among peers.",
     context:
       "Built as a community education experiment: mentorship-friendly, progress acknowledgement, and resource sharing without pretending to be a full LMS.",
-    role: "Builder — product framing and full-stack implementation.",
+    role: "Builder, product framing and full-stack implementation.",
     thinking:
       "Start from culture (appreciation, peer support) then add features. Avoid vanity engagement metrics; design for useful exchanges.",
     execution:
@@ -123,12 +216,12 @@ export const work: WorkItem[] = [
     title: "Expert-O",
     type: "project",
     summary:
-      "A collective / studio site for multi-disciplinary digital work in India — services, portfolio framing, and recruitment narrative with AI-assisted workflows in mind.",
+      "A collective / studio site for multi-disciplinary digital work in India, services, portfolio framing, and recruitment narrative with AI-assisted workflows in mind.",
     problem:
       "Small interdisciplinary teams need a clear public face without overselling speed or 'transformative' jargon.",
     context:
       "I treated Expert-O as a positioning and operating-system site for a polymath-style collective: mission, services, thought leadership, hiring.",
-    role: "Designer-developer — narrative, UI, and deployment.",
+    role: "Designer-developer, narrative, UI, and deployment.",
     thinking:
       "Rewrite away from '5x faster' marketing. Show how AI is used as leverage in workflows, not as decoration. Keep recruitment and services honest about stage.",
     execution:
@@ -155,7 +248,7 @@ export const work: WorkItem[] = [
     links: {
       demo: "https://expert-o.vercel.app/",
     },
-    // Older portfolio copy claimed "5x faster" execution — omit as unverified
+    // Older portfolio copy claimed "5x faster" execution, omit as unverified
     needsConfirmation: [
       "Any quantitative speed or delivery multipliers previously used in marketing copy",
     ],
@@ -165,12 +258,12 @@ export const work: WorkItem[] = [
     title: "Overlay Text Box",
     type: "open-source",
     summary:
-      "A Chrome extension that overlays a text box and types into page fields character-by-character — useful for testing, demos, and more comfortable input flows.",
+      "A Chrome extension that overlays a text box and types into page fields character-by-character, useful for testing, demos, and more comfortable input flows.",
     problem:
-      "Some workflows need simulated typing into arbitrary fields with control over pace and start/stop — browser defaults don't cover that well.",
+      "Some workflows need simulated typing into arbitrary fields with control over pace and start/stop, browser defaults don't cover that well.",
     context:
       "Manifest V3 extension with a resizable overlay, trigger near focused fields, and random delays for more human-like typing.",
-    role: "Author — design and implementation.",
+    role: "Author, design and implementation.",
     thinking:
       "Keep the surface small: one job, clear controls, broad compatibility. Accessibility and testing use-cases beat novelty.",
     execution:
@@ -196,7 +289,7 @@ export const work: WorkItem[] = [
     title: "Iha by Himani",
     type: "client",
     summary:
-      "A responsive marketing site for an art studio — gallery, services, and contact — built to make the studio easier to find and approach online.",
+      "A responsive marketing site for an art studio, gallery, services, and contact, built to make the studio easier to find and approach online.",
     problem:
       "The studio needed a modern web presence that showcased work and reduced friction for inquiries.",
     context:
@@ -207,7 +300,7 @@ export const work: WorkItem[] = [
     execution:
       "React + TypeScript with CSS Modules and Framer Motion; email-integrated contact form.",
     outcome:
-      "Site live at ihabyhimani.com. Older '300% inquiry' style metrics are not repeated here — I don't have a verified baseline for that claim.",
+      "Site live at ihabyhimani.com. Older '300% inquiry' style metrics are not repeated here, I don't have a verified baseline for that claim.",
     lessons: [
       "Client trust comes from reliable delivery and editable structure, not from inflated ROI numbers.",
       "Motion helps if it respects performance on image-heavy pages.",
@@ -227,7 +320,7 @@ export const work: WorkItem[] = [
       github: "https://github.com/ayushrai-hub/IHA-art-studio",
     },
     needsConfirmation: [
-      "Previously stated 'increased client inquiries by 300%' — needs baseline data before reuse",
+      "Previously stated 'increased client inquiries by 300%', needs baseline data before reuse",
     ],
   },
   {
@@ -235,14 +328,14 @@ export const work: WorkItem[] = [
     title: "Praful H. Professional Site",
     type: "client",
     summary:
-      "A professional portfolio for a UK-based technology leader — credibility-first layout for experience, leadership narrative, and contact.",
+      "A professional portfolio for a UK-based technology leader, credibility-first layout for experience, leadership narrative, and contact.",
     problem:
       "Senior operators need a site that communicates depth without looking like a generic template or a startup splash page.",
     context:
       "2024 client engagement focused on performance, SEO, timeline of work, and a restrained visual system.",
-    role: "Developer — implementation and structure for the client's narrative.",
+    role: "Developer, implementation and structure for the client's narrative.",
     thinking:
-      "Enterprise credibility is typography, hierarchy, and evidence — not tech-name soup. Keep stack claims aligned with what the site actually uses.",
+      "Enterprise credibility is typography, hierarchy, and evidence, not tech-name soup. Keep stack claims aligned with what the site actually uses.",
     execution:
       "React / TypeScript / Next.js-oriented portfolio with strong content structure, contact flows, and deploy on Netlify.",
     outcome:
@@ -260,9 +353,9 @@ export const work: WorkItem[] = [
       demo: "https://praful-h.netlify.app/",
       github: "https://github.com/ayushrai-hub/client-portfolio-praful",
     },
-    // Older copy listed TensorFlow/K8s/OAuth heavily — verify before emphasizing
+    // Older copy listed TensorFlow/K8s/OAuth heavily, verify before emphasizing
     needsConfirmation: [
-      "Full production stack previously listed (TensorFlow, Kubernetes, PostgreSQL, OAuth) — confirm what shipped vs aspirational",
+      "Full production stack previously listed (TensorFlow, Kubernetes, PostgreSQL, OAuth), confirm what shipped vs aspirational",
     ],
   },
 ];

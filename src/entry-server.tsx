@@ -14,7 +14,7 @@ export function getRoutes(): string[] {
     "/", "/about", "/work", "/products", "/projects", "/research", "/writing",
     "/notes", "/now", "/ideas", "/principles", "/timeline", "/education",
     "/leadership", "/recognition", "/elsewhere", "/contact", "/archive",
-    "/uses", "/resume",
+    "/uses", "/resume", "/developers",
   ];
   return [
     ...base,

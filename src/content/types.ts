@@ -29,10 +29,37 @@ export type IdeaStatus =
 
 export type ProductStage =
   | "concept"
+  | "building"
+  | "experimental"
   | "mvp"
   | "beta"
   | "production"
   | "maintained";
+
+/** Domain category for products */
+export type ProductCategory =
+  | "dpi"
+  | "agrotech"
+  | "platform"
+  | "enterprise"
+  | "brand";
+
+/** What exists, what is still moving, and what is only specified. */
+export interface ProductMaturity {
+  implemented: string[];
+  experimental: string[];
+  planned: string[];
+}
+
+/** Domain category for projects / experiments */
+export type ProjectCategory =
+  | "tooling"
+  | "education"
+  | "client"
+  | "studio"
+  | "web"
+  | "personal";
+
 
 export type TimelineKind =
   | "education"
@@ -88,6 +115,12 @@ export interface Person {
   shortName: string;
   location: string;
   email: string;
+  /** Withheld. Leave empty. Do not publish a number here. */
+  phone: string;
+  /** Withheld display form. Leave empty. */
+  phoneDisplay: string;
+  /** Typical reply window for contact */
+  responseTime: string;
   tagline: string;
   positioning: string;
   siteUrl: string;
@@ -163,7 +196,20 @@ export interface Product {
   title: string;
   summary: string;
   stage: ProductStage;
+  /** Precise reading of the stage. Not a completion percentage. */
+  stageExplanation: string;
+  /** Shown first on the homepage and products catalog. */
+  featured?: boolean;
+  /** Short scan labels for the homepage. Problem space or technical constraint. */
+  descriptors?: string[];
+  category: ProductCategory;
+  /** What the product is for, in one or two sentences. */
+  thesis?: string;
+  /** Why this is being built, when that reason is documented. */
+  why?: string;
   audience: string[];
+  /** Ordered workflow steps, when the product has one. */
+  workflow?: string[];
   architecture: {
     frontend?: string;
     backend?: string;
@@ -172,6 +218,9 @@ export interface Product {
     infra?: string;
     other?: string[];
   };
+  maturity?: ProductMaturity;
+  /** Engineering trade-offs, separate from open questions. */
+  tradeoffs?: string[];
   openQuestions: string[];
   problem: string;
   approach: string;
@@ -186,6 +235,7 @@ export interface Project {
   title: string;
   summary: string;
   type: WorkType;
+  category: ProjectCategory;
   status: WorkStatus;
   yearStart: number;
   yearEnd?: number | "present";
@@ -208,7 +258,7 @@ export interface ResearchItem {
   context?: string;
   methods?: string[];
   technologies: string[];
-  /** Softened / provisional — not peer-reviewed claims */
+  /** Softened / provisional, not peer-reviewed claims */
   findings?: string;
   /** Explicit: this is not a peer-reviewed publication */
   disclaimer: string;

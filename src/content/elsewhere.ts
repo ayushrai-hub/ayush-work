@@ -236,12 +236,20 @@ export const elsewhereProfiles: ProfileLink[] = [
 
   // Scheduling
   {
+    id: "calendly",
+    name: "Calendly",
+    url: "https://calendly.com/ayushrai0211",
+    category: "scheduling",
+    description: "Book a conversation",
+    primary: true,
+  },
+  {
     id: "cal",
     name: "Cal.com",
     url: "https://cal.com/ayush-rai-02",
     category: "scheduling",
-    description: "Book a conversation",
-    primary: true,
+    description: "Alternate booking link",
+    archive: true,
   },
 
   // Portfolio mirrors
@@ -277,7 +285,7 @@ export const elsewhereProfiles: ProfileLink[] = [
     description: "Personal life/systems site",
   },
 
-  // Social — no WhatsApp / phone
+  // Social, no WhatsApp / phone
   {
     id: "twitter",
     name: "Twitter / X",

@@ -6,7 +6,7 @@ import type { Note } from "./types";
 export const notes: Note[] = [
   {
     slug: "dpi-language-invites-skepticism",
-    title: "DPI language invites skepticism — earn it with specificity",
+    title: "DPI language invites skepticism. Earn it with specificity",
     kind: "learning",
     publishedAt: "2026-08-08",
     body: "Calling something Digital Public Infrastructure sets a high bar. People immediately compare you to UPI or DigiLocker. For Open Framework I learned to say what is actually shipped (a concept site and architecture direction) and what is not (national adoption). The metaphor is useful for seriousness; it is dangerous as a status claim.",
@@ -17,7 +17,7 @@ export const notes: Note[] = [
     title: "In RLHF-shaped work, evaluation is the job",
     kind: "observation",
     publishedAt: "2026-08-08",
-    body: "Model names get the headlines; judgment criteria get the results. When reviewing code-oriented LLM outputs, vague 'looks good' feedback trains noise. Explicit rubrics — correctness, edge cases, security smells — make human feedback something a training loop can use. Brand proximity to big AI labs is not a substitute for that discipline.",
+    body: "Model names get the headlines; judgment criteria get the results. When reviewing code-oriented LLM outputs, vague 'looks good' feedback trains noise. Explicit rubrics, correctness, edge cases, security smells, make human feedback something a training loop can use. Brand proximity to big AI labs is not a substitute for that discipline.",
     relatedSlugs: ["focdot-sde-ai", "outlier-genai"],
   },
   {

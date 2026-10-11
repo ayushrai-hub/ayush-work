@@ -34,9 +34,15 @@ export default function ProductLogPage() {
         <PageHeader
           label="Build log"
           title={product.title}
-          dek="Dated notes — what changed and why, not a changelog dump."
+          dek="Dated notes, what changed and why, not a changelog dump."
         />
 
+        {entries.length === 0 ? (
+          <p className="max-w-measure text-ink-muted leading-relaxed">
+            No verified build-log entries yet. A date is added only when a
+            repository commit, a dated document, or another record supports it.
+          </p>
+        ) : (
         <ol className="max-w-measure space-y-8 border-l border-rule pl-6">
           {entries.map((entry) => (
             <li key={`${entry.date}-${entry.title}`} className="relative">
@@ -44,7 +50,9 @@ export default function ProductLogPage() {
                 className="absolute -left-[1.65rem] top-1.5 h-2.5 w-2.5 rounded-full bg-accent"
                 aria-hidden
               />
-              <p className="font-mono text-xs text-ink-faint">{entry.date}</p>
+              <p className="font-mono text-xs text-ink-faint">
+                <time dateTime={entry.date}>{entry.date}</time>
+              </p>
               <h2 className="mt-1 font-display text-xl text-ink">
                 {entry.title}
               </h2>
@@ -54,6 +62,7 @@ export default function ProductLogPage() {
             </li>
           ))}
         </ol>
+        )}
 
         <p className="mt-12 flex flex-wrap gap-4">
           <Link to={`/products/${product.slug}`} className="link-accent">

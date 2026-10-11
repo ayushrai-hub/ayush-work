@@ -1,17 +1,20 @@
 import type { Person } from "./types";
 
 /**
- * Public identity — no phone numbers in this file.
+ * Public identity.
  */
 export const person: Person = {
   name: "Ayush Rai",
   shortName: "Ayush",
-  location: "Bhopal, India",
+  location: "Remote",
   email: "ayushrai0211@gmail.com",
+  phone: "",
+  phoneDisplay: "",
+  responseTime: "<24 hrs",
   tagline:
-    "I build software and AI systems that try to be useful in the real world — civil society tooling, education platforms, and careful model evaluation.",
+    "I build software and AI systems that try to be useful in the real world: civil society tooling, education platforms, and careful model evaluation.",
   positioning:
-    "I'm an AI-focused software engineer based in Bhopal. My work includes contract evaluation for frontier-lab programs and building AI products, and on the side I ship products and client sites — from an early Digital Public Infrastructure concept for NGOs to education and agrotech MVPs. I care more about clear problem framing and shipped learning than about sounding futuristic.",
+    "I'm an AI-focused software engineer working remotely. My work includes contract evaluation for frontier-lab programs and building AI products, and on the side I ship products and client sites, from an early Digital Public Infrastructure concept for NGOs to education and agrotech MVPs. I care more about clear problem framing and shipped learning than about sounding futuristic.",
   siteUrl: "https://www.ayushrai.site",
   resumeUrl:
     "https://drive.google.com/file/d/1JdAckW6i057eYNpdRVLYDMFp2Xo5vyJs/view?usp=sharing",
@@ -22,7 +25,7 @@ export const person: Person = {
     label: "MyLifeOS",
     url: "https://thelifeofayush.vercel.app/sites/www/",
     description:
-      "A longer personal archive — more of the life, work, and context behind this site.",
+      "A longer personal archive with more of the life, work, and context behind this site.",
   },
   primaryProfiles: {
     github: "https://github.com/ayushrai-hub",
@@ -30,9 +33,9 @@ export const person: Person = {
     orcid: "https://orcid.org/0009-0005-7341-7856",
     huggingface: "https://huggingface.co/ayushrai02",
     medium: "https://medium.com/@ayushrai0211",
-    cal: "https://cal.com/ayush-rai-02",
+    cal: "https://calendly.com/ayushrai0211",
   },
-  // Authoritative / identity URLs only — not every social profile
+  // Authoritative / identity URLs only, not every social profile
   sameAs: [
     "https://github.com/ayushrai-hub",
     "https://www.linkedin.com/in/ayushrai02/",

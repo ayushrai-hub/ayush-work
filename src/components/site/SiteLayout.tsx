@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
 import SkipLink from "./SkipLink";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import SearchDialog from "./SearchDialog";
+import AgentView from "./AgentView";
+import PortfolioWebMcp from "./PortfolioWebMcp";
 
 export default function SiteLayout() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [params] = useSearchParams();
+  const agentView = params.get("agent") === "1";
   const openSearch = useCallback(() => setSearchOpen(true), []);
   const closeSearch = useCallback(() => setSearchOpen(false), []);
 
@@ -40,10 +44,11 @@ export default function SiteLayout() {
       <SkipLink />
       <SiteHeader onOpenSearch={openSearch} />
       <main id="main" className="flex-1">
-        <Outlet />
+        {agentView ? <AgentView /> : <Outlet />}
       </main>
       <SiteFooter />
       <SearchDialog open={searchOpen} onClose={closeSearch} />
+      <PortfolioWebMcp />
     </div>
   );
 }

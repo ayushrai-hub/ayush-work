@@ -1,13 +1,13 @@
 import type { Capability } from "./types";
 
 /**
- * Capability map — skills linked to work / product / experience slugs as evidence.
+ * Capability map, skills linked to work / product / experience slugs as evidence.
  */
 export const capabilities: Capability[] = [
   {
     domain: "Intelligence",
     summary:
-      "Judgment-heavy AI work: evaluation, prompting, and reliability for generative systems — not demo theater.",
+      "Judgment-heavy AI work: evaluation, prompting, and reliability for generative systems, not demo theater.",
     skills: [
       {
         name: "RLHF / human feedback loops",
@@ -36,6 +36,7 @@ export const capabilities: Capability[] = [
         name: "React + TypeScript",
         evidenceSlugs: [
           "personal-portfolio",
+          "the-open-framework",
           "iha-by-himani",
           "praful-h",
           "shiksha-mitra",
@@ -44,7 +45,8 @@ export const capabilities: Capability[] = [
       {
         name: "Next.js apps",
         evidenceSlugs: [
-          "the-open-framework",
+          "agenyra",
+          "medvoice",
           "ayushmushrooms",
           "shiksha-mitra",
           "expert-o",
@@ -67,7 +69,11 @@ export const capabilities: Capability[] = [
     skills: [
       {
         name: "MVP scoping",
-        evidenceSlugs: ["ayushmushrooms", "the-open-framework", "shiksha-mitra"],
+        evidenceSlugs: ["ayushmushrooms", "shiksha-mitra"],
+      },
+      {
+        name: "Stage-honest product framing",
+        evidenceSlugs: ["the-open-framework", "agenyra", "medvoice"],
       },
       {
         name: "DPI / institutional product thinking",
@@ -86,7 +92,7 @@ export const capabilities: Capability[] = [
   {
     domain: "Research",
     summary:
-      "Investigations and experiments with cautious claims — notes, not peer-reviewed papers.",
+      "Investigations and experiments with cautious claims, notes, not peer-reviewed papers.",
     skills: [
       {
         name: "Applied NLP exploration",
@@ -109,7 +115,7 @@ export const capabilities: Capability[] = [
   {
     domain: "Leadership",
     summary:
-      "Grounded community and campus roles — teaching, events, and WebOps — without inflated reach metrics.",
+      "Grounded community and campus roles, teaching and events, without inflated reach metrics.",
     skills: [
       {
         name: "Workshop & champion work",
@@ -117,15 +123,11 @@ export const capabilities: Capability[] = [
       },
       {
         name: "Event organization",
-        evidenceSlugs: ["beyond-the-words", "mun-lnct", "hack2skill"],
+        evidenceSlugs: ["mun-lnct", "hack2skill"],
       },
       {
         name: "Education volunteering",
         evidenceSlugs: ["bachpanshala", "we-care", "raahat"],
-      },
-      {
-        name: "Campus WebOps",
-        evidenceSlugs: ["kanha-webops", "kanha-webops-leadership"],
       },
     ],
   },

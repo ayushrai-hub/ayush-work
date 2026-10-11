@@ -29,7 +29,7 @@ export const principles: Principle[] = [
     slug: "interdisciplinary-leverage",
     title: "Interdisciplinary leverage",
     statement:
-      "Crossing AI, web, and domain context is useful when it clarifies the problem — not as a personality brand.",
+      "Crossing AI, web, and domain context is useful when it clarifies the problem, not as a personality brand.",
     inPractice:
       "Civil society DPI and agrotech work borrow product + compliance thinking, not buzzword stacks.",
   },
@@ -45,7 +45,7 @@ export const principles: Principle[] = [
     slug: "trust-in-products",
     title: "Trust is a product requirement",
     statement:
-      "Consent, auditability, and progressive verification are features — especially in civil society tooling.",
+      "Consent, auditability, and progressive verification are features, especially in civil society tooling.",
     inPractice:
       "Open Framework architecture starts from RBAC, consent, and audit logs.",
   },

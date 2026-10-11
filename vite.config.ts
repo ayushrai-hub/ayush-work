@@ -16,10 +16,11 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { agentSurfacesPlugin } from './src/lib/agent/vitePlugin';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ isSsrBuild }) => ({
-  plugins: [react()],
+  plugins: [react(), agentSurfacesPlugin()],
   ssr: { noExternal: ['react-helmet-async'] },
   optimizeDeps: {
     exclude: ['lucide-react'],
