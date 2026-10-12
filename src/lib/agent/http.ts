@@ -135,6 +135,15 @@ type NodeLikeResponse = {
   end: (body?: string) => void;
 };
 
+function headerValue(req: NodeLikeRequest, name: string): string | undefined {
+  const headers = req.headers as
+    | (Record<string, string | undefined> & { get?: (key: string) => string | null })
+    | undefined;
+  if (!headers) return undefined;
+  if (typeof headers.get === "function") return headers.get(name) ?? undefined;
+  return headers[name] || headers[name.toLowerCase()];
+}
+
 function queryParams(req: NodeLikeRequest, route: string): URLSearchParams {
   const params = new URLSearchParams();
   const rawUrl = req.url || req.path || route;
@@ -151,19 +160,30 @@ function queryParams(req: NodeLikeRequest, route: string): URLSearchParams {
   return params;
 }
 
-/** Shared adapter for Vercel's (req, res) and Netlify's event return shape. */
+function routeFromRequest(req: NodeLikeRequest, fallback: "/api/search" | "/api/projects") {
+  const raw = req.url || req.path || "";
+  try {
+    const url = new URL(raw, "https://www.ayushrai.site");
+    const path = url.pathname.replace(/\/$/, "") || "/";
+    if (path.startsWith("/api/")) return path;
+  } catch {
+    // Fall back to the function's own route.
+  }
+  return fallback;
+}
+
+/** Shared adapter for Vercel's (req, res) and Netlify's Web Response runtime. */
 export async function handleAgentRequest(
   req: NodeLikeRequest,
   res: NodeLikeResponse | undefined,
   route: "/api/search" | "/api/projects",
 ) {
   const method = (req.method || req.httpMethod || "GET").toUpperCase();
-  const result = dispatchAgentApi(route, method, queryParams(req, route));
-  const origin = req.headers?.origin || req.headers?.Origin;
+  const result = dispatchAgentApi(routeFromRequest(req, route), method, queryParams(req, route));
   const headers: Record<string, string> = {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "public, max-age=300",
-    ...corsHeaders(origin),
+    ...corsHeaders(headerValue(req, "origin")),
   };
   if (res && typeof res.status === "function") {
     for (const [key, value] of Object.entries(headers)) res.setHeader(key, value);
@@ -174,12 +194,9 @@ export async function handleAgentRequest(
     res.status(result.status).json(result.body);
     return;
   }
-  return {
-    statusCode: result.status,
-    headers,
-    body:
-      method === "HEAD" || result.status === 204 || result.body == null
-        ? ""
-        : JSON.stringify(result.body),
-  };
+  const body =
+    method === "HEAD" || result.status === 204 || result.body == null
+      ? null
+      : JSON.stringify(result.body);
+  return new Response(body, { status: result.status, headers });
 }
