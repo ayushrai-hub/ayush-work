@@ -1,83 +1,119 @@
 import sgMail from '@sendgrid/mail';
 
-// Netlify Functions handler - API route for email sending
-export default async function handler(event: any, context?: any) {
-  // Set CORS headers
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json',
-  };
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Content-Type': 'application/json',
+};
 
-  // Only allow POST requests
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ message: 'Method not allowed' }),
-    };
+type MailResponse = {
+  status: (code: number) => MailResponse;
+  setHeader: (name: string, value: string) => void;
+  json: (body: unknown) => void;
+  end: (body?: string) => void;
+};
+
+type MailRequest = {
+  method?: string;
+  httpMethod?: string;
+  body?: unknown;
+  json?: () => Promise<unknown>;
+};
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function finish(
+  res: MailResponse | undefined,
+  status: number,
+  payload: unknown,
+) {
+  if (res && typeof res.status === 'function') {
+    for (const [key, value] of Object.entries(headers)) res.setHeader(key, value);
+    if (payload == null) {
+      res.status(status).end();
+      return;
+    }
+    res.status(status).json(payload);
+    return;
   }
+  return new Response(payload == null ? null : JSON.stringify(payload), {
+    status,
+    headers,
+  });
+}
 
-  // Handle preflight requests
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers,
-      body: '',
-    };
+async function readJsonBody(event: MailRequest): Promise<unknown> {
+  const body = event.body;
+  if (typeof body === 'string') return body ? JSON.parse(body) : {};
+  if (body && typeof body === 'object' && typeof (body as { getReader?: unknown }).getReader !== 'function') {
+    return body;
+  }
+  if (typeof event.json === 'function') return event.json();
+  return {};
+}
+
+export default async function handler(event: MailRequest, res?: MailResponse) {
+  const method = (event.method || event.httpMethod || 'GET').toUpperCase();
+
+  if (method === 'OPTIONS') return finish(res, 204, null);
+  if (method !== 'POST') {
+    return finish(res, 405, { message: 'Method not allowed' });
   }
 
   try {
-    const { name, email, subject, message, service } = JSON.parse(event.body);
+    const parsed = await readJsonBody(event);
+    const { name, email, subject, message, service } = (parsed ?? {}) as {
+      name?: string;
+      email?: string;
+      subject?: string;
+      message?: string;
+      service?: string;
+    };
 
-    // Validate required fields
     if (!name || !email || !subject || !message) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: 'Missing required fields'
-        }),
-      };
+      return finish(res, 400, {
+        success: false,
+        message: 'Missing required fields',
+      });
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: 'Invalid email format'
-        }),
-      };
+      return finish(res, 400, {
+        success: false,
+        message: 'Invalid email format',
+      });
     }
 
-    // Initialize SendGrid
     const sendgridApiKey = process.env.SENDGRID_API_KEY;
     if (!sendgridApiKey) {
       console.error('SENDGRID_API_KEY not configured');
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: 'Email service not configured'
-        }),
-      };
+      return finish(res, 500, {
+        success: false,
+        message: 'Email service not configured',
+      });
     }
 
     sgMail.setApiKey(sendgridApiKey);
 
-    // Prepare email content
-    const msg = {
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeSubject = escapeHtml(subject);
+    const safeMessage = escapeHtml(message);
+    const safeService = escapeHtml(service || 'Not specified');
+
+    await sgMail.send({
       to: process.env.CONTACT_EMAIL || 'ayushrai0211@gmail.com',
       from: {
         email: process.env.FROM_EMAIL || 'noreply@yourdomain.com',
-        name: 'Portfolio Contact Form'
+        name: 'Portfolio Contact Form',
       },
       subject: `Portfolio Contact: ${subject}`,
       html: `
@@ -86,14 +122,14 @@ export default async function handler(event: any, context?: any) {
 
           <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3>Contact Details:</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-            <p><strong>Service Interest:</strong> ${service || 'Not specified'}</p>
+            <p><strong>Name:</strong> ${safeName}</p>
+            <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+            <p><strong>Service Interest:</strong> ${safeService}</p>
           </div>
 
           <div style="background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
             <h3>Message:</h3>
-            <p style="white-space: pre-wrap; line-height: 1.6;">${message}</p>
+            <p style="white-space: pre-wrap; line-height: 1.6;">${safeMessage}</p>
           </div>
 
           <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
@@ -103,33 +139,24 @@ export default async function handler(event: any, context?: any) {
           </p>
         </div>
       `,
-      reply_to: {
-        email: email,
-        name: name
-      }
-    };
+      replyTo: {
+        email,
+        name,
+      },
+    });
 
-
-    await sgMail.send(msg);
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        success: true,
-        message: 'Message sent successfully!'
-      }),
-    };
-
+    return finish(res, 200, {
+      success: true,
+      message: 'Message sent successfully!',
+    });
   } catch (error) {
-    console.error('Email service error:', error);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        success: false,
-        message: 'Failed to send message. Please try again later.'
-      }),
-    };
+    const message = error instanceof SyntaxError
+      ? 'Invalid email payload'
+      : 'Failed to send message. Please try again later.';
+    if (!(error instanceof SyntaxError)) console.error('Email service error:', error);
+    return finish(res, error instanceof SyntaxError ? 400 : 500, {
+      success: false,
+      message,
+    });
   }
 }
