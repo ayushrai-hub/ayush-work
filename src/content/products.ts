@@ -26,7 +26,7 @@ export const productCategoryLabels: Record<ProductCategory, string> = {
   brand: "Brand & commerce",
 };
 
-/** Group order for `productsByCategory`. Not re-exported from index.ts. */
+/** Group order for `productsByCategory`. */
 export const productCategoryOrder: ProductCategory[] = [
   "dpi",
   "platform",
@@ -364,7 +364,7 @@ export function featuredProducts(): Product[] {
  * Products grouped by category in `productCategoryOrder`, skipping empty
  * groups. Only called by `otherProductsByCategory` today.
  */
-export function productsByCategory(): Array<{
+function productsByCategory(): Array<{
   category: ProductCategory;
   label: string;
   items: Product[];

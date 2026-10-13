@@ -2,11 +2,11 @@
  * `/work/:slug`: case study with type, status, years, stack, links, the narrative sections
  * (context, problem, role, thinking, execution, outcome), lessons, and a confirmation list.
  *
- * Looks up the item with `getWorkBySlug`. An unknown slug renders an inline "Work not found"
- * message with no PageSEO. Products whose `relatedWorkSlug` matches this item get a
+ * Looks up the item with `getWorkBySlug`. An unknown slug renders MissingRecord ("Work not
+ * found", noindex). Products whose `relatedWorkSlug` matches this item get a
  * "Product page" link, rendered inside the `item.links` block, so it only appears when the
- * work item has a `links` object. The `needsConfirmation` list is shown on this HTML page but is
- * not included in the Markdown twin.
+ * work item has a `links` object. The per-item `needsConfirmation` caveats are shown here and in
+ * the Markdown twin under "Needs confirmation".
  *
  * Connects to:
  * - Routed in src/App.tsx as `work/:slug`; every `work[].slug` is prerendered and in the sitemap
@@ -17,16 +17,12 @@
  */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import MetaList from "../components/editorial/MetaList";
 import { getWorkBySlug, products } from "../content";
-
-/** Year range label: a single year when there is no end or it equals the start, otherwise "start–end" or "start–present". */
-function yearLabel(start: number, end?: number | "present") {
-  if (!end || end === start) return String(start);
-  return `${start}–${end === "present" ? "present" : end}`;
-}
+import { yearLabel } from "../lib/format";
 
 /** Work case study component. Lazy-loaded by the `work/:slug` route in src/App.tsx. */
 export default function WorkDetailPage() {
@@ -35,12 +31,12 @@ export default function WorkDetailPage() {
 
   if (!item) {
     return (
-      <div className="site-shell page-section">
-        <PageHeader title="Work not found" dek="That case study isn’t here." />
-        <Link to="/work" className="link-accent">
-          Back to work →
-        </Link>
-      </div>
+      <MissingRecord
+        title="Work not found"
+        dek="That case study isn’t here."
+        backTo="/work"
+        backLabel="Back to work →"
+      />
     );
   }
 

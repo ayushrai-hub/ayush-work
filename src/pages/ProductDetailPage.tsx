@@ -3,7 +3,7 @@
  * architecture, maturity, trade-offs, and open questions.
  *
  * Looks up the product with `getProductBySlug` from the `slug` route param. An unknown slug
- * renders an inline "Product not found" message with no PageSEO (so no `noIndex`). Optional
+ * renders MissingRecord ("Product not found", noindex). Optional
  * sections render only when their fields exist; architecture keys with empty values are
  * dropped. Emits CreativeWork JSON-LD via `productJsonLd`. Links to the build log when it has
  * entries, otherwise explains that the log is empty.
@@ -17,6 +17,7 @@
  */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import MetaList from "../components/editorial/MetaList";
@@ -65,14 +66,7 @@ export default function ProductDetailPage() {
   const product = slug ? getProductBySlug(slug) : undefined;
 
   if (!product) {
-    return (
-      <div className="site-shell page-section">
-        <PageHeader title="Product not found" />
-        <Link to="/products" className="link-accent">
-          Back to products
-        </Link>
-      </div>
-    );
+    return <MissingRecord title="Product not found" backTo="/products" backLabel="Back to products" />;
   }
 
   const archEntries = Object.entries(product.architecture).filter(

@@ -2,15 +2,16 @@
  * One row in a work list: title, type, year range, and summary, linking to `/work/<slug>`.
  *
  * Stateless. Renders an <li>, so callers must place it inside a <ul> or <ol>. The whole row is a
- * single router Link. The type is shown with its first hyphen replaced by a space
- * (e.g. "open-source" becomes "open source").
+ * single router Link. The type is shown with its label from `projectTypeLabels`
+ * (e.g. "open-source" becomes "Open source"), and the years with the shared `yearLabel`.
  *
  * Connects to:
  * - Rendered by WorkPage (full list) and HomePage (selected work, reordered by `?audience=`)
- * - content: WorkItem type
+ * - content: WorkItem type, projectTypeLabels; lib/format: yearLabel
  */
 import { Link } from "react-router-dom";
-import type { WorkItem } from "../../content";
+import { projectTypeLabels, type WorkItem } from "../../content";
+import { yearLabel } from "../../lib/format";
 
 /** Props for WorkRow; only the WorkItem fields the row displays. */
 interface WorkRowProps {
@@ -18,12 +19,6 @@ interface WorkRowProps {
     WorkItem,
     "slug" | "title" | "type" | "summary" | "yearStart" | "yearEnd"
   >;
-}
-
-/** Formats a year range: "2024" for a single year, otherwise "2023–2025" or "2023–present". */
-function yearLabel(start: number, end?: number | "present") {
-  if (!end || end === start) return String(start);
-  return `${start}–${end === "present" ? "present" : end}`;
 }
 
 /** Linked list item for one work entry. */
@@ -39,7 +34,7 @@ export default function WorkRow({ item }: WorkRowProps) {
             {item.title}
           </h3>
           <p className="meta-row">
-            <span className="capitalize">{item.type.replace("-", " ")}</span>
+            <span className="capitalize">{projectTypeLabels[item.type] ?? item.type}</span>
             <span aria-hidden="true">·</span>
             <span>{yearLabel(item.yearStart, item.yearEnd)}</span>
           </p>

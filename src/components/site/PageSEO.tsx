@@ -3,7 +3,7 @@
  *
  * Title is `<title> · Ayush Rai`, or `Ayush Rai · <person.roleTitle>` when no title is passed
  * (the homepage). Description and image fall back to `defaultSEO`; relative images are made
- * absolute against `person.siteUrl`. The canonical comes from `canonicalUrl(path)`, which adds a
+ * absolute against `person.siteUrl`. The Person node's image is `person.portrait`. The canonical comes from `canonicalUrl(path)`, which adds a
  * trailing slash to non-root paths. With `personSchema`, emits one `@graph` holding WebSite,
  * Person, and ProfilePage nodes linked by `@id`; `jsonLd` adds a second, page-specific script.
  * Tags are written through react-helmet-async, so the prerender (entry-server) captures them too.
@@ -32,6 +32,13 @@ interface PageSEOProps {
   jsonLd?: Record<string, unknown>;
 }
 
+/** Makes a site-relative path absolute against `person.siteUrl`; absolute URLs pass through, and no path gives undefined. */
+function absoluteUrl(src?: string): string | undefined {
+  if (!src) return undefined;
+  if (src.startsWith("http")) return src;
+  return `${person.siteUrl}${src.startsWith("/") ? src : `/${src}`}`;
+}
+
 /** Writes the head tags for one page; renders nothing in the body. */
 export default function PageSEO({
   title,
@@ -46,9 +53,7 @@ export default function PageSEO({
     ? `${title} · ${person.name}`
     : `${person.name} · ${person.roleTitle}`;
   const canonical = canonicalUrl(path);
-  const ogImage = image?.startsWith("http")
-    ? image
-    : `${person.siteUrl}${image?.startsWith("/") ? image : `/${image}`}`;
+  const ogImage = absoluteUrl(image);
 
   const jsonLd = personSchema
     ? {
@@ -70,7 +75,7 @@ export default function PageSEO({
             email: person.email,
             jobTitle: person.roleTitle,
             description: person.tagline,
-            image: `${person.siteUrl}/IMG_0029.jpeg`,
+            image: absoluteUrl(person.portrait),
             workLocation: {
               "@type": "Place",
               name: person.location,
@@ -101,12 +106,12 @@ export default function PageSEO({
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={canonical} />
-      <meta property="og:image" content={ogImage} />
+      {ogImage && <meta property="og:image" content={ogImage} />}
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
+      {ogImage && <meta name="twitter:image" content={ogImage} />}
 
       {jsonLd && (
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>

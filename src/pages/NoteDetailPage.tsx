@@ -13,6 +13,7 @@
  */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import { notes } from "../content";
@@ -23,14 +24,7 @@ export default function NoteDetailPage() {
   const note = notes.find((n) => n.slug === slug);
 
   if (!note) {
-    return (
-      <div className="site-shell page-section">
-        <PageHeader title="Note not found" />
-        <Link to="/notes" className="link-accent">
-          Back to notes →
-        </Link>
-      </div>
-    );
+    return <MissingRecord title="Note not found" backTo="/notes" backLabel="Back to notes →" />;
   }
 
   return (

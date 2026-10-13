@@ -27,7 +27,7 @@ export const principles: Principle[] = [
     statement:
       "A live MVP with open questions beats a perfect deck that never meets users.",
     inPractice:
-      "Open Framework and AyushMushrooms ship as MVPs with explicit unfinished edges.",
+      "AyushMushrooms ships as an MVP and Open Framework as a front-end prototype, both with explicit unfinished edges.",
   },
   {
     slug: "evidence-over-adjectives",
@@ -35,7 +35,7 @@ export const principles: Principle[] = [
     statement:
       "Prefer links, dates, and roles over 'visionary', 'elite', or 'transformative'.",
     inPractice:
-      "Research and leadership claims that lack evidence go to needsConfirmation or get omitted.",
+      "Research and leadership claims that lack evidence are held back until confirmed, or omitted.",
   },
   {
     slug: "interdisciplinary-leverage",
@@ -59,7 +59,7 @@ export const principles: Principle[] = [
     statement:
       "Consent, auditability, and progressive verification are features, especially in civil society tooling.",
     inPractice:
-      "Open Framework architecture starts from RBAC, consent, and audit logs.",
+      "Open Framework treats consent, verification, and audit trails as design goals from the start; the current prototype does not implement them yet.",
   },
   {
     slug: "clarity-before-complexity",

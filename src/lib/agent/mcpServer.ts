@@ -93,14 +93,15 @@ export function createPortfolioMcpServer() {
     "compare_projects",
     {
       description:
-        "Compare two to four public projects by slug. Rejects duplicates. Same comparison as GET /api/v1/compare?slugs=.",
+        "Compare two to four public projects by slug. Rejects duplicates. Archived projects are reported as missing unless includeArchive is true. Same comparison as GET /api/v1/compare?slugs= (archive=1).",
       inputSchema: {
         slugs: z.array(z.string()).min(2).max(4).describe("Two to four project slugs"),
+        includeArchive: z.boolean().optional(),
       },
       annotations: { readOnlyHint: true },
     },
-    async ({ slugs }) => {
-      const result = comparePublicProjects(slugs);
+    async ({ slugs, includeArchive }) => {
+      const result = comparePublicProjects(slugs, { includeArchive });
       if (!result.ok) return toolError(result.message);
       return text({ projects: result.projects, missing: result.missing });
     },
@@ -110,10 +111,12 @@ export function createPortfolioMcpServer() {
     "search_portfolio",
     {
       description:
-        "Search Ayush Rai's public site index: work, products, projects, research, and notes. Lexical match only, the same function as GET /api/v1/search. Not semantic search.",
+        "Search Ayush Rai's public site index: work, products, projects, research, and notes. Lexical match only, the same function as GET /api/v1/search. Not semantic search. Pass nextCursor back as cursor for the next page.",
       inputSchema: {
         query: z.string().max(200).describe("Search text. Empty returns the default slice."),
         type: z.string().optional().describe("Optional record type, such as work or research"),
+        limit: z.number().int().min(1).max(20).optional().describe("Results per page"),
+        cursor: z.string().optional().describe("nextCursor from a previous call"),
       },
       annotations: { readOnlyHint: true },
     },

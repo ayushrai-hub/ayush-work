@@ -1,29 +1,36 @@
 /**
  * In-page "Agent view": shows the current route's Markdown twin with copy and download controls.
  *
- * Reads the pathname from the router, looks up the generated Markdown for that path, and renders
- * it in a <pre>. Copy tries the async Clipboard API, then a hidden-textarea execCommand fallback,
- * and if both fail selects the <pre> text and asks the user to copy manually. Download saves the
- * Markdown as a Blob named after the `.md` URL. Paths without a twin get a short notice linking
- * to llms.txt. The view sets `robots: noindex, follow` and no title or canonical of its own,
- * because the page's PageSEO is not rendered while this view replaces the route outlet.
+ * Reads the pathname from the router, looks up the generated twin for that path (a trailing slash
+ * is ignored), and renders its Markdown in a <pre>. Copy tries the async Clipboard API, then a
+ * hidden-textarea execCommand fallback, and if both fail selects the <pre> text and asks the user to
+ * press the platform's copy shortcut. Download saves the Markdown as a Blob named after the `.md`
+ * URL. Paths without a twin get a short notice linking to llms.txt. Because the page's own PageSEO
+ * does not render while this view replaces the route outlet, the view sets its own head: title
+ * "<Page> (Markdown) · Ayush Rai", a canonical pointing at the human page, and
+ * `robots: noindex, follow`.
  *
  * Connects to:
  * - Rendered by SiteLayout in place of <Outlet /> when the URL has `?agent=1` (toggled from SiteHeader)
- * - lib/agent/markdown: renderPageMarkdown (same Markdown served at `<path>.md`) and markdownPublicPath
+ * - lib/agent/markdown: getAgentPage (same Markdown served at `<path>.md`) and markdownPublicPath
+ * - lib/canonical: canonicalUrl; lib/platform: shortcutLabel
  */
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useLocation } from "react-router-dom";
-import { markdownPublicPath, renderPageMarkdown } from "../../lib/agent/markdown";
+import { person } from "../../content";
+import { getAgentPage, markdownPublicPath } from "../../lib/agent/markdown";
+import { canonicalUrl } from "../../lib/canonical";
+import { shortcutLabel } from "../../lib/platform";
 
 /** Agent view for the current pathname; `copied` and `copyFailed` drive the button label and live-region text. */
 export default function AgentView() {
   const { pathname } = useLocation();
-  const markdown = renderPageMarkdown(pathname);
+  const page = getAgentPage(pathname);
+  const markdown = page?.markdown ?? null;
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
-  const filePath = markdownPublicPath(pathname);
+  const filePath = markdownPublicPath(page?.path ?? pathname);
   const filename = filePath.split("/").pop() || "page.md";
 
   /** Copies the Markdown: Clipboard API, then execCommand fallback, then select-and-prompt. */
@@ -72,9 +79,13 @@ export default function AgentView() {
     window.setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
-  if (!markdown) {
+  if (!page || !markdown) {
     return (
       <div className="site-shell page-section">
+        <Helmet>
+          <title>{`No agent view · ${person.name}`}</title>
+          <meta name="robots" content="noindex, follow" />
+        </Helmet>
         <h1 className="font-display text-3xl text-ink">No agent view for this page</h1>
         <p className="mt-4 max-w-measure text-ink-muted">
           This path does not have a Markdown twin. The index of pages that do is{" "}
@@ -92,11 +103,13 @@ export default function AgentView() {
     );
   }
 
-  const copyLabel = copied ? "Copied" : copyFailed ? "Selected. Press ⌘C" : "Copy";
+  const copyLabel = copied ? "Copied" : copyFailed ? `Selected. Press ${shortcutLabel("C")}` : "Copy";
 
   return (
     <div className="site-shell page-section">
       <Helmet>
+        <title>{`${page.title} (Markdown) · ${person.name}`}</title>
+        <link rel="canonical" href={canonicalUrl(page.path)} />
         <meta name="robots" content="noindex, follow" />
       </Helmet>
       <div className="flex flex-wrap items-baseline justify-between gap-3">

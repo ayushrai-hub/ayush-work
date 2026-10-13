@@ -31,7 +31,6 @@ export {
   products,
   getProductBySlug,
   featuredProducts,
-  productsByCategory,
   otherProductsByCategory,
   productCategoryLabels,
   productStageLabels,
@@ -42,20 +41,16 @@ export {
   archivedProjects,
   getProjectBySlug,
   projectsByCategory,
-  projectsByType,
   projectCategoryLabels,
   projectTypeLabels,
 } from "./projects";
 export {
   research,
   researchAwardsNeedsConfirmation,
+  researchFundingNeedsConfirmation,
   getResearchBySlug,
 } from "./research";
-export {
-  experience,
-  currentExperience,
-  getExperienceBySlug,
-} from "./experience";
+export { experience } from "./experience";
 export { education } from "./education";
 export { leadership, leadershipNeedsConfirmation } from "./leadership";
 export {

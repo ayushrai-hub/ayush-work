@@ -3,7 +3,8 @@
  *
  * A flat list grouped by `category` on the page. Items with `todo: true` are
  * shown with an "unconfirmed" note; inline comments say what still needs
- * checking.
+ * checking. Open Framework is only named where docs/content-fact-check.md §13
+ * verifies it (a Vite/React prototype, not Next.js, PostgreSQL, or Docker).
  *
  * Connects to:
  * - UsesPage.
@@ -31,7 +32,7 @@ export const uses: UseItem[] = [
   {
     name: "Vite",
     category: "runtime",
-    notes: "Dev server and build for this React portfolio.",
+    notes: "Dev server and build for this React portfolio and the Open Framework prototype.",
   },
   {
     name: "React",
@@ -52,7 +53,7 @@ export const uses: UseItem[] = [
     name: "Next.js",
     category: "framework",
     notes:
-      "Used on Open Framework, AyushMushrooms, Shiksha-Mitra, Expert-O, and related apps, not this Vite portfolio.",
+      "Used on AyushMushrooms, Shiksha-Mitra, Expert-O, and related apps, not this Vite portfolio.",
   },
   {
     name: "Tailwind CSS",
@@ -89,18 +90,6 @@ export const uses: UseItem[] = [
     name: "MongoDB",
     category: "other",
     notes: "Used in Shiksha-Mitra data layer.",
-    todo: true,
-  },
-  {
-    name: "PostgreSQL",
-    category: "other",
-    notes: "Target data store in Open Framework architecture.",
-    todo: true, // architecture intent vs. production today
-  },
-  {
-    name: "Docker",
-    category: "ops",
-    notes: "Part of Open Framework infra direction.",
     todo: true,
   },
 ];

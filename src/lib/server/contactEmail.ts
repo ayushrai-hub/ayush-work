@@ -1,54 +1,89 @@
 /**
- * Host-independent contact form logic: validate the submitted fields and send them as an email via SendGrid.
+ * Host-independent contact form logic: rate-limit, validate, and send the submitted fields as an
+ * email via SendGrid.
  *
- * handleContactEmail takes an HTTP method and a raw body (JSON string, bytes, or an already parsed
- * object) and returns a status plus JSON body; it never touches a request or response object. It
- * reads env SENDGRID_API_KEY (required), FROM_EMAIL (sender), and CONTACT_EMAIL (recipient inbox);
- * the last two fall back to hard-coded defaults. The visitor's address is set as reply-to.
+ * handleContactEmail takes an HTTP method, a raw body (JSON string, bytes, or an already parsed
+ * object), and the client's rate-limit key, and returns a status, JSON body, and extra headers; it
+ * never touches a request or response object. It needs env SENDGRID_API_KEY and FROM_EMAIL (a
+ * SendGrid-verified sender); if either is missing it answers 500 "Email service not configured"
+ * without attempting a send. CONTACT_EMAIL (recipient) defaults to the public address in
+ * src/content/person.ts. The visitor's address is set as reply-to.
+ *
+ * Abuse protection: a per-client limit (CONTACT_RATE_LIMIT, counted per function instance, so the
+ * real ceiling across instances is higher), field length limits, and a honeypot field. A filled
+ * honeypot gets the normal success reply but nothing is sent. Logs never include visitor fields.
  *
  * Connects to:
  * - api/send-email.ts, which adapts Netlify, Vercel, and legacy event calls to this function.
+ * - src/lib/contactFields.ts (limits and honeypot name, shared with the browser form).
+ * - src/lib/agent/rateLimit.ts (createRateLimiter).
  * - src/__tests__/contactEmail.test.ts (mocks @sendgrid/mail).
  * - @sendgrid/mail.
  */
 import sgMail from "@sendgrid/mail";
+import { person } from "../../content/person";
+import { createRateLimiter, type RateLimitPolicy } from "../agent/rateLimit";
+import { CONTACT_FIELD_LIMITS, CONTACT_HONEYPOT_FIELD } from "../contactFields";
 
 /** Fields the contact form posts. All are optional here because the body is untrusted. */
 type ContactFields = {
-  name?: string;
-  email?: string;
-  subject?: string;
-  message?: string;
-  service?: string;
+  name?: unknown;
+  email?: unknown;
+  subject?: unknown;
+  message?: unknown;
+  service?: unknown;
+  [CONTACT_HONEYPOT_FIELD]?: unknown;
 };
 
-/** HTTP status and JSON body for the caller to send. A null body means an empty response (preflight). */
+/** HTTP status, JSON body, and extra headers for the caller to send. A null body means an empty response (preflight). */
 export type ContactEmailResult = {
   status: number;
   body: { success?: boolean; message: string } | null;
+  headers?: Record<string, string>;
 };
+
+/** Five messages per client per ten minutes, per function instance. */
+export const CONTACT_RATE_LIMIT: RateLimitPolicy = {
+  name: "contact",
+  quota: 5,
+  windowSeconds: 600,
+};
+
+const contactLimiter = createRateLimiter(CONTACT_RATE_LIMIT);
+
+/** Clears the contact limiter's windows. Used by tests. */
+export function resetContactRateLimit() {
+  contactLimiter.reset();
+}
+
+const SENT = { success: true, message: "Message sent successfully!" } as const;
 
 /**
  * Normalizes the body: parses a JSON string or UTF-8 bytes, treats empty/null as `{}`, and passes
- * objects through. Returns null for malformed JSON so the handler can answer 400.
+ * objects through. Returns null for malformed JSON or a non-object body so the handler can answer 400.
  */
 function readFields(raw: unknown): ContactFields | null {
+  let value: unknown = raw;
   try {
     if (typeof raw === "string" || raw == null) {
-      return JSON.parse(raw && raw.length > 0 ? raw : "{}") as ContactFields;
-    }
-    if (raw instanceof Uint8Array) {
-      return JSON.parse(new TextDecoder().decode(raw)) as ContactFields;
+      value = JSON.parse(raw && raw.length > 0 ? raw : "{}");
+    } else if (raw instanceof Uint8Array) {
+      value = JSON.parse(new TextDecoder().decode(raw));
     }
   } catch {
     return null;
   }
-  return raw as ContactFields;
+  return value && typeof value === "object" && !Array.isArray(value) ? (value as ContactFields) : null;
 }
 
 /** True for a non-empty string; JSON bodies can carry numbers, arrays, or objects instead. */
 function isFilled(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
+}
+
+/** Collapses line breaks so a value is safe in a single-line header such as the subject. */
+function singleLine(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
 }
 
 /** Escapes visitor text before it is placed in the notification email's HTML. */
@@ -61,33 +96,55 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/** 400 result with the shared failure shape. */
+function badRequest(message: string): ContactEmailResult {
+  return { status: 400, body: { success: false, message } };
+}
+
 /**
  * Validate a contact request and send it through SendGrid.
  *
- * OPTIONS returns 200 with no body; other non-POST methods return 405. A body that is not valid
- * JSON, missing name, email, subject, or message, or a malformed email returns 400. A missing
- * SENDGRID_API_KEY returns 500. Field values are HTML-escaped before they go into the email body.
- * SendGrid errors are not caught here; they propagate to the caller.
- * Runtime-specific request and response adaptation stays in api/send-email.ts.
+ * OPTIONS returns 200 with no body; other non-POST methods return 405. Each POST counts against
+ * CONTACT_RATE_LIMIT for `clientKey`; over the limit returns 429 with Retry-After. A body that is
+ * not a JSON object, missing name, email, subject, or message, an over-long field, or a malformed
+ * email returns 400. A filled honeypot returns the success reply without sending. Missing
+ * SENDGRID_API_KEY or FROM_EMAIL returns 500. A SendGrid failure returns 502 and logs only the
+ * error code. Runtime-specific request and response adaptation stays in api/send-email.ts.
  */
 export async function handleContactEmail(
   method: string,
   rawBody: unknown,
+  clientKey = "anonymous",
 ): Promise<ContactEmailResult> {
   if (method === "OPTIONS") {
     return { status: 200, body: null };
   }
 
   if (method !== "POST") {
-    return { status: 405, body: { message: "Method not allowed" } };
+    return { status: 405, body: { message: "Method not allowed" }, headers: { Allow: "POST, OPTIONS" } };
+  }
+
+  const limit = contactLimiter.take(clientKey);
+  if (!limit.allowed) {
+    return {
+      status: 429,
+      body: {
+        success: false,
+        message: `Too many messages. Please wait a few minutes, or email ${person.email} directly.`,
+      },
+      headers: limit.headers,
+    };
   }
 
   const fields = readFields(rawBody);
   if (!fields) {
-    return {
-      status: 400,
-      body: { success: false, message: "Request body must be valid JSON" },
-    };
+    return badRequest("Request body must be valid JSON");
+  }
+
+  const honeypot = fields[CONTACT_HONEYPOT_FIELD];
+  if (typeof honeypot === "string" && honeypot.trim().length > 0) {
+    console.warn("Contact form honeypot filled; message dropped");
+    return { status: 200, body: { ...SENT }, headers: limit.headers };
   }
 
   const { name, email, subject, message, service } = fields;
@@ -99,47 +156,56 @@ export async function handleContactEmail(
     !isFilled(message) ||
     (service !== undefined && typeof service !== "string")
   ) {
-    return {
-      status: 400,
-      body: { success: false, message: "Missing required fields" },
-    };
+    return badRequest("Missing required fields");
+  }
+
+  if (
+    name.length > CONTACT_FIELD_LIMITS.name ||
+    email.length > CONTACT_FIELD_LIMITS.email ||
+    subject.length > CONTACT_FIELD_LIMITS.subject ||
+    message.length > CONTACT_FIELD_LIMITS.message ||
+    (typeof service === "string" && service.length > CONTACT_FIELD_LIMITS.service)
+  ) {
+    return badRequest("One or more fields are too long");
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return {
-      status: 400,
-      body: { success: false, message: "Invalid email format" },
-    };
+    return badRequest("Invalid email format");
   }
 
   const sendgridApiKey = process.env.SENDGRID_API_KEY;
-  if (!sendgridApiKey) {
-    console.error("SENDGRID_API_KEY not configured");
+  const fromEmail = process.env.FROM_EMAIL;
+  if (!sendgridApiKey || !fromEmail) {
+    const missing = [!sendgridApiKey && "SENDGRID_API_KEY", !fromEmail && "FROM_EMAIL"].filter(Boolean);
+    console.error(`Contact email not configured: missing ${missing.join(", ")}`);
     return {
       status: 500,
       body: { success: false, message: "Email service not configured" },
     };
   }
 
+  const safeName = singleLine(name);
+  const safeService = typeof service === "string" && service.length > 0 ? service : "Not specified";
+
   sgMail.setApiKey(sendgridApiKey);
-  // The FROM_EMAIL fallback is a placeholder; SendGrid only accepts a verified sender.
-  await sgMail.send({
-    to: process.env.CONTACT_EMAIL || "ayushrai0211@gmail.com",
-    from: {
-      email: process.env.FROM_EMAIL || "noreply@yourdomain.com",
-      name: "Portfolio Contact Form",
-    },
-    subject: `Portfolio Contact: ${subject}`,
-    html: `
+  try {
+    await sgMail.send({
+      to: process.env.CONTACT_EMAIL || person.email,
+      from: {
+        email: fromEmail,
+        name: "Portfolio Contact Form",
+      },
+      subject: `Portfolio Contact: ${singleLine(subject)}`,
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2563eb;">New Contact Form Submission</h2>
 
           <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3>Contact Details:</h3>
-            <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+            <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
             <p><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
-            <p><strong>Service Interest:</strong> ${escapeHtml(service || "Not specified")}</p>
+            <p><strong>Service Interest:</strong> ${escapeHtml(safeService)}</p>
           </div>
 
           <div style="background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
@@ -154,14 +220,19 @@ export async function handleContactEmail(
           </p>
         </div>
       `,
-    replyTo: {
-      email,
-      name,
-    },
-  });
+      replyTo: {
+        email,
+        name: safeName,
+      },
+    });
+  } catch (error) {
+    const code = (error as { code?: unknown }).code;
+    console.error(`SendGrid send failed (${typeof code === "number" ? code : "no status"})`);
+    return {
+      status: 502,
+      body: { success: false, message: "Failed to send message. Please try again later." },
+    };
+  }
 
-  return {
-    status: 200,
-    body: { success: true, message: "Message sent successfully!" },
-  };
+  return { status: 200, body: { ...SENT }, headers: limit.headers };
 }

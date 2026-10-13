@@ -24,7 +24,7 @@ export const API_VERSIONING_POLICY =
 
 /** Access and caching note, shared with the developer docs. */
 export const API_ACCESS_NOTE =
-  "Free and public. No account, API key, or sandbox is needed because every endpoint is read-only over published content. Clients may cache responses for five minutes.";
+  "Free and public. No account, API key, or sandbox is needed because every endpoint is read-only over published content. Clients may cache responses for five minutes. REST responses grant CORS only to the site's own origins, so call the REST API from a server, an agent, or the CLI rather than from a browser page on another site. The MCP endpoint and its Server Card allow any origin.";
 
 /** Rate-limit note built from the constants in `rateLimit.ts`, shared with the developer docs. */
 export const API_RATE_LIMIT_NOTE = `${RATE_LIMIT_QUOTA} requests per ${RATE_LIMIT_WINDOW_SECONDS} seconds per client address, counted per server instance. Every response carries RateLimit-Policy and RateLimit headers (draft-ietf-httpapi-ratelimit-headers-11). Over the limit, the API returns 429 with a Retry-After header in seconds and error code rate_limited.`;
@@ -45,7 +45,7 @@ const ERROR_CODES: ApiErrorCode[] = [
 /** `application/json` content object that references a component schema by name. */
 const json = (ref: string) => ({ "application/json": { schema: { $ref: `#/components/schemas/${ref}` } } });
 
-/** RateLimit header references used by the 200 and 429 responses. */
+/** RateLimit header references used by the 200, 400, 404, and 429 responses. */
 const rateLimitHeaders = {
   RateLimit: { $ref: "#/components/headers/RateLimit" },
   "RateLimit-Policy": { $ref: "#/components/headers/RateLimitPolicy" },
@@ -124,6 +124,19 @@ export function buildOpenApiDocument() {
   const origin = person.siteUrl.replace(/\/$/, "");
   const categories = Object.keys(projectCategoryLabels);
   const projectTypes = Object.keys(projectTypeLabels);
+  /** Filters and paging shared by `/api/v1/projects` and its `/api/projects` alias. */
+  const listParameters = [
+    { name: "category", in: "query", required: false, schema: { type: "string", enum: categories } },
+    { name: "type", in: "query", required: false, schema: { type: "string", enum: projectTypes } },
+    {
+      name: "limit",
+      in: "query",
+      required: false,
+      schema: { type: "integer", minimum: 1, maximum: 20 },
+    },
+    archiveParameter,
+    cursorParameter,
+  ];
   return {
     openapi: "3.1.0",
     info: {
@@ -145,7 +158,7 @@ export function buildOpenApiDocument() {
           description:
             "v1 alias. No query lists projects in pages, like /api/v1/projects. slug returns one project. compare accepts 2 to 4 comma-separated slugs.",
           parameters: [
-            cursorParameter,
+            ...listParameters,
             { name: "slug", in: "query", required: false, schema: { type: "string" } },
             {
               name: "compare",
@@ -154,7 +167,13 @@ export function buildOpenApiDocument() {
               description: "Comma-separated slugs, two to four",
               schema: { type: "string" },
             },
-            archiveParameter,
+            {
+              name: "slugs",
+              in: "query",
+              required: false,
+              description: "Same as compare; read only when compare is absent.",
+              schema: { type: "string" },
+            },
           ],
           responses: {
             ...ok("A page of projects, one project, or a comparison", "ProjectsAliasResponse"),
@@ -170,18 +189,7 @@ export function buildOpenApiDocument() {
           summary: "List public projects",
           description:
             "Active projects by default. Pass archive=1 to include archived records. Maximum limit is 20 when set; the default page is 50. Page with cursor and nextCursor.",
-          parameters: [
-            { name: "category", in: "query", required: false, schema: { type: "string", enum: categories } },
-            { name: "type", in: "query", required: false, schema: { type: "string", enum: projectTypes } },
-            {
-              name: "limit",
-              in: "query",
-              required: false,
-              schema: { type: "integer", minimum: 1, maximum: 20 },
-            },
-            archiveParameter,
-            cursorParameter,
-          ],
+          parameters: listParameters,
           responses: {
             ...ok("One page of projects", "ProjectListResponse"),
             "400": { $ref: "#/components/responses/BadRequest" },
@@ -269,8 +277,16 @@ export function buildOpenApiDocument() {
         },
       },
       responses: {
-        BadRequest: { description: "Invalid query, filter, slug, or cursor", content: json("ErrorResponse") },
-        NotFound: { description: "Unknown or archived slug", content: json("ErrorResponse") },
+        BadRequest: {
+          description: "Invalid query, filter, slug, or cursor",
+          headers: rateLimitHeaders,
+          content: json("ErrorResponse"),
+        },
+        NotFound: {
+          description: "Unknown or archived slug",
+          headers: rateLimitHeaders,
+          content: json("ErrorResponse"),
+        },
         TooManyRequests: {
           description: "Rate limit exceeded",
           headers: {

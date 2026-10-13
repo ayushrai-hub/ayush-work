@@ -528,7 +528,7 @@ export const domains: DomainRecord[] = [
       {
         heading: "What I will not carry forward from older copy",
         paragraphs: [
-          "Earlier materials claimed a time reduction and a document volume. Those numbers are unverified and are not repeated here. A possible LNCT internal research grant is also unverified. The research record keeps them in needsConfirmation.",
+          "Earlier materials claimed a time reduction and a document volume. Those numbers are unverified and are not repeated here. A funding source named in older materials is also unverified. They stay off the site until confirmed.",
         ],
       },
       {

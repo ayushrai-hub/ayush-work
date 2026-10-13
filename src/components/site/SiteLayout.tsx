@@ -4,26 +4,32 @@
  * Owns the search dialog's open state and registers global shortcuts: Cmd/Ctrl+K opens search
  * from anywhere, including inside inputs; "/" opens it only when focus is not in an editable
  * field. When the URL has `?agent=1`, <main> renders AgentView (the route's Markdown twin)
- * instead of the matched page via <Outlet />.
+ * instead of the matched page via <Outlet />. The page area sits inside an ErrorBoundary keyed on
+ * the URL, so a page that throws (or a lazy chunk that fails to load) leaves the header and footer
+ * in place, and navigating elsewhere recovers.
  *
  * Connects to:
  * - Used as the parent layout route in App.tsx (AppRoutes), for both the browser app and the
  *   entry-server prerender
- * - Renders SkipLink, SiteHeader, SiteFooter, SearchDialog, AgentView, and PortfolioWebMcp
+ * - Renders ScrollManager, SkipLink, SiteHeader, SiteFooter, SearchDialog, AgentView,
+ *   PortfolioWebMcp, and components/layout/ErrorBoundary
  */
 import { useCallback, useEffect, useState } from "react";
-import { Outlet, useSearchParams } from "react-router-dom";
+import { Outlet, useLocation, useSearchParams } from "react-router-dom";
+import ErrorBoundary from "../layout/ErrorBoundary";
 import SkipLink from "./SkipLink";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import SearchDialog from "./SearchDialog";
 import AgentView from "./AgentView";
 import PortfolioWebMcp from "./PortfolioWebMcp";
+import ScrollManager from "./ScrollManager";
 
 /** Layout route component; `searchOpen` is the SearchDialog state, `agentView` mirrors `?agent=1`. */
 export default function SiteLayout() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [params] = useSearchParams();
+  const location = useLocation();
   const agentView = params.get("agent") === "1";
   const openSearch = useCallback(() => setSearchOpen(true), []);
   const closeSearch = useCallback(() => setSearchOpen(false), []);
@@ -55,10 +61,13 @@ export default function SiteLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-paper text-ink">
+      <ScrollManager />
       <SkipLink />
       <SiteHeader onOpenSearch={openSearch} />
       <main id="main" className="flex-1">
-        {agentView ? <AgentView /> : <Outlet />}
+        <ErrorBoundary resetKey={`${location.pathname}${location.search}`}>
+          {agentView ? <AgentView /> : <Outlet />}
+        </ErrorBoundary>
       </main>
       <SiteFooter />
       <SearchDialog open={searchOpen} onClose={closeSearch} />

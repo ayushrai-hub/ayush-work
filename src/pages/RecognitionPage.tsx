@@ -39,7 +39,7 @@ export default function RecognitionPage() {
         <PageHeader
           label="Recognition"
           title="Certificates & awards"
-          dek="Featured first. Archive available on request, no vanity strip."
+          dek="Featured first. Older items are in the archive below, no vanity strip."
         />
 
         <ul className="max-w-measure space-y-8">

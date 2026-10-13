@@ -1,21 +1,23 @@
 /**
  * `/products/:slug/log`: dated build log for one product, newest entry first.
  *
- * Looks up the product with `getProductBySlug`. An unknown slug renders an inline "Log not
- * found" message with no PageSEO. Entries are copied and sorted by `date` descending (string
- * compare, so dates must be ISO-formatted). An empty log shows a note explaining that entries
- * need a dated record; the page is still indexable in that case.
+ * Looks up the product with `getProductBySlug`. An unknown slug renders MissingRecord ("Log not
+ * found", noindex). Entries are copied and sorted by `date` descending (string compare, so dates
+ * must be ISO-formatted). An empty log shows a note explaining that entries need a dated record,
+ * and the page is marked `noindex` so search engines skip the thin page (it is also left out of
+ * the sitemap).
  *
  * Connects to:
  * - Routed in src/App.tsx as `products/:slug/log`. src/lib/publicRoutes.ts prerenders the log
  *   for every product but lists only non-empty logs in the sitemap. ProductDetailPage and
  *   ProductsPage link here.
- * - Content from src/content (`getProductBySlug`); components PageSEO, PageHeader, Prose.
+ * - Content from src/content (`getProductBySlug`); components PageSEO, PageHeader, Prose, MissingRecord.
  * - Markdown twin `/products/<slug>/log.md` built by `productLogPage()` in src/lib/agent/markdown.ts
  *   (generated for every product, including empty logs).
  */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import { getProductBySlug } from "../content";
@@ -26,14 +28,7 @@ export default function ProductLogPage() {
   const product = slug ? getProductBySlug(slug) : undefined;
 
   if (!product) {
-    return (
-      <div className="site-shell page-section">
-        <PageHeader title="Log not found" />
-        <Link to="/products" className="link-accent">
-          Back to products →
-        </Link>
-      </div>
-    );
+    return <MissingRecord title="Log not found" backTo="/products" backLabel="Back to products →" />;
   }
 
   const entries = [...product.log].sort((a, b) =>
@@ -46,6 +41,7 @@ export default function ProductLogPage() {
         title={`${product.title} log`}
         description={`Build log for ${product.title}.`}
         path={`/products/${product.slug}/log`}
+        noIndex={entries.length === 0}
       />
       <article className="site-shell page-section">
         <PageHeader

@@ -33,9 +33,13 @@ Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com
 - **Content SSOT:** Prefer `import { … } from '../content'` instead of hardcoding copy. Search, Markdown, REST, WebMCP, and MCP must call `src/lib/agent/` rather than a second dataset. Omit phone numbers from public pages and machine output. Keep `needsConfirmation` / withheld award lists out of machine output
 - **Flagship products:** `featured` on `src/content/products.ts` orders The Open Framework, AGENYRA, and MedVoice. Stages include `building` and `experimental` via `productStageLabels`. The product page and the `/work/:slug` case study share a slug and say different things. MedVoice has no demo URL until one is verified. AGENYRA waitlist admin and MedVoice demo credentials stay out of public copy. Audit: `docs/flagship-products-audit.md`.
 - **Search ranking:** lexical tiers shared by the dialog, REST, MCP, and WebMCP (`src/lib/agent/search.ts`): exact title, title substring, tag or type, then summary; ties keep content order. Not semantic
-- **Code documentation:** every source file starts with a `/** */` header (what it is for, how it works, "Connects to:" with grep-verified callers and dependencies); every function/component/hook has a short JSDoc. Legacy files say they are not routed. Keep these accurate when code changes
+- **Code documentation:** every source file starts with a `/** */` header (what it is for, how it works, "Connects to:" with grep-verified callers and dependencies); every function/component/hook has a short JSDoc. Keep these accurate when code changes
 - **Prerender list:** `src/lib/publicRoutes.ts` — `sitemapRoutes()` (indexable) and `prerenderRoutes()` (adds all product logs, writing detail pages, `/design-system`). Anything with a Markdown twin must be prerendered
-- **Contact email:** `src/lib/server/contactEmail.ts` HTML-escapes visitor fields, returns 400 for malformed JSON or non-string fields
+- **Contact email:** `src/lib/server/contactEmail.ts` HTML-escapes visitor fields, returns 400 for malformed JSON or non-string fields, length limits from `src/lib/contactFields.ts`, `website` honeypot, 5 per 10 min per client (per instance), 500 when `SENDGRID_API_KEY` or `FROM_EMAIL` is missing (no fallback sender)
+- **Hydration:** `src/main.tsx` keeps `createRoot`. A `hydrateRoot` trial (Oct 2026) was clean on all 56 routes in light mode but mismatched for a saved dark theme (ThemeProvider reads localStorage in its first render), `?agent=1`, and `?audience=`. See issue 10 in `docs/known-issues.md`
+- **Coverage gate:** `vite.config.ts` thresholds 95/95/87/91 (lines/statements/branches/functions); `npm run test:coverage` and CI fail below them. Measure before raising
+- **Search types:** `SEARCH_ITEM_TYPES` in `src/content/types.ts` is the only list; `SearchItem["type"]` and `SEARCH_TYPES` derive from it
+- **Legacy SPA:** removed from `main` (components, tests, unused packages); recover from tag `legacy-portfolio-spa`
 - **Analytics:** GA4 `G-VBS0YJ07R8` loads from the inline snippet in `index.html`; `initGA()` skips injection when that script exists (prevents double page_view). GTM `GTM-NJZ5ZBX4` also loads from `index.html`
 - **SPA fallback:** do not set Netlify `force` on `/*` → `/index.html`. Static HTML, `.md`, `llms.txt`, and the sitemap must win over the shell
 - **Deployment ownership:** Keep host-required `vercel.json`, `netlify.toml`, and public `api/*.ts` entry points at the repository root. Put reusable server-only logic in `src/lib/server/` and deployment notes in `docs/deployment/`
@@ -62,6 +66,7 @@ Product direction for the site rebuild (Vite + React Router MPA — not Next.js)
 | `docs/seo/measurement-plan.md` | Search Console and analytics review, no fake metrics |
 | `docs/deployment/vercel.md` | Vercel layout, variables, preview checks, and safe rollout |
 | `docs/API_ENDPOINTS.md` | Every endpoint, parameters, errors, rate limit, CORS, contact API |
+| `docs/known-issues.md` | Open issues (P1–P3) with owner, cause, and suggested fix; update when one is fixed |
 | `docs/personal-positioning.md` | Positioning narrative and checks |
 | `docs/migration-plan.md` | Phased migration on current stack |
 | `docs/content-style.md` | Voice, banned hype, copy patterns |
