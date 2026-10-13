@@ -1,7 +1,23 @@
+/**
+ * Vitest setup file: runs before every test file to add matchers, fill jsdom gaps, and mock heavy UI libraries.
+ *
+ * Registered in vite.config.ts as `test.setupFiles: ['./src/setupTests.ts']`
+ * (environment jsdom, globals on). Top-level `vi.mock` calls here apply to every
+ * suite; a test file can override one with its own `vi.mock` (App.test.tsx
+ * does this for framer-motion). Several mocks exist only for the legacy
+ * components in src/components, whose tests in src/__tests__/legacy are
+ * excluded from the run by vite.config.ts `test.exclude`.
+ *
+ * Connects to:
+ * - vite.config.ts (test.setupFiles); every non-legacy suite in src/__tests__
+ * - @testing-library/jest-dom and jest-axe matchers (toBeInTheDocument, toHaveNoViolations)
+ */
 import React from "react";
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
 import "jest-axe/extend-expect";
+
+type MockProps = { children?: React.ReactNode; [key: string]: unknown };
 
 interface MotionProps {
   children?: React.ReactNode;
@@ -22,14 +38,17 @@ interface LucideIconProps {
   [key: string]: unknown;
 }
 
-// Setup global mocks for jsdom
+// jsdom has no ResizeObserver. This vi.fn version is replaced by the class
+// version further down, which is the one tests actually see.
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
 }));
 
-// Mock getComputedStyle
+// Replaces getComputedStyle with a stub whose only member is getPropertyValue
+// (font-size reads as 16px, everything else as ""). Code that reads other
+// CSSStyleDeclaration properties gets undefined.
 Object.defineProperty(window, "getComputedStyle", {
   writable: true,
   value: vi.fn(() => ({
@@ -37,13 +56,15 @@ Object.defineProperty(window, "getComputedStyle", {
   })),
 });
 
-// Mock HTMLElement method for testing-library
+// jsdom does not implement scrollIntoView; components that scroll to sections call it.
 Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
   writable: true,
   value: vi.fn(),
 });
 
-// Mock Canvas for Chart.js
+// jsdom has no canvas implementation. getContext("2d") returns a stub with the
+// drawing methods the legacy ParticleBackground uses; any other context type
+// (including "webgl") returns null, so WebGL checks report it as unavailable.
 const mockGetContext = vi.fn((contextType: string) => {
   if (contextType === "2d") {
     return {
@@ -79,7 +100,8 @@ Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
   value: mockGetContext,
 });
 
-// Mock chart.js with proper scale registration
+// chart.js is in package.json but nothing in src/, api/, or mcp/ imports it,
+// so this mock currently has no effect.
 vi.mock("chart.js", () => {
   // Registry mock
   const registry = {
@@ -117,7 +139,7 @@ vi.mock("chart.js", () => {
   }));
 
   // Add register method to Chart class
-  (ChartClass as any).register = vi.fn();
+  (ChartClass as unknown as { register: unknown }).register = vi.fn();
 
   return {
     Chart: ChartClass,
@@ -149,7 +171,9 @@ vi.mock("chart.js", () => {
   };
 });
 
-// Mock React Helmet
+// Helmet and HelmetProvider become pass-throughs, so <title>, <meta>, and
+// <link> from PageSEO and AgentView render inline into the test DOM. Tests
+// such as flagshipProducts.test.tsx query those tags with document.querySelector.
 vi.mock("react-helmet-async", () => ({
   Helmet: ({ children }: React.PropsWithChildren) => children,
   HelmetProvider: ({ children }: React.PropsWithChildren) => children,
@@ -157,7 +181,9 @@ vi.mock("react-helmet-async", () => ({
 
 
 
-// Mock lucide-react icons with partial mock using importOriginal
+// Real lucide icons are kept when the export exists. Any other capitalised
+// name that is accessed returns a stub `<div data-testid="<name>-icon">`, so a
+// missing icon renders a stub instead of crashing the render.
 vi.mock('lucide-react', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   const createIconMock = (name: string) => {
@@ -186,7 +212,8 @@ vi.mock('lucide-react', async (importOriginal) => {
   });
 });
 
-// Mock next/image
+// next is not a dependency of this Vite app and nothing imports next/image;
+// this mock is left over and has no effect.
 vi.mock('next/image', () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => {
@@ -200,7 +227,8 @@ vi.mock('next/image', () => ({
   },
 }));
 
-// Mock IntersectionObserver
+// jsdom has no IntersectionObserver. This inert class never fires callbacks;
+// components using react-intersection-observer get the module mock below instead.
 class IntersectionObserver {
   observe = vi.fn();
   disconnect = vi.fn();
@@ -219,7 +247,8 @@ Object.defineProperty(global, 'IntersectionObserver', {
   value: IntersectionObserver,
 });
 
-// Mock window.matchMedia
+// jsdom has no matchMedia. Every query reports matches: false (for example,
+// prefers-reduced-motion and prefers-color-scheme are both "no").
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation(query => ({
@@ -234,7 +263,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Mock ResizeObserver
+// The effective ResizeObserver stub: an inert class that never fires callbacks.
 class ResizeObserver {
   observe = vi.fn();
   unobserve = vi.fn();
@@ -244,7 +273,10 @@ class ResizeObserver {
 window.ResizeObserver = ResizeObserver;
 global.ResizeObserver = ResizeObserver;
 
-// Mock framer-motion with proper React component forwarding
+// framer-motion is used only by the legacy components. `motion.<tag>` becomes
+// the plain element with every prop forwarded (animation props therefore reach
+// the DOM and may trigger unknown-prop warnings), and AnimatePresence renders
+// its children directly, so content is visible immediately with no animation.
 vi.mock('framer-motion', async () => {
   const actual = await vi.importActual('framer-motion');
 
@@ -294,29 +326,27 @@ vi.mock('framer-motion', async () => {
   };
 });
 
-// Mock react-intersection-observer
+// useInView always returns [null ref, inView = true], so legacy sections that
+// gate content on visibility render it immediately.
 vi.mock('react-intersection-observer', () => ({
   useInView: () => [null, true], // [ref, inView]
 }));
 
-// Mock intersection observer
-// vi.mock("react-intersection-observer", () => ({
-//   useInView: vi.fn(() => [vi.fn(), true]),
-// }));
-
-// Mock react-countup
+// CountUp renders its final `end` value as text with no animation (legacy Hero, Experience, Projects).
 vi.mock("react-countup", () => ({
   __esModule: true,
   default: vi.fn(({ end }: { end?: number }) => end?.toString() || "0"),
 }));
 
-// Mock @sendgrid/mail for API tests
+// Prevents real email sends from src/lib/server/contactEmail.ts. Its suite,
+// contactEmail.test.ts, also declares its own @sendgrid/mail mock with spies it asserts on.
 vi.mock("@sendgrid/mail", () => ({
   setApiKey: vi.fn(),
   send: vi.fn().mockResolvedValue({}),
 }));
 
-// Mock requestAnimationFrame
+// Animation frames run on a 16ms setTimeout so loops (such as the legacy
+// ParticleBackground) progress under fake or real timers.
 global.requestAnimationFrame = vi.fn((cb) => {
   return setTimeout(cb, 16) as unknown as number;
 });
@@ -325,7 +355,9 @@ global.cancelAnimationFrame = vi.fn((id) => {
   clearTimeout(id as unknown as NodeJS.Timeout);
 });
 
-// Mock Three.js
+// three, @react-three/fiber, and @react-three/drei are used only by the legacy
+// src/components/backgrounds/ThreeJSContent.tsx; jsdom has no WebGL. Constructors
+// are inert vi.fn()s, and scene components render as <div data-testid="...">.
 vi.mock('three', () => ({
   __esModule: true,
   default: {
@@ -370,7 +402,7 @@ vi.mock('three', () => ({
   })),
 }));
 
-// Mock @react-three/fiber
+// Canvas renders as <div data-testid="canvas">; useFrame never runs its callback.
 vi.mock('@react-three/fiber', () => ({
   __esModule: true,
   Canvas: ({ children, ...props }: R3FProps) => React.createElement('div', { 'data-testid': 'canvas', ...props }, children),
@@ -384,20 +416,20 @@ vi.mock('@react-three/fiber', () => ({
   })),
   extend: vi.fn(),
   // Add lowercase elements that might be used
-  ambientLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'ambient-light', ...props }, children),
-  directionalLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'directional-light', ...props }, children),
-  pointLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'point-light', ...props }, children),
-  group: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'group', ...props }, children),
-  meshStandardMaterial: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'mesh-standard-material', ...props }, children),
+  ambientLight: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'ambient-light', ...props }, children),
+  directionalLight: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'directional-light', ...props }, children),
+  pointLight: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'point-light', ...props }, children),
+  group: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'group', ...props }, children),
+  meshStandardMaterial: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'mesh-standard-material', ...props }, children),
 }));
 
-// Mock @react-three/drei
+// Each drei helper used by ThreeJSContent renders as a <div> with a matching data-testid.
 vi.mock('@react-three/drei', () => ({
   __esModule: true,
-  Sphere: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'sphere', ...props }, children),
-  Box: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'box', ...props }, children),
-  Octahedron: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'octahedron', ...props }, children),
-  Float: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'float', ...props }, children),
-  MeshDistortMaterial: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'mesh-distort-material', ...props }, children),
-  PresentationControls: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'presentation-controls', ...props }, children),
+  Sphere: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'sphere', ...props }, children),
+  Box: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'box', ...props }, children),
+  Octahedron: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'octahedron', ...props }, children),
+  Float: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'float', ...props }, children),
+  MeshDistortMaterial: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'mesh-distort-material', ...props }, children),
+  PresentationControls: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'presentation-controls', ...props }, children),
 }));

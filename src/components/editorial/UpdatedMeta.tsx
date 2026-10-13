@@ -1,5 +1,16 @@
+/**
+ * Small "Updated <date>" stamp wrapped in a <time> element.
+ *
+ * Stateless. Formats the ISO `date` (YYYY-MM-DD) with formatUpdated (e.g. "3 Mar 2026") and keeps
+ * the raw value in `dateTime`. `label` replaces the default "Updated" prefix.
+ *
+ * Connects to:
+ * - Rendered by PageHeader (when `updated` is set) and directly by HomePage
+ * - content/siteMeta: formatUpdated
+ */
 import { formatUpdated } from "../../content/siteMeta";
 
+/** Props for UpdatedMeta. `date` is an ISO date string (YYYY-MM-DD). */
 interface UpdatedMetaProps {
   date: string;
   /** Defaults to "Updated" */
@@ -7,7 +18,7 @@ interface UpdatedMetaProps {
   className?: string;
 }
 
-/** Quiet freshness stamp for page headers and intro meta. */
+/** Freshness stamp for page headers and the homepage intro. */
 export default function UpdatedMeta({
   date,
   label = "Updated",

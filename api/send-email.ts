@@ -1,162 +1,114 @@
-import sgMail from '@sendgrid/mail';
+/**
+ * Serverless entry for the contact form: `POST /api/send-email` (plus `OPTIONS` preflight).
+ *
+ * Adapts each host's calling convention to handleContactEmail, which validates the fields and sends
+ * through SendGrid. Netlify Functions v2 pass a Web Request and expect a Web Response. Vercel's Node
+ * runtime passes (req, res). A legacy Lambda-style event branch (`{ httpMethod, body }` in,
+ * `{ statusCode, headers, body }` out) remains for older callers. Any thrown error becomes a 500.
+ *
+ * Connects to:
+ * - src/lib/emailService.ts posts here; src/pages/ContactPage.tsx calls that service.
+ * - Netlify: netlify.toml routes `/api/*` to `/.netlify/functions/:splat`. Vercel serves it as `/api/send-email`.
+ * - src/lib/server/contactEmail.ts (handleContactEmail): env SENDGRID_API_KEY, FROM_EMAIL, optional CONTACT_EMAIL.
+ */
+import {
+  handleContactEmail,
+  type ContactEmailResult,
+} from "../src/lib/server/contactEmail";
 
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json',
+/** CORS and content-type headers sent on every response, including errors and preflight. */
+const headers: Record<string, string> = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Content-Type": "application/json",
 };
 
-type MailResponse = {
-  status: (code: number) => MailResponse;
+/** The subset of Vercel's Node response this handler writes to. */
+type NodeResponse = {
+  status: (code: number) => NodeResponse;
   setHeader: (name: string, value: string) => void;
   json: (body: unknown) => void;
   end: (body?: string) => void;
 };
 
-type MailRequest = {
-  method?: string;
-  httpMethod?: string;
-  body?: unknown;
-  json?: () => Promise<unknown>;
-};
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+/** True when the second argument looks like Vercel's Node response (has `status` and `setHeader`). */
+function isNodeResponse(value: unknown): value is NodeResponse {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<NodeResponse>;
+  return (
+    typeof candidate.status === "function" &&
+    typeof candidate.setHeader === "function"
+  );
 }
 
-function finish(
-  res: MailResponse | undefined,
-  status: number,
-  payload: unknown,
-) {
-  if (res && typeof res.status === 'function') {
-    for (const [key, value] of Object.entries(headers)) res.setHeader(key, value);
-    if (payload == null) {
-      res.status(status).end();
-      return;
-    }
-    res.status(status).json(payload);
+/** Writes a result to a Node response: shared headers, then JSON, or an empty body when `body` is null. */
+function sendNode(res: NodeResponse, result: ContactEmailResult) {
+  for (const [key, value] of Object.entries(headers)) res.setHeader(key, value);
+  if (result.body == null) {
+    res.status(result.status).end();
     return;
   }
-  return new Response(payload == null ? null : JSON.stringify(payload), {
-    status,
-    headers,
-  });
+  res.status(result.status).json(result.body);
 }
 
-async function readJsonBody(event: MailRequest): Promise<unknown> {
-  const body = event.body;
-  if (typeof body === 'string') return body ? JSON.parse(body) : {};
-  if (body && typeof body === 'object' && typeof (body as { getReader?: unknown }).getReader !== 'function') {
-    return body;
-  }
-  if (typeof event.json === 'function') return event.json();
-  return {};
-}
-
-export default async function handler(event: MailRequest, res?: MailResponse) {
-  const method = (event.method || event.httpMethod || 'GET').toUpperCase();
-
-  if (method === 'OPTIONS') return finish(res, 204, null);
-  if (method !== 'POST') {
-    return finish(res, 405, { message: 'Method not allowed' });
-  }
-
+/**
+ * Contact form handler. Branches on the argument shape:
+ * - Web Request (Netlify Functions v2): returns a Web Response.
+ * - Node (req, res) (Vercel): writes to `res` and returns undefined.
+ * - Lambda-style event (legacy callers only): returns `{ statusCode, headers, body }`.
+ * Errors are logged and answered with a generic 500 in the same shape as the request.
+ */
+export default async function handler(
+  eventOrRequest: unknown,
+  responseOrContext?: unknown,
+) {
   try {
-    const parsed = await readJsonBody(event);
-    const { name, email, subject, message, service } = (parsed ?? {}) as {
-      name?: string;
-      email?: string;
-      subject?: string;
-      message?: string;
-      service?: string;
+    if (typeof Request !== "undefined" && eventOrRequest instanceof Request) {
+      const request = eventOrRequest;
+      const raw = request.method === "POST" ? await request.text() : null;
+      const result = await handleContactEmail(request.method, raw);
+      const body = result.body == null ? "" : JSON.stringify(result.body);
+      return new Response(body, { status: result.status, headers });
+    }
+
+    if (isNodeResponse(responseOrContext)) {
+      const request = eventOrRequest as { method?: string; body?: unknown };
+      const result = await handleContactEmail(
+        (request.method || "GET").toUpperCase(),
+        request.body,
+      );
+      sendNode(responseOrContext, result);
+      return;
+    }
+
+    const event = eventOrRequest as { httpMethod?: string; body?: string | null };
+    const result = await handleContactEmail(
+      (event.httpMethod || "GET").toUpperCase(),
+      event.body ?? null,
+    );
+    return {
+      statusCode: result.status,
+      headers,
+      body: result.body == null ? "" : JSON.stringify(result.body),
     };
-
-    if (!name || !email || !subject || !message) {
-      return finish(res, 400, {
-        success: false,
-        message: 'Missing required fields',
-      });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return finish(res, 400, {
-        success: false,
-        message: 'Invalid email format',
-      });
-    }
-
-    const sendgridApiKey = process.env.SENDGRID_API_KEY;
-    if (!sendgridApiKey) {
-      console.error('SENDGRID_API_KEY not configured');
-      return finish(res, 500, {
-        success: false,
-        message: 'Email service not configured',
-      });
-    }
-
-    sgMail.setApiKey(sendgridApiKey);
-
-    const safeName = escapeHtml(name);
-    const safeEmail = escapeHtml(email);
-    const safeSubject = escapeHtml(subject);
-    const safeMessage = escapeHtml(message);
-    const safeService = escapeHtml(service || 'Not specified');
-
-    await sgMail.send({
-      to: process.env.CONTACT_EMAIL || 'ayushrai0211@gmail.com',
-      from: {
-        email: process.env.FROM_EMAIL || 'noreply@yourdomain.com',
-        name: 'Portfolio Contact Form',
-      },
-      subject: `Portfolio Contact: ${subject}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">New Contact Form Submission</h2>
-
-          <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3>Contact Details:</h3>
-            <p><strong>Name:</strong> ${safeName}</p>
-            <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
-            <p><strong>Service Interest:</strong> ${safeService}</p>
-          </div>
-
-          <div style="background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-            <h3>Message:</h3>
-            <p style="white-space: pre-wrap; line-height: 1.6;">${safeMessage}</p>
-          </div>
-
-          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
-
-          <p style="color: #64748b; font-size: 14px;">
-            This message was sent from your portfolio contact form.
-          </p>
-        </div>
-      `,
-      replyTo: {
-        email,
-        name,
-      },
-    });
-
-    return finish(res, 200, {
-      success: true,
-      message: 'Message sent successfully!',
-    });
   } catch (error) {
-    const message = error instanceof SyntaxError
-      ? 'Invalid email payload'
-      : 'Failed to send message. Please try again later.';
-    if (!(error instanceof SyntaxError)) console.error('Email service error:', error);
-    return finish(res, error instanceof SyntaxError ? 400 : 500, {
+    console.error("Email service error:", error);
+    const failure = {
       success: false,
-      message,
-    });
+      message: "Failed to send message. Please try again later.",
+    };
+    if (isNodeResponse(responseOrContext)) {
+      sendNode(responseOrContext, { status: 500, body: failure });
+      return;
+    }
+    if (typeof Request !== "undefined" && eventOrRequest instanceof Request) {
+      return new Response(JSON.stringify(failure), { status: 500, headers });
+    }
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify(failure),
+    };
   }
 }

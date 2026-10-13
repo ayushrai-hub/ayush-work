@@ -1,33 +1,42 @@
+/**
+ * SSR entry used only at build time to prerender routes to static HTML.
+ *
+ * render() streams AppRoutes inside a StaticRouter with ThemeProvider and HelmetProvider, waits for
+ * onAllReady so lazy pages resolve, and returns the HTML plus the Helmet head state. The client entry
+ * (src/main.tsx) adds GTMProvider and Vercel Analytics; neither is rendered here.
+ *
+ * Connects to:
+ * - package.json `build` compiles it with `vite build --ssr src/entry-server.tsx --outDir dist-server`;
+ *   scripts/prerender.mjs imports the output and calls getRoutes, getSitemapRoutes, and render.
+ * - src/App.tsx (AppRoutes), src/contexts/ThemeContext.tsx, src/lib/publicRoutes.ts.
+ */
 import { renderToPipeableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
+import { HelmetProvider, type HelmetServerState } from "react-helmet-async";
 import { Writable } from "node:stream";
 import { AppRoutes } from "./App";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { work } from "./content/work";
-import { products } from "./content/products";
-import { research } from "./content/research";
-import { notes } from "./content/notes";
+import { prerenderRoutes, sitemapRoutes } from "./lib/publicRoutes";
 
+/** Every route to write as dist/<route>/index.html. */
 export function getRoutes(): string[] {
-  const base = [
-    "/", "/about", "/work", "/products", "/projects", "/research", "/writing",
-    "/notes", "/now", "/ideas", "/principles", "/timeline", "/education",
-    "/leadership", "/recognition", "/elsewhere", "/contact", "/archive",
-    "/uses", "/resume", "/developers",
-  ];
-  return [
-    ...base,
-    ...work.map((w) => `/work/${w.slug}`),
-    ...products.map((p) => `/products/${p.slug}`),
-    ...research.map((r) => `/research/${r.slug}`),
-    ...notes.map((n) => `/notes/${n.slug}`),
-  ];
+  return prerenderRoutes();
 }
 
-export function render(url: string): Promise<{ html: string; helmet: any }> {
+/** Routes listed in dist/sitemap.xml. */
+export function getSitemapRoutes(): string[] {
+  return sitemapRoutes();
+}
+
+/**
+ * Renders one URL to an HTML string for the `#root` element, plus Helmet's collected head tags.
+ * Rejects if React reports a render error.
+ */
+export function render(
+  url: string,
+): Promise<{ html: string; helmet: HelmetServerState | undefined }> {
   return new Promise((resolve, reject) => {
-    const helmetContext: any = {};
+    const helmetContext: { helmet?: HelmetServerState } = {};
     let html = "";
     const sink = new Writable({
       write(chunk, _enc, cb) {

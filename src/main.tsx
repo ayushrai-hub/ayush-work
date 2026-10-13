@@ -1,15 +1,18 @@
 /**
- * Main entry point, Initializes and mounts the React application.
+ * Browser entry: mounts the React app into `#root` in index.html.
  *
- * This module sets up the root React renderer, wrapping the app with all necessary providers for theme, GTM, and SEO. It uses createRoot for React 18 concurrent features.
+ * Wraps App in StrictMode, ThemeProvider, GTMProvider, and HelmetProvider, and renders Vercel Web
+ * Analytics beside it. It uses createRoot, not hydrateRoot, so the prerendered markup from
+ * scripts/prerender.mjs is replaced by a fresh client render rather than hydrated.
  *
- * Notes:
- * - Assumes an element with id="root" exists in index.html
- * - StrictMode is enabled for development warnings
- * - All context providers are initialized here for global availability
+ * Connects to:
+ * - index.html loads this module; global styles come from src/index.css and src/App.css.
+ * - src/App.tsx, src/contexts/ThemeContext.tsx, src/components/layout/GTMProvider.tsx (src/lib/gtm.ts),
+ *   @vercel/analytics/react. The SSR counterpart is src/entry-server.tsx.
  */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 import { HelmetProvider } from "react-helmet-async";
 import GTMProvider from "./components/layout/GTMProvider.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
@@ -23,6 +26,7 @@ createRoot(document.getElementById("root")!).render(
       <GTMProvider>
         <HelmetProvider>
           <App />
+          <Analytics />
         </HelmetProvider>
       </GTMProvider>
     </ThemeProvider>

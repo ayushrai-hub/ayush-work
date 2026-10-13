@@ -10,8 +10,16 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-server
 .next
+.vercel
+*.tsbuildinfo
 *.local
+
+# Test output (regenerated on every run; CI uploads it as an artifact)
+coverage
+playwright-report
+test-results
 
 # Editor directories and files
 .vscode/*

@@ -1,7 +1,19 @@
+/**
+ * `/ideas`: list of ideas with status, theme, summary, rationale, and optional next step.
+ *
+ * Static render of `ideas`; no state. Each item has an `id` anchor (`#<slug>`).
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `ideas`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   HomePage's research section links its idea titles here (without an anchor).
+ * - Content from src/content (`ideas`); components PageSEO, PageHeader.
+ * - Markdown twin `/ideas.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { ideas } from "../content";
 
+/** Ideas page component. Lazy-loaded by the `ideas` route in src/App.tsx. */
 export default function IdeasPage() {
   return (
     <>

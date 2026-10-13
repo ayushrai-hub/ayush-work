@@ -1,3 +1,20 @@
+/**
+ * Legacy react-three-fiber scene of floating, distorted geometric shapes used behind the legacy 3D hero.
+ *
+ * Legacy: only imported (lazily) by src/components/backgrounds/ThreeJSHero.tsx,
+ * which the current site does not render. Kept for reference;
+ * src/components/backgrounds is excluded from tsconfig.app.json. No test
+ * renders it: src/__tests__/legacy/ThreeJSHero.test.tsx mocks this module.
+ *
+ * ThreeJSContent checks for WebGL on mount and renders nothing if it is missing.
+ * Otherwise it mounts a transparent Canvas with three lights, a drag-to-rotate
+ * PresentationControls group around FloatingShapes, and a CameraRig that eases
+ * the camera toward the pointer.
+ *
+ * Connects to:
+ * - src/components/backgrounds/ThreeJSHero.tsx (React.lazy import of the named export)
+ * - three, @react-three/fiber, @react-three/drei (all mocked in src/setupTests.ts)
+ */
 import React, { useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
@@ -10,7 +27,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-// Floating geometric shapes component
+/** Five `Float`-wrapped meshes in one group that slowly rotates every frame. */
 function FloatingShapes() {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -79,7 +96,7 @@ function FloatingShapes() {
   );
 }
 
-// Interactive camera controls
+/** Renders nothing; each frame lerps the camera x/y toward the normalised pointer position and re-aims it at the origin. */
 function CameraRig() {
   const { camera, mouse } = useThree();
 
@@ -101,17 +118,20 @@ function CameraRig() {
   return null;
 }
 
-// Three.js Canvas with error handling
+/**
+ * The exported scene. Returns null after mount when WebGL is unavailable;
+ * otherwise renders the Canvas. Canvas errors are only logged with console.warn.
+ */
 function ThreeJSContent() {
   const [webGLError, setWebGLError] = React.useState(false);
 
-  // WebGL availability check
+  /** Same probe as `isWebGLAvailable` in ThreeJSHero.tsx: true if a webgl or experimental-webgl context can be created. */
   const isWebGLAvailable = () => {
     try {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       return !!gl;
-    } catch (e) {
+    } catch {
       return false;
     }
   };
@@ -141,13 +161,13 @@ function ThreeJSContent() {
         failIfMajorPerformanceCaveat: false, // Don't fail on low-performance devices
       }}
       onCreated={({ gl }) => {
-        // Set up error handling for WebGL context
+        // Only requests the debug-renderer extension and discards it; no error handling is installed here.
         const context = gl.getContext();
         if (context) {
           context.getExtension('WEBGL_debug_renderer_info');
         }
       }}
-      onError={(error: any) => {
+      onError={(error: React.SyntheticEvent<HTMLDivElement>) => {
         console.warn('Three.js Canvas error:', error);
       }}
     >

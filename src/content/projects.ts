@@ -1,5 +1,27 @@
+/**
+ * Projects: smaller, bounded pieces of work and experiments, including early work flagged as archive.
+ *
+ * `projects` is the list behind /projects and the public project API. Projects
+ * that have a case study point at it with `relatedWorkSlug`; deeper narrative
+ * lives in work.ts. Category and type labels defined here double as the
+ * allowed values for API filters.
+ *
+ * Connects to:
+ * - ProjectsPage (`activeProjects`, `archivedProjects`, `projectsByCategory`,
+ *   labels) and DomainPage (`projects`).
+ * - REST API /api/v1/projects, /api/v1/projects/{slug}, /api/v1/compare and
+ *   the MCP tools `list_projects`, `get_project`, `compare_projects`, via
+ *   src/lib/agent/projectsQuery.ts; filter validation in validate.ts and enum
+ *   values in openapi.ts come from the label maps.
+ * - Markdown twin /projects.md; search items of type "project".
+ * - Uses `Project`, `ProjectCategory` and `WorkType` from types.ts.
+ */
 import type { Project, ProjectCategory, WorkType } from "./types";
 
+/**
+ * Display label for each project category. Its keys are also the accepted
+ * `category` filter values for the REST API and MCP, and the OpenAPI enum.
+ */
 export const projectCategoryLabels: Record<ProjectCategory, string> = {
   tooling: "Tooling",
   education: "Education",
@@ -9,6 +31,7 @@ export const projectCategoryLabels: Record<ProjectCategory, string> = {
   personal: "Personal systems",
 };
 
+/** Group order for `projectsByCategory`. Not re-exported from index.ts. */
 export const projectCategoryOrder: ProjectCategory[] = [
   "tooling",
   "education",
@@ -18,6 +41,10 @@ export const projectCategoryOrder: ProjectCategory[] = [
   "personal",
 ];
 
+/**
+ * Display label for each `WorkType`. Its keys are also the accepted `type`
+ * filter values for the REST API and MCP, and the OpenAPI enum.
+ */
 export const projectTypeLabels: Record<string, string> = {
   product: "Product",
   project: "Project",
@@ -27,8 +54,10 @@ export const projectTypeLabels: Record<string, string> = {
 };
 
 /**
- * Smaller / bounded work. Case-study depth lives in work.ts for selected items.
- * Early experiments tagged archive.
+ * Smaller / bounded work. Case-study depth lives in work.ts, linked through
+ * `relatedWorkSlug`. Early experiments are flagged `archive: true`, which hides
+ * them from API and MCP results unless the caller requests archived records.
+ * Slugs are public API identifiers; renaming one breaks /api/v1/projects/{slug}.
  */
 export const projects: Project[] = [
   {
@@ -195,13 +224,23 @@ export const projects: Project[] = [
   },
 ];
 
+/** Projects not flagged archive. Main list on ProjectsPage. */
 export const activeProjects = projects.filter((p) => !p.archive);
+/** Projects flagged archive. Archive section on ProjectsPage. */
 export const archivedProjects = projects.filter((p) => p.archive);
 
+/**
+ * Look up a project by slug, including archived ones. projectsQuery.ts applies
+ * the archive filter for API and MCP callers.
+ */
 export function getProjectBySlug(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
 }
 
+/**
+ * Group projects (default: `activeProjects`) by category in
+ * `projectCategoryOrder`, skipping empty groups. Used by ProjectsPage.
+ */
 export function projectsByCategory(
   list: Project[] = activeProjects,
 ): Array<{ category: ProjectCategory; label: string; items: Project[] }> {
@@ -214,6 +253,10 @@ export function projectsByCategory(
     .filter((g) => g.items.length > 0);
 }
 
+/**
+ * Group projects (default: `activeProjects`) by `WorkType` in a fixed order,
+ * skipping empty groups. Exported but not called anywhere today.
+ */
 export function projectsByType(
   list: Project[] = activeProjects,
 ): Array<{ type: WorkType; label: string; items: Project[] }> {

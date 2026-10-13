@@ -1,4 +1,15 @@
-// Profile data for Ayush Rai's portfolio
+/**
+ * Static list of external profile links, grouped into display domains with Tailwind color classes.
+ *
+ * Plain data, no logic. `profiles[].domain` must name one of the `domains` entries. This list is
+ * separate from the content SSOT (src/content/elsewhere.ts, person.sameAs) and is not kept in sync with it.
+ *
+ * Connects to:
+ * - Legacy only (not routed): src/components/Profiles.tsx and src/components/layout/Footer.tsx,
+ *   both excluded from tsconfig.app.json; src/__tests__/legacy/Profiles.test.tsx.
+ */
+
+/** One external profile link. `icon` is a string key the legacy components map to an icon. */
 export type Profile = {
   id: string;
   name: string;
@@ -9,6 +20,7 @@ export type Profile = {
   description: string;
 };
 
+/** Display group for profiles: `color` and `gradient` are Tailwind class fragments. */
 export interface Domain {
   name: string;
   color: string;
@@ -16,6 +28,7 @@ export interface Domain {
   description: string;
 }
 
+/** Display groups for the legacy profile grid. Unrelated to the dossier domains in src/content/domains.ts. */
 export const domains: Domain[] = [
   {
     name: 'development',
@@ -61,6 +74,7 @@ export const domains: Domain[] = [
   }
 ];
 
+/** Every external profile. The WhatsApp entry embeds a phone number, which the live site must not publish. */
 export const profiles: Profile[] = [
   // Development & Coding
   {

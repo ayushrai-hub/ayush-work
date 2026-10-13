@@ -1,21 +1,42 @@
+/**
+ * Generates the Markdown twin of every public page, plus `llms.txt`, `llms-full.txt`, and the Markdown 404.
+ *
+ * `buildPages()` turns the records in `src/content` into one `AgentPage` per site path, and the
+ * result is cached for the life of the process. Each page has a title, `Source:` (canonical HTML URL),
+ * `Markdown:` (its `.md` URL), a description, the body, and a closing note on what is left out.
+ * No page reads `person.phone` or `person.phoneDisplay`.
+ *
+ * Connects to:
+ * - `surfaces.ts` (static files for the build, request-time negotiation) and `vitePlugin.ts`
+ *   (dev/preview 404 body).
+ * - `src/components/site/AgentView.tsx` shows `renderPageMarkdown` output on the site.
+ * - Tests: `agentSurfaces.test.ts`, `agentReadiness.test.ts`, `domainSurfaces.test.tsx`,
+ *   `flagshipProducts.test.tsx` in `src/__tests__/`.
+ * - Depends on `src/content` (all page records), `../canonical`, and `developerDocs.ts`.
+ */
 import {
   archive,
   capabilities,
+  domains,
   education,
   elsewhereProfiles,
   experience,
+  featuredProducts,
   ideas,
   leadership,
+  contactSections,
   notes,
   now,
   pageUpdatedAt,
   person,
   principles,
+  privacySections,
   productCategoryLabels,
   products,
   productStageLabels,
   projects,
   recognition,
+  renderDomainBody,
   research,
   selectedWork,
   timeline,
@@ -23,8 +44,17 @@ import {
   work,
   writing,
 } from "../../content";
-import type { Product } from "../../content";
+import type { PolicySection, Product } from "../../content";
+import { canonicalUrl } from "../canonical";
+import {
+  DEVELOPER_DESCRIPTION,
+  DEVELOPER_TITLE,
+  developerSections,
+  WHEN_NOT_TO_USE,
+  WHEN_TO_USE,
+} from "./developerDocs";
 
+/** One Markdown twin. `path` is the site path without `.md` (`/` for the homepage). */
 export interface AgentPage {
   path: string;
   title: string;
@@ -32,25 +62,38 @@ export interface AgentPage {
   markdown: string;
 }
 
+/** Closing note on every page and in `llms.txt`. */
 const OMISSION =
   "Private phone numbers and unverified award metrics are omitted. Wording matches the public site.";
 
+/** Renders heading-plus-paragraphs sections (contact, privacy, developers) as `##` blocks. */
+function policyBody(sections: PolicySection[]): string {
+  return sections
+    .map((section) => `## ${section.heading}\n\n${section.paragraphs.join("\n\n")}`)
+    .join("\n\n");
+}
+
+/** Absolute URL on `person.siteUrl` for a site path; `http(s)` URLs pass through unchanged. */
 function abs(path: string): string {
   if (path.startsWith("http")) return path;
   const base = person.siteUrl.replace(/\/$/, "");
   return path === "/" ? `${base}/` : `${base}${path}`;
 }
 
-/** Escape characters that would change Markdown structure. Used for titles and fixtures. */
+/** Escape characters that would change Markdown structure. Applied to page titles in `doc()`; tests call it directly. */
 export function escapeMarkdownText(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/([`*_{}[\]()#+.!|])/g, "\\$1");
 }
 
+/**
+ * Assembles one page: escaped `#` title, Source and Markdown URLs, description, body, and the
+ * omission note. Only the title is escaped; `description` and `body` are inserted as Markdown.
+ */
 function doc(path: string, title: string, description: string, body: string): AgentPage {
   const markdown = [
     `# ${escapeMarkdownText(title)}`,
     "",
-    `Source: ${abs(path)}`,
+    `Source: ${canonicalUrl(path)}`,
     `Markdown: ${abs(markdownPublicPath(path))}`,
     "",
     description.trim(),
@@ -63,15 +106,18 @@ function doc(path: string, title: string, description: string, body: string): Ag
   return { path, title, description: description.trim(), markdown };
 }
 
+/** Public `.md` URL path for a site path: `/` becomes `/index.md`, anything else gets `.md` appended. */
 export function markdownPublicPath(path: string): string {
   if (path === "/") return "/index.md";
   return `${path}.md`;
 }
 
+/** Markdown bullet list, one line per item. */
 function bullets(items: readonly string[]): string {
   return items.map((item) => `- ${item}`).join("\n");
 }
 
+/** Bullet list of the recorded architecture layers; empty string when none are set. */
 function architectureBlock(architecture: Product["architecture"]): string {
   const lines = [
     architecture.frontend && `- Frontend: ${architecture.frontend}`,
@@ -84,6 +130,7 @@ function architectureBlock(architecture: Product["architecture"]): string {
   return lines.join("\n");
 }
 
+/** `/work/{slug}`: a case study from problem to lessons, technologies, and links. */
 function workPage(item: (typeof work)[number]): AgentPage {
   const links = [
     item.links?.demo && `- Demo: ${item.links.demo}`,
@@ -135,6 +182,7 @@ function workPage(item: (typeof work)[number]): AgentPage {
   );
 }
 
+/** `/products/{slug}`: stage, thesis, audience, approach, architecture, maturity, and open questions. */
 function productPage(item: (typeof products)[number]): AgentPage {
   const maturity = item.maturity
     ? [
@@ -190,6 +238,7 @@ function productPage(item: (typeof products)[number]): AgentPage {
   );
 }
 
+/** `/products/{slug}/log`: dated build-log entries. Generated for every product, even with no entries. */
 function productLogPage(item: (typeof products)[number]): AgentPage {
   const entries = item.log
     .map((entry) => `### ${entry.date}: ${entry.title}\n\n${entry.body}`)
@@ -202,6 +251,11 @@ function productLogPage(item: (typeof products)[number]): AgentPage {
   );
 }
 
+/**
+ * Every Markdown twin, in site order: home, about, list and detail pages, the static pages,
+ * developers, privacy, then the domain dossiers from `src/content/domains.ts`.
+ * A page added to the React app needs an entry here to get a twin.
+ */
 function buildPages(): AgentPage[] {
   const pages: AgentPage[] = [];
 
@@ -569,6 +623,8 @@ function buildPages(): AgentPage[] {
         "Intents: work opportunity, product, research, collaboration, speaking, consulting, hello.",
         "",
         "A phone number is not included in machine-readable pages.",
+        "",
+        policyBody(contactSections),
       ].join("\n"),
     ),
   );
@@ -636,90 +692,150 @@ function buildPages(): AgentPage[] {
   pages.push(
     doc(
       "/developers",
-      "Developers",
-      "How to read the public Markdown, search API, and local MCP tools.",
-      [
-        "Start at /llms.txt. Open a `.md` URL for a page. Home is /index.md.",
-        "",
-        "Search is lexical: `GET /api/search?q=`. It is not a model and does not understand intent.",
-        "",
-        "Projects:",
-        "",
-        "- `GET /api/v1/projects`",
-        "- `GET /api/v1/projects/{slug}`",
-        "- `GET /api/v1/compare?slugs=a,b`",
-        "",
-        "The older `/api/projects` query form remains. OpenAPI is /openapi.json. Agent notes are /AGENTS.md and /SKILL.md.",
-        "",
-        "Archived projects are omitted unless `archive=1`. Phone numbers and withheld claims are omitted.",
-        "",
-        "A local stdio MCP server in this repository exposes `list_projects`, `get_project`, and `compare_projects`. There is no remote MCP endpoint and no registry listing.",
-      ].join("\n"),
+      DEVELOPER_TITLE,
+      DEVELOPER_DESCRIPTION,
+      policyBody(developerSections()),
     ),
   );
+
+  pages.push(
+    doc(
+      "/privacy",
+      "Privacy",
+      "What this site collects, who processes it, and how to ask about it.",
+      policyBody(privacySections),
+    ),
+  );
+
+  for (const page of domains) {
+    pages.push(doc(page.path, page.h1, page.description, renderDomainBody(page)));
+  }
 
   return pages;
 }
 
 let pageCache: AgentPage[] | null = null;
 
+/** All twins, built once per process and then reused. Content only changes on redeploy. */
 export function listAgentPages(): AgentPage[] {
   if (!pageCache) pageCache = buildPages();
   return pageCache;
 }
 
+/**
+ * Markdown for an exact site path (no `.md`, no trailing slash; `""` means `/`), or null when
+ * no twin exists. Use `sitePathFromRequest` first for raw request paths.
+ */
 export function renderPageMarkdown(pathname: string): string | null {
   const path = pathname === "" ? "/" : pathname;
   return listAgentPages().find((page) => page.path === path)?.markdown ?? null;
 }
 
+/**
+ * `/llms.txt`: the site index for language models. A summary, when (not) to use the site, then
+ * links to domains, flagship products, case studies, profiles, and the developer surfaces.
+ * It lists the pages worth opening first, not every page.
+ */
 export function renderLlmsTxt(): string {
-  const groups = new Map<string, AgentPage[]>();
-  for (const page of listAgentPages()) {
-    const key = page.path.split("/").filter(Boolean)[0] ?? "home";
-    const list = groups.get(key) ?? [];
-    list.push(page);
-    groups.set(key, list);
-  }
   const lines = [
     `# ${person.name}`,
     "",
     `> ${person.tagline}`,
     "",
-    person.positioning,
+    `${person.roleTitle}. ${person.positioning}`,
     "",
-    "Markdown twins use the same content records as the website. Fetch a URL ending in `.md`, or send `Accept: text/markdown` without `text/html`. A full dump is at /llms-full.txt when you want one file.",
+    "Markdown twins use the same content records as the website. Fetch a URL ending in `.md`, or send `Accept: text/markdown` without `text/html`. A full dump of every page is at /llms-full.txt. This file lists the pages worth opening first.",
     "",
     OMISSION,
     "",
+    "**When to use this site:**",
+    "",
+    ...WHEN_TO_USE.map((line) => `- ${line}`),
+    "",
+    "**When not to use it:**",
+    "",
+    ...WHEN_NOT_TO_USE.map((line) => `- ${line}`),
+    "",
+    "## Domains",
+    "",
+    ...domains.map(
+      (page) =>
+        `- [${page.title}](${abs(markdownPublicPath(page.path))}): ${page.description}`,
+    ),
+    "",
+    "## Flagship products",
+    "",
+    ...featuredProducts().map(
+      (item) => `- [${item.title}](${abs(`/products/${item.slug}.md`)}): ${item.summary}`,
+    ),
+    "",
+    "## Case studies",
+    "",
+    ...selectedWork.map(
+      (item) => `- [${item.title}](${abs(`/work/${item.slug}.md`)}): ${item.summary}`,
+    ),
+    "",
+    "## Profiles and contact",
+    "",
+    `- [About](${abs("/about.md")})`,
+    `- [Experience](${abs("/experience.md")})`,
+    `- [Contact](${abs("/contact.md")}): ${person.email}`,
+    `- [Privacy](${abs("/privacy.md")}): what the site collects and who processes it.`,
+    `- GitHub: ${person.primaryProfiles.github}`,
+    `- LinkedIn: ${person.primaryProfiles.linkedin}`,
+    `- ORCID: ${person.primaryProfiles.orcid}`,
+    `- Hugging Face: ${person.primaryProfiles.huggingface}`,
+    "",
+    `## ${DEVELOPER_TITLE}`,
+    "",
+    `- [${person.name} developer docs](${abs("/developers")}): how to call the public API and MCP server, versioning, and pagination.`,
+    `- [${person.name} API: search](${abs("/api/v1/search")}): lexical \`GET /api/v1/search?q=\`. Not semantic search.`,
+    `- [${person.name} API: projects](${abs("/api/v1/projects")}): list. \`/api/v1/projects/{slug}\` fetches one. \`/api/v1/compare?slugs=a,b\` compares.`,
+    `- [${person.name} OpenAPI spec](${abs("/openapi.json")}): OpenAPI 3.1 description of those GET endpoints.`,
+    `- [${person.name} MCP server](${abs("/api/mcp")}): Streamable HTTP, \`POST /api/mcp\`. Tools: list_projects, get_project, compare_projects, search_portfolio.`,
+    `- [${person.name} MCP Server Card](${abs("/api/mcp/server-card")}): SEP-2127 card for that endpoint, also listed in the AI Catalog at /.well-known/ai-catalog.json.`,
+    `- [${person.name} API catalog](${abs("/.well-known/api-catalog")}): RFC 9727 linkset.`,
+    `- [AGENTS.md](${abs("/AGENTS.md")}): instructions for agents reading this site.`,
+    `- [SKILL.md](${abs("/SKILL.md")}): examples and limits.`,
+    `- [Full Markdown dump](${abs("/llms-full.txt")})`,
+    "",
   ];
-  for (const [key, pages] of groups) {
-    lines.push(`## ${key}`);
-    lines.push("");
-    for (const page of pages) {
-      lines.push(`- [${page.title}](${abs(markdownPublicPath(page.path))}): ${page.description.replace(/\s+/g, " ")}`);
-    }
-    lines.push("");
-  }
-  lines.push("## Interfaces");
-  lines.push("");
-  lines.push(`- [Search API](${abs("/api/search")}): lexical \`GET /api/search?q=\`. Not semantic search.`);
-  lines.push(`- [Projects API](${abs("/api/v1/projects")}): list. \`/api/v1/projects/{slug}\` fetches one. \`/api/v1/compare?slugs=a,b\` compares.`);
-  lines.push(`- [OpenAPI](${abs("/openapi.json")}): description of those GET endpoints.`);
-  lines.push(`- [Developers](${abs("/developers")}): how to call the public interfaces.`);
-  lines.push(`- [AGENTS.md](${abs("/AGENTS.md")}): instructions for agents reading this site.`);
-  lines.push(`- [SKILL.md](${abs("/SKILL.md")}): examples and limits.`);
-  lines.push("");
   return lines.join("\n");
 }
 
+/** `/llms-full.txt`: every twin from `listAgentPages()` joined with `---` separators. */
 export function renderLlmsFull(): string {
   return listAgentPages()
     .map((page) => page.markdown)
     .join("\n\n---\n\n");
 }
 
-/** Map a request path such as /work/foo.md or /index.md to a site path. */
+/**
+ * Body for a 404 sent to a Markdown reader. Static so hosts can serve it as /404.md:
+ * `surfaces.ts` emits it as that file, and the Netlify edge function fetches it from there.
+ */
+export function renderNotFoundMarkdown(): string {
+  return [
+    "# Page not found",
+    "",
+    `There is no page at this address on ${abs("/")}. It may have moved, or it never existed.`,
+    "",
+    "Start here instead:",
+    "",
+    `- Index of every page: ${abs("/llms.txt")}`,
+    `- Sitemap: ${abs("/sitemap.xml")}`,
+    `- Agent guide: ${abs("/AGENTS.md")}`,
+    `- Developer notes and API: ${abs("/developers")}`,
+    `- Search: ${abs("/api/search?q=")}`,
+    "",
+  ].join("\n");
+}
+
+/**
+ * Map a request path such as /work/foo.md or /index.md to a site path. Drops the query string
+ * and one trailing slash. Throws on malformed percent-encoding (`decodeURIComponent`); the
+ * caller in `surfaces.ts` catches that.
+ */
 export function sitePathFromRequest(urlPath: string): string | null {
   let path = decodeURIComponent(urlPath.split("?")[0] ?? "/");
   if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);

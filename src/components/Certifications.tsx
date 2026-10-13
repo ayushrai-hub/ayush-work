@@ -1,30 +1,18 @@
 /**
- * Certifications.tsx, Professional certifications showcase component.
+ * Legacy certifications section: category chips, a grid of certificate cards, and summary stats.
  *
- * This component displays a comprehensive collection of professional certifications
- * earned across multiple domains including cloud computing, cybersecurity, machine
- * learning, and leadership. Features interactive categorization, verified credentials
- * with links, and achievement statistics.
+ * Legacy: not imported by the live routes in src/App.tsx. Its only importer is
+ * the legacy src/components/pages/CertificationsPage.tsx, which is itself not routed.
+ * Kept for reference; excluded from tsconfig.app.json. Covered only by
+ * src/__tests__/legacy/Certifications.test.tsx, which Vitest excludes.
  *
- * The component includes:
- * - Certification cards with detailed information
- * - Category-based filtering and overview
- * - Verification links to credential sources
- * - Achievement metrics and statistics
- * - Responsive grid layout with animations
+ * The certificate list, the category counts, and the "Learning Impact" numbers
+ * are separate hard-coded values; the counts are not derived from the list.
+ * There is no filtering: the category chips are display-only.
  *
- * @component
- * @example
- * ```tsx
- * import Certifications from './components/Certifications';
- *
- * function App() {
- *   return <Certifications />;
- * }
- * ```
- *
- * @see {@link src/components/Experience.tsx} for professional experience
- * @see {@link src/components/Education.tsx} for academic background
+ * Connects to:
+ * - src/components/pages/CertificationsPage.tsx (legacy, unrouted)
+ * - framer-motion, react-intersection-observer, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -32,22 +20,10 @@ import { useInView } from "react-intersection-observer";
 import { Award, Calendar, ExternalLink, CheckCircle } from "lucide-react";
 
 /**
- * Certifications, Professional certifications display component.
+ * Renders `<section id="certifications">` from the local `certifications` array.
  *
- * Renders an interactive certifications showcase with filtering capabilities,
- * detailed credential information, and achievement metrics. Displays certifications
- * across multiple categories with verification links and enables users to explore
- * professional development journey.
- *
- * @component
- * @returns {JSX.Element} The rendered Certifications section
- *
- * @example
- * ```tsx
- * <Certifications />
- * ```
- *
- * @see {@link src/lib/profilesData.ts} for external profile data
+ * Each card has a "Verify Certificate" button, but the button has no click
+ * handler and the entry's `link` field is never rendered, so it does nothing.
  */
 const Certifications: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

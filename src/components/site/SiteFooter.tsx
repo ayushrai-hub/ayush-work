@@ -1,16 +1,31 @@
+/**
+ * Site-wide footer: one-line positioning, footer navigation, email, location, and freshness dates.
+ *
+ * Stateless. The opening line is the first sentence of `person.positioning` (text up to the first
+ * period). Navigation is FOOTER_LINKS followed by Developers, llms.txt, and Privacy; llms.txt is a
+ * plain anchor because it is a static file, not a router route. The dates show
+ * `siteMeta.siteUpdatedAt` and `now.lastUpdated`, formatted with formatUpdated.
+ *
+ * Connects to:
+ * - Rendered once by SiteLayout below <main>
+ * - content: person, siteMeta, now, formatUpdated
+ */
 import { Link } from "react-router-dom";
 import { formatUpdated, now, person, siteMeta } from "../../content";
 
+/** Router links shown first in the footer nav; Developers, llms.txt, and Privacy are appended in JSX. */
 const FOOTER_LINKS = [
   { to: "/work", label: "Work" },
   { to: "/products", label: "Products" },
+  { to: "/ai-engineering", label: "AI engineering" },
+  { to: "/software-engineering", label: "Software" },
+  { to: "/experience", label: "Experience" },
   { to: "/about", label: "About" },
-  { to: "/now", label: "Now" },
-  { to: "/writing", label: "Writing" },
   { to: "/contact", label: "Contact" },
   { to: "/resume", label: "Resume" },
 ] as const;
 
+/** Footer rendered on every route. */
 export default function SiteFooter() {
   return (
     <footer className="border-t border-rule mt-auto">
@@ -34,6 +49,9 @@ export default function SiteFooter() {
           <a href="/llms.txt" className="link-underline text-sm">
             llms.txt
           </a>
+          <Link to="/privacy" className="link-underline text-sm">
+            Privacy
+          </Link>
         </nav>
 
         <div className="mt-8 meta-row gap-x-4">

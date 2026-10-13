@@ -1,39 +1,22 @@
 /**
- * Contact.tsx, Contact form and information display component with security validation.
+ * Legacy contact section: contact details, social links, a Formspree contact form, and booking links.
  *
- * This component provides a comprehensive contact section with secure form validation,
- * analytics integration, and multiple contact methods. Features client-side and server-side
- * validation, rate limiting protection, and comprehensive error handling for form submissions.
- * Integrates Google Tag Manager analytics for user interaction tracking.
+ * Legacy: not imported by the current site (src/App.tsx routes use src/pages;
+ * the live form is src/pages/ContactPage.tsx). Kept for reference; excluded from
+ * tsconfig.app.json. Covered only by src/__tests__/legacy/Contact.test.tsx,
+ * which Vitest excludes.
  *
- * The component includes:
- * - Secure contact form with comprehensive validation
- * - Analytics tracking for user interactions
- * - Rate limiting and security logging
- * - Multiple contact method display
- * - Social media links and profiles
- * - Responsive design with accessibility features
+ * The form validates on submit, applies a client-side rate limit from
+ * securityLogger, and POSTs JSON to `import.meta.env.VITE_FORMSPREE_ENDPOINT`.
+ * Validation and rate limiting run only in the browser; there is no server-side
+ * check in this path. Events go to Google Analytics through src/lib/analytics.ts.
+ * This file publishes a phone number, which AGENTS.md keeps off the current site.
  *
- * Security Features:
- * - Input sanitization to prevent XSS
- * - Email validation with RFC compliance
- * - Rate limiting to prevent spam
- * - Security logging for anomalous behavior
- * - Client-side form validation
- *
- * @component
- * @example
- * ```tsx
- * import Contact from './components/Contact';
- *
- * function App() {
- *   return <Contact />;
- * }
- * ```
- *
- * @see {@link src/lib/analytics.ts} for analytics integration
- * @see {@link src/lib/securityLogger.ts} for security logging
- * @see {@link src/lib/emailService.ts} for email handling
+ * Connects to:
+ * - No importers in src/
+ * - src/lib/analytics.ts (trackContactForm, trackServiceInterest)
+ * - src/lib/securityLogger.ts (validation-failure and network-error logs, trackFormSubmission rate limit)
+ * - Formspree via VITE_FORMSPREE_ENDPOINT (not src/lib/emailService.ts, which this file does not use)
  */
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -57,37 +40,13 @@ import {
   trackFormSubmission
 } from "../lib/securityLogger";
 
-/**
- * Contact, Secure contact form and information component.
- *
- * Renders a comprehensive contact section with secure form handling, validation,
- * analytics integration, and multiple communication channels. Provides both
- * immediate contact options and an async contact form with full security validation.
- *
- * Security considerations:
- * - Comprehensive input sanitization
- * - Email format validation per RFC standards
- * - Rate limiting protection
- * - Analytics tracking for abuse detection
- * - Error logging for security incidents
- *
- * @component
- * @returns {JSX.Element} The rendered Contact section
- *
- * @example
- * ```tsx
- * <Contact />
- * ```
- *
- * @see {@link src/lib/profilesData.ts} for social media profiles
- */
-
-// Input validation utilities
+/** Returns true for a syntactically plausible address of at most 254 characters (RFC 5321 length limit). */
 const validateEmail = (email: string): boolean => {
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   return emailRegex.test(email.trim()) && email.trim().length <= 254; // RFC 5321 limit
 };
 
+/** Returns true for 2-100 characters of ASCII letters, spaces, hyphens, and apostrophes. */
 const validateName = (name: string): boolean => {
   const trimmed = name.trim();
   // Allow letters, spaces, hyphens, apostrophes (common name characters)
@@ -95,17 +54,26 @@ const validateName = (name: string): boolean => {
   return trimmed.length >= 2 && trimmed.length <= 100 && nameRegex.test(trimmed);
 };
 
+/** Returns true when the trimmed subject is 5-200 characters. */
 const validateSubject = (subject: string): boolean => {
   const trimmed = subject.trim();
   return trimmed.length >= 5 && trimmed.length <= 200 && trimmed.length > 0;
 };
 
+/** Returns true when the trimmed message is 10-2000 characters. */
 const validateMessage = (message: string): boolean => {
   const trimmed = message.trim();
   return trimmed.length >= 10 && trimmed.length <= 2000 && trimmed.length > 0;
 };
 
-// Input sanitization - comprehensive XSS prevention
+/**
+ * Truncates to 2000 characters, trims, strips HTML tags, script-like protocols,
+ * inline event handlers, and control characters, then entity-encodes some characters.
+ *
+ * This is a regex blacklist, not a complete XSS defence. It runs on every
+ * keystroke in handleInputChange, so its trim() removes a trailing space as soon
+ * as it is typed, and the apostrophe it encodes as `&#x27;` then fails validateName.
+ */
 const sanitizeInput = (input: string): string => {
   // First, trim and limit length to prevent DoS
   let sanitized = input.substring(0, 2000).trim();
@@ -133,7 +101,8 @@ const sanitizeInput = (input: string): string => {
     // eslint-disable-next-line no-control-regex
     .replace(/[\u0000-\u001F\u007F-\u009F]/g, ''); // Remove control characters
 
-  // Escape remaining potentially dangerous characters
+  // Only ', / and \ are actually encoded below: the &, ", < and > replacements
+  // map each character to itself, so they are no-ops.
   sanitized = sanitized
     .replace(/&/g, '&')
     .replace(/"/g, '"')
@@ -146,6 +115,13 @@ const sanitizeInput = (input: string): string => {
   return sanitized.trim();
 };
 
+/**
+ * Renders `<section id="contact">` with the contact list, availability notes,
+ * social links, the form, and a row of booking links.
+ *
+ * Form state holds sanitized values. Errors appear per field after submit, and a
+ * failed send shows a "Try Again" button that calls submitForm again.
+ */
 const Contact: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [formData, setFormData] = useState({
@@ -165,6 +141,7 @@ const Contact: React.FC = () => {
     message: "",
   });
 
+  /** Returns the error message for one field, or an empty string when it is valid. */
   const validateField = (name: string, value: string): string => {
     switch (name) {
       case 'name':
@@ -193,6 +170,7 @@ const Contact: React.FC = () => {
     return '';
   };
 
+  /** Stores the sanitized value, clears that field's error and any submit status, and schedules service-interest tracking. */
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -218,10 +196,10 @@ const Contact: React.FC = () => {
 
     // Track service interest when user selects a service
     if (name === "service" && value) {
-      // Wait a bit to avoid tracking incomplete selections
+      // The timeout closes over the pre-update formData, so this comparison only
+      // passes when the same service is re-selected; a new choice is never tracked.
       setTimeout(() => {
         if (formData.service === value) {
-          // Ensure it hasn't changed
           trackServiceInterest(value);
         }
       }, 1000);
@@ -233,6 +211,7 @@ const Contact: React.FC = () => {
     }
   };
 
+  /** Sends the `start` contact-form event when a field is focused while every text field is empty. */
   const handleFormFocus = () => {
     // Track when user starts interacting with the form
     if (
@@ -245,6 +224,7 @@ const Contact: React.FC = () => {
     }
   };
 
+  /** Validates every required field, logs each failure to securityLogger, stores the errors, and returns true when none failed. */
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
 
@@ -289,6 +269,7 @@ const Contact: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
+  /** Form submit handler: validates, marks the form as submitting, records the `submit` event, then sends. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -306,6 +287,13 @@ const Contact: React.FC = () => {
     await submitForm();
   };
 
+  /**
+   * Applies the client-side rate limit (5 submissions per 60 s by default), then
+   * POSTs the sanitized fields to Formspree and maps the response to a status message.
+   *
+   * The rate-limit early return happens outside the try/finally, so isSubmitting
+   * stays true and the submit button stays disabled after a rate-limit rejection.
+   */
   const submitForm = async () => {
     // Check rate limiting before submission
     if (!trackFormSubmission('contact-form')) {
@@ -414,6 +402,7 @@ const Contact: React.FC = () => {
     }
   };
 
+  /** "Try Again" handler: clears the status and resubmits the current form data without revalidating. */
   const handleRetry = () => {
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: "" });

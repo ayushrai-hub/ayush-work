@@ -1,9 +1,24 @@
+/**
+ * Unit tests for the Google Analytics 4 helpers in src/lib/analytics.ts.
+ *
+ * initGA: logs and returns early when `window` is undefined, skips injection
+ * when a gtag.js script for the same ID is already present (the index.html
+ * snippet), and otherwise appends two scripts (the loader and the inline config).
+ * trackEvent: is a no-op without a global `gtag`, and forwards
+ * ('event', name, params) to it when present.
+ *
+ * The browser case spies on document.createElement and document.head.appendChild
+ * so no real script tags are added.
+ *
+ * Connects to:
+ * - src/lib/analytics.ts (initGA, trackEvent)
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { initGA, trackEvent } from '../lib/analytics';
 
 // Google Analytics gtag function type
 interface GtagFunction {
-  (...args: any[]): void;
+  (...args: unknown[]): void;
 }
 
 // Declare global gtag property
@@ -11,11 +26,13 @@ declare global {
   var gtag: GtagFunction | undefined;
 }
 
+/** GA4 helper behaviour with and without a browser environment and gtag global. */
 describe('analytics', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
+  /** Server guard and script injection. */
   describe('initGA', () => {
     it('should not initialize when running on server', () => {
       // Mock window as undefined for server environment
@@ -46,9 +63,24 @@ describe('analytics', () => {
 
       expect(createElementSpy).toHaveBeenCalledWith('script');
       expect(appendChildSpy).toHaveBeenCalledTimes(2);
+      vi.restoreAllMocks();
+    });
+
+    it('skips injection when index.html already loaded gtag.js for the property', () => {
+      const existing = document.createElement('script');
+      existing.src = 'https://www.googletagmanager.com/gtag/js?id=G-VBS0YJ07R8';
+      document.head.appendChild(existing);
+      const appendChildSpy = vi.spyOn(document.head, 'appendChild');
+
+      initGA();
+
+      expect(appendChildSpy).not.toHaveBeenCalled();
+      appendChildSpy.mockRestore();
+      existing.remove();
     });
   });
 
+  /** Safe no-op without gtag, and argument forwarding with it. */
   describe('trackEvent', () => {
     it('should not throw error when gtag is not available', () => {
       // Mock window.gtag as undefined

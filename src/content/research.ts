@@ -1,8 +1,25 @@
+/**
+ * Research-shaped work (notes, investigations, experiments) and a withheld list of unverified research awards.
+ *
+ * `research` holds the public records; every item carries a disclaimer that it
+ * is not a peer-reviewed publication. `researchAwardsNeedsConfirmation` holds
+ * award claims that are deliberately not published.
+ *
+ * Connects to:
+ * - ResearchPage, ResearchDetailPage and HomePage.
+ * - Markdown twins /research.md and /research/:slug.md; search items of type
+ *   "research"; sitemap and prerender routes in src/lib/publicRoutes.ts.
+ * - src/__tests__/agentSurfaces.test.ts checks that no entry of
+ *   `researchAwardsNeedsConfirmation` appears in llms.txt or llms-full.txt.
+ * - Uses `ResearchItem` from types.ts.
+ */
 import type { ResearchItem } from "./types";
 
 /**
  * Research-shaped work. Status is Note | Investigation | Experiment.
  * These are NOT peer-reviewed publications. Soften unverified metrics.
+ * `fundingNote` is printed verbatim on the HTML and Markdown pages;
+ * per-item `needsConfirmation` appears only on the HTML detail page.
  */
 export const research: ResearchItem[] = [
   {
@@ -85,8 +102,11 @@ export const research: ResearchItem[] = [
 ];
 
 /**
- * Awards previously listed on the research page with thin public evidence.
- * Kept out of primary research[] until confirmed.
+ * Withheld: awards previously listed on the research page with thin public
+ * evidence. Kept out of `research` until confirmed. Do not publish these
+ * strings or copy them into pages, Markdown, search, API or MCP output; no
+ * page renders this list, and a test asserts it is absent from llms.txt and
+ * llms-full.txt.
  */
 export const researchAwardsNeedsConfirmation: string[] = [
   "Top 5 Finalist - Smart India Hackathon 2024 (blockchain voting narrative)",
@@ -94,6 +114,7 @@ export const researchAwardsNeedsConfirmation: string[] = [
   "ACM Student Research Competition Finalist - CCSE 2023",
 ];
 
+/** Look up a research item by slug. Used by ResearchDetailPage. */
 export function getResearchBySlug(slug: string): ResearchItem | undefined {
   return research.find((r) => r.slug === slug);
 }

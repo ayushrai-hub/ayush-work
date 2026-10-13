@@ -1,3 +1,14 @@
+/**
+ * React hook exposing memoized wrappers around the GTM dataLayer helpers in src/lib/gtm.ts.
+ *
+ * Each returned function is a stable useCallback reference that forwards to the matching gtm.ts
+ * helper; trackPage defaults to the current URL and document title.
+ *
+ * Connects to:
+ * - Legacy only (not routed): src/components/AboutMe.tsx and src/components/layout/Footer.tsx.
+ *   No live page uses it.
+ * - src/lib/gtm.ts.
+ */
 import { useCallback } from 'react';
 import {
   trackPageView,
@@ -9,6 +20,7 @@ import {
   trackScrollDepth,
 } from '../lib/gtm';
 
+/** Returns stable tracking callbacks that push events onto the GTM dataLayer. Call them only in the browser. */
 export const useGTM = () => {
   const trackPage = useCallback((url?: string, title?: string) => {
     const currentUrl = url || window.location.href;

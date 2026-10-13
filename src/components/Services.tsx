@@ -1,40 +1,17 @@
 /**
- * Services.tsx, Professional services offering display component with detailed service categories.
+ * Legacy services section: six service cards with included items, duration, and starting price, plus four value tiles.
  *
- * This component showcases Ayush Rai's professional services across multiple domains including
- * AI/ML development, web development, data science, community management, technical consultation,
- * and rapid prototyping. Features detailed service descriptions, pricing information, expected
- * duration, and key benefits. Includes responsive design with smooth animations and service category
- * differentiation.
+ * Legacy: not imported by the live routes in src/App.tsx (/services redirects to
+ * /contact). Its only importer is the legacy src/components/pages/ServicesPage.tsx,
+ * which is itself not routed. Kept for reference; excluded from tsconfig.app.json.
+ * Covered only by src/__tests__/legacy/Services.test.tsx, which Vitest excludes.
  *
- * The component includes:
- * - Six core service categories with detailed offerings
- * - Pricing and duration estimates
- * - Service features and what's included
- * - Responsive card-based layout
- * - Benefit highlighting and value propositions
+ * Services and prices are hard-coded. AGENTS.md states the current site has no
+ * pricing page, so these prices are not published anywhere live.
  *
- * Service Categories:
- * - AI & Machine Learning Development
- * - Full-Stack Web Development
- * - Data Science & Analytics
- * - Community Management & Strategy
- * - Technical Consultation & Training
- * - Rapid Prototyping & MVP Services
- *
- * @component
- * @example
- * ```tsx
- * import Services from './components/Services';
- *
- * function App() {
- *   return <Services />;
- * }
- * ```
- *
- * @see {@link src/components/Contact.tsx} for service inquiry forms
- * @see {@link src/components/Projects.tsx} for service implementation examples
- * @see {@link src/components/Experience.tsx} for service delivery experience
+ * Connects to:
+ * - src/components/pages/ServicesPage.tsx (legacy, unrouted)
+ * - framer-motion, react-intersection-observer, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -51,21 +28,8 @@ import {
 } from "lucide-react";
 
 /**
- * Services, Professional services showcase component.
- *
- * Renders a comprehensive service offerings display with detailed categories,
- * pricing information, features, and value propositions. Enables potential clients
- * to explore available services and understand offerings across different domains.
- *
- * @component
- * @returns {JSX.Element} The rendered Services section
- *
- * @example
- * ```tsx
- * <Services />
- * ```
- *
- * @see {@link src/lib/analytics.ts} for service interest tracking
+ * Renders `<section id="services">`. Each card lists at most four included items.
+ * No analytics events are sent from this component.
  */
 const Services: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

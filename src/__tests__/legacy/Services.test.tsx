@@ -1,9 +1,27 @@
+/**
+ * Legacy tests for the old Services section (service titles, prices, durations, categories, features, axe audit).
+ *
+ * Renders <Services /> with no providers, checks static copy including the
+ * "Starting at $..." price strings, and runs a jest-axe audit. The current site has
+ * no pricing page (/services redirects to /contact), so these prices exist only in
+ * the legacy component.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Services'
+ * import resolves to src/__tests__/components/Services, which does not exist; the component
+ * is src/components/Services.tsx, itself unused by the current site. Assertions have not
+ * been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Services.tsx (intended target)
+ * - jest-axe (matcher registered in src/setupTests.ts)
+ */
 import { render, screen } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { vi } from 'vitest';
 import Services from '../components/Services';
 
-// Mock IntersectionObserver
+// Overrides the global IntersectionObserver mock from src/setupTests.ts for this file.
 beforeAll(() => {
   global.IntersectionObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
@@ -12,6 +30,7 @@ beforeAll(() => {
   }));
 });
 
+/** Static content and accessibility of the Services section. */
 describe('Services', () => {
   it('renders the services section heading', () => {
     render(<Services />);

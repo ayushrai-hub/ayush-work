@@ -1,8 +1,23 @@
+/**
+ * Sticky site header: wordmark, primary nav, "More" menu, agent/human view toggle, search, theme toggle, and mobile menu.
+ *
+ * From md up, PRIMARY_NAV shows inline and SECONDARY_NAV sits in a native <details> "More"
+ * dropdown. Below md, a menu button opens a panel listing both groups plus Search and the view
+ * toggle; while that panel is open, Escape closes it and body scroll is locked. Route changes
+ * close both menus. The view toggle links to the same path with `agent=1` added or removed,
+ * keeping other query parameters. The theme button calls toggleTheme from ThemeContext.
+ *
+ * Connects to:
+ * - Rendered once by SiteLayout, which passes `onOpenSearch` to open SearchDialog
+ * - contexts/ThemeContext: useTheme
+ * - The `?agent=1` link is read by SiteLayout, which then renders AgentView instead of the page
+ */
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, Moon, Search, Sun, X } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 
+/** Links shown inline in the desktop header; also listed first in the mobile menu. */
 const PRIMARY_NAV = [
   { to: "/work", label: "Work" },
   { to: "/products", label: "Products" },
@@ -11,7 +26,12 @@ const PRIMARY_NAV = [
   { to: "/about", label: "About" },
 ] as const;
 
+/** Links in the desktop "More" dropdown; listed after PRIMARY_NAV in the mobile menu. */
 const SECONDARY_NAV = [
+  { to: "/ai-engineering", label: "AI engineering" },
+  { to: "/software-engineering", label: "Software" },
+  { to: "/experience", label: "Experience" },
+  { to: "/open-source", label: "Open source" },
   { to: "/now", label: "Now" },
   { to: "/ideas", label: "Ideas" },
   { to: "/timeline", label: "Timeline" },
@@ -20,10 +40,12 @@ const SECONDARY_NAV = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
+/** Props for SiteHeader; `onOpenSearch` opens the SearchDialog owned by SiteLayout. */
 interface SiteHeaderProps {
   onOpenSearch: () => void;
 }
 
+/** Site header; `mobileOpen` and `moreOpen` track the two menus, `moreRef` lets route changes close the <details>. */
 export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -51,16 +73,19 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
     };
   }, [mobileOpen]);
 
+  /** Class name for desktop primary NavLinks, highlighting the active route. */
   const navClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm transition-colors ${
       isActive ? "text-ink" : "text-ink-muted hover:text-ink"
     }`;
 
+  /** Closes the mobile menu before opening search so the two overlays never stack. */
   const openSearch = useCallback(() => {
     setMobileOpen(false);
     onOpenSearch();
   }, [onOpenSearch]);
 
+  // Link target for the view toggle: current path and query with `agent=1` flipped.
   const agentParams = new URLSearchParams(location.search);
   const agentOn = agentParams.get("agent") === "1";
   if (agentOn) agentParams.delete("agent");

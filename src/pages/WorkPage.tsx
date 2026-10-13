@@ -1,9 +1,23 @@
+/**
+ * `/work`: index of all case studies with a type filter.
+ *
+ * Keeps the selected `WorkType` (or "all") in component state; it is not reflected in the URL.
+ * Rows are rendered by WorkRow in content order.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `work`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   Rows link to WorkDetailPage at `/work/:slug`.
+ * - Content from src/content (`work`, `pageUpdatedAt("work")`, type `WorkType`); components
+ *   PageSEO, PageHeader, WorkRow.
+ * - Markdown twin `/work.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { useMemo, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import WorkRow from "../components/editorial/WorkRow";
 import { work, pageUpdatedAt, type WorkType } from "../content";
 
+/** Type filter buttons, one per `WorkType` plus "all". */
 const FILTERS: Array<{ label: string; value: WorkType | "all" }> = [
   { label: "All", value: "all" },
   { label: "Product", value: "product" },
@@ -13,6 +27,7 @@ const FILTERS: Array<{ label: string; value: WorkType | "all" }> = [
   { label: "Open source", value: "open-source" },
 ];
 
+/** Work index component. Lazy-loaded by the `work` route in src/App.tsx. */
 export default function WorkPage() {
   const [filter, setFilter] = useState<WorkType | "all">("all");
 

@@ -23,6 +23,17 @@
   to = "/.netlify/functions/projects"
   status = 200
 
+[[redirects]]
+  from = "/api/v1/search"
+  to = "/.netlify/functions/search"
+  status = 200
+
+# MCP Server Card (SEP-2127): <streamable-http-url>/server-card.
+[[redirects]]
+  from = "/api/mcp/server-card"
+  to = "/.netlify/functions/mcp?resource=server-card"
+  status = 200
+
 # API before the SPA fallback. Existing static files are not forced aside.
 [[redirects]]
   from = "/api/*"
@@ -179,12 +190,16 @@
   force = true
   conditions = {Accept = ["text/markdown"]}
 
-# SPA fallback for client routes. force stays off so prerendered HTML,
-# Markdown twins, llms.txt, the sitemap, and other real files win.
+# Unknown paths must not reuse the homepage. Prerendered files still win
+# because force is off. design-system and product logs are real files.
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/404.html"
+  status = 404
+
+[[edge_functions]]
+  function = "markdown-negotiation"
+  path = "/*"
 
 [[headers]]
   for = "/**/*.md"
@@ -194,6 +209,33 @@
     Vary = "Accept"
 
 [[headers]]
+  for = "/.well-known/api-catalog"
+  [headers.values]
+    Content-Type = 'application/linkset+json; profile="https://www.rfc-editor.org/info/rfc9727"'
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/.well-known/ai-catalog.json"
+  [headers.values]
+    Content-Type = "application/ai-catalog+json"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/.well-known/mcp/server-card.json"
+  [headers.values]
+    Content-Type = "application/mcp-server-card+json"
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET"
+    Access-Control-Allow-Headers = "Content-Type, If-None-Match"
+    Access-Control-Expose-Headers = "ETag"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Link = '</.well-known/api-catalog>; rel="api-catalog"'
+
+[[headers]]
   for = "/index.md"
   [headers.values]
     Content-Type = "text/markdown; charset=utf-8"
@@ -201,4 +243,4 @@
     Vary = "Accept"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "22"

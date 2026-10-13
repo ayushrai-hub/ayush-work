@@ -1,8 +1,31 @@
+/**
+ * `/timeline`: reverse-chronological list of education, roles, projects, products,
+ * leadership, recognition, and life entries.
+ *
+ * Sorts a copy of `timeline` by `date` descending (string compare, so dates must be
+ * ISO-formatted). Entry titles link to a related page via `relatedHref` when the entry has a
+ * `relatedSlug` and its kind maps to a page.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `timeline`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   AboutPage and HomePage link here.
+ * - Content from src/content (`timeline`, plus `work` and `research` slugs for links); components
+ *   PageSEO, PageHeader.
+ * - Markdown twin `/timeline.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
-import { timeline } from "../content";
+import { research, timeline, work } from "../content";
 
+const WORK_SLUGS = new Set(work.map((item) => item.slug));
+const RESEARCH_SLUGS = new Set(research.map((item) => item.slug));
+
+/**
+ * Page link for a timeline entry, or null when there is no slug or the kind has no page.
+ * Project and product kinds use the slug: `/work/<slug>` for a work record, `/research/<slug>`
+ * for a research record, otherwise no link. Other kinds link to their list page without an anchor.
+ */
 function relatedHref(kind: string, slug?: string) {
   if (!slug) return null;
   switch (kind) {
@@ -12,7 +35,9 @@ function relatedHref(kind: string, slug?: string) {
       return "/about";
     case "project":
     case "product":
-      return `/work/${slug}`;
+      if (WORK_SLUGS.has(slug)) return `/work/${slug}`;
+      if (RESEARCH_SLUGS.has(slug)) return `/research/${slug}`;
+      return null;
     case "leadership":
       return "/leadership";
     case "recognition":
@@ -22,6 +47,7 @@ function relatedHref(kind: string, slug?: string) {
   }
 }
 
+/** Timeline page component. Lazy-loaded by the `timeline` route in src/App.tsx. */
 export default function TimelinePage() {
   const sorted = [...timeline].sort((a, b) => b.date.localeCompare(a.date));
 

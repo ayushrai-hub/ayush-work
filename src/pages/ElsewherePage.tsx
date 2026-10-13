@@ -1,3 +1,16 @@
+/**
+ * `/elsewhere`: map of external profiles, with primary profiles first and the rest by category.
+ *
+ * Category groups drop archived profiles and any profile already shown under Primary; empty
+ * groups are hidden. Archived profiles sit behind a toggle (`showArchive` state). Uses its own
+ * header markup instead of PageHeader, and no phone numbers are listed.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `elsewhere`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`elsewhere`, `primaryElsewhere`, `archivedElsewhere`, type
+ *   `ProfileLink`); component PageSEO.
+ * - Markdown twin `/elsewhere.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { useMemo, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
 import {
@@ -7,6 +20,7 @@ import {
 } from "../content";
 import type { ProfileLink } from "../content";
 
+/** One external profile link (new tab) with its description as the hover title. Used by every list on this page. */
 function ProfileLinkRow({ profile }: { profile: ProfileLink }) {
   return (
     <a
@@ -27,6 +41,7 @@ function ProfileLinkRow({ profile }: { profile: ProfileLink }) {
   );
 }
 
+/** Elsewhere page component. Lazy-loaded by the `elsewhere` route in src/App.tsx. */
 export default function ElsewherePage() {
   const [showArchive, setShowArchive] = useState(false);
 

@@ -1,3 +1,23 @@
+/**
+ * Tests the three flagship products (The Open Framework, AGENYRA, MedVoice) across data, agent, and page surfaces.
+ *
+ * Data: featured order, unique slugs, GitHub and demo URLs (MedVoice has no
+ * demo), stage labels, and the product-to-case-study mapping. Agent surfaces:
+ * search-index hrefs are known routes, and llms-full plus product and work
+ * Markdown leak no private operational strings. Pages: the homepage "Things I
+ * build" section lists the three flagships in order, the products catalog keeps
+ * AyushMushrooms after them, detail pages set canonical and og:url and
+ * CreativeWork JSON-LD, the AGENYRA build log shows dated entries, and the
+ * MedVoice case study links back to its product page.
+ *
+ * Meta and canonical assertions rely on the react-helmet-async pass-through in
+ * src/setupTests.ts, which writes tags straight into document.head.
+ *
+ * Connects to:
+ * - src/content (products, works, searchIndex)
+ * - src/lib/agent/markdown.ts, src/lib/agent/routes.ts
+ * - src/pages/HomePage, ProductsPage, ProductDetailPage, ProductLogPage, WorkDetailPage
+ */
 import type { ReactElement } from "react";
 import { render, screen, within } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
@@ -20,6 +40,7 @@ import WorkDetailPage from "../pages/WorkDetailPage";
 
 const FLAGSHIP = ["the-open-framework", "agenyra", "medvoice"] as const;
 
+/** Renders `element` at `path` under HelmetProvider and a MemoryRouter with the product and work route shapes. */
 function renderRoute(path: string, element: ReactElement) {
   return render(
     <HelmetProvider>
@@ -36,6 +57,7 @@ function renderRoute(path: string, element: ReactElement) {
   );
 }
 
+/** Content records, search index entries, and agent Markdown for the flagship products. */
 describe("flagship products", () => {
   it("keeps three unique featured slugs in portfolio order", () => {
     const slugs = featuredProducts().map((product) => product.slug);
@@ -107,6 +129,7 @@ describe("flagship products", () => {
   });
 });
 
+/** Rendered homepage, catalog, detail, build-log, and case-study pages for the flagships. */
 describe("flagship product pages", () => {
   it("prioritizes the three products on the homepage", () => {
     renderRoute("/", <HomePage />);
@@ -182,11 +205,11 @@ describe("flagship product pages", () => {
     expect(screen.queryByRole("link", { name: "Live site" })).toBeNull();
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       "href",
-      "https://www.ayushrai.site/products/medvoice",
+      "https://www.ayushrai.site/products/medvoice/",
     );
     expect(document.querySelector('meta[property="og:url"]')).toHaveAttribute(
       "content",
-      "https://www.ayushrai.site/products/medvoice",
+      "https://www.ayushrai.site/products/medvoice/",
     );
     const structured = document.querySelector(
       'script[type="application/ld+json"]',
@@ -200,7 +223,7 @@ describe("flagship product pages", () => {
     expect(screen.queryByText(/Kubernetes/)).toBeNull();
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       "href",
-      "https://www.ayushrai.site/products/the-open-framework",
+      "https://www.ayushrai.site/products/the-open-framework/",
     );
     const descriptions = FLAGSHIP.map(
       (slug) => getProductBySlug(slug)?.summary,

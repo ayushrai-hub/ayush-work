@@ -1,8 +1,23 @@
+/**
+ * Legacy tests for the old Skills grid (heading, six categories, sample skills, card count).
+ *
+ * Renders <Skills /> with no providers, checks static copy, and counts category
+ * cards by their Tailwind class selector, which breaks if those classes change.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Skills'
+ * import resolves to src/__tests__/components/Skills, which does not exist; the component
+ * is src/components/Skills.tsx, itself unused by the current site. Assertions have not
+ * been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Skills.tsx (intended target)
+ */
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import Skills from '../components/Skills';
 
-// Mock IntersectionObserver
+// Overrides the global IntersectionObserver mock from src/setupTests.ts for this file.
 beforeAll(() => {
   global.IntersectionObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
@@ -11,6 +26,7 @@ beforeAll(() => {
   }));
 });
 
+/** Static content and category count of the Skills section. */
 describe('Skills Component', () => {
   it('renders without crashing', () => {
     const { container } = render(<Skills />);
@@ -47,7 +63,7 @@ describe('Skills Component', () => {
   it('renders all skill categories', () => {
     const { container } = render(<Skills />);
     const skillCategories = container.querySelectorAll('.group.bg-white.dark\\:bg-gray-800');
-    expect(skillCategories).toHaveLength(6); // Should have 6 skill categories
+    expect(skillCategories).toHaveLength(6);
   });
 
   it('has accessible markup for main heading', () => {

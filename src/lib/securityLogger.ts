@@ -1,5 +1,19 @@
-// Security Event Logger for Client-Side Security Monitoring
-// Implements OWASP A09:2021 Security Logging and Monitoring Failures mitigation
+/**
+ * Client-side security event log kept in localStorage, plus a per-form submission rate limiter.
+ *
+ * logSecurityEvent stamps an event with id, time, user agent, URL, a heuristic risk score, severity,
+ * and a canvas-based session fingerprint, appends it to localStorage key `security_events` (trimmed
+ * to the newest 800 once it passes 1000), logs it to the console, and forwards a `security_event` to
+ * gtag when present. Nothing is sent to a server. Importing the module starts a 60-second
+ * setInterval that prunes the in-memory submission tracker; it is never cleared.
+ *
+ * Connects to:
+ * - Legacy only (not routed): src/components/Contact.tsx and src/components/layout/ErrorBoundary.tsx
+ *   (ErrorBoundary is imported only by src/__tests__/ErrorBoundary.test.tsx).
+ * - The reporting helpers (getSecurityEvents, exportSecurityEvents, clearOldSecurityEvents,
+ *   getSecuritySummary) and logSuspiciousActivity, logValidationBypassAttempt, logRepeatedFailures,
+ *   and _detectSuspiciousPatterns have no callers.
+ */
 
 export type SecurityEventType =
   | 'form_validation_failure'
@@ -13,6 +27,7 @@ export type SecurityEventType =
   | 'csrf_attempt'
   | 'malicious_payload';
 
+/** One stored event. `riskScore` and `severity` are filled in by logSecurityEvent. */
 export interface SecurityEvent {
   id: string;
   timestamp: string;
@@ -42,7 +57,10 @@ const STORAGE_KEY = 'security_events';
 const MAX_EVENTS = 1000;
 const EVENTS_TO_KEEP = 800;
 
-// Generate a simple fingerprint for tracking repeated attempts from same session
+/**
+ * Last 16 characters of a canvas data URL, used to correlate events from the same browser.
+ * Returns a fixed marker string on the server or when canvas is unavailable.
+ */
 const generateSessionFingerprint = (): string => {
   if (typeof window === 'undefined') return 'ssr';
   try {
@@ -60,6 +78,7 @@ const generateSessionFingerprint = (): string => {
   }
 };
 
+/** Reads the event array from localStorage; returns [] on the server or on any read/parse error. */
 const getStoredEvents = (): SecurityEvent[] => {
   if (typeof window === 'undefined') return [];
   try {
@@ -70,10 +89,13 @@ const getStoredEvents = (): SecurityEvent[] => {
   }
 };
 
+/**
+ * Writes the event array, keeping only the newest EVENTS_TO_KEEP once it exceeds MAX_EVENTS.
+ * On a write error (for example quota exceeded) the whole key is removed.
+ */
 const storeEvents = (events: SecurityEvent[]): void => {
   if (typeof window === 'undefined') return;
   try {
-    // Rotate events if exceeding max
     const eventsToStore = events.length > MAX_EVENTS
       ? events.slice(-EVENTS_TO_KEEP)
       : events;
@@ -81,11 +103,14 @@ const storeEvents = (events: SecurityEvent[]): void => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(eventsToStore));
   } catch (error) {
     console.error('Failed to store security events:', error);
-    // Clear storage if corrupted
     localStorage.removeItem(STORAGE_KEY);
   }
 };
 
+/**
+ * Heuristic 0-100 score: a base by event type, +30 for more than 3 attempts, and +50 when
+ * `details.value` contains a script-like keyword. Capped at 100.
+ */
 const calculateRiskScore = (event: SecurityEvent): number => {
   let score = 0;
 
@@ -132,6 +157,7 @@ const calculateRiskScore = (event: SecurityEvent): number => {
   return Math.min(score, 100);
 };
 
+/** Maps a risk score to severity: >=80 critical, >=60 high, >=30 medium, else low. */
 const determineSeverity = (riskScore: number): SecurityEvent['severity'] => {
   if (riskScore >= 80) return 'critical';
   if (riskScore >= 60) return 'high';
@@ -139,7 +165,7 @@ const determineSeverity = (riskScore: number): SecurityEvent['severity'] => {
   return 'low';
 };
 
-// Check for suspicious patterns in input
+/** True when the input contains script/event-handler markup, embedding or form tags, or control characters. */
 const detectSuspiciousPatterns = (input: string): boolean => {
   const suspiciousPatterns = [
     /<script[^>]*>.*?<\/script>/gi,
@@ -161,7 +187,11 @@ const detectSuspiciousPatterns = (input: string): boolean => {
   return suspiciousPatterns.some(pattern => pattern.test(input));
 };
 
-// Core logging function
+/**
+ * Records one event: adds id, timestamp, user agent, URL, risk score, severity, and fingerprint,
+ * appends it to localStorage, logs it at a console level matching severity, and sends a
+ * `security_event` to gtag if loaded. No-op on the server.
+ */
 export const logSecurityEvent = (eventData: Omit<SecurityEvent, 'id' | 'timestamp' | 'userAgent' | 'url' | 'riskScore' | 'severity'>): void => {
   if (typeof window === 'undefined') return;
 
@@ -173,19 +203,16 @@ export const logSecurityEvent = (eventData: Omit<SecurityEvent, 'id' | 'timestam
     ...eventData,
   };
 
-  // Calculate risk and severity
   event.riskScore = calculateRiskScore(event);
   event.severity = determineSeverity(event.riskScore);
 
-  // Add fingerprint for tracking
+  // Mutates the caller's `details` object, since `...eventData` copies it by reference.
   event.details.fingerprint = generateSessionFingerprint();
 
-  // Store event
   const existingEvents = getStoredEvents();
   const newEvents = [...existingEvents, event];
   storeEvents(newEvents);
 
-  // Console logging for development/monitoring
   const logLevel = event.severity! === 'critical' || event.severity! === 'high' ? 'error' :
                   event.severity! === 'medium' ? 'warn' : 'info';
 
@@ -198,7 +225,6 @@ export const logSecurityEvent = (eventData: Omit<SecurityEvent, 'id' | 'timestam
     }
   );
 
-  // Potentially integrate with analytics (if configured)
   if (typeof window !== 'undefined' && (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -213,14 +239,16 @@ export const logSecurityEvent = (eventData: Omit<SecurityEvent, 'id' | 'timestam
   }
 };
 
-// Specific logging functions for different types of security events
+/**
+ * Logs a failed form validation. Input matching detectSuspiciousPatterns is logged as `xss_attempt`
+ * with the value replaced by a placeholder; otherwise the first 100 characters are stored.
+ */
 export const logFormValidationFailure = (
   component: string,
   field: string,
   value: string,
   validationError: string
 ): void => {
-  // Check if input is suspicious
   const isSuspicious = detectSuspiciousPatterns(value);
 
   logSecurityEvent({
@@ -235,6 +263,7 @@ export const logFormValidationFailure = (
   });
 };
 
+/** Logs a `rate_limit_exceeded` event; called by trackFormSubmission. */
 export const logRateLimitExceeded = (
   component: string,
   attempts: number,
@@ -246,6 +275,7 @@ export const logRateLimitExceeded = (
   });
 };
 
+/** Logs a `suspicious_input` event with arbitrary details. */
 export const logSuspiciousActivity = (
   activity: string,
   details: Record<string, unknown>
@@ -256,6 +286,7 @@ export const logSuspiciousActivity = (
   });
 };
 
+/** Logs a `validation_bypass_attempt` only when sanitizing changed the value; stores both values unredacted. */
 export const logValidationBypassAttempt = (
   component: string,
   originalValue: string,
@@ -269,6 +300,7 @@ export const logValidationBypassAttempt = (
   }
 };
 
+/** Logs a `repeated_failures` event; risk grows with `attempts`. */
 export const logRepeatedFailures = (
   component: string,
   attempts: number,
@@ -280,6 +312,7 @@ export const logRepeatedFailures = (
   });
 };
 
+/** Logs a `network_error` with the message and the first 200 characters of the stack. */
 export const logNetworkError = (
   error: Error,
   component: string,
@@ -296,7 +329,7 @@ export const logNetworkError = (
   });
 };
 
-// Utility function to get security events for reporting/debugging
+/** Returns stored events, optionally filtered by type, severity, and minimum timestamp. */
 export const getSecurityEvents = (
   filter?: { type?: SecurityEventType; severity?: SecurityEvent['severity']; since?: Date }
 ): SecurityEvent[] => {
@@ -312,13 +345,13 @@ export const getSecurityEvents = (
   });
 };
 
-// Export events for analysis (admin use only)
+/** Stored events as pretty-printed JSON. There is no access control; anything on the page can call it. */
 export const exportSecurityEvents = (): string => {
   const events = getStoredEvents();
   return JSON.stringify(events, null, 2);
 };
 
-// Clear old events
+/** Drops stored events older than `daysToKeep` days (default 30). */
 export const clearOldSecurityEvents = (daysToKeep: number = 30): void => {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
@@ -331,7 +364,7 @@ export const clearOldSecurityEvents = (daysToKeep: number = 30): void => {
   storeEvents(filteredEvents);
 };
 
-// Get security summary
+/** Counts by severity, the last 10 events, and the mean risk score of all stored events. */
 export const getSecuritySummary = () => {
   const events = getStoredEvents();
   const critical = events.filter(e => e.severity === 'critical').length;
@@ -347,9 +380,14 @@ export const getSecuritySummary = () => {
   };
 };
 
-// Track form submissions for rate limiting
+/** In-memory submission counts per form id; reset on page reload. */
 const submissionTracker = new Map<string, { count: number; firstAttempt: number }>();
 
+/**
+ * Fixed-window client-side rate limit. Returns true and counts the attempt when allowed; returns
+ * false and logs `rate_limit_exceeded` once `maxAttempts` (default 5) is reached within `windowMs`
+ * (default 60 s). Not a security boundary: it lives in the browser.
+ */
 export const trackFormSubmission = (formId: string, maxAttempts: number = 5, windowMs: number = 60000): boolean => {
   const now = Date.now();
   const existing = submissionTracker.get(formId);
@@ -375,7 +413,7 @@ export const trackFormSubmission = (formId: string, maxAttempts: number = 5, win
   return true;
 };
 
-// Auto-clear old trackers periodically
+// Prunes trackers older than an hour. Starts at import time, without a window check, and is never cleared.
 setInterval(() => {
   const now = Date.now();
   const maxAge = 3600000; // 1 hour

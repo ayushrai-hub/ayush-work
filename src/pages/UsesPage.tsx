@@ -1,8 +1,19 @@
+/**
+ * `/uses`: tools and stack, grouped by category.
+ *
+ * Groups `uses` by `CATEGORY_ORDER` and drops empty groups. Items with `todo` set show EmptyNote.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `uses`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`uses`); components PageSEO, PageHeader, EmptyNote.
+ * - Markdown twin `/uses.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import EmptyNote from "../components/editorial/EmptyNote";
 import { uses } from "../content";
 
+/** Display order of `uses` categories. Must cover every `UseItem["category"]`; a category left out is not rendered. */
 const CATEGORY_ORDER = [
   "editor",
   "runtime",
@@ -14,6 +25,7 @@ const CATEGORY_ORDER = [
   "other",
 ] as const;
 
+/** Uses page component. Lazy-loaded by the `uses` route in src/App.tsx. */
 export default function UsesPage() {
   const grouped = CATEGORY_ORDER.map((cat) => ({
     category: cat,

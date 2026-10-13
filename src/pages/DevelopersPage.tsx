@@ -1,49 +1,92 @@
+/**
+ * `/developers`: developer documentation for the public REST API and MCP server.
+ *
+ * Renders `developerSections()` from src/lib/agent/developerDocs.ts, the same sections the
+ * Markdown twin uses, so the HTML and `/developers.md` cannot drift. Backtick spans in those
+ * paragraphs become `<code>` via `withCode`. A fixed resource list links the machine-readable
+ * discovery files (OpenAPI, API catalog, MCP Server Card, AI Catalog, llms.txt, AGENTS.md, SKILL.md).
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `developers`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`pageUpdatedAt("developers")`) and src/lib/agent/developerDocs.ts
+ *   (`DEVELOPER_TITLE`, `DEVELOPER_DESCRIPTION`, `developerSections`); components PageSEO,
+ *   PageHeader, Prose, SectionHeading.
+ * - Markdown twin `/developers.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
+import SectionHeading from "../components/editorial/SectionHeading";
 import PageSEO from "../components/site/PageSEO";
+import { pageUpdatedAt } from "../content";
+import {
+  DEVELOPER_DESCRIPTION,
+  DEVELOPER_TITLE,
+  developerSections,
+} from "../lib/agent/developerDocs";
 
+/** Splits on backticks and wraps every odd segment in `<code>`. An unmatched backtick codes the rest of the string. */
+function withCode(text: string) {
+  return text.split("`").map((part, index) =>
+    index % 2 === 1 ? <code key={index}>{part}</code> : part,
+  );
+}
+
+/** Discovery and agent files served by the site or API. Plain `<a>` links because they are not SPA routes. */
+const RESOURCES = [
+  { href: "/openapi.json", label: "OpenAPI spec" },
+  { href: "/.well-known/api-catalog", label: "API catalog" },
+  { href: "/api/mcp/server-card", label: "MCP Server Card" },
+  { href: "/.well-known/ai-catalog.json", label: "AI Catalog" },
+  { href: "/llms.txt", label: "llms.txt" },
+  { href: "/AGENTS.md", label: "AGENTS.md" },
+  { href: "/SKILL.md", label: "SKILL.md" },
+  { href: "/developers.md", label: "This page as Markdown" },
+] as const;
+
+/** Developers page component. Lazy-loaded by the `developers` route in src/App.tsx. */
 export default function DevelopersPage() {
   return (
     <>
       <PageSEO
-        title="Developers"
-        description="How to read Ayush Rai's public pages as Markdown, search them, and call the read-only project API."
+        title="Developer docs: API and MCP server"
+        description={DEVELOPER_DESCRIPTION}
         path="/developers"
       />
       <div className="site-shell page-section">
         <PageHeader
           label="Developers"
-          title="Public interfaces"
-          dek="The same content records as the website. Search is lexical. Nothing here is a model."
+          title={DEVELOPER_TITLE}
+          dek="Read-only REST API and MCP server over the same content records as the website. Free, public, and keyless."
+          updated={pageUpdatedAt("developers")}
         />
-        <Prose>
-          <p>
-            Start at <a href="/llms.txt">llms.txt</a>. Each linked page has a{" "}
-            <code>.md</code> twin. The homepage twin is <a href="/index.md">/index.md</a>.
-            Sending <code>Accept: text/markdown</code> without <code>text/html</code> returns
-            Markdown for known pages. The <code>.md</code> URL is the stable contract.
-          </p>
-          <p>
-            <code>GET /api/search?q=</code> matches titles, tags, types, and summaries. It
-            does not infer meaning. <code>GET /api/v1/projects</code> lists active projects.{" "}
-            <code>GET /api/v1/projects/overlay-text-box</code> fetches one.{" "}
-            <code>GET /api/v1/compare?slugs=overlay-text-box,expert-o</code> compares two to
-            four. Archived projects stay out unless <code>archive=1</code>.
-          </p>
-          <p>
-            The specification is <a href="/openapi.json">openapi.json</a>. Agent notes are{" "}
-            <a href="/AGENTS.md">AGENTS.md</a> and <a href="/SKILL.md">SKILL.md</a>. A local
-            stdio MCP server in the repository exposes <code>list_projects</code>,{" "}
-            <code>get_project</code>, and <code>compare_projects</code>. There is no remote
-            MCP endpoint and no registry listing.
-          </p>
-          <p>
-            <Link to="/" className="link-accent">
-              Back to the site
-            </Link>
-          </p>
-        </Prose>
+        {developerSections().map((section) => (
+          <section key={section.heading} className="mt-10">
+            <SectionHeading title={section.heading} />
+            <Prose>
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{withCode(paragraph)}</p>
+              ))}
+            </Prose>
+          </section>
+        ))}
+        <section className="mt-10">
+          <SectionHeading title="Resources" />
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {RESOURCES.map((item) => (
+              <li key={item.href}>
+                <a href={item.href} className="link-accent">
+                  {item.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              <Link to="/" className="link-accent">
+                Back to the site
+              </Link>
+            </li>
+          </ul>
+        </section>
       </div>
     </>
   );

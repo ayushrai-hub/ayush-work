@@ -1,6 +1,21 @@
+/**
+ * Catch-all 404 page for unmatched paths.
+ *
+ * Static render; no state. PageSEO gets `noIndex` and `path="/404"`. The client router cannot
+ * set an HTTP status; the 404 status comes from the host serving dist/404.html.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `*`. DomainPage also renders it when no domain record matches the
+ *   pathname. Not in src/lib/publicRoutes.ts; scripts/prerender.mjs renders `/404` separately
+ *   to dist/404.html, which netlify.toml serves with status 404.
+ * - Component PageSEO.
+ * - No per-route Markdown twin; agents asking for Markdown on an unknown path get
+ *   `renderNotFoundMarkdown()` from src/lib/agent/markdown.ts instead.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 
+/** 404 page component. Lazy-loaded by the `*` route in src/App.tsx and rendered directly by DomainPage. */
 export default function NotFoundPage() {
   return (
     <>

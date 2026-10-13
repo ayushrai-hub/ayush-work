@@ -1,3 +1,15 @@
+/**
+ * Tools, languages, frameworks and hosts listed on /uses.
+ *
+ * A flat list grouped by `category` on the page. Items with `todo: true` are
+ * shown with an "unconfirmed" note; inline comments say what still needs
+ * checking.
+ *
+ * Connects to:
+ * - UsesPage.
+ * - Markdown twin /uses.md. Not indexed for search.
+ * - Uses `UseItem` from types.ts.
+ */
 import type { UseItem } from "./types";
 
 /**

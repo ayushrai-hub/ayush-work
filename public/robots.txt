@@ -1,5 +1,11 @@
+# One group on purpose. A separate Googlebot or GPTBot group would replace
+# these rules instead of inheriting them. Common search and AI crawlers are
+# allowed to read public pages. /design-system is an internal specimen.
+# ?audience= only reorders the homepage and is not a separate document.
+
 User-agent: *
 Allow: /
 Disallow: /design-system
+Disallow: /*?audience=
 
 Sitemap: https://www.ayushrai.site/sitemap.xml

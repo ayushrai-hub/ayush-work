@@ -1,38 +1,17 @@
 /**
- * GTMProvider.tsx, Google Tag Manager integration provider component.
+ * Legacy duplicate of src/components/layout/GTMProvider.tsx.
  *
- * This component provides Google Tag Manager (GTM) integration for the entire React application.
- * Dynamically loads GTM script, initializes dataLayer, and provides seamless analytics tracking.
- * Features environment-aware configuration, error handling, and safe script loading.
+ * Legacy: not imported anywhere; src/main.tsx uses src/components/layout/GTMProvider.tsx.
+ * Kept for reference; excluded from tsconfig.app.json. No test covers it.
+ * Its import `../utils/gtm` does not resolve (src/utils does not exist; the
+ * module is now src/lib/gtm.ts), so this file would fail to compile if included.
  *
- * The component includes:
- * - Dynamic GTM script loading with error handling
- * - DataLayer initialization and configuration
- * - Environment-based GTM ID configuration
- * - Safe loading with browser environment checks
- * - Graceful degradation when GTM unavailable
+ * The component body matches the live provider: it initialises `dataLayer` and
+ * injects gtm.js only for a non-default GTM_ID.
  *
- * Security features:
- * - Environment variable-based configuration
- * - Safe script injection
- * - Error logging for tracking failures
- *
- * @component
- * @example
- * ```tsx
- * import GTMProvider from './components/GTMProvider';
- *
- * function App() {
- *   return (
- *     <GTMProvider>
- *       <AppContent />
- *     </GTMProvider>
- *   );
- * }
- * ```
- *
- * @see {@link src/utils/gtm.ts} for GTM utilities
- * @see {@link src/hooks/useGTM.ts} for GTM integration hook
+ * Connects to:
+ * - No importers
+ * - ../utils/gtm (missing; see src/lib/gtm.ts)
  */
 import React, { useEffect } from 'react';
 import { initGTM, GTM_ID } from '../utils/gtm';
@@ -46,22 +25,8 @@ interface GTMProviderProps {
 }
 
 /**
- * GTMProvider, Google Tag Manager integration provider.
- *
- * Provides GTM integration for the entire React application with
- * dynamic script loading, dataLayer initialization, and environment-aware
- * configuration. Ensures safe GTM integration with error handling.
- *
- * @component
- * @param {GTMProviderProps} props - Component props
- * @returns {JSX.Element} The rendered provider component
- *
- * @example
- * ```tsx
- * <GTMProvider>
- *   <App />
- * </GTMProvider>
- * ```
+ * Initialises `dataLayer` on mount and, for a non-default GTM_ID with no
+ * matching script tag, inserts gtm.js. Renders its children unchanged.
  */
 export const GTMProvider: React.FC<GTMProviderProps> = ({ children }) => {
   useEffect(() => {

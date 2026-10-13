@@ -1,8 +1,25 @@
+/**
+ * Community, volunteering and extracurricular roles, plus a withheld list of unverified leadership claims.
+ *
+ * `leadership` holds only grounded roles, described without reach metrics.
+ * `leadershipNeedsConfirmation` holds older claims that are deliberately not
+ * published.
+ *
+ * Connects to:
+ * - LeadershipPage (all entries) and AboutPage (first four).
+ * - Markdown twins /leadership.md and /about.md (first four); search items of
+ *   type "leadership".
+ * - Slugs are cited by timeline.ts and capabilities.ts.
+ * - src/__tests__/agentSurfaces.test.ts checks that no entry of
+ *   `leadershipNeedsConfirmation` appears in llms.txt or llms-full.txt.
+ * - Uses `LeadershipItem` from types.ts.
+ */
 import type { LeadershipItem } from "./types";
 
 /**
  * Grounded extracurriculars and community roles only.
- * Inflated GDSC / Microsoft / generic "1000+ students" claims live in needsConfirmation.
+ * Inflated GDSC / Microsoft / generic "1000+ students" claims live in
+ * `leadershipNeedsConfirmation`, not here.
  */
 export const leadership: LeadershipItem[] = [
   {
@@ -89,8 +106,11 @@ export const leadership: LeadershipItem[] = [
 ];
 
 /**
- * Previously shown on CommunityLeadership with large unverified metrics.
- * Do not surface as public fact until confirmed.
+ * Withheld: leadership claims with large unverified metrics. Do not surface
+ * them as public fact until confirmed, and do not copy them into pages,
+ * Markdown, search, API or MCP output. No current page or agent surface
+ * renders this list; a test asserts it is absent from llms.txt and
+ * llms-full.txt.
  */
 export const leadershipNeedsConfirmation: string[] = [
   "Google Developer Student Club Lead — '200+ developers', '50+ workshops', '95% satisfaction', '1000+ students'",

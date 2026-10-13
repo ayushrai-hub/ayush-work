@@ -1,22 +1,17 @@
 /**
- * About.tsx, Personal story and core values presentation component.
+ * Legacy "My Story" section: a short biography plus four core-value cards.
  *
- * This component displays Ayush Rai's personal journey, core values, and professional approach
- * as a polymath in AI engineering and full-stack development. It features animated sections
- * showcasing strategic thinking, technical innovation, community leadership, and continuous learning.
+ * Legacy: not imported by the current site (src/App.tsx routes use src/pages).
+ * Kept for reference; excluded from tsconfig.app.json. Covered only by
+ * src/__tests__/legacy/About.test.tsx, which Vitest excludes.
  *
- * @component
- * @example
- * ```tsx
- * import About from './components/About';
+ * The biography and values are hard-coded in this file rather than read from
+ * src/content/. Sections fade in once via react-intersection-observer and
+ * framer-motion.
  *
- * function App() {
- *   return <About />;
- * }
- * ```
- *
- * @see {@link src/components/AboutMe.tsx} for detailed personal profile
- * @see {@link src/components/Hero.tsx} for landing section
+ * Connects to:
+ * - No importers in src/ (sibling legacy section: src/components/AboutMe.tsx)
+ * - framer-motion, react-intersection-observer, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -24,27 +19,9 @@ import { useInView } from "react-intersection-observer";
 import { Brain, Code, Users, Lightbulb } from "lucide-react";
 
 /**
- * About, Main About section component displaying personal story and values.
- *
- * Renders an animated section that introduces the user with their professional journey,
- * core principles, and value proposition. Uses Framer Motion for smooth animations and
- * React Intersection Observer for performance-optimized animations.
- *
- * The component displays:
- * - Personal story with background and current pursuits
- * - Core values with icons and descriptions
- * - Animated entrance effects on scroll
- *
- * @component
- * @returns {JSX.Element} The rendered About section
- *
- * @example
- * ```tsx
- * <About />
- * ```
- *
- * @see {@link src/lib/types} for shared type definitions
- * @see {@link src/styles/globals.css} for animation classes
+ * Renders `<section id="about">` with the biography column and a grid of the
+ * hard-coded `values` cards. Animations start once the heading enters the viewport.
+ * The `card` class is no longer defined in src/index.css or the Tailwind config.
  */
 const About: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

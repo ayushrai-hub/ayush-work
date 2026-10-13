@@ -1,8 +1,20 @@
+/**
+ * `/research`: index of research notes, investigations, and experiments with status and period.
+ *
+ * Static render of `research` in content order; no state.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `research`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   Links to ResearchDetailPage at `/research/:slug`.
+ * - Content from src/content (`research`); components PageSEO, PageHeader.
+ * - Markdown twin `/research.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { research } from "../content";
 
+/** Research index component. Lazy-loaded by the `research` route in src/App.tsx. */
 export default function ResearchPage() {
   return (
     <>

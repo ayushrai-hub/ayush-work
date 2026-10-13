@@ -1,7 +1,18 @@
+/**
+ * `/archive`: list of earlier sites and superseded work, each with an optional external pointer.
+ *
+ * Static render of the `archive` records; no state. Items without `pointer` show no link.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `archive`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`archive`); components PageSEO, PageHeader.
+ * - Markdown twin `/archive.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { archive } from "../content";
 
+/** Archive page component. Lazy-loaded by the `archive` route in src/App.tsx. */
 export default function ArchivePage() {
   return (
     <>

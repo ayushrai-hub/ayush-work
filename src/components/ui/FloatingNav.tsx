@@ -1,69 +1,26 @@
 /**
- * FloatingNav.tsx, Floating navigation component with expandable page sections.
+ * Legacy floating vertical nav of emoji links to secondary pages, shown after scrolling.
  *
- * This component provides a floating navigation menu that appears on scroll, offering
- * quick access to page sections with hover tooltips and expanded labels. Features
- * smooth animations, accessibility support, and responsive behavior that adapts to
- * scroll position and viewport size.
+ * Legacy: not imported anywhere in src/. Kept for reference; excluded from
+ * tsconfig.app.json. No test covers it.
  *
- * The component includes:
- * - Scroll-based visibility control (shows after 200px scroll)
- * - Page section navigation with emoji icons and hover tooltips
- * - Accordion-style label expansion on hover
- * - Smooth scroll navigation with router integration
- * - Accessibility features (ARIA labels, keyboard navigation)
- * - Responsive positioning and mobile-friendly behavior
+ * A scroll listener (not throttled) shows the nav once `window.scrollY` passes
+ * 200px; otherwise it renders null. Each item is a react-router `Link` with an
+ * aria-label, and hovering shows a label tooltip. The targets resolve in
+ * src/App.tsx, though /certifications, /services, and /extracurriculars are now
+ * redirects. There is no scroll-to-top or smooth scrolling.
  *
- * Navigation Features:
- * - Research, Leadership, Certifications, Services, Extra-curriculars
- * - Smooth routing with React Router integration
- * - Back-to-top scroll behavior on section navigation
- * - Accessible tooltip system with proper ARIA attributes
- *
- * Performance Optimizations:
- * - Efficient scroll event handling with throttling
- * - Minimal DOM footprint when hidden
- * - Hardware-accelerated animations
- * - Accessibility-first design
- *
- * @component
- * @example
- * ```tsx
- * import FloatingNav from './components/FloatingNav';
- *
- * function Layout() {
- *   return (
- *     <div>
- *       <FloatingNav />
- *       <MainContent />
- *     </div>
- *   );
- * }
- * ```
- *
- * @see {@link src/components/Header.tsx} for main navigation bar
- * @see {@link src/components/Footer.tsx} for footer navigation
+ * Connects to:
+ * - No importers in src/ (the legacy header is src/components/layout/Header.tsx)
+ * - react-router-dom `Link` (requires a router ancestor), framer-motion
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 /**
- * FloatingNav, Floating navigation with section quick-access.
- *
- * Provides a compact, floating navigation menu that appears on scroll,
- * offering quick access to main page sections with tooltips and smooth
- * routing. Enhances user experience with accessible navigation controls.
- *
- * @component
- * @returns {JSX.Element | null} The rendered floating nav or null when hidden
- *
- * @example
- * ```tsx
- * <FloatingNav />
- * ```
- *
- * @see {@link src/components/Header.tsx} for primary navigation alternative
+ * Returns null until the page is scrolled past 200px, then a fixed `<nav>` on the
+ * right edge. The tooltip's `exit` animation never runs because it is not inside AnimatePresence.
  */
 const FloatingNav: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);

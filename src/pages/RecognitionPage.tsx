@@ -1,8 +1,23 @@
+/**
+ * `/recognition`: featured certificates and awards, plus a toggleable archive.
+ *
+ * `showArchive` state controls the archive list, which stays in the DOM with `hidden` so its
+ * anchors exist. On mount, if `location.hash` names an archived item, the archive opens so the
+ * deep link (search hits use `/recognition#<slug>`, see src/content/searchIndex.ts) is visible.
+ * Every item has an `id` anchor (`#<slug>`).
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `recognition` (legacy `/certifications` redirects here); prerendered
+ *   via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`featuredRecognition`, `archivedRecognition`); components PageSEO, PageHeader.
+ * - Markdown twin `/recognition.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { useEffect, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { archivedRecognition, featuredRecognition } from "../content";
 
+/** Recognition page component. Lazy-loaded by the `recognition` route in src/App.tsx. */
 export default function RecognitionPage() {
   const [showArchive, setShowArchive] = useState(false);
 

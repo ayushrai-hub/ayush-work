@@ -1,6 +1,18 @@
+/**
+ * `/design-system`: internal specimen page for color tokens, type families, and button/link styles.
+ *
+ * Static render; no state. Marked `noIndex` through PageSEO and not linked from any page.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `design-system`. Prerendered via `prerenderRoutes()` in
+ *   src/lib/publicRoutes.ts but excluded from `sitemapRoutes()`.
+ * - Components PageSEO, PageHeader. Swatch class names map to Tailwind theme colors.
+ * - No Markdown twin: src/lib/agent/markdown.ts has no `/design-system` page, so it stays HTML-only.
+ */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 
+/** Color tokens to show. `className` is the Tailwind background (plus a border for pale tokens). */
 const SWATCHES = [
   { name: "paper", className: "bg-paper border border-rule" },
   { name: "paper-elevated", className: "bg-paper-elevated border border-rule" },
@@ -14,6 +26,7 @@ const SWATCHES = [
   { name: "focus", className: "bg-focus" },
 ] as const;
 
+/** Design system page component. Lazy-loaded by the `design-system` route in src/App.tsx. */
 export default function DesignSystemPage() {
   return (
     <>

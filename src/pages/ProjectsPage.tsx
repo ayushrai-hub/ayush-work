@@ -1,3 +1,19 @@
+/**
+ * `/projects`: bounded projects and experiments, grouped by category, with domain and kind filters.
+ *
+ * Keeps two filter states (`domain` = project category, `kind` = work type) in component state;
+ * they are not reflected in the URL. Non-archived projects (`activeProjects`) are filtered, then
+ * grouped with `projectsByCategory`. Archived projects are listed in a collapsed `<details>`
+ * block regardless of filters. Each project has an `id` anchor (`#<slug>`), which the
+ * Markdown twin links to for projects without a case study.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `projects`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`activeProjects`, `archivedProjects`, `projectsByCategory`,
+ *   `projectCategoryLabels`, `projectTypeLabels`, types `ProjectCategory` and `WorkType`);
+ *   components PageSEO, PageHeader.
+ * - Markdown twin `/projects.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { useMemo, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
@@ -11,9 +27,12 @@ import {
   type WorkType,
 } from "../content";
 
+/** Selected project category, or "all". */
 type DomainFilter = ProjectCategory | "all";
+/** Selected work type, or "all". */
 type KindFilter = WorkType | "all";
 
+/** Category filter buttons. Values must match `ProjectCategory`; this list is maintained by hand. */
 const DOMAIN_FILTERS: Array<{ label: string; value: DomainFilter }> = [
   { label: "All domains", value: "all" },
   { label: "Tooling", value: "tooling" },
@@ -24,6 +43,7 @@ const DOMAIN_FILTERS: Array<{ label: string; value: DomainFilter }> = [
   { label: "Personal", value: "personal" },
 ];
 
+/** Work-type filter buttons. Omits "product", so product-type projects only appear under "All kinds". */
 const KIND_FILTERS: Array<{ label: string; value: KindFilter }> = [
   { label: "All kinds", value: "all" },
   { label: "Open source", value: "open-source" },
@@ -32,6 +52,7 @@ const KIND_FILTERS: Array<{ label: string; value: KindFilter }> = [
   { label: "Experiment", value: "experiment" },
 ];
 
+/** Projects index component. Lazy-loaded by the `projects` route in src/App.tsx. */
 export default function ProjectsPage() {
   const [domain, setDomain] = useState<DomainFilter>("all");
   const [kind, setKind] = useState<KindFilter>("all");

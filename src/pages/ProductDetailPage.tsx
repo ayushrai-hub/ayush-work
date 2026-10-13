@@ -1,3 +1,20 @@
+/**
+ * `/products/:slug`: product detail with stage, audience, links, thesis, problem, approach,
+ * architecture, maturity, trade-offs, and open questions.
+ *
+ * Looks up the product with `getProductBySlug` from the `slug` route param. An unknown slug
+ * renders an inline "Product not found" message with no PageSEO (so no `noIndex`). Optional
+ * sections render only when their fields exist; architecture keys with empty values are
+ * dropped. Emits CreativeWork JSON-LD via `productJsonLd`. Links to the build log when it has
+ * entries, otherwise explains that the log is empty.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `products/:slug`; every `products[].slug` is prerendered and in the
+ *   sitemap via src/lib/publicRoutes.ts. ProductsPage, HomePage, and WorkDetailPage link here.
+ * - Content from src/content (`getProductBySlug`, `person`, `productStageLabels`,
+ *   `productCategoryLabels`, type `Product`); components PageSEO, PageHeader, Prose, MetaList.
+ * - Markdown twin `/products/<slug>.md` built by `productPage()` in src/lib/agent/markdown.ts.
+ */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
@@ -11,6 +28,7 @@ import {
   type Product,
 } from "../content";
 
+/** schema.org CreativeWork for a product, authored by `person`; `sameAs` lists the demo and GitHub URLs when present. */
 function productJsonLd(product: Product) {
   const sameAs = [product.demoUrl, product.githubUrl].filter(
     (url): url is string => Boolean(url),
@@ -30,6 +48,7 @@ function productJsonLd(product: Product) {
   };
 }
 
+/** Plain bulleted list used for audience, maturity, and trade-off sections. */
 function BulletList({ items }: { items: string[] }) {
   return (
     <ul className="max-w-measure list-disc space-y-2 pl-5 text-ink-muted">
@@ -40,6 +59,7 @@ function BulletList({ items }: { items: string[] }) {
   );
 }
 
+/** Product detail component. Lazy-loaded by the `products/:slug` route in src/App.tsx. */
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const product = slug ? getProductBySlug(slug) : undefined;

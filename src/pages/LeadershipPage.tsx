@@ -1,7 +1,20 @@
+/**
+ * `/leadership`: community and extracurricular roles with organization, period, category, and skills.
+ *
+ * Static render of `leadership`; no state. Each item has an `id` anchor (`#<slug>`). Claims
+ * still awaiting confirmation live in `leadershipNeedsConfirmation` and are not rendered here.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `leadership` (legacy `/extracurriculars` redirects here); prerendered
+ *   via STATIC_PAGES in src/lib/publicRoutes.ts. AboutPage and TimelinePage link here.
+ * - Content from src/content (`leadership`); components PageSEO, PageHeader.
+ * - Markdown twin `/leadership.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { leadership } from "../content";
 
+/** Leadership page component. Lazy-loaded by the `leadership` route in src/App.tsx. */
 export default function LeadershipPage() {
   return (
     <>

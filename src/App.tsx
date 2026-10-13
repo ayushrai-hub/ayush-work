@@ -1,3 +1,16 @@
+/**
+ * Route table for the live site, shared by the browser app and the build-time prerenderer.
+ *
+ * AppRoutes renders every page lazily inside SiteLayout behind one Suspense fallback, including the
+ * domain dossier paths, legacy redirects, and a NotFoundPage catch-all. App wraps it in a
+ * BrowserRouter and loads Google Analytics once on mount; entry-server.tsx wraps AppRoutes in a
+ * StaticRouter instead, so initGA never runs during prerender.
+ *
+ * Connects to:
+ * - src/main.tsx renders App; src/entry-server.tsx renders AppRoutes. src/__tests__/App.test.tsx.
+ * - src/pages/* and src/components/site/SiteLayout.tsx; src/lib/analytics.ts (initGA).
+ * - Prerendered paths come from src/lib/publicRoutes.ts, which must cover these routes.
+ */
 import { Suspense, lazy, useEffect } from "react";
 import {
   BrowserRouter,
@@ -36,8 +49,11 @@ const UsesPage = lazy(() => import("./pages/UsesPage"));
 const ResumePage = lazy(() => import("./pages/ResumePage"));
 const DesignSystemPage = lazy(() => import("./pages/DesignSystemPage"));
 const DevelopersPage = lazy(() => import("./pages/DevelopersPage"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const DomainPage = lazy(() => import("./pages/DomainPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
+/** Suspense placeholder shown while a lazy page chunk loads. */
 function PageFallback() {
   return (
     <div className="site-shell py-24" role="status" aria-live="polite">
@@ -46,6 +62,10 @@ function PageFallback() {
   );
 }
 
+/**
+ * All routes, without a router. The caller supplies BrowserRouter (client) or StaticRouter (SSR).
+ * DomainPage resolves its dossier from the current path.
+ */
 export function AppRoutes() {
   return (
       <Suspense fallback={<PageFallback />}>
@@ -79,6 +99,13 @@ export function AppRoutes() {
             <Route path="resume" element={<ResumePage />} />
             <Route path="design-system" element={<DesignSystemPage />} />
             <Route path="developers" element={<DevelopersPage />} />
+            <Route path="privacy" element={<PrivacyPage />} />
+            <Route path="ai-engineering/*" element={<DomainPage />} />
+            <Route path="ai-engineering" element={<DomainPage />} />
+            <Route path="software-engineering" element={<DomainPage />} />
+            <Route path="software-services" element={<DomainPage />} />
+            <Route path="experience" element={<DomainPage />} />
+            <Route path="open-source" element={<DomainPage />} />
 
             {/* Legacy redirects */}
             <Route path="services" element={<Navigate to="/contact" replace />} />
@@ -98,6 +125,7 @@ export function AppRoutes() {
   );
 }
 
+/** Client app: AppRoutes in a BrowserRouter, with GA4 injected once after the first render. */
 export default function App() {
   useEffect(() => {
     initGA();

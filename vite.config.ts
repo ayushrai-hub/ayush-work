@@ -1,24 +1,28 @@
 /**
- * Vite configuration — Configures build tool for development, testing, and production builds.
+ * Vite and Vitest configuration for the dev server, client build, SSR build, and tests.
  *
- * This file sets up Vite with React plugin, optimizes dependencies, configures Vitest for testing, and defines build optimizations for production.
+ * Registers the React plugin and agentSurfacesPlugin, which in dev/preview stands in for the hosts
+ * (`/api/*`, `/api/mcp`, Markdown twins and negotiation, llms.txt, OpenAPI, `.well-known` files) and
+ * at build time emits those static files plus AGENTS.md and SKILL.md as assets. The config is a
+ * function of `isSsrBuild`: manualChunks applies only to the client build, and react-helmet-async
+ * is bundled into the SSR output (`ssr.noExternal`).
  *
- * Special flags and options:
- * - exclude from optimizeDeps: lucide-react (to avoid bundling issues)
- * - manualChunks in build: separates large libraries (Three.js, Framer Motion, etc.) to improve loading performance
- * - sourcemap: disabled for production security (set to true for debugging)
- * - terserOptions: compress removes console and debugger in production
- * - Vitest: uses jsdom, global test API, includes coverage
+ * Options worth knowing:
+ * - optimizeDeps.exclude: lucide-react is not pre-bundled by the dev server.
+ * - manualChunks (client only): framer-motion, react-router-dom, react/react-dom, and
+ *   lucide-react + react-helmet-async go into named chunks.
+ * - sourcemap is off; terser drops console and debugger statements from production bundles.
+ * - Vitest: jsdom, global test API, setup in src/setupTests.ts, legacy tests and e2e excluded, v8 coverage.
  *
- * Environment variables consumed: None directly, but can be accessed in code
- * Overridden by hosting provider: build settings may be altered in Netlify/Vercel UI
+ * Connects to:
+ * - package.json scripts `dev`, `build` (client and `--ssr src/entry-server.tsx` builds), `preview`, `test`.
+ * - src/lib/agent/vitePlugin.ts (agentSurfacesPlugin).
  */
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { agentSurfacesPlugin } from './src/lib/agent/vitePlugin';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react(), agentSurfacesPlugin()],
   ssr: { noExternal: ['react-helmet-async'] },
@@ -26,7 +30,6 @@ export default defineConfig(({ isSsrBuild }) => ({
     exclude: ['lucide-react'],
   },
 
-  // Vitest configuration (merged into Vite config for Vite >= 3.0)
   test: {
     globals: true,
     environment: 'jsdom',
@@ -54,9 +57,7 @@ export default defineConfig(({ isSsrBuild }) => ({
         },
       },
     },
-    // Enable source maps for production debugging
     sourcemap: false,
-    // Compress assets
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -65,10 +66,9 @@ export default defineConfig(({ isSsrBuild }) => ({
       },
       mangle: true,
     },
-    // Optimize for better performance
     cssCodeSplit: true,
     reportCompressedSize: true,
-    // Increased chunk size limit to reduce warnings
+    // Raised from Vite's 500 kB default.
     chunkSizeWarningLimit: 600,
   },
 }));

@@ -1,9 +1,30 @@
+/**
+ * Legacy fixed site header: avatar home link, section links, a "Work" dropdown of secondary pages, theme toggle, and a mobile menu.
+ *
+ * Legacy: not rendered by the current site, whose header is
+ * src/components/site/SiteHeader.tsx. Its only importers are the legacy wrappers
+ * in src/components/pages/, which are not routed. Kept for reference; excluded
+ * from tsconfig.app.json. Covered only by src/__tests__/legacy/Header.test.tsx,
+ * which Vitest excludes.
+ *
+ * Section items navigate to "/" if needed and then scroll to an element id
+ * (#aboutme, #experience, ...). Those ids belonged to the old single-page home;
+ * the current "/" (src/pages/HomePage.tsx) does not render them, so the scroll
+ * finds nothing. The mobile menu and the desktop Work dropdown each trap Tab
+ * focus and close on Escape, returning focus to their toggle button.
+ *
+ * Connects to:
+ * - src/components/pages/*.tsx (legacy, unrouted)
+ * - src/components/ui/ThemeToggle.tsx, which needs a ThemeProvider ancestor
+ * - react-router-dom (useLocation, useNavigate, Link; requires a router ancestor), framer-motion, lucide-react
+ */
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import ThemeToggle from "../ui/ThemeToggle";
 
+/** Renders the header; it gains a background and shadow once `window.scrollY` passes 50px. */
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [workDropdownOpen, setWorkDropdownOpen] = useState(false);
@@ -25,7 +46,7 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Helper function to get all focusable elements within a container
+  /** Returns the enabled, non-aria-hidden focusable elements inside `container`, in DOM order; used by both focus traps. */
   const getFocusableElements = (container: HTMLElement | null) => {
     if (!container) return [];
     const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -145,7 +166,10 @@ const Header: React.FC = () => {
     }
   }, [workDropdownOpen]);
 
-  // Handle navigation to sections
+  /**
+   * Smooth-scrolls to `#sectionId`. From another route it first navigates to "/"
+   * and waits a fixed 100ms, which may be too short for the target to have rendered.
+   */
   const handleSectionNavigation = (sectionId: string) => {
     if (location.pathname !== '/') {
       // If not on main page, navigate to main page first
@@ -304,6 +328,8 @@ const Header: React.FC = () => {
             {menuItems.map((item) => (
               <div key={item.label}>
                 {item.isRoute ? (
+                  /* The indicator span below uses a double-quoted className, so its
+                     `${...}` is literal class text and the active state is never applied. */
                   <button
                     onClick={() => {
                       if (item.href === '/' && location.pathname !== '/') {

@@ -1,7 +1,23 @@
+/**
+ * External profiles (code, research, writing, design, freelancing, community, scheduling, portfolio mirrors, social).
+ *
+ * `elsewhereProfiles` is the flat list; `elsewhere` groups it by category in
+ * a fixed order, and `primaryElsewhere` / `archivedElsewhere` are filtered
+ * views. Phone numbers must never appear on public pages or in machine
+ * output, so WhatsApp and phone links are excluded. The legacy
+ * src/lib/profilesData.ts still contains a WhatsApp phone link; do not copy
+ * entries from it without removing that.
+ *
+ * Connects to:
+ * - ElsewherePage (`elsewhere`, `primaryElsewhere`, `archivedElsewhere`).
+ * - Markdown twin /elsewhere.md and search items of type "elsewhere" (both
+ *   read `elsewhereProfiles`).
+ * - Uses `ProfileLink` and `ElsewhereGroup` from types.ts.
+ */
 import type { ElsewhereGroup, ProfileLink } from "./types";
 
 /**
- * Reorganized from profilesData.ts.
+ * Every external profile, grouped in source by the section comments below.
  * Excludes WhatsApp / phone. Primary vs archive flagged per link.
  */
 export const elsewhereProfiles: ProfileLink[] = [
@@ -350,11 +366,18 @@ const categoryOrder = [
   "portfolio",
 ] as const;
 
+/**
+ * Profiles grouped by category in `categoryOrder`, archived profiles included.
+ * Every category in `categoryOrder` produces a group, even if it is empty;
+ * ElsewherePage removes archived and primary profiles and drops empty groups.
+ */
 export const elsewhere: ElsewhereGroup[] = categoryOrder.map((category) => ({
   category,
   label: categoryLabels[category],
   profiles: elsewhereProfiles.filter((p) => p.category === category),
 }));
 
+/** Profiles flagged `primary`; the lead list on ElsewherePage. */
 export const primaryElsewhere = elsewhereProfiles.filter((p) => p.primary);
+/** Profiles flagged `archive`; listed behind a "Show archive" toggle on ElsewherePage. */
 export const archivedElsewhere = elsewhereProfiles.filter((p) => p.archive);

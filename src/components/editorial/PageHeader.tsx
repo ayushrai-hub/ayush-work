@@ -1,5 +1,17 @@
+/**
+ * Standard page header: optional eyebrow label, the page's <h1>, optional dek, and optional updated date.
+ *
+ * Stateless. `label` renders above the title, `dek` is the one-paragraph intro below it, and
+ * `updated` (ISO date) renders an UpdatedMeta stamp. Pages that use it get their <h1> from here.
+ *
+ * Connects to:
+ * - Rendered at the top of most pages in src/pages (Work, Products, About, Contact, Developers,
+ *   DomainPage, the detail pages, and others; HomePage, ElsewherePage, and NotFoundPage do not use it)
+ * - editorial/UpdatedMeta
+ */
 import UpdatedMeta from "./UpdatedMeta";
 
+/** Props for PageHeader. */
 interface PageHeaderProps {
   label?: string;
   title: string;
@@ -8,6 +20,7 @@ interface PageHeaderProps {
   updated?: string;
 }
 
+/** Page title block; optional parts are omitted when their props are absent. */
 export default function PageHeader({
   label,
   title,

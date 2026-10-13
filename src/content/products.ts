@@ -1,5 +1,23 @@
+/**
+ * Products: longer-running things being built, each with a stage, architecture, maturity breakdown and build log.
+ *
+ * `products` is the catalog; helpers select featured products and group the
+ * rest by category. Stage and category labels are defined here so every
+ * surface uses the same wording, and each product's `stageExplanation` keeps
+ * the stage label from overstating what exists.
+ *
+ * Connects to:
+ * - Pages: ProductsPage (catalog), ProductDetailPage, ProductLogPage,
+ *   HomePage (featured products), WorkDetailPage (related product), DomainPage.
+ * - Markdown twins /products.md, /products/:slug.md and
+ *   /products/:slug/log.md; llms.txt "Flagship products"; search items of type
+ *   "product"; sitemap and prerender routes in src/lib/publicRoutes.ts.
+ * - Not exposed by the REST API or MCP project tools, which serve `projects`.
+ * - Uses `Product`, `ProductCategory` and `ProductStage` from types.ts.
+ */
 import type { Product, ProductCategory, ProductStage } from "./types";
 
+/** Display label for each product category, on pages and in Markdown. */
 export const productCategoryLabels: Record<ProductCategory, string> = {
   dpi: "Digital public infrastructure",
   agrotech: "Agrotech",
@@ -8,6 +26,7 @@ export const productCategoryLabels: Record<ProductCategory, string> = {
   brand: "Brand & commerce",
 };
 
+/** Group order for `productsByCategory`. Not re-exported from index.ts. */
 export const productCategoryOrder: ProductCategory[] = [
   "dpi",
   "platform",
@@ -16,6 +35,7 @@ export const productCategoryOrder: ProductCategory[] = [
   "brand",
 ];
 
+/** Display label for each product stage, on pages, in Markdown and in the homepage list. */
 export const productStageLabels: Record<ProductStage, string> = {
   concept: "Concept",
   building: "Building",
@@ -26,6 +46,11 @@ export const productStageLabels: Record<ProductStage, string> = {
   maintained: "Maintained",
 };
 
+/**
+ * All products, in catalog order. The featured entries separate what exists
+ * in the linked repository or site from design goals, which go under
+ * `maturity.planned` or are labelled as such in `architecture.other`.
+ */
 export const products: Product[] = [
   {
     slug: "the-open-framework",
@@ -322,14 +347,23 @@ export const products: Product[] = [
   },
 ];
 
+/** Look up a product by slug. Used by ProductDetailPage and ProductLogPage. */
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
+/**
+ * Products with `featured: true`, in catalog order. Shown first on the
+ * homepage and the products catalog, and listed in llms.txt.
+ */
 export function featuredProducts(): Product[] {
   return products.filter((product) => product.featured);
 }
 
+/**
+ * Products grouped by category in `productCategoryOrder`, skipping empty
+ * groups. Only called by `otherProductsByCategory` today.
+ */
 export function productsByCategory(): Array<{
   category: ProductCategory;
   label: string;
@@ -344,7 +378,10 @@ export function productsByCategory(): Array<{
     .filter((g) => g.items.length > 0);
 }
 
-/** Category groups with featured products removed, so the catalog can lead with them once. */
+/**
+ * Category groups with featured products removed, so the catalog can lead
+ * with them once. Used by ProductsPage.
+ */
 export function otherProductsByCategory(): Array<{
   category: ProductCategory;
   label: string;

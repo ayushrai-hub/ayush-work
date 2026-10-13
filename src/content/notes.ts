@@ -1,3 +1,15 @@
+/**
+ * Short notes under /notes/:slug, grounded in product and AI evaluation work.
+ *
+ * A flat list. Each note has a plain-text body and optional `relatedSlugs`
+ * pointing at work, product or experience records.
+ *
+ * Connects to:
+ * - NotesPage and NoteDetailPage.
+ * - Markdown twins /notes.md and /notes/:slug.md; search items of type
+ *   "note"; sitemap and prerender routes in src/lib/publicRoutes.ts.
+ * - Uses `Note` from types.ts.
+ */
 import type { Note } from "./types";
 
 /**

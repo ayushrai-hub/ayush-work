@@ -1,23 +1,40 @@
+/**
+ * Legacy tests for the old Formspree contact form (fields, success, error, 429, reset, missing endpoint).
+ *
+ * Replaces global fetch with a mock, fills the form with fireEvent, submits, and
+ * checks the success message, the request sent to the Formspree endpoint, the
+ * "Try Again" path for 400 and 429 responses, the field reset after success, and
+ * that no request is made when VITE_FORMSPREE_ENDPOINT is missing. The expected
+ * endpoint in the success test is the value from .env.example.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Contact'
+ * import resolves to src/__tests__/components/Contact, which does not exist; the
+ * component is src/components/Contact.tsx, itself unused by the current site (the live
+ * form is src/pages/ContactPage.tsx posting to /api/send-email). Assertions have not been
+ * re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Contact.tsx (intended target)
+ * - VITE_FORMSPREE_ENDPOINT (see .env.example)
+ */
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import userEvent from '@testing-library/user-event';
 import Contact from '../components/Contact';
 
-// Mock Formspree fetch globally since we can't mock individual fetch calls easily in tests
 const fetchMock = vi.fn();
 global.fetch = fetchMock;
 
+// Reports every section as in view so the animated form is visible.
 vi.mock('react-intersection-observer', () => ({
   useInView: () => [vi.fn(), true]
 }));
 
+/** Rendering, submission outcomes, and configuration errors of the Formspree form. */
 describe('Contact Form with Formspree', () => {
-  const user = userEvent.setup();
-
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock successful fetch response by default
     fetchMock.mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ ok: true, success: true }),
@@ -72,9 +89,8 @@ describe('Contact Form with Formspree', () => {
       expect(screen.getByText('Thank you! Your message has been sent successfully. I\'ll get back to you soon.')).toBeInTheDocument();
     });
 
-    // Check that fetch was called with correct Formspree endpoint and data
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://formspree.io/f/mandaogr', // Environment variable value
+      'https://formspree.io/f/mandaogr',
       expect.objectContaining({
         method: 'POST',
         headers: {
@@ -169,9 +185,7 @@ describe('Contact Form with Formspree', () => {
   });
 
   it('should handle missing Formspree endpoint environment variable', async () => {
-    // Temporarily delete the environment variable
     const originalEnv = import.meta.env.VITE_FORMSPREE_ENDPOINT;
-    // Use type assertion only for this test manipulation
     delete (import.meta.env as Record<string, unknown>)['VITE_FORMSPREE_ENDPOINT'];
 
     render(<Contact />);
@@ -188,7 +202,7 @@ describe('Contact Form with Formspree', () => {
       expect(screen.getByText('Contact form is temporarily unavailable. Please try again later or use the email contact method.')).toBeInTheDocument();
     });
 
-    // Restore environment variable
+    // Not in a finally block, so a failed waitFor above leaves the variable deleted for later tests.
     (import.meta.env as Record<string, unknown>).VITE_FORMSPREE_ENDPOINT = originalEnv;
 
     expect(fetchMock).not.toHaveBeenCalled();

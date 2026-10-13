@@ -1,69 +1,26 @@
 /**
- * Other.tsx, Page routing component for specialized content sections.
+ * Legacy "Work Pages" section: a row of router links to secondary pages.
  *
- * This component provides navigation to additional portfolio pages and specialized content areas
- * not included in the main homepage sections. Features a clean dropdown interface for exploring
- * research, leadership, certifications, and professional services pages with descriptive previews.
+ * Legacy: not imported by the current site (src/App.tsx routes use src/pages).
+ * Kept for reference; excluded from tsconfig.app.json. No test covers it.
  *
- * The component includes:
- * - Dropdown navigation interface with expandable sections
- * - Page previews with icons and descriptions
- * - Direct routing to specialized content areas
- * - Responsive design adapting to different screen sizes
- * - Accessibility features for keyboard and screen reader users
+ * It is a static list of five react-router `Link`s, not a dropdown, and has no
+ * ARIA attributes. The targets still resolve in src/App.tsx, but no longer to
+ * the legacy pages in src/components/pages: /research and /leadership render
+ * src/pages components, /services redirects to /contact, /certifications to
+ * /recognition, and /extracurriculars to /leadership.
  *
- * Navigation Structure:
- * - Research: Academic and technical research projects
- * - Leadership: Community leadership and mentorship activities
- * - Certifications: Professional credentials and qualifications
- * - Services: Detailed service offerings and expertise areas
- * - Extra-curriculars: Personal development and community involvement
- *
- * User Experience Features:
- * - Collapsible interface to reduce visual clutter
- * - Icon-based navigation for quick recognition
- * - Preview descriptions for informed navigation choices
- * - Smooth transitions and hover effects
- *
- * Accessibility Implementation:
- * - Keyboard navigation support for dropdown interactions
- * - Screen reader compatible with proper ARIA labels
- * - Semantic HTML structure with proper heading hierarchy
- * - Focus management for interactive elements
- *
- * @component
- * @example
- * ```tsx
- * import Other from './components/Other';
- *
- * function SpecializedContent() {
- *   return <Other />;
- * }
- * ```
- *
- * @see {@link src/components/Header.tsx} for primary navigation
- * @see {@link src/components/FloatingNav.tsx} for floating navigation alternative
+ * Connects to:
+ * - No importers in src/
+ * - react-router-dom `Link` (requires a router ancestor), lucide-react
  */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 
 /**
- * Other, Specialized page navigation component.
- *
- * Provides organized access to additional portfolio content areas
- * through an interactive dropdown interface with previews and
- * descriptions for informed navigation choices.
- *
- * @component
- * @returns {JSX.Element} The rendered navigation component
- *
- * @example
- * ```tsx
- * <Other />
- * ```
- *
- * @see {@link src/App.tsx} for router integration
+ * Renders `<section id="work">` with one link per `otherPages` entry. The
+ * `description` field is defined but not rendered.
  */
 const Other: React.FC = () => {
   const otherPages = [

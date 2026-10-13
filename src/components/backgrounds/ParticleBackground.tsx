@@ -1,59 +1,26 @@
 /**
- * ParticleBackground.tsx, Animated particle system background component with performance optimizations.
+ * Legacy full-screen 2D canvas background of drifting particles joined by faint lines.
  *
- * This component creates a dynamic, animated particle system using HTML5 Canvas and requestAnimationFrame.
- * Features WebGL availability checks, responsive canvas sizing, and performance optimizations for mobile devices.
- * Implements connection lines between particles with color-coded relationships and smooth motion animations.
+ * Legacy: not imported anywhere in src/ (ThreeJSHero does not use it). Kept for
+ * reference; src/components/backgrounds is excluded from tsconfig.app.json.
+ * Covered only by src/__tests__/legacy/ParticleBackground.test.tsx, which Vitest excludes.
  *
- * The component includes:
- * - Canvas-based particle rendering with custom animations
- * - Performance optimization with mobile device detection
- * - Adaptive particle connection based on distance
- * - Color-coded particle system with gradient effects
- * - Responsive canvas sizing and cleanup management
- * - Browser compatibility and error handling
+ * On mount it sizes a fixed canvas to the window, seeds 80 particles, and runs a
+ * requestAnimationFrame loop that moves them (wrapping at the edges) and draws a
+ * line between every pair closer than 150px, an O(n^2) pass per frame. It uses
+ * the 2D context only: there is no WebGL check and no mobile detection.
  *
- * Performance Considerations:
- * - Disabled on mobile devices to preserve battery life
- * - Frame rate optimization with requestAnimationFrame
- * - Memory leak prevention with proper cleanup
- * - WebGL availability checks before initialization
- *
- * @component
- * @example
- * ```tsx
- * import ParticleBackground from './components/ParticleBackground';
- *
- * function AppBackground() {
- *   return (
- *     <>
- *       <ParticleBackground />
- *       <MainContent />
- *     </>
- *   );
- * }
- * ```
- *
- * @see {@link src/components/ThreeJSHero.tsx} for primary usage
+ * Connects to:
+ * - No importers in src/
+ * - Browser Canvas 2D API; src/setupTests.ts stubs getContext for jsdom
  */
 import React, { useEffect, useRef } from "react";
 
 /**
- * ParticleBackground, Animated canvas particle system component.
+ * Renders a non-interactive `<canvas data-testid="particle-canvas">` behind page content.
  *
- * Creates a visually appealing particle background with animated nodes
- * and connection lines. Optimized for performance with mobile detection
- * and cleanup management. Disabled on mobile devices to preserve battery life.
- *
- * @component
- * @returns {JSX.Element} The rendered particle background canvas
- *
- * @example
- * ```tsx
- * <ParticleBackground />
- * ```
- *
- * @see {@link src/components/ThreeJSHero.tsx} for integration example
+ * The effect cleanup removes the resize listener but never cancels the
+ * animation frame, so the draw loop keeps running after unmount.
  */
 const ParticleBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -70,6 +37,7 @@ const ParticleBackground: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    /** Matches the canvas drawing buffer to the window size; also bound to `resize`. */
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -104,6 +72,7 @@ const ParticleBackground: React.FC = () => {
       });
     }
 
+    /** One frame: clear, move and draw each particle, draw near-neighbour lines, then schedule the next frame. */
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 

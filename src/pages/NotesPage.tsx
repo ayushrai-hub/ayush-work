@@ -1,8 +1,20 @@
+/**
+ * `/notes`: index of short notes, each linking to its detail page with kind and publish date.
+ *
+ * Static render of `notes` in content order; no state.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `notes`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   Links to NoteDetailPage at `/notes/:slug`.
+ * - Content from src/content (`notes`); components PageSEO, PageHeader.
+ * - Markdown twin `/notes.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { notes } from "../content";
 
+/** Notes index component. Lazy-loaded by the `notes` route in src/App.tsx. */
 export default function NotesPage() {
   return (
     <>

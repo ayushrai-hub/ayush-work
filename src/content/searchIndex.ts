@@ -1,3 +1,22 @@
+/**
+ * Builds the flat search index that every search surface on the site ranks.
+ *
+ * `buildSearchIndex` walks the content modules in a fixed order (person,
+ * domains, work, products, projects, research, experience, education,
+ * leadership, recognition, ideas, principles, notes, writing, profiles,
+ * capabilities) and emits one `SearchItem` per record. Ranking ties keep this
+ * order. `searchIndex` is that result, computed once at module load.
+ *
+ * Connects to:
+ * - src/lib/agent/search.ts ranks `searchIndex` lexically for the on-site
+ *   SearchDialog, GET /api/v1/search (and /api/search) via
+ *   src/lib/agent/http.ts, the MCP `search_portfolio` tool
+ *   (src/lib/agent/mcpServer.ts via searchTool.ts) and the WebMCP
+ *   `search_portfolio_projects` tool (PortfolioWebMcp).
+ * - Reads every record module in src/content/ except now, timeline, uses and
+ *   archive, which are not indexed.
+ * - Uses `SearchItem` from types.ts.
+ */
 import type { SearchItem } from "./types";
 import { person } from "./person";
 import { getWorkBySlug, work } from "./work";
@@ -14,10 +33,14 @@ import { notes } from "./notes";
 import { writing } from "./writing";
 import { elsewhereProfiles } from "./elsewhere";
 import { capabilities } from "./capabilities";
+import { domains } from "./domains";
 
 /**
- * Flat searchable items. href values match routes in src/App.tsx.
- * Projects with a case study link to /work/:slug. Others link to /projects#slug.
+ * Flatten all searchable content into `SearchItem`s. href values match routes
+ * in src/App.tsx (anchors such as /about#slug for list-page records; external
+ * URLs for writing with a `url` and for profiles). Projects with a resolvable
+ * `relatedWorkSlug` link to /work/:slug; others link to /projects#slug.
+ * Archived projects, recognition and profiles are included with an "archive" tag.
  */
 export function buildSearchIndex(): SearchItem[] {
   const items: SearchItem[] = [
@@ -30,6 +53,17 @@ export function buildSearchIndex(): SearchItem[] {
       tags: ["ayush", "about", "contact", person.location],
     },
   ];
+
+  for (const domain of domains) {
+    items.push({
+      id: `domain:${domain.path}`,
+      title: domain.title,
+      type: "domain",
+      summary: domain.description,
+      href: domain.path,
+      tags: [domain.evidenceLevel, domain.label, "domain"],
+    });
+  }
 
   for (const w of work) {
     items.push({
@@ -201,4 +235,5 @@ export function buildSearchIndex(): SearchItem[] {
   return items;
 }
 
+/** The search index built once at module load; the default item list for `searchPortfolio`. */
 export const searchIndex: SearchItem[] = buildSearchIndex();
