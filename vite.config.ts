@@ -9,10 +9,11 @@
  *
  * Options worth knowing:
  * - optimizeDeps.exclude: lucide-react is not pre-bundled by the dev server.
- * - manualChunks (client only): framer-motion, react-router-dom, react/react-dom, and
+ * - manualChunks (client only): react-router-dom, react/react-dom, and
  *   lucide-react + react-helmet-async go into named chunks.
  * - sourcemap is off; terser drops console and debugger statements from production bundles.
- * - Vitest: jsdom, global test API, setup in src/setupTests.ts, legacy tests and e2e excluded, v8 coverage.
+ * - Vitest: jsdom, global test API, setup in src/setupTests.ts, e2e excluded, v8 coverage with
+ *   minimum thresholds that `npm run test:coverage` (and CI) fails below.
  *
  * Connects to:
  * - package.json scripts `dev`, `build` (client and `--ssr src/entry-server.tsx` builds), `preview`, `test`.
@@ -37,20 +38,20 @@ export default defineConfig(({ isSsrBuild }) => ({
     exclude: [
       'e2e/**/*.ts',
       'node_modules/**',
-      'src/__tests__/legacy/**',
     ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.d.ts', 'src/__tests__/**', 'src/setupTests.ts', 'src/main.tsx', 'e2e/**'],
+      // About 1.5 points under the measured totals (96.4 lines, 88.3 branches, 93.1 functions).
+      thresholds: { lines: 95, statements: 95, branches: 87, functions: 91 },
     },
   },
   build: {
     rollupOptions: {
       output: isSsrBuild ? {} : {
         manualChunks: {
-          animations: ['framer-motion'],
           router: ['react-router-dom'],
           vendor: ['react', 'react-dom'],
           ui: ['lucide-react', 'react-helmet-async'],

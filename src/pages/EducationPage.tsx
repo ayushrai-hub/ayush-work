@@ -30,7 +30,7 @@ export default function EducationPage() {
         />
         <ul className="max-w-measure space-y-10">
           {education.map((ed) => (
-            <li key={ed.slug} className="border-t border-rule pt-6">
+            <li id={ed.slug} key={ed.slug} className="scroll-mt-24 border-t border-rule pt-6">
               <h2 className="font-display text-xl text-ink">{ed.degree}</h2>
               <p className="mt-1 text-ink-muted">
                 {ed.institution}

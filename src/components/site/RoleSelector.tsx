@@ -9,12 +9,13 @@
  *
  * Connects to:
  * - Rendered by HomePage near the bottom of the page
- * - lib/agent/audiences: AUDIENCES, parseAudience, AudienceId (HomePage uses HOME_SECTION_ORDER
+ * - lib/agent/audiences: AUDIENCES, audienceDescription, parseAudience, AudienceId (HomePage uses HOME_SECTION_ORDER
  *   and rankWorkForAudience from the same module)
  */
 import { useSearchParams } from "react-router-dom";
 import {
   AUDIENCES,
+  audienceDescription,
   parseAudience,
   type AudienceId,
 } from "../../lib/agent/audiences";
@@ -23,7 +24,6 @@ import {
 export default function RoleSelector() {
   const [params, setParams] = useSearchParams();
   const current = parseAudience(params.get("audience"));
-  const meta = AUDIENCES.find((audience) => audience.id === current) ?? AUDIENCES[0];
 
   /** Writes the chosen audience to the URL; "general" clears the parameter. */
   function select(id: AudienceId) {
@@ -53,7 +53,7 @@ export default function RoleSelector() {
           </button>
         ))}
       </div>
-      <p className="mt-3 text-sm text-ink-muted">{meta.description}</p>
+      <p className="mt-3 text-sm text-ink-muted">{audienceDescription(current)}</p>
     </fieldset>
   );
 }

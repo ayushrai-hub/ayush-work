@@ -4,7 +4,9 @@
  * Keeps form state locally (intent, name, email, message, send status). Submitting calls
  * `EmailService.sendContactEmail` (src/lib/emailService.ts), which POSTs JSON to `/api/send-email`;
  * that function (api/send-email.ts -> src/lib/server/contactEmail.ts) delivers it via SendGrid.
- * The selected intent sets the email subject and `service` label. "Open mail app" builds a
+ * The selected intent sets the email subject and `service` label. A hidden honeypot input and
+ * `maxLength` values come from src/lib/contactFields.ts and match the server's checks. The reply
+ * time in the header and body comes from `person.responseTime`. "Open mail app" builds a
  * `mailto:` link from the same subject and current message, so it works without the API.
  * The policy sections below the form come from `contactSections`.
  *
@@ -23,6 +25,7 @@ import Prose from "../components/editorial/Prose";
 import SectionHeading from "../components/editorial/SectionHeading";
 import { contactSections, pageUpdatedAt, person } from "../content";
 import EmailService from "../lib/emailService";
+import { CONTACT_FIELD_LIMITS, CONTACT_HONEYPOT_FIELD } from "../lib/contactFields";
 
 /** Intent options shown as a radio group. `subject` becomes the email subject; `label` is sent as `service`. */
 const INTENTS = [
@@ -44,6 +47,7 @@ export default function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "err">(
     "idle"
   );
@@ -66,6 +70,7 @@ export default function ContactPage() {
       subject: selected.subject,
       message,
       service: selected.label,
+      [CONTACT_HONEYPOT_FIELD]: honeypot,
     });
     if (result.success) {
       setStatus("ok");
@@ -88,7 +93,7 @@ export default function ContactPage() {
         <PageHeader
           label="Contact"
           title="Get in touch"
-          dek="Pick an intent, write a short note. Usual reply time: <24 hrs."
+          dek={`Pick an intent, write a short note. Usual reply time: ${person.responseTime}.`}
           updated={pageUpdatedAt("contact")}
         />
 
@@ -145,6 +150,7 @@ export default function ContactPage() {
               onChange={(e) => setName(e.target.value)}
               className="w-full rounded-sm border border-rule bg-paper-elevated px-3 py-2 text-ink"
               autoComplete="name"
+              maxLength={CONTACT_FIELD_LIMITS.name}
             />
           </div>
           <div>
@@ -159,6 +165,20 @@ export default function ContactPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-sm border border-rule bg-paper-elevated px-3 py-2 text-ink"
               autoComplete="email"
+              maxLength={CONTACT_FIELD_LIMITS.email}
+            />
+          </div>
+          {/* Honeypot: never displayed, so people and browser autofill leave it empty. */}
+          <div hidden aria-hidden="true">
+            <label htmlFor="contact-hp">Leave this field empty</label>
+            <input
+              id="contact-hp"
+              name="hp_field"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
             />
           </div>
           <div>
@@ -169,6 +189,7 @@ export default function ContactPage() {
               id="contact-message"
               required
               rows={5}
+              maxLength={CONTACT_FIELD_LIMITS.message}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               className="w-full rounded-sm border border-rule bg-paper-elevated px-3 py-2 text-ink"

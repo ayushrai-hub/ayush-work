@@ -2,9 +2,11 @@
  * Sticky site header: wordmark, primary nav, "More" menu, agent/human view toggle, search, theme toggle, and mobile menu.
  *
  * From md up, PRIMARY_NAV shows inline and SECONDARY_NAV sits in a native <details> "More"
- * dropdown. Below md, a menu button opens a panel listing both groups plus Search and the view
- * toggle; while that panel is open, Escape closes it and body scroll is locked. Route changes
- * close both menus. The view toggle links to the same path with `agent=1` added or removed,
+ * disclosure: a list of links (not an ARIA menu), closed by Escape (focus returns to "More"), by a
+ * pointer press outside it, or by clicking "More" again. Below md, a menu button opens a panel
+ * listing both groups plus Search and the view toggle; while that panel is open, Escape closes it
+ * and body scroll is locked. Route changes close both menus. The search button advertises its
+ * shortcuts with `aria-keyshortcuts` rather than a platform-specific label. The view toggle links to the same path with `agent=1` added or removed,
  * keeping other query parameters. The theme button calls toggleTheme from ThemeContext.
  *
  * Connects to:
@@ -45,7 +47,7 @@ interface SiteHeaderProps {
   onOpenSearch: () => void;
 }
 
-/** Site header; `mobileOpen` and `moreOpen` track the two menus, `moreRef` lets route changes close the <details>. */
+/** Site header; `mobileOpen` and `moreOpen` track the two menus, `moreRef` lets route changes, Escape, and outside presses close the <details>. */
 export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -59,6 +61,28 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
     setMoreOpen(false);
     if (moreRef.current) moreRef.current.open = false;
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    const details = moreRef.current;
+    const close = (returnFocus: boolean) => {
+      if (details) details.open = false;
+      setMoreOpen(false);
+      if (returnFocus) details?.querySelector("summary")?.focus();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close(true);
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (details && !details.contains(e.target as Node)) close(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, [moreOpen]);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -121,21 +145,14 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
             className="relative"
             onToggle={(e) => setMoreOpen((e.target as HTMLDetailsElement).open)}
           >
-            <summary
-              className="list-none cursor-pointer text-sm text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden"
-              aria-expanded={moreOpen}
-            >
+            <summary className="list-none cursor-pointer text-sm text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden">
               More
             </summary>
-            <div
-              className="absolute right-0 top-full mt-2 min-w-[11rem] rounded-sm border border-rule bg-paper-elevated py-2 shadow-sm"
-              role="menu"
-            >
+            <div className="absolute right-0 top-full mt-2 min-w-[11rem] rounded-sm border border-rule bg-paper-elevated py-2 shadow-sm">
               {SECONDARY_NAV.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  role="menuitem"
                   className={({ isActive }) =>
                     `block px-4 py-2 text-sm ${
                       isActive
@@ -162,7 +179,8 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
             type="button"
             onClick={openSearch}
             className="btn-ghost p-2"
-            aria-label="Open search ( / or ⌘K )"
+            aria-label="Open search"
+            aria-keyshortcuts="/ Control+K Meta+K"
           >
             <Search className="h-4 w-4" aria-hidden />
           </button>

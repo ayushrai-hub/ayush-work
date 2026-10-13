@@ -95,11 +95,6 @@ function projectLimit(filters: ProjectListFilters): number {
   return Math.min(PROJECT_DEFAULT_LIMIT, Math.max(1, filters.limit ?? PROJECT_DEFAULT_LIMIT));
 }
 
-/** First page of filtered projects as a plain array. Not imported anywhere at present; callers use `pagePublicProjects`. */
-export function listPublicProjects(filters: ProjectListFilters = {}): PublicProject[] {
-  return filterPublicProjects(filters).slice(0, projectLimit(filters));
-}
-
 /** One page of filtered projects starting at `offset`, with a cursor for the next page. */
 export function pagePublicProjects(
   filters: ProjectListFilters & { offset?: number } = {},
@@ -157,12 +152,4 @@ export function comparePublicProjects(
     else missing.push(slug);
   }
   return { ok: true, projects: found, missing };
-}
-
-/** Site-relative link for a project, by the same rule as `toPublicProject`. Not imported anywhere at present. */
-export function projectHref(project: Project): string {
-  if (project.relatedWorkSlug && getWorkBySlug(project.relatedWorkSlug)) {
-    return `/work/${project.relatedWorkSlug}`;
-  }
-  return `/projects#${project.slug}`;
 }

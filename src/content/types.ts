@@ -14,7 +14,8 @@
  *   principles, timeline, writing, notes, uses, elsewhere, archive,
  *   capabilities, searchIndex).
  * - src/lib/agent/projectsQuery.ts maps `Project` to the public API shape;
- *   src/lib/agent/search.ts ranks `SearchItem`.
+ *   src/lib/agent/search.ts ranks `SearchItem` and filters by `SEARCH_ITEM_TYPES`, the one
+ *   runtime value in this file.
  * - Domain dossier types live in src/content/domains.ts and policy section
  *   types in src/content/policies.ts, not here.
  */
@@ -155,12 +156,6 @@ export type NoteKind = "learning" | "observation" | "process" | "reflection";
 /** Kind of writing entry. "external" entries carry a `url` and are hosted elsewhere. */
 export type WritingKind = "essay" | "note" | "external";
 
-/** Generic labelled link. Not referenced by any content module at present. */
-export interface LinkRef {
-  label: string;
-  url: string;
-}
-
 /**
  * One external profile (GitHub, Medium, freelancing sites, and so on) from
  * src/content/elsewhere.ts. Rendered on /elsewhere, in /elsewhere.md, and
@@ -206,6 +201,8 @@ export interface Person {
   /** Public role line. Not a ranking and not a years-of-experience claim. */
   roleTitle: string;
   positioning: string;
+  /** One-sentence summary shown at the top of the site footer. */
+  footerLine: string;
   /** Canonical origin. Used to build absolute URLs in Markdown, SEO tags and API records. */
   siteUrl: string;
   resumeUrl: string;
@@ -283,7 +280,7 @@ export interface WorkItem {
   relatedSlugs?: string[];
   /**
    * Caveats about claims that are not verified. WorkDetailPage shows them in a
-   * "Needs confirmation" aside; the Markdown twin omits them. Write each entry
+   * "Needs confirmation" aside and the Markdown twin a matching section. Write each entry
    * as a caveat, never as a claim to be promoted.
    */
   needsConfirmation?: string[];
@@ -400,7 +397,7 @@ export interface ResearchItem {
   disclaimer: string;
   /**
    * Unverified figures or labels for this item. ResearchDetailPage shows them
-   * as a caveat list; the Markdown twin omits them.
+   * as a caveat list, and the Markdown twin prints the same list.
    */
   needsConfirmation?: string[];
   /** Printed verbatim on the HTML detail page and in the Markdown twin. */
@@ -421,7 +418,7 @@ export interface Experience {
   start: string; // e.g. "2024-04"
   end: string | "present";
   type: "full-time" | "part-time" | "internship" | "contract" | "leadership";
-  /** Adds a "current" search tag and feeds `currentExperience`. */
+  /** Adds a "current" search tag. */
   current: boolean;
   /** Prose used on /about; search uses its first 180 characters as the summary. */
   narrative: string;
@@ -608,6 +605,33 @@ export interface Capability {
 }
 
 /**
+ * Every record type in the search index, in the order published as the OpenAPI
+ * `type` enum. The single source for `SearchItem["type"]`; the API filter
+ * (`SEARCH_TYPES` in src/lib/agent/search.ts) is this same array.
+ */
+export const SEARCH_ITEM_TYPES = [
+  "person",
+  "work",
+  "product",
+  "project",
+  "research",
+  "experience",
+  "education",
+  "leadership",
+  "recognition",
+  "idea",
+  "principle",
+  "note",
+  "writing",
+  "elsewhere",
+  "capability",
+  "domain",
+] as const;
+
+/** One of `SEARCH_ITEM_TYPES`. */
+export type SearchItemType = (typeof SEARCH_ITEM_TYPES)[number];
+
+/**
  * One flattened record in `searchIndex` (src/content/searchIndex.ts). The
  * on-site search dialog, GET /api/v1/search, the MCP `search_portfolio` tool
  * and the WebMCP `search_portfolio_projects` tool all rank these items with
@@ -617,27 +641,8 @@ export interface SearchItem {
   /** `<type>:<slug>` (or "person"); unique across the index. */
   id: string;
   title: string;
-  /**
-   * Record type. The API `type` filter validates against `SEARCH_TYPES` in
-   * src/lib/agent/search.ts, a separate list that must stay in sync with this union.
-   */
-  type:
-    | "person"
-    | "work"
-    | "product"
-    | "project"
-    | "research"
-    | "experience"
-    | "education"
-    | "leadership"
-    | "recognition"
-    | "idea"
-    | "principle"
-    | "note"
-    | "writing"
-    | "elsewhere"
-    | "capability"
-    | "domain";
+  /** Record type; also the value of the API `type` filter. */
+  type: SearchItemType;
   summary: string;
   /** Site-relative route (or an external URL for writing and profiles). */
   href: string;

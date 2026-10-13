@@ -3,7 +3,9 @@
  *
  * Wraps App in StrictMode, ThemeProvider, GTMProvider, and HelmetProvider, and renders Vercel Web
  * Analytics beside it. It uses createRoot, not hydrateRoot, so the prerendered markup from
- * scripts/prerender.mjs is replaced by a fresh client render rather than hydrated.
+ * scripts/prerender.mjs is replaced by a fresh client render rather than hydrated. hydrateRoot was
+ * measured to mismatch for a saved dark theme, `?agent=1`, and `?audience=`; see issue 10 in
+ * docs/known-issues.md before switching.
  *
  * Connects to:
  * - index.html loads this module; global styles come from src/index.css and src/App.css.

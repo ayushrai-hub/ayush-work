@@ -25,11 +25,12 @@ import { beforeEach, describe, expect, it } from "vitest";
 import netlifyEdge, {
   API_ROUTES as EDGE_API_ROUTES,
   isKnownApiPath as edgeIsKnownApiPath,
+  wantsMarkdown as edgeWantsMarkdown,
 } from "../../netlify/edge-functions/markdown-negotiation.js";
 import { buildRequest, parseArgs, run } from "../../packages/cli/bin/ayushrai.mjs";
 import { buildApiCatalog } from "../lib/agent/apiCatalog";
 import { API_ROUTES, isKnownApiPath } from "../lib/agent/apiRoutes";
-import { agentApiResponse, dispatchAgentApi } from "../lib/agent/http";
+import { agentApiResponse, corsHeaders, dispatchAgentApi } from "../lib/agent/http";
 import { renderLlmsTxt, renderPageMarkdown } from "../lib/agent/markdown";
 import { markdownMiddleware } from "../lib/agent/markdownMiddleware";
 import {
@@ -41,8 +42,8 @@ import {
 } from "../lib/agent/mcpCard";
 import { handleMcpRequest } from "../lib/agent/mcpHttp";
 import { buildOpenApiDocument } from "../lib/agent/openapi";
-import { RATE_LIMIT_QUOTA, resetRateLimits, takeRateLimit } from "../lib/agent/rateLimit";
-import { agentFiles } from "../lib/agent/surfaces";
+import { clientKeyFrom, RATE_LIMIT_QUOTA, resetRateLimits, takeRateLimit } from "../lib/agent/rateLimit";
+import { agentFiles, wantsMarkdown } from "../lib/agent/surfaces";
 
 const ORIGIN = "https://www.ayushrai.site";
 
@@ -115,6 +116,54 @@ describe("JSON errors", () => {
     const known = await netlifyEdge(new Request(`${ORIGIN}/api/v1/search?q=x`), context);
     expect(await known.text()).toBe("passed through");
   });
+
+  it("negotiates Markdown by quality value, identically in surfaces.ts and the Netlify edge copy", () => {
+    const cases: Array<[string | undefined, boolean]> = [
+      ["text/markdown", true],
+      ["Text/Markdown; charset=utf-8", true],
+      ["text/markdown, text/plain;q=0.5", true],
+      ["text/markdown, text/html;q=0.9", true],
+      ["text/markdown;q=0.9, text/html;q=0.1", true],
+      ["text/markdown;q=0", false],
+      ["text/markdown;q=0.000", false],
+      ["text/markdown;q=0.5, text/html", false],
+      ["text/markdown, text/html", false],
+      ["text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", false],
+      ["*/*", false],
+      ["text/*", false],
+      ["text/markdownish", false],
+      ["", false],
+      [undefined, false],
+    ];
+    for (const [accept, expected] of cases) {
+      expect(wantsMarkdown(accept), String(accept)).toBe(expected);
+      expect(edgeWantsMarkdown(accept), `edge ${accept}`).toBe(expected);
+    }
+  });
+});
+
+/** REST stays same-site for browsers; MCP and its card are open. Both are stated in the docs. */
+describe("CORS", () => {
+  it("grants REST CORS only to the site's own origins and says so in the developer docs", async () => {
+    const call = (origin: string | null) =>
+      agentApiResponse({ pathname: "/api/v1/search", method: "GET", params: new URLSearchParams("q=x"), clientKey: "cors", origin });
+    expect(call(ORIGIN).headers["Access-Control-Allow-Origin"]).toBe(ORIGIN);
+    expect(call("https://ayushrai.site").headers["Access-Control-Allow-Origin"]).toBe("https://ayushrai.site");
+    expect(call("http://localhost:5173").headers["Access-Control-Allow-Origin"]).toBe("http://localhost:5173");
+    for (const origin of ["https://evil.example", "null", "https://www.ayushrai.site.evil.example", null]) {
+      const response = call(origin);
+      expect(response.headers["Access-Control-Allow-Origin"], String(origin)).toBeUndefined();
+      expect(response.headers.Vary).toContain("Origin");
+    }
+    expect(corsHeaders("*")["Access-Control-Allow-Origin"]).toBeUndefined();
+
+    const mcp = await handleMcpRequest(new Request(`${ORIGIN}/api/mcp`, { method: "OPTIONS" }));
+    expect(mcp.headers.get("access-control-allow-origin")).toBe("*");
+
+    const developers = renderPageMarkdown("/developers") ?? "";
+    expect(developers).toContain("REST responses grant CORS only to the site's own origins");
+    expect(buildOpenApiDocument().info.description).toContain("REST responses grant CORS only");
+  });
 });
 
 /** Per-client fixed-window limits on the REST API and the MCP endpoint. */
@@ -134,6 +183,29 @@ describe("rate limits", () => {
     expect(JSON.parse(limited.body ?? "{}").error.code).toBe("rate_limited");
 
     expect(apiCall("/api/v1/projects", "198.51.100.2").status).toBe(200);
+  });
+
+  it("keys clients by address, else by a User-Agent hash, never one shared anonymous bucket", () => {
+    expect(clientKeyFrom({ "x-nf-client-connection-ip": " 192.0.2.9 ", "x-real-ip": "x" })).toBe("192.0.2.9");
+    expect(clientKeyFrom(new Headers({ "x-forwarded-for": "198.51.100.4, 10.0.0.1" }))).toBe("198.51.100.4");
+    const curl = clientKeyFrom(new Headers({ "user-agent": "curl/8.7.1" }));
+    const bot = clientKeyFrom({ "user-agent": "ExampleBot/1.0" });
+    expect(curl).toMatch(/^anonymous:[0-9a-f]+$/);
+    expect(curl).not.toBe(bot);
+    expect(curl).not.toContain("curl");
+    expect(clientKeyFrom(new Headers({ "user-agent": "curl/8.7.1" }))).toBe(curl);
+    expect(clientKeyFrom(new Headers())).toBe("anonymous");
+    expect(clientKeyFrom(undefined)).toBe("anonymous");
+  });
+
+  it("sends RateLimit headers on the Server Card's 405", async () => {
+    const response = await handleMcpRequest(
+      new Request(`${ORIGIN}/api/mcp/server-card`, { method: "DELETE", headers: { "x-real-ip": "192.0.2.77" } }),
+    );
+    expect(response.status).toBe(405);
+    expect(response.headers.get("allow")).toBe("GET, HEAD, OPTIONS");
+    expect(response.headers.get("ratelimit-policy")).toBe(`"default";q=${RATE_LIMIT_QUOTA};w=60`);
+    expect(response.headers.get("ratelimit")).toMatch(/^"default";r=\d+;t=\d+$/);
   });
 
   it("opens a new window after the old one ends", () => {
@@ -195,6 +267,40 @@ describe("OpenAPI", () => {
     expect(operations).toBe(7);
     const errorSchema = schemas.ErrorResponse as { properties: { error: { required: string[] } } };
     expect(errorSchema.properties.error.required).toEqual(["code", "message", "hint", "docs"]);
+  });
+
+  it("documents every query parameter http.ts reads, including on the /api/projects alias", () => {
+    const source = readFileSync(resolve(__dirname, "../lib/agent/http.ts"), "utf8");
+    const read = new Set([...source.matchAll(/params\.get\("(\w+)"\)/g)].map((match) => match[1]));
+    const spec = buildOpenApiDocument();
+    const names = (path: string) =>
+      new Set(
+        ((spec.paths as Record<string, { get: { parameters?: Array<{ name: string }> } }>)[path].get.parameters ?? []).map(
+          (parameter) => parameter.name,
+        ),
+      );
+    const documented = new Set(Object.keys(spec.paths).flatMap((path) => [...names(path)]));
+    for (const name of read) expect(documented.has(name), name).toBe(true);
+    const alias = names("/api/projects");
+    for (const name of ["category", "type", "limit", "cursor", "archive", "slug", "compare", "slugs"]) {
+      expect(alias.has(name), `/api/projects ${name}`).toBe(true);
+    }
+  });
+
+  it("declares RateLimit headers on 400 and 404, matching what the API sends", () => {
+    const spec = buildOpenApiDocument();
+    const responses = spec.components.responses as Record<string, { headers?: Record<string, unknown> }>;
+    for (const name of ["BadRequest", "NotFound", "TooManyRequests"]) {
+      expect(Object.keys(responses[name].headers ?? {}), name).toEqual(
+        expect.arrayContaining(["RateLimit", "RateLimit-Policy"]),
+      );
+    }
+    const badRequest = apiCall("/api/v1/projects", "203.0.113.20", "limit=99");
+    expect(badRequest.status).toBe(400);
+    expect(badRequest.headers.RateLimit).toBeTruthy();
+    const notFound = apiCall("/api/v1/projects/no-such-project", "203.0.113.21");
+    expect(notFound.status).toBe(404);
+    expect(notFound.headers["RateLimit-Policy"]).toBeTruthy();
   });
 });
 

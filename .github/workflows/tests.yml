@@ -4,8 +4,8 @@
 #   lint (ESLint) -> typecheck (tsc -b) -> unit tests with coverage (Vitest)
 #   -> production build (client, SSR, prerender) -> browser tests (Playwright, Chromium).
 # Node 22 matches netlify.toml and satisfies Vite 7 (Node 20.19+ or 22.12+).
-# Coverage and the Playwright report are uploaded as artifacts; there is no coverage gate
-# because legacy, unrouted components are still counted in the totals.
+# Coverage and the Playwright report are uploaded as artifacts. The coverage step fails when
+# totals drop below the thresholds in vite.config.ts.
 name: Tests and Quality Checks
 
 on:

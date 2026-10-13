@@ -11,7 +11,7 @@
  *   rewrite `/api/v1/*` onto those two functions.
  * - `vitePlugin.ts` calls `agentApiResponse` for `/api/*` in dev and preview.
  * - Depends on `search.ts`, `projectsQuery.ts`, `validate.ts`, `pagination.ts`, `rateLimit.ts`,
- *   and `apiError.ts`.
+ *   `apiError.ts`, and `../siteOrigins.ts` (the CORS allow-list).
  */
 import { apiErrorBody, type ApiErrorCode } from "./apiError";
 import { decodeCursor } from "./pagination";
@@ -24,6 +24,7 @@ import {
   takeRateLimit,
 } from "./rateLimit";
 import { searchPayload } from "./search";
+import { isSiteOrigin } from "../siteOrigins";
 import {
   parseLimit,
   validateProjectCategory,
@@ -40,17 +41,10 @@ export interface AgentHttpResult {
   body: unknown;
 }
 
-/** Browser origins that get `Access-Control-Allow-Origin`. Other origins get no CORS grant. */
-const ALLOWED_ORIGINS = new Set([
-  "https://www.ayushrai.site",
-  "https://ayushrai.site",
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:5174",
-]);
-
-/** CORS headers for a REST response; echoes `origin` only when it is in `ALLOWED_ORIGINS`. */
+/**
+ * CORS headers for a REST response. Echoes `origin` only when it is one of the site's own origins
+ * (`SITE_ORIGINS`); other browser origins get no grant. Server-side clients are unaffected.
+ */
 export function corsHeaders(origin?: string | null): Record<string, string> {
   const headers: Record<string, string> = {
     "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
@@ -58,7 +52,7 @@ export function corsHeaders(origin?: string | null): Record<string, string> {
     "Access-Control-Expose-Headers": RATE_LIMIT_EXPOSED_HEADERS,
     Vary: "Origin",
   };
-  if (origin && ALLOWED_ORIGINS.has(origin)) {
+  if (isSiteOrigin(origin)) {
     headers["Access-Control-Allow-Origin"] = origin;
   }
   return headers;

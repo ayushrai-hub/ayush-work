@@ -72,7 +72,12 @@ function serveServerCard(request: Request, rateHeaders: Record<string, string>):
   if (request.method !== "GET" && request.method !== "HEAD") {
     return new Response(JSON.stringify(apiErrorBody("method_not_allowed", "The Server Card is read with GET.")), {
       status: 405,
-      headers: { ...SERVER_CARD_HEADERS, "Content-Type": "application/json", Allow: "GET, HEAD, OPTIONS" },
+      headers: {
+        ...SERVER_CARD_HEADERS,
+        ...rateHeaders,
+        "Content-Type": "application/json",
+        Allow: "GET, HEAD, OPTIONS",
+      },
     });
   }
   const body = serverCardJson();

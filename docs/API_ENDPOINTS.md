@@ -67,13 +67,18 @@ Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `in
 
 ### CORS
 
-REST responses echo `Access-Control-Allow-Origin` only for the site's own origins and localhost (`ALLOWED_ORIGINS` in `http.ts`). Server-side clients, agents, and the CLI are unaffected. The MCP endpoint, the Server Card, and the JSON 404 use `*`.
+This is a deliberate policy, stated on `/developers` and in `/openapi.json`. REST responses echo `Access-Control-Allow-Origin` only for the site's own origins and localhost (`SITE_ORIGINS` in `src/lib/siteOrigins.ts`), always with `Vary: Origin`. A browser page on another site cannot read them; server-side clients, agents, and the CLI are unaffected. The MCP endpoint, the Server Card, and the JSON 404 use `*`. Tested in `src/__tests__/agentReadiness.test.ts` ("CORS").
+
+Clients with no address header are keyed by a hash of their User-Agent, so they do not share one `anonymous` bucket.
 
 ## MCP
 
 ### `POST /api/mcp`
 
 Streamable HTTP, stateless: JSON responses, no sessions, no `GET` stream, no auth. Built by `src/lib/agent/mcpHttp.ts` on top of the server in `src/lib/agent/mcpServer.ts`. Tools: `list_projects`, `get_project`, `compare_projects`, `search_portfolio`. The same server runs over stdio with `npm run mcp` (`mcp/server.ts`).
+
+- `search_portfolio` takes `query`, optional `type`, `limit` (1–20), and `cursor` (a previous `nextCursor`); the WebMCP tool `search_portfolio_projects` takes the same arguments. Both page exactly like `GET /api/v1/search`.
+- `compare_projects` takes `slugs` (two to four) and optional `includeArchive`, like `archive=1` on `/api/v1/compare`. A malformed slug is reported in `missing`, as on the REST endpoint, rather than rejected; changing that to a 400 would be a breaking change under the v1 policy.
 
 ### `GET /api/mcp/server-card`
 
@@ -91,28 +96,30 @@ Body (JSON):
 { "name": "Jane", "email": "jane@example.com", "subject": "Hello", "message": "…", "service": "Collaboration" }
 ```
 
-`name`, `email`, `subject`, and `message` are required non-empty strings; `service` is an optional string.
+`name`, `email`, `subject`, and `message` are required non-empty strings; `service` is an optional string. Length limits (`src/lib/contactFields.ts`): name 200, email 254, subject 200, service 200, message 5000 characters. `website` is a honeypot that the form never shows; when it is filled the request gets the normal success reply and nothing is sent.
 
 | Status | Body `message` | When |
 | --- | --- | --- |
-| 200 | `Message sent successfully!` | SendGrid accepted the message. |
+| 200 | `Message sent successfully!` | SendGrid accepted the message (or the honeypot was filled). |
 | 200 (empty) | | `OPTIONS` preflight. |
 | 400 | `Request body must be valid JSON` | Body is not JSON. |
 | 400 | `Missing required fields` | A required field is missing, empty, or not a string. |
+| 400 | `One or more fields are too long` | A field is over its limit. |
 | 400 | `Invalid email format` | `email` fails `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`. |
-| 405 | `Method not allowed` | Any method other than `POST` or `OPTIONS`. |
-| 500 | `Email service not configured` | `SENDGRID_API_KEY` is not set. |
-| 500 | `Failed to send message. Please try again later.` | SendGrid or another error was thrown. |
+| 405 | `Method not allowed` | Any method other than `POST` or `OPTIONS` (with `Allow`). |
+| 429 | `Too many messages…` | More than 5 messages per client in 10 minutes, per function instance (with `Retry-After`). |
+| 500 | `Email service not configured` | `SENDGRID_API_KEY` or `FROM_EMAIL` is not set. Only the variable names are logged. |
+| 502 | `Failed to send message. Please try again later.` | SendGrid rejected the message. Only its status code is logged. |
 
-Visitor text is HTML-escaped before it goes into the notification email. The visitor's address is the reply-to.
+Visitor text is HTML-escaped before it goes into the notification email, and line breaks are stripped from the name and subject. The visitor's address is the reply-to. CORS is granted only to the site's own origins, and responses are `Cache-Control: no-store`.
 
 Environment variables (set per host; never commit them):
 
 - `SENDGRID_API_KEY`: required.
-- `FROM_EMAIL`: a SendGrid-verified sender. The code falls back to a placeholder that SendGrid will reject, so set it.
+- `FROM_EMAIL`: required; a SendGrid-verified sender. There is no fallback.
 - `CONTACT_EMAIL`: optional recipient; defaults to the public contact address.
 
-This endpoint has no rate limit or CAPTCHA.
+There is no CAPTCHA. The rate limit is per instance, so it slows a casual script but is not a global limit. Whether the variables are set on Netlify and Vercel has not been verified from this repository.
 
 ## Static machine files
 
@@ -124,7 +131,7 @@ Generated at build time by `src/lib/agent/vitePlugin.ts` from `src/content` (and
 - `/.well-known/ai-catalog.json` and `/.well-known/mcp/server-card.json` (`mcpCard.ts`)
 - `/AGENTS.md`, `/SKILL.md`, `/developers.md`
 
-Content negotiation: a request with `Accept: text/markdown` and without `text/html` gets the page's Markdown (Vercel `middleware.ts`, Netlify edge function). Unknown paths get a Markdown 404.
+Content negotiation: a request whose `Accept` header gives `text/markdown` a positive quality higher than `text/html` gets the page's Markdown (Vercel `middleware.ts`, Netlify edge function). `Accept: text/markdown` alone qualifies; a tie, `q=0`, or a wildcard does not. Unknown paths get a Markdown 404. `netlify.toml` no longer has Accept-conditioned redirects; Netlify cannot match on `Accept`, so the edge function does it.
 
 ## Tests
 

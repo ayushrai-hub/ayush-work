@@ -105,11 +105,3 @@ export const experience: Experience[] = [
   },
 
 ];
-
-/** Roles with `current: true`. Exported but not used by any page today. */
-export const currentExperience = experience.filter((e) => e.current);
-
-/** Look up a role by slug. Exported but not used by any page today. */
-export function getExperienceBySlug(slug: string): Experience | undefined {
-  return experience.find((e) => e.slug === slug);
-}

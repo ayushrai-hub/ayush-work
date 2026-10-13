@@ -14,9 +14,9 @@
  *   src/lib/agent/projectsQuery.ts; filter validation in validate.ts and enum
  *   values in openapi.ts come from the label maps.
  * - Markdown twin /projects.md; search items of type "project".
- * - Uses `Project`, `ProjectCategory` and `WorkType` from types.ts.
+ * - Uses `Project` and `ProjectCategory` from types.ts.
  */
-import type { Project, ProjectCategory, WorkType } from "./types";
+import type { Project, ProjectCategory } from "./types";
 
 /**
  * Display label for each project category. Its keys are also the accepted
@@ -249,29 +249,6 @@ export function projectsByCategory(
       category,
       label: projectCategoryLabels[category],
       items: list.filter((p) => p.category === category),
-    }))
-    .filter((g) => g.items.length > 0);
-}
-
-/**
- * Group projects (default: `activeProjects`) by `WorkType` in a fixed order,
- * skipping empty groups. Exported but not called anywhere today.
- */
-export function projectsByType(
-  list: Project[] = activeProjects,
-): Array<{ type: WorkType; label: string; items: Project[] }> {
-  const order: WorkType[] = [
-    "open-source",
-    "project",
-    "client",
-    "experiment",
-    "product",
-  ];
-  return order
-    .map((type) => ({
-      type,
-      label: projectTypeLabels[type] ?? type,
-      items: list.filter((p) => p.type === type),
     }))
     .filter((g) => g.items.length > 0);
 }

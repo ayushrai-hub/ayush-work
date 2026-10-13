@@ -1,8 +1,8 @@
 /**
  * `/writing/:slug`: detail page for one writing entry.
  *
- * Looks up the entry in `writing` by the `slug` route param. An unknown slug renders an inline
- * "Writing not found" message with no PageSEO. Entries with `url` render a pointer to the
+ * Looks up the entry in `writing` by the `slug` route param. An unknown slug renders
+ * MissingRecord ("Writing not found", noindex). Entries with `url` render a pointer to the
  * external original (plus EmptyNote when `todo` is set); entries without `url` render only the
  * summary and EmptyNote, since there is no on-site body field.
  *
@@ -15,6 +15,7 @@
  */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import EmptyNote from "../components/editorial/EmptyNote";
@@ -26,14 +27,7 @@ export default function WritingDetailPage() {
   const item = writing.find((w) => w.slug === slug);
 
   if (!item) {
-    return (
-      <div className="site-shell page-section">
-        <PageHeader title="Writing not found" />
-        <Link to="/writing" className="link-accent">
-          Back to writing →
-        </Link>
-      </div>
-    );
+    return <MissingRecord title="Writing not found" backTo="/writing" backLabel="Back to writing →" />;
   }
 
   if (item.url) {

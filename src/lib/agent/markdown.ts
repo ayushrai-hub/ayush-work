@@ -46,6 +46,7 @@ import {
 } from "../../content";
 import type { PolicySection, Product } from "../../content";
 import { canonicalUrl } from "../canonical";
+import { yearLabel } from "../format";
 import {
   DEVELOPER_DESCRIPTION,
   DEVELOPER_TITLE,
@@ -117,6 +118,23 @@ function bullets(items: readonly string[]): string {
   return items.map((item) => `- ${item}`).join("\n");
 }
 
+/**
+ * "Needs confirmation" section for a record's public per-item caveats, matching the aside on the
+ * work and research HTML pages; "" when there are none. The withheld lists in src/content
+ * (`*NeedsConfirmation` exports) are never passed here.
+ */
+function caveats(items?: readonly string[]): string {
+  return items?.length
+    ? `\n## Needs confirmation\n\nUnverified. Do not cite these as facts.\n\n${bullets(items)}`
+    : "";
+}
+
+/** "start – end", just the one that is set, or "" when neither is, so blank dates print nothing. */
+export function dateRange(start?: string, end?: string): string {
+  if (start && end) return `${start} – ${end}`;
+  return start || end || "";
+}
+
 /** Bullet list of the recorded architecture layers; empty string when none are set. */
 function architectureBlock(architecture: Product["architecture"]): string {
   const lines = [
@@ -144,7 +162,7 @@ function workPage(item: (typeof work)[number]): AgentPage {
     item.title,
     item.summary,
     [
-      `Status: ${item.status}. Type: ${item.type}. ${item.yearStart}–${item.yearEnd ?? ""}.`,
+      `Status: ${item.status}. Type: ${item.type}. ${yearLabel(item.yearStart, item.yearEnd)}.`,
       "",
       "## Problem",
       "",
@@ -178,6 +196,7 @@ function workPage(item: (typeof work)[number]): AgentPage {
       "",
       bullets(item.technologies),
       links ? `\n## Links\n\n${links}` : "",
+      caveats(item.needsConfirmation),
     ].join("\n"),
   );
 }
@@ -313,7 +332,7 @@ function buildPages(): AgentPage[] {
         education
           .map(
             (ed) =>
-              `- ${ed.degree}, ${ed.institution}${ed.location ? ` (${ed.location})` : ""}, ${ed.start} – ${ed.end}${ed.grade ? `, ${ed.grade}` : ""}`,
+              `- ${[`${ed.degree}`, `${ed.institution}${ed.location ? ` (${ed.location})` : ""}`, dateRange(ed.start, ed.end), ed.grade].filter(Boolean).join(", ")}`,
           )
           .join("\n"),
         "",
@@ -421,6 +440,7 @@ function buildPages(): AgentPage[] {
           `## Technologies\n\n${bullets(item.technologies)}`,
           item.findings ? `## Findings\n\n${item.findings}` : "",
           item.fundingNote ? item.fundingNote : "",
+          caveats(item.needsConfirmation).trim(),
         ]
           .filter(Boolean)
           .join("\n\n"),
@@ -560,10 +580,18 @@ function buildPages(): AgentPage[] {
       "Education",
       "Degrees and coursework.",
       education
-        .map(
-          (ed) =>
-            `### ${ed.degree}\n\n${ed.institution}${ed.location ? ` · ${ed.location}` : ""}\n\n${ed.start} – ${ed.end}${ed.grade ? ` · ${ed.grade}` : ""}${ed.coursework?.length ? `\n\n${ed.coursework.join(" · ")}` : ""}${ed.note ? `\n\n${ed.note}` : ""}`,
-        )
+        .map((ed) => {
+          const when = [dateRange(ed.start, ed.end), ed.grade].filter(Boolean).join(" · ");
+          return [
+            `### ${ed.degree}`,
+            `${ed.institution}${ed.location ? ` · ${ed.location}` : ""}`,
+            when,
+            ed.coursework?.length ? ed.coursework.join(" · ") : "",
+            ed.note ?? "",
+          ]
+            .filter(Boolean)
+            .join("\n\n");
+        })
         .join("\n\n"),
     ),
   );
@@ -682,7 +710,7 @@ function buildPages(): AgentPage[] {
         education
           .map(
             (ed) =>
-              `- ${ed.degree}, ${ed.institution}, ${ed.start} – ${ed.end}${ed.grade ? `, ${ed.grade}` : ""}`,
+              `- ${[ed.degree, ed.institution, dateRange(ed.start, ed.end), ed.grade].filter(Boolean).join(", ")}`,
           )
           .join("\n"),
       ].join("\n"),
@@ -723,12 +751,19 @@ export function listAgentPages(): AgentPage[] {
 }
 
 /**
- * Markdown for an exact site path (no `.md`, no trailing slash; `""` means `/`), or null when
- * no twin exists. Use `sitePathFromRequest` first for raw request paths.
+ * The twin for a router pathname, or null when none exists. `""` means `/`, and one trailing slash
+ * is ignored, because canonical URLs end in `/` while twin paths do not. Use `sitePathFromRequest`
+ * first for raw request paths (`.md` suffixes, query strings, percent-encoding).
  */
+export function getAgentPage(pathname: string): AgentPage | null {
+  let path = pathname === "" ? "/" : pathname;
+  if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);
+  return listAgentPages().find((page) => page.path === path) ?? null;
+}
+
+/** Markdown for a router pathname (see `getAgentPage`), or null when no twin exists. */
 export function renderPageMarkdown(pathname: string): string | null {
-  const path = pathname === "" ? "/" : pathname;
-  return listAgentPages().find((page) => page.path === path)?.markdown ?? null;
+  return getAgentPage(pathname)?.markdown ?? null;
 }
 
 /**

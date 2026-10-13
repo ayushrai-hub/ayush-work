@@ -2,8 +2,9 @@
  * Research-shaped work (notes, investigations, experiments) and a withheld list of unverified research awards.
  *
  * `research` holds the public records; every item carries a disclaimer that it
- * is not a peer-reviewed publication. `researchAwardsNeedsConfirmation` holds
- * award claims that are deliberately not published.
+ * is not a peer-reviewed publication. `researchAwardsNeedsConfirmation` and
+ * `researchFundingNeedsConfirmation` hold award and funding claims that are
+ * deliberately not published.
  *
  * Connects to:
  * - ResearchPage, ResearchDetailPage and HomePage.
@@ -19,7 +20,8 @@ import type { ResearchItem } from "./types";
  * Research-shaped work. Status is Note | Investigation | Experiment.
  * These are NOT peer-reviewed publications. Soften unverified metrics.
  * `fundingNote` is printed verbatim on the HTML and Markdown pages;
- * per-item `needsConfirmation` appears only on the HTML detail page.
+ * per-item `needsConfirmation` caveats appear on the HTML detail page and in
+ * the Markdown twin, so write them as public text.
  */
 export const research: ResearchItem[] = [
   {
@@ -56,7 +58,7 @@ export const research: ResearchItem[] = [
       "Investigated NLP pipelines for contract and regulatory text — document structure, retrieval, and assisted review rather than autonomous legal advice.",
     period: "2023-08 – 2023-12",
     context:
-      "Internal / academic exploration (older materials cited LNCT internal research grant — verify before emphasizing).",
+      "Internal / academic exploration. Older materials named a funding source; it is unverified and not repeated here.",
     methods: [
       "Transformer-based classification / extraction experiments",
       "Pipeline sketches for review assistance",
@@ -66,7 +68,7 @@ export const research: ResearchItem[] = [
       "Useful learning on domain text and evaluation pitfalls. Softened from earlier claims of '60% time reduction' and '10,000+ documents' until those can be evidenced.",
     disclaimer:
       "Not a peer-reviewed publication or production legal tool. Not legal advice.",
-    fundingNote: "LNCT Internal Research Grant — needsConfirmation.",
+    fundingNote: "No funding claim verified.",
     needsConfirmation: [
       "Document volume processed",
       "Time-reduction measurements",
@@ -81,7 +83,7 @@ export const research: ResearchItem[] = [
       "Notes and early work around IoT-style energy monitoring and a dashboard for campus buildings — learning project more than a city-scale rollout.",
     period: "2023-03 – 2023-08",
     context:
-      "Older copy referenced 'Bhopal Smart City Initiative' funding — keep that claim provisional.",
+      "Older copy named an external funding source and partner; that claim is unverified and not repeated here.",
     methods: [
       "Sensor network concepts",
       "Basic ML for anomaly / optimization sketches",
@@ -92,7 +94,7 @@ export const research: ResearchItem[] = [
       "Produced learning artifacts and a monitoring dashboard direction. Softened from '15% energy savings' until measurement methodology is confirmed.",
     disclaimer:
       "Not peer-reviewed. Not a municipal deployment claim.",
-    fundingNote: "BHOPAL SMART CITY INITIATIVE — needsConfirmation.",
+    fundingNote: "No funding claim verified.",
     needsConfirmation: [
       "Energy savings percentage",
       "Institutional partnership / funding label",
@@ -113,6 +115,17 @@ export const researchAwardsNeedsConfirmation: string[] = [
   "Best Research Paper Award - National Conference on Emerging Technologies (2023)",
   "ACM Student Research Competition Finalist - CCSE 2023",
 ];
+
+/**
+ * Withheld: funding sources that older materials attached to research records, keyed by slug.
+ * Unconfirmed, so the public `fundingNote` says "No funding claim verified." instead. Same rules as
+ * `researchAwardsNeedsConfirmation`: never render or export these strings; a test asserts they are
+ * absent from every Markdown twin, llms file, search record, and research page.
+ */
+export const researchFundingNeedsConfirmation: Record<string, string> = {
+  "legal-nlp-contracts": "LNCT Internal Research Grant",
+  "smart-campus-energy": "Bhopal Smart City Initiative",
+};
 
 /** Look up a research item by slug. Used by ResearchDetailPage. */
 export function getResearchBySlug(slug: string): ResearchItem | undefined {

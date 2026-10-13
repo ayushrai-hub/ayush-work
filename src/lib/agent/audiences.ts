@@ -172,7 +172,7 @@ export function parseAudience(value: string | null | undefined): AudienceId {
   return match?.id ?? "general";
 }
 
-/** Description text for an audience id. Not imported anywhere at present. */
+/** Description text for an audience id, shown under RoleSelector's buttons. */
 export function audienceDescription(id: AudienceId): string {
   return AUDIENCES.find((audience) => audience.id === id)?.description ?? "";
 }

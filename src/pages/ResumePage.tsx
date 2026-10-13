@@ -2,7 +2,8 @@
  * `/resume`: short on-site resume with positioning, experience highlights, and education.
  *
  * Static render; no state. No download link is rendered here (`person.resumeUrl` is not used
- * on this page), even though the meta description mentions a download.
+ * on this page); the dek says a refreshed PDF will be linked later, and the meta description makes
+ * no download promise.
  *
  * Connects to:
  * - Routed in src/App.tsx as `resume`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
@@ -20,7 +21,7 @@ export default function ResumePage() {
     <>
       <PageSEO
         title="Resume"
-        description="Brief summary of experience and education, plus resume download."
+        description="Brief summary of experience and education."
         path="/resume"
       />
       <div className="site-shell page-section">

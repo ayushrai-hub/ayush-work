@@ -21,8 +21,8 @@ import type { WorkItem } from "./types";
 
 /**
  * All case studies, in display order. Soften or omit unverified impact
- * metrics. Per-item `needsConfirmation` entries appear on the HTML detail page
- * as caveats and are left out of the Markdown twin.
+ * metrics. Per-item `needsConfirmation` entries appear as public caveats on the
+ * HTML detail page and in the Markdown twin, so write them as public text.
  */
 export const work: WorkItem[] = [
   {

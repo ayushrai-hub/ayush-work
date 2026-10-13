@@ -2,7 +2,7 @@
  * Netlify Edge Function: JSON 404s for unknown `/api` paths and Markdown content negotiation for pages.
  *
  * Unknown `/api/*` paths get a JSON `route_not_found` 404. For GET/HEAD page requests whose Accept
- * header includes `text/markdown` but not `text/html`, it fetches the deployed `<path>.md` twin (or
+ * header gives `text/markdown` a higher quality than `text/html`, it fetches the deployed `<path>.md` twin (or
  * `/index.md` for `/`) and returns it as Markdown. With no twin, an existing HTML page (for example
  * `/design-system`) passes through unchanged; a 404 becomes a Markdown 404 from `/404.md`. Everything
  * else calls `context.next()`. The Accept-conditioned redirects in netlify.toml did not take effect on
@@ -12,8 +12,8 @@
  * - netlify.toml `[[edge_functions]]` binds it to `/*`. Vercel uses middleware.ts instead.
  * - Plain JS copy of negotiateMarkdown (src/lib/agent/surfaces.ts) and unknownApiResponse /
  *   isKnownApiPath (src/lib/agent/apiRoutes.ts), because the Deno edge runtime cannot import those
- *   TS sources. src/__tests__/agentReadiness.test.ts checks that API_ROUTES and isKnownApiPath match
- *   the TS versions and that misses return JSON; the Markdown branch is not compared.
+ *   TS sources. src/__tests__/agentReadiness.test.ts checks that API_ROUTES, isKnownApiPath, and
+ *   wantsMarkdown match the TS versions and that misses return JSON.
  */
 const MARKDOWN_HEADERS = {
   "Content-Type": "text/markdown; charset=utf-8",
@@ -75,16 +75,33 @@ function markdown(request, body, status) {
   });
 }
 
+/** Highest q `accept` gives to exactly `mediaType`, or 0. Wildcards are ignored; a bad q counts as 1. */
+function acceptQuality(accept, mediaType) {
+  let best = 0;
+  for (const range of accept.toLowerCase().split(",")) {
+    const [type, ...params] = range.split(";").map((part) => part.trim());
+    if (type !== mediaType) continue;
+    const q = params.find((param) => param.startsWith("q="));
+    const value = q ? Number(q.slice(2)) : 1;
+    best = Math.max(best, Number.isFinite(value) ? Math.min(Math.max(value, 0), 1) : 1);
+  }
+  return best;
+}
+
+/** Copy of wantsMarkdown in src/lib/agent/surfaces.ts: Markdown only when its q beats text/html's. */
+export function wantsMarkdown(accept) {
+  if (!accept) return false;
+  const markdown = acceptQuality(accept, "text/markdown");
+  return markdown > 0 && markdown > acceptQuality(accept, "text/html");
+}
+
 /** Edge entry. `context.next()` continues to Netlify's redirects, static files, and functions. */
 export default async function handler(request, context) {
   const url = new URL(request.url);
   const pathname = url.pathname;
   if (pathname.startsWith("/api/") && !isKnownApiPath(pathname)) return apiNotFound(pathname);
 
-  const accept = (request.headers.get("accept") ?? "").toLowerCase();
-  if (!accept.includes("text/markdown") || accept.includes("text/html")) {
-    return context.next();
-  }
+  if (!wantsMarkdown(request.headers.get("accept"))) return context.next();
   if (request.method !== "GET" && request.method !== "HEAD") return context.next();
 
   if (NON_PAGE_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {

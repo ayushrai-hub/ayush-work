@@ -36,6 +36,7 @@ export const person: Person = {
     "AI engineer and AI product builder. I work on LLM evaluation, preference feedback, and software products that have to survive a real workflow.",
   positioning:
     "I'm an AI engineer and AI product builder working remotely. My paid work includes contract evaluation for frontier-lab programs. Alongside that I build AI products and client software, from an early civil-society coordination prototype to education and agrotech MVPs. I would rather describe what shipped, and what did not, than sound futuristic.",
+  footerLine: "I'm an AI engineer and AI product builder working remotely.",
   siteUrl: "https://www.ayushrai.site",
   resumeUrl:
     "https://drive.google.com/file/d/1JdAckW6i057eYNpdRVLYDMFp2Xo5vyJs/view?usp=sharing",

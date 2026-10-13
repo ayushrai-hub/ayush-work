@@ -9,10 +9,10 @@
  * - `src/components/site/SearchDialog.tsx` (`searchPortfolio`), `http.ts` for `/api/search` and
  *   `/api/v1/search` (`searchPayload`), and `searchTool.ts` for MCP `search_portfolio` and WebMCP.
  * - `openapi.ts` and `validate.ts` read `SEARCH_TYPES` and `SEARCH_MAX_QUERY`.
- * - Depends on `searchIndex` from `src/content` and `pagination.ts`.
+ * - Depends on `searchIndex` and `SEARCH_ITEM_TYPES` from `src/content`, and `pagination.ts`.
  */
 import type { SearchItem } from "../../content";
-import { searchIndex } from "../../content";
+import { SEARCH_ITEM_TYPES, searchIndex } from "../../content";
 import { paginate } from "./pagination";
 
 /** Empty-query size used by the search dialog. */
@@ -24,27 +24,8 @@ export const SEARCH_MAX_LIMIT = 20;
 /** Longest accepted query, in characters. Enforced by `validateQuery`. */
 export const SEARCH_MAX_QUERY = 200;
 
-/** Record types that may appear in the index and in the `type` filter. */
-export const SEARCH_TYPES = [
-  "person",
-  "work",
-  "product",
-  "project",
-  "research",
-  "experience",
-  "education",
-  "leadership",
-  "recognition",
-  "idea",
-  "principle",
-  "note",
-  "writing",
-  "elsewhere",
-  "capability",
-  "domain",
-] as const;
-
-export type SearchType = (typeof SEARCH_TYPES)[number];
+/** Record types accepted by the `type` filter: the content layer's `SEARCH_ITEM_TYPES`, not a copy. */
+export const SEARCH_TYPES = SEARCH_ITEM_TYPES;
 
 /** Optional record type and page size. */
 export interface SearchFilters {

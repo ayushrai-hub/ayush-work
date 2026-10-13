@@ -35,13 +35,30 @@ export const MARKDOWN_HEADERS = {
 } as const;
 
 /**
- * True when `Accept` mentions `text/markdown` and does not mention `text/html`. Browsers
- * send `text/html` on page loads, so they keep getting HTML. Quality values are not parsed.
+ * Highest quality value `accept` gives to exactly `mediaType`, or 0 when it is absent.
+ * Wildcards are ignored so `*\/*` never selects Markdown. A missing or malformed q counts as 1.
+ */
+function acceptQuality(accept: string, mediaType: string): number {
+  let best = 0;
+  for (const range of accept.toLowerCase().split(",")) {
+    const [type, ...params] = range.split(";").map((part) => part.trim());
+    if (type !== mediaType) continue;
+    const q = params.find((param) => param.startsWith("q="));
+    const value = q ? Number(q.slice(2)) : 1;
+    best = Math.max(best, Number.isFinite(value) ? Math.min(Math.max(value, 0), 1) : 1);
+  }
+  return best;
+}
+
+/**
+ * True when `Accept` gives `text/markdown` a positive quality strictly above `text/html`.
+ * Browsers list `text/html` at q=1 on page loads, so they keep getting HTML; a tie also stays
+ * HTML. `netlify/edge-functions/markdown-negotiation.js` copies this rule (test-enforced).
  */
 export function wantsMarkdown(accept: string | undefined): boolean {
   if (!accept) return false;
-  if (!accept.toLowerCase().includes("text/markdown")) return false;
-  return !accept.toLowerCase().includes("text/html");
+  const markdown = acceptQuality(accept, "text/markdown");
+  return markdown > 0 && markdown > acceptQuality(accept, "text/html");
 }
 
 /**

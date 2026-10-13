@@ -54,13 +54,13 @@ npm run dev          # http://localhost:5173, includes the agent API and Markdow
 | `packages/cli/` | Zero-dependency CLI over the v1 API. Not published to npm. |
 | `scripts/prerender.mjs` | Prerender and sitemap step of the build. |
 | `e2e/` | Playwright specs. |
-| `src/__tests__/` | Vitest suites. `legacy/` holds tests for the old SPA; they are excluded from the run. |
+| `src/__tests__/` | Vitest suites. |
 
 Every source file starts with a header comment that says what the module is for, how it works, and what it connects to, and every function and component has a short doc comment. Keep those accurate when you change code.
 
 ### Legacy code
 
-The previous single-page portfolio's components are still in the repo (top-level `src/components/*.tsx`, `src/components/{layout,backgrounds,ui,pages}/`, and a few `src/lib` helpers). They are not routed or imported by the live site, are excluded from `tsconfig.app.json`, and each file's header says so. Some still contain a phone number and withheld claims, which is why they must never be wired back in without review. The old site is also preserved on branch [`archive/portfolio-spa-2026`](https://github.com/ayushrai-hub/ayush-work/tree/archive/portfolio-spa-2026) and tag `legacy-portfolio-spa` ([`docs/preserving-old-site.md`](docs/preserving-old-site.md)).
+The previous single-page portfolio's components, their tests, and the packages only they used (three.js, chart.js, framer-motion, web-vitals, and others) were removed from `main`. The old site is preserved on branch [`archive/portfolio-spa-2026`](https://github.com/ayushrai-hub/ayush-work/tree/archive/portfolio-spa-2026) and tag `legacy-portfolio-spa` ([`docs/preserving-old-site.md`](docs/preserving-old-site.md)). Some of those files contain a phone number and withheld claims, so do not copy them back without review. Deleting them from `main` does not remove them from git history.
 
 ## Routes
 
@@ -82,7 +82,7 @@ Client-side redirects for old URLs: `/services` → `/contact`, `/certifications
 
 ## Agent-readable surfaces
 
-- Markdown twin for every page: append `.md` (for example `/work/the-open-framework.md`, `/index.md`), or send `Accept: text/markdown` without `text/html`.
+- Markdown twin for every page: append `.md` (for example `/work/the-open-framework.md`, `/index.md`), or send `Accept: text/markdown` without `text/html` (quality values are honored; ties go to HTML).
 - `/llms.txt` (index) and `/llms-full.txt` (everything in one file).
 - REST: `GET /api/v1/search`, `/api/v1/projects`, `/api/v1/projects/{slug}`, `/api/v1/compare`. JSON errors with hints, cursor pagination, 60 requests per minute per instance with draft-11 `RateLimit` headers.
 - `/openapi.json`, `/.well-known/api-catalog` (RFC 9727), `/AGENTS.md`, `/SKILL.md`.
@@ -93,9 +93,10 @@ Endpoint details: [`docs/API_ENDPOINTS.md`](docs/API_ENDPOINTS.md). Agent instru
 
 ## Testing and CI
 
-- `npx vitest run`: unit and component tests in `src/__tests__/` (agent surfaces, API errors and rate limits, MCP, contact email, domain pages, product pages, analytics, WebMCP, app shell).
-- `npm run test:e2e`: `e2e/site.spec.ts` (navigation, contact form validation, privacy, 404, skip link, mobile menu, external links) and `e2e/agent-readiness.spec.ts` (role view, agent view, Markdown and search responses).
-- `.github/workflows/tests.yml` runs on pushes and pull requests to `main`: `npm ci`, lint, typecheck, coverage, build, Playwright, and uploads the coverage and Playwright reports. There is no coverage threshold.
+- `npx vitest run`: unit and component tests in `src/__tests__/` (agent surfaces, API errors, CORS, rate limits, MCP and WebMCP, contact email and form states, search dialog and menus, Agent view, not-found routes, error boundary, scroll restoration, every prerendered page's public output, domain and product pages, analytics, app shell).
+- `npm run test:coverage`: the same suite with V8 coverage. It fails below the thresholds in `vite.config.ts` (95% lines and statements, 87% branches, 91% functions; measured about 96.4 / 88.3 / 93.1).
+- `npm run test:e2e`: `e2e/site.spec.ts` (navigation, contact form validation, privacy, 404, skip link, mobile menu, external links, search keyboard use, the More menu, scroll on navigation) and `e2e/agent-readiness.spec.ts` (role view, agent view, Markdown and search responses).
+- `.github/workflows/tests.yml` runs on pushes and pull requests to `main`: `npm ci`, lint, typecheck, coverage (with the threshold), build, Playwright, and uploads the coverage and Playwright reports.
 
 ## Deployment
 
@@ -107,7 +108,7 @@ Endpoint details: [`docs/API_ENDPOINTS.md`](docs/API_ENDPOINTS.md). Agent instru
 
 ## Content and strategy docs
 
-In `docs/`: `site-audit.md`, `personal-positioning.md`, `information-architecture.md`, `content-fact-check.md` (claims still needing confirmation), `questions-for-ayush.md`, `design-system.md`, `content-style.md`, `seo-strategy.md`, `seo/` (evidence map, keyword strategy, live audit, measurement plan), `agent-readiness-audit.md`, `agent-readiness-report.md`, `migration-plan.md`.
+In `docs/`: `known-issues.md` (open issues and suggested fixes), `site-audit.md`, `personal-positioning.md`, `information-architecture.md`, `content-fact-check.md` (claims still needing confirmation), `questions-for-ayush.md`, `design-system.md`, `content-style.md`, `seo-strategy.md`, `seo/` (evidence map, keyword strategy, live audit, measurement plan), `agent-readiness-audit.md`, `agent-readiness-report.md`, `migration-plan.md`.
 
 ## Privacy
 

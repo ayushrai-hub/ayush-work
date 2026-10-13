@@ -48,7 +48,7 @@ export function validateSlug(value: string): FieldError | null {
 /** Optional search `type`; must be one of `SEARCH_TYPES`, case-sensitive. */
 export function validateSearchType(value: string | null): FieldError | null {
   if (!value) return null;
-  if (!(SEARCH_TYPES as readonly string[]).includes(value)) {
+  if (!SEARCH_TYPES.some((type) => type === value)) {
     return {
       code: "invalid_filter",
       message: `Unknown type "${value}".`,
