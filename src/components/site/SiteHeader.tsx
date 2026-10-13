@@ -12,6 +12,10 @@ const PRIMARY_NAV = [
 ] as const;
 
 const SECONDARY_NAV = [
+  { to: "/ai-engineering", label: "AI engineering" },
+  { to: "/software-engineering", label: "Software" },
+  { to: "/experience", label: "Experience" },
+  { to: "/open-source", label: "Open source" },
   { to: "/now", label: "Now" },
   { to: "/ideas", label: "Ideas" },
   { to: "/timeline", label: "Timeline" },

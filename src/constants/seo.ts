@@ -7,9 +7,9 @@ interface SEOMetadata {
 }
 
 export const defaultSEO: SEOMetadata = {
-  title: "Ayush Rai",
+  title: "Ayush Rai · AI Engineer & AI Product Builder",
   description:
-    "Ayush Rai, AI-focused software engineer working remotely. Work across products, systems, research notes, and experiments. Digital home, not a brochure.",
+    "Ayush Rai, AI engineer and AI product builder. LLM evaluation, preference feedback, and software products with the limits written down.",
   keywords:
     "Ayush Rai, AI engineer, software, products, research, remote, RLHF, Open Framework, personal site",
   image: "/IMG_0029.jpeg",

@@ -12,11 +12,14 @@ export const siteMeta = {
    */
   pages: {
     home: "2026-10-11",
+    domains: "2026-10-11",
     now: "2026-08-08",
     about: "2026-10-11",
     work: "2026-10-11",
     products: "2026-10-11",
-    contact: "2026-08-08",
+    contact: "2026-10-14",
+    privacy: "2026-10-14",
+    developers: "2026-10-14",
     resume: "2026-08-08",
   } as Record<string, string>,
 };

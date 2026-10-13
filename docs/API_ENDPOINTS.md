@@ -4,11 +4,13 @@ This document outlines the available API endpoints for the Ayush Rai Portfolio a
 
 ## Overview
 
-The portfolio application includes a serverless API built on Netlify Functions, providing contact form functionality and other backend features.
+The portfolio application includes serverless endpoints that run on Netlify
+Functions and Vercel Functions. Public entry points live in `api/`; reusable
+server logic lives in `src/lib/server/`.
 
 ## Base URL
 
-In production: `https://ayush-rai-work.netlify.app`
+In production: `https://www.ayushrai.site`
 In development: `http://localhost:5173`
 
 ## Endpoints
@@ -35,10 +37,10 @@ Handles contact form submissions by sending emails using SendGrid.
 
 #### Required Fields
 
-- `name` (string): The sender's full name (2-100 characters)
+- `name` (string): The sender's name
 - `email` (string): Valid email address format
-- `subject` (string): Email subject (5-200 characters)
-- `message` (string): Message content (10-5000 characters)
+- `subject` (string): Email subject
+- `message` (string): Message content
 
 #### Optional Fields
 
@@ -84,12 +86,6 @@ Handles contact form submissions by sending emails using SendGrid.
 #### Validation Rules
 
 - **Email Format**: Uses regex `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`
-- **Field Length**:
-  - `name`: 1-100 characters
-  - `email`: 1-254 characters (RFC compliant)
-  - `subject`: 1-200 characters
-  - `message`: 1-5000 characters
-
 #### Environment Variables
 
 The endpoint requires the following environment variables to be configured:
@@ -102,8 +98,7 @@ The endpoint requires the following environment variables to be configured:
 
 - Input validation for all fields
 - Email format validation
-- XSS protection through proper content handling
-- CORS configuration (if needed)
+- CORS headers for JSON requests
 
 #### Email Template
 
@@ -125,7 +120,7 @@ Currently no explicit rate limiting is implemented. Consider implementing:
 #### Dependencies
 
 - `@sendgrid/mail`: ^8.x.x
-- Netlify Functions runtime
+- Netlify Functions or Vercel Functions runtime
 
 #### Error Handling
 
@@ -138,11 +133,12 @@ The API includes comprehensive error handling for:
 
 #### Testing
 
-API tests are located in `api/__tests__/send-email.test.ts` and include tests for:
-- Successful email sending
+Contact service tests are located in
+`src/__tests__/contactEmail.test.ts` and cover:
+
+- Preflight handling
 - Validation failures
-- SendGrid service errors
-- Invalid request methods
+- Valid SendGrid payload construction
 
 #### Usage Example (Frontend)
 

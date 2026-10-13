@@ -1,0 +1,32 @@
+{
+  "name": "ayushrai",
+  "version": "1.0.0",
+  "description": "Command-line client for Ayush Rai's public portfolio API: search, list, fetch, and compare projects as JSON.",
+  "type": "module",
+  "bin": {
+    "ayushrai": "bin/ayushrai.mjs"
+  },
+  "exports": "./bin/ayushrai.mjs",
+  "files": [
+    "bin"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "ayush-rai",
+    "portfolio",
+    "api",
+    "cli",
+    "mcp"
+  ],
+  "homepage": "https://www.ayushrai.site/developers/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayushrai-hub/ayush-work.git",
+    "directory": "packages/cli"
+  },
+  "author": "Ayush Rai",
+  "license": "UNLICENSED",
+  "private": true
+}

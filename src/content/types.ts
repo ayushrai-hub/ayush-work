@@ -122,6 +122,8 @@ export interface Person {
   /** Typical reply window for contact */
   responseTime: string;
   tagline: string;
+  /** Public role line. Not a ranking and not a years-of-experience claim. */
+  roleTitle: string;
   positioning: string;
   siteUrl: string;
   resumeUrl: string;
@@ -420,7 +422,8 @@ export interface SearchItem {
     | "note"
     | "writing"
     | "elsewhere"
-    | "capability";
+    | "capability"
+    | "domain";
   summary: string;
   href: string;
   tags: string[];

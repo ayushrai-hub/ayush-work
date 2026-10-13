@@ -69,7 +69,7 @@ The human site and the machine surfaces read `src/content/`. Details are in `doc
 - Search: `GET /api/search?q=` (lexical, shared with the on-site dialog)
 - Projects: `GET /api/v1/projects`, `GET /api/v1/projects/:slug`, `GET /api/v1/compare?slugs=a,b`
 - Spec: `/openapi.json`, `/AGENTS.md`, `/SKILL.md`
-- Local MCP: `npm run mcp` (stdio only)
+- MCP: `npm run mcp` (stdio), or `POST /api/mcp` (Streamable HTTP)
 
 Homepage role view (`?audience=`) reorders existing sections. Agent view (`?agent=1`) shows the page Markdown. Neither query is meant for the sitemap.
 

@@ -1,6 +1,6 @@
 ---
 name: ayush-portfolio
-description: Read Ayush Rai's public portfolio from llms.txt, Markdown page twins, the search API, or the local MCP server. Use when looking up his work, products, projects, or research.
+description: Read Ayush Rai's public portfolio from llms.txt, Markdown page twins, the search API, or the MCP server. Use when looking up his work, products, projects, or research.
 ---
 
 # Ayush portfolio
@@ -15,9 +15,9 @@ Canonical site: https://www.ayushrai.site
 
 ## Search
 
-`GET https://www.ayushrai.site/api/search?q=your+query`
+`GET https://www.ayushrai.site/api/v1/search?q=your+query`
 
-Empty `q` returns a short default slice. Matches are lexical: title, then tag or type, then summary. Do not describe the result as semantic understanding.
+Empty `q` returns a short default slice. Matches are lexical: title, then tag or type, then summary. Do not describe the result as semantic understanding. For more results, pass the response's `nextCursor` back as `cursor` until it is `null`.
 
 ## Projects
 
@@ -27,6 +27,6 @@ Empty `q` returns a short default slice. Matches are lexical: title, then tag or
 
 `/api/projects?slug=` and `?compare=` remain. Archived slugs need `archive=1`.
 
-If this repository is checked out, the same three operations are MCP tools named `list_projects`, `get_project`, and `compare_projects` via `npx tsx mcp/server.ts`. See `AGENTS.md` for the client config.
+The same operations, plus `search_portfolio`, are MCP tools at `https://www.ayushrai.site/api/mcp` (Streamable HTTP). From a checkout, `npx tsx mcp/server.ts` runs them over stdio. See `AGENTS.md` for the client config.
 
 Specification: https://www.ayushrai.site/openapi.json

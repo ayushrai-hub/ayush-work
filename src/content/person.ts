@@ -11,10 +11,11 @@ export const person: Person = {
   phone: "",
   phoneDisplay: "",
   responseTime: "<24 hrs",
+  roleTitle: "AI Engineer & AI Product Builder",
   tagline:
-    "I build software and AI systems that try to be useful in the real world: civil society tooling, education platforms, and careful model evaluation.",
+    "AI engineer and AI product builder. I work on LLM evaluation, preference feedback, and software products that have to survive a real workflow.",
   positioning:
-    "I'm an AI-focused software engineer working remotely. My work includes contract evaluation for frontier-lab programs and building AI products, and on the side I ship products and client sites, from an early Digital Public Infrastructure concept for NGOs to education and agrotech MVPs. I care more about clear problem framing and shipped learning than about sounding futuristic.",
+    "I'm an AI engineer and AI product builder working remotely. My paid work includes contract evaluation for frontier-lab programs. Alongside that I build AI products and client software, from an early civil-society coordination prototype to education and agrotech MVPs. I would rather describe what shipped, and what did not, than sound futuristic.",
   siteUrl: "https://www.ayushrai.site",
   resumeUrl:
     "https://drive.google.com/file/d/1JdAckW6i057eYNpdRVLYDMFp2Xo5vyJs/view?usp=sharing",

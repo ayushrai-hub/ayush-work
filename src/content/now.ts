@@ -8,7 +8,7 @@ export const now: NowStatus = {
   lastUpdated: "2026-09-29",
   workingOn: [
     "Independent AI evaluation and product building (FoCDoT role ended August 2025)",
-    "The Open Framework — early DPI concept and site for India's civil society ecosystem",
+    "The Open Framework, a public front-end prototype for civil-society coordination",
     "AyushMushrooms — agrotech brand MVP (content, leads, future shop readiness)",
     "AGENYRA, a distribution layer for AI products, still early and stage-labeled",
     "MedVoice, voice-assisted wholesale billing with deterministic tax and confirmation",

@@ -14,6 +14,7 @@ import { notes } from "./notes";
 import { writing } from "./writing";
 import { elsewhereProfiles } from "./elsewhere";
 import { capabilities } from "./capabilities";
+import { domains } from "./domains";
 
 /**
  * Flat searchable items. href values match routes in src/App.tsx.
@@ -30,6 +31,17 @@ export function buildSearchIndex(): SearchItem[] {
       tags: ["ayush", "about", "contact", person.location],
     },
   ];
+
+  for (const domain of domains) {
+    items.push({
+      id: `domain:${domain.path}`,
+      title: domain.title,
+      type: "domain",
+      summary: domain.description,
+      href: domain.path,
+      tags: [domain.evidenceLevel, domain.label, "domain"],
+    });
+  }
 
   for (const w of work) {
     items.push({

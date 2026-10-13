@@ -1,135 +1,95 @@
-import sgMail from '@sendgrid/mail';
+import {
+  handleContactEmail,
+  type ContactEmailResult,
+} from "../src/lib/server/contactEmail";
 
-// Netlify Functions handler - API route for email sending
-export default async function handler(event: any, context?: any) {
-  // Set CORS headers
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json',
-  };
+const headers: Record<string, string> = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Content-Type": "application/json",
+};
 
-  // Only allow POST requests
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ message: 'Method not allowed' }),
-    };
+type NodeResponse = {
+  status: (code: number) => NodeResponse;
+  setHeader: (name: string, value: string) => void;
+  json: (body: unknown) => void;
+  end: (body?: string) => void;
+};
+
+function isNodeResponse(value: unknown): value is NodeResponse {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<NodeResponse>;
+  return (
+    typeof candidate.status === "function" &&
+    typeof candidate.setHeader === "function"
+  );
+}
+
+function sendNode(res: NodeResponse, result: ContactEmailResult) {
+  for (const [key, value] of Object.entries(headers)) res.setHeader(key, value);
+  if (result.body == null) {
+    res.status(result.status).end();
+    return;
   }
+  res.status(result.status).json(result.body);
+}
 
-  // Handle preflight requests
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers,
-      body: '',
-    };
-  }
-
+/**
+ * Contact form handler.
+ * Netlify calls this with an event and expects { statusCode, headers, body }.
+ * Vercel calls it with a Node request and response, or a Web Request.
+ */
+export default async function handler(
+  eventOrRequest: unknown,
+  responseOrContext?: unknown,
+) {
   try {
-    const { name, email, subject, message, service } = JSON.parse(event.body);
-
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: 'Missing required fields'
-        }),
-      };
+    if (typeof Request !== "undefined" && eventOrRequest instanceof Request) {
+      const request = eventOrRequest;
+      const raw = request.method === "POST" ? await request.text() : null;
+      const result = await handleContactEmail(request.method, raw);
+      const body = result.body == null ? "" : JSON.stringify(result.body);
+      return new Response(body, { status: result.status, headers });
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: 'Invalid email format'
-        }),
-      };
+    if (isNodeResponse(responseOrContext)) {
+      const request = eventOrRequest as { method?: string; body?: unknown };
+      const result = await handleContactEmail(
+        (request.method || "GET").toUpperCase(),
+        request.body,
+      );
+      sendNode(responseOrContext, result);
+      return;
     }
 
-    // Initialize SendGrid
-    const sendgridApiKey = process.env.SENDGRID_API_KEY;
-    if (!sendgridApiKey) {
-      console.error('SENDGRID_API_KEY not configured');
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: 'Email service not configured'
-        }),
-      };
-    }
-
-    sgMail.setApiKey(sendgridApiKey);
-
-    // Prepare email content
-    const msg = {
-      to: process.env.CONTACT_EMAIL || 'ayushrai0211@gmail.com',
-      from: {
-        email: process.env.FROM_EMAIL || 'noreply@yourdomain.com',
-        name: 'Portfolio Contact Form'
-      },
-      subject: `Portfolio Contact: ${subject}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">New Contact Form Submission</h2>
-
-          <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3>Contact Details:</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-            <p><strong>Service Interest:</strong> ${service || 'Not specified'}</p>
-          </div>
-
-          <div style="background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-            <h3>Message:</h3>
-            <p style="white-space: pre-wrap; line-height: 1.6;">${message}</p>
-          </div>
-
-          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
-
-          <p style="color: #64748b; font-size: 14px;">
-            This message was sent from your portfolio contact form.
-          </p>
-        </div>
-      `,
-      reply_to: {
-        email: email,
-        name: name
-      }
-    };
-
-
-    await sgMail.send(msg);
-
+    const event = eventOrRequest as { httpMethod?: string; body?: string | null };
+    const result = await handleContactEmail(
+      (event.httpMethod || "GET").toUpperCase(),
+      event.body ?? null,
+    );
     return {
-      statusCode: 200,
+      statusCode: result.status,
       headers,
-      body: JSON.stringify({
-        success: true,
-        message: 'Message sent successfully!'
-      }),
+      body: result.body == null ? "" : JSON.stringify(result.body),
     };
-
   } catch (error) {
-    console.error('Email service error:', error);
+    console.error("Email service error:", error);
+    const failure = {
+      success: false,
+      message: "Failed to send message. Please try again later.",
+    };
+    if (isNodeResponse(responseOrContext)) {
+      sendNode(responseOrContext, { status: 500, body: failure });
+      return;
+    }
+    if (typeof Request !== "undefined" && eventOrRequest instanceof Request) {
+      return new Response(JSON.stringify(failure), { status: 500, headers });
+    }
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
-        success: false,
-        message: 'Failed to send message. Please try again later.'
-      }),
+      body: JSON.stringify(failure),
     };
   }
 }

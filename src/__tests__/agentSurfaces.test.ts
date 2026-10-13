@@ -19,8 +19,17 @@ import {
   writing,
 } from "../content";
 import { parseAudience, rankWorkForAudience } from "../lib/agent/audiences";
-import { dispatchAgentApi } from "../lib/agent/http";
-import { escapeMarkdownText, renderLlmsFull, renderLlmsTxt, renderPageMarkdown } from "../lib/agent/markdown";
+import { dispatchAgentApi, handleAgentRequest } from "../lib/agent/http";
+import {
+  escapeMarkdownText,
+  renderLlmsFull,
+  renderLlmsTxt,
+  renderNotFoundMarkdown,
+  renderPageMarkdown,
+} from "../lib/agent/markdown";
+import { markdownMiddleware } from "../lib/agent/markdownMiddleware";
+import { handleMcpRequest } from "../lib/agent/mcpHttp";
+import { agentFiles, negotiateMarkdown } from "../lib/agent/surfaces";
 import { executePortfolioSearch } from "../lib/agent/searchTool";
 import { buildOpenApiDocument } from "../lib/agent/openapi";
 import { comparePublicProjects, getPublicProject } from "../lib/agent/projectsQuery";
@@ -54,8 +63,8 @@ function hrefResolves(href: string): boolean {
   if (path === "/recognition") return recognition.some((item) => item.slug === hash);
   if (path === "/ideas") return ideas.some((item) => item.slug === hash);
   if (path === "/principles") return principles.some((item) => item.slug === hash);
-  if (path === "/about") {
-    if (hash.startsWith("capability-")) {
+  if (path === "/about" || path === "/experience") {
+    if (path === "/about" && hash.startsWith("capability-")) {
       return capabilities.some(
         (item) => `capability-${item.domain.toLowerCase()}` === hash,
       );
@@ -177,7 +186,9 @@ describe("agent surfaces", () => {
     for (const claim of researchAwardsNeedsConfirmation) {
       expect(full).not.toContain(claim);
     }
-    expect(renderLlmsTxt()).toContain("/api/search");
+    expect(renderLlmsTxt()).toContain("/api/v1/search");
+    expect(renderLlmsTxt()).toContain("/api/mcp");
+    expect(renderLlmsTxt()).toContain("/.well-known/api-catalog");
     expect(renderLlmsTxt()).toContain("/developers");
     expect(escapeMarkdownText("Title with *stars* and [link](http://example.com)")).not.toContain(
       "*stars*",
@@ -195,6 +206,19 @@ describe("agent surfaces", () => {
     expect(ranked[0]?.type).toBe("product");
   });
 
+  it("returns a Web Response when the host does not pass a Node response", async () => {
+    const response = await handleAgentRequest(
+      { method: "GET", url: "https://www.ayushrai.site/api/search?q=medvoice" },
+      undefined,
+      "/api/search",
+    );
+    expect(response).toBeInstanceOf(Response);
+    if (!(response instanceof Response)) return;
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.match).toBe("lexical");
+  });
+
   it("publishes an OpenAPI document for the read API", () => {
     const spec = buildOpenApiDocument();
     expect(spec.paths["/api/search"]).toBeTruthy();
@@ -208,5 +232,139 @@ describe("agent surfaces", () => {
     const found = executePortfolioSearch({ query: "open framework" });
     expect(found.isError).toBeUndefined();
     expect(JSON.stringify(found)).not.toContain("7440567944");
+  });
+
+  it("negotiates Markdown for pages and a Markdown 404 for unknown paths", async () => {
+    const markdownAccept = "text/markdown";
+    const browserAccept = "text/html,application/xhtml+xml,*/*;q=0.8";
+
+    const home = markdownMiddleware(
+      new Request("https://www.ayushrai.site/", { headers: { accept: markdownAccept } }),
+    );
+    expect(home?.status).toBe(200);
+    expect(home?.headers.get("content-type")).toBe("text/markdown; charset=utf-8");
+    expect(home?.headers.get("vary")).toBe("Accept");
+    expect(await home?.text()).toBe(renderPageMarkdown("/"));
+
+    const missing = markdownMiddleware(
+      new Request("https://www.ayushrai.site/some-path-that-does-not-exist/", {
+        headers: { accept: markdownAccept },
+      }),
+    );
+    expect(missing?.status).toBe(404);
+    expect(missing?.headers.get("content-type")).toBe("text/markdown; charset=utf-8");
+    const body = (await missing?.text()) ?? "";
+    expect(body).toBe(renderNotFoundMarkdown());
+    expect(body).toContain("https://www.ayushrai.site/llms.txt");
+    expect(body).toContain("https://www.ayushrai.site/sitemap.xml");
+    expect(agentFiles()["404.md"]).toBe(body);
+
+    expect(
+      markdownMiddleware(
+        new Request("https://www.ayushrai.site/", { headers: { accept: browserAccept } }),
+      ),
+    ).toBeUndefined();
+    expect(negotiateMarkdown("/about/", markdownAccept)?.body).toBe(renderPageMarkdown("/about"));
+    expect(negotiateMarkdown("/design-system", markdownAccept)).toBeNull();
+    expect(negotiateMarkdown("/api/search", markdownAccept)).toBeNull();
+    expect(negotiateMarkdown("/favicon.ico", markdownAccept)).toBeNull();
+    expect(negotiateMarkdown("/%E0%A4%A", markdownAccept)?.status).toBe(404);
+  });
+
+  it("pages list endpoints with an opaque cursor until nextCursor is null", () => {
+    const seen: string[] = [];
+    let cursor: string | null = "";
+    do {
+      const params = new URLSearchParams({ limit: "2", archive: "1" });
+      if (cursor) params.set("cursor", cursor);
+      const result = dispatchAgentApi("/api/v1/projects", "GET", params);
+      expect(result.status).toBe(200);
+      const body = result.body as { projects: { slug: string }[]; nextCursor: string | null };
+      seen.push(...body.projects.map((item) => item.slug));
+      cursor = body.nextCursor;
+    } while (cursor);
+    expect(seen).toEqual(projects.map((item) => item.slug));
+
+    const first = dispatchAgentApi("/api/v1/search", "GET", new URLSearchParams("q=&limit=3"));
+    const firstBody = first.body as { results: { title: string }[]; nextCursor: string };
+    const second = dispatchAgentApi(
+      "/api/search",
+      "GET",
+      new URLSearchParams({ q: "", limit: "3", cursor: firstBody.nextCursor }),
+    );
+    const secondBody = second.body as { results: { title: string }[] };
+    expect(secondBody.results[0]?.title).toBe(searchIndex[3]?.title);
+
+    const bad = dispatchAgentApi("/api/v1/projects", "GET", new URLSearchParams("cursor=nope"));
+    expect(bad.status).toBe(400);
+    expect((bad.body as { error: { code: string } }).error.code).toBe("invalid_cursor");
+  });
+
+  it("publishes an RFC 9727 catalog that points only at deployed APIs", () => {
+    const catalog = JSON.parse(agentFiles()[".well-known/api-catalog"] ?? "{}");
+    const items = catalog.linkset[0].item.map((link: { href: string }) => link.href);
+    expect(items).toEqual([
+      "https://www.ayushrai.site/api/v1/projects",
+      "https://www.ayushrai.site/api/v1/search",
+      "https://www.ayushrai.site/api/mcp",
+    ]);
+    expect(catalog.linkset[1]["service-desc"][0].href).toBe(
+      "https://www.ayushrai.site/openapi.json",
+    );
+  });
+
+  it("serves the MCP tools over stateless Streamable HTTP", async () => {
+    const call = (body: unknown) =>
+      handleMcpRequest(
+        new Request("https://www.ayushrai.site/api/mcp", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            accept: "application/json, text/event-stream",
+          },
+          body: JSON.stringify(body),
+        }),
+      );
+
+    const init = await call({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2025-06-18",
+        capabilities: {},
+        clientInfo: { name: "test", version: "0" },
+      },
+    });
+    expect(init.status).toBe(200);
+    expect((await init.json()).result.serverInfo.name).toBe("site.ayushrai/portfolio");
+
+    const listed = await call({ jsonrpc: "2.0", id: 2, method: "tools/list" });
+    const names = (await listed.json()).result.tools.map((tool: { name: string }) => tool.name);
+    expect(names.sort()).toEqual(
+      ["compare_projects", "get_project", "list_projects", "search_portfolio"].sort(),
+    );
+
+    const got = await call({
+      jsonrpc: "2.0",
+      id: 3,
+      method: "tools/call",
+      params: { name: "get_project", arguments: { slug: "overlay-text-box" } },
+    });
+    const text = (await got.json()).result.content[0].text;
+    expect(JSON.parse(text).project.slug).toBe("overlay-text-box");
+
+    const get = await handleMcpRequest(new Request("https://www.ayushrai.site/api/mcp"));
+    expect(get.status).toBe(405);
+  });
+
+  it("publishes about, contact, and privacy pages with substantive Markdown", () => {
+    for (const path of ["/about", "/contact", "/privacy"]) {
+      const markdown = renderPageMarkdown(path) ?? "";
+      expect(markdown.length).toBeGreaterThan(500);
+      expect(isKnownRoute(path)).toBe(true);
+    }
+    expect(renderPageMarkdown("/privacy")).toContain("Google Analytics");
+    expect(renderPageMarkdown("/privacy")).not.toContain("7440567944");
   });
 });

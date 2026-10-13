@@ -10,6 +10,7 @@
  */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 import { HelmetProvider } from "react-helmet-async";
 import GTMProvider from "./components/layout/GTMProvider.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
       <GTMProvider>
         <HelmetProvider>
           <App />
+          <Analytics />
         </HelmetProvider>
       </GTMProvider>
     </ThemeProvider>

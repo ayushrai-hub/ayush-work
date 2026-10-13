@@ -2,6 +2,13 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "redirects": [
+    {
+      "source": "/((?!api/|_vercel/|\\.well-known/)(?!.*\\.[A-Za-z0-9]+$).*[^/])",
+      "destination": "/$1/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/v1/projects/:slug",
@@ -16,20 +23,12 @@
       "destination": "/api/projects"
     },
     {
-      "source": "/",
-      "has": [{ "type": "header", "key": "accept", "value": "text/markdown" }],
-      "missing": [{ "type": "header", "key": "accept", "value": "text/html" }],
-      "destination": "/index.md"
+      "source": "/api/v1/search",
+      "destination": "/api/search"
     },
     {
-      "source": "/((?!api/)(?!.*\\.[A-Za-z0-9]+$).+)",
-      "has": [{ "type": "header", "key": "accept", "value": "text/markdown" }],
-      "missing": [{ "type": "header", "key": "accept", "value": "text/html" }],
-      "destination": "/$1.md"
-    },
-    {
-      "source": "/((?!api/)(?!.*\\.[A-Za-z0-9]+$).*)",
-      "destination": "/index.html"
+      "source": "/api/mcp/server-card",
+      "destination": "/api/mcp?resource=server-card"
     }
   ],
   "headers": [
@@ -64,6 +63,70 @@
         {
           "key": "Vary",
           "value": "Accept"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/api-catalog",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/linkset+json; profile=\"https://www.rfc-editor.org/info/rfc9727\""
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/ai-catalog.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/ai-catalog+json"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/mcp/server-card.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/mcp-server-card+json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, If-None-Match"
+        },
+        {
+          "key": "Access-Control-Expose-Headers",
+          "value": "ETag"
+        }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</.well-known/api-catalog>; rel=\"api-catalog\""
         }
       ]
     }

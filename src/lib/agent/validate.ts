@@ -4,7 +4,7 @@ import { SEARCH_MAX_QUERY, SEARCH_TYPES } from "./search";
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export interface FieldError {
-  code: "invalid_query" | "invalid_slug" | "invalid_filter" | "invalid_compare";
+  code: "invalid_query" | "invalid_slug" | "invalid_filter" | "invalid_compare" | "invalid_cursor";
   message: string;
 }
 

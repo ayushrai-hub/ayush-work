@@ -4,7 +4,7 @@ export const structuredData = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: person.name,
-  jobTitle: "AI-focused software engineer",
+  jobTitle: person.roleTitle,
   description: person.tagline,
   url: person.siteUrl,
   image: `${person.siteUrl}/IMG_0029.jpeg`,

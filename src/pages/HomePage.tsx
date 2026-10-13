@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
 import PageSEO from "../components/site/PageSEO";
 import SectionHeading from "../components/editorial/SectionHeading";
 import WorkRow from "../components/editorial/WorkRow";
@@ -9,6 +8,7 @@ import RoleSelector from "../components/site/RoleSelector";
 import {
   featuredProducts,
   formatUpdated,
+  homeDomains,
   ideas,
   now,
   pageUpdatedAt,
@@ -29,20 +29,12 @@ import {
 } from "../lib/agent/audiences";
 
 export default function HomePage() {
-  const reduceMotion = useReducedMotion();
   const [params] = useSearchParams();
   const audience = parseAudience(params.get("audience"));
   const rankedWork = rankWorkForAudience(audience, selectedWork);
   const sectionOrder = HOME_SECTION_ORDER[audience];
   const sectionNumber = (id: HomeSectionId) =>
     String(sectionOrder.indexOf(id) + 1).padStart(2, "0");
-  const fade = reduceMotion
-    ? {}
-    : {
-        initial: { opacity: 0, y: 12 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.45, ease: "easeOut" as const },
-      };
 
   const pullQuote = principles[0];
 
@@ -56,14 +48,14 @@ export default function HomePage() {
       />
 
       <section className="site-shell page-section pt-16 md:pt-24">
-        <motion.div
-          {...fade}
-          className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-16"
-        >
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-16">
           <div>
             <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-ink">
               {person.name}
             </h1>
+            <p className="mt-4 font-mono text-sm tracking-wide text-ink-muted">
+              {person.roleTitle}
+            </p>
             <p className="mt-6 max-w-measure text-xl md:text-2xl font-display text-ink leading-snug">
               {person.tagline}
             </p>
@@ -72,8 +64,6 @@ export default function HomePage() {
             </Prose>
             <p className="meta-row mt-6">
               <span>{person.location}</span>
-              <span aria-hidden="true">·</span>
-              <span>AI + software + products</span>
             </p>
             <UpdatedMeta
               date={pageUpdatedAt("home")}
@@ -123,7 +113,7 @@ export default function HomePage() {
                 About
               </Link>
               <a href="#go-deeper" className="btn-ghost">
-                Go deeper
+                Domains
               </a>
             </div>
           </div>
@@ -143,14 +133,41 @@ export default function HomePage() {
               </figcaption>
             </figure>
           )}
-        </motion.div>
+        </div>
       </section>
 
       <section
         id="go-deeper"
         className="site-shell page-section border-t border-rule scroll-mt-20"
       >
-        <SectionHeading number="00" title="Go deeper" />
+        <SectionHeading number="00" title="Domains" />
+        <Prose>
+          <p>
+            These pages collect work I can point to. A topic without a system
+            to show stays a note inside the hub, not its own URL.
+          </p>
+        </Prose>
+        <ul className="mt-8 max-w-measure divide-y divide-rule border-y border-rule">
+          {homeDomains().map((domain) => (
+            <li key={domain.path}>
+              <Link
+                to={domain.path}
+                className="group flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+              >
+                <span className="font-display text-lg text-ink group-hover:text-accent">
+                  {domain.title}
+                </span>
+                <span className="text-sm text-ink-muted sm:max-w-xs sm:text-right">
+                  {domain.dek}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="site-shell page-section border-t border-rule">
+        <SectionHeading title="Go deeper" />
         <Prose>
           <p>
             If you’d like to read more about who I am, what I’ve built, and how
@@ -405,6 +422,9 @@ export default function HomePage() {
         <div className="mt-6 flex flex-wrap gap-4">
           <Link to="/timeline" className="link-accent">
             Timeline →
+          </Link>
+          <Link to="/experience" className="link-accent">
+            Experience →
           </Link>
           <Link to="/about" className="link-accent">
             About →

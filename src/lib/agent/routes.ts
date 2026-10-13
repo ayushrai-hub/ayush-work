@@ -2,31 +2,9 @@
  * Routes that exist in src/App.tsx. Search and Markdown twins must stay inside this set.
  * Hash targets are anchors on those pages, not extra routers.
  */
+import { prerenderRoutes } from "../publicRoutes";
 
-const STATIC_PATHS = new Set([
-  "/",
-  "/about",
-  "/work",
-  "/products",
-  "/projects",
-  "/research",
-  "/writing",
-  "/notes",
-  "/now",
-  "/ideas",
-  "/principles",
-  "/timeline",
-  "/education",
-  "/leadership",
-  "/recognition",
-  "/elsewhere",
-  "/contact",
-  "/archive",
-  "/uses",
-  "/resume",
-  "/developers",
-  "/design-system",
-]);
+const STATIC_PATHS = new Set(prerenderRoutes());
 
 const DYNAMIC_PATTERNS = [
   /^\/work\/[^/]+$/,

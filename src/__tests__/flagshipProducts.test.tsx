@@ -182,11 +182,11 @@ describe("flagship product pages", () => {
     expect(screen.queryByRole("link", { name: "Live site" })).toBeNull();
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       "href",
-      "https://www.ayushrai.site/products/medvoice",
+      "https://www.ayushrai.site/products/medvoice/",
     );
     expect(document.querySelector('meta[property="og:url"]')).toHaveAttribute(
       "content",
-      "https://www.ayushrai.site/products/medvoice",
+      "https://www.ayushrai.site/products/medvoice/",
     );
     const structured = document.querySelector(
       'script[type="application/ld+json"]',
@@ -200,7 +200,7 @@ describe("flagship product pages", () => {
     expect(screen.queryByText(/Kubernetes/)).toBeNull();
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       "href",
-      "https://www.ayushrai.site/products/the-open-framework",
+      "https://www.ayushrai.site/products/the-open-framework/",
     );
     const descriptions = FLAGSHIP.map(
       (slug) => getProductBySlug(slug)?.summary,

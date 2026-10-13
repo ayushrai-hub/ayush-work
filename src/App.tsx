@@ -36,6 +36,8 @@ const UsesPage = lazy(() => import("./pages/UsesPage"));
 const ResumePage = lazy(() => import("./pages/ResumePage"));
 const DesignSystemPage = lazy(() => import("./pages/DesignSystemPage"));
 const DevelopersPage = lazy(() => import("./pages/DevelopersPage"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const DomainPage = lazy(() => import("./pages/DomainPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 function PageFallback() {
@@ -79,6 +81,13 @@ export function AppRoutes() {
             <Route path="resume" element={<ResumePage />} />
             <Route path="design-system" element={<DesignSystemPage />} />
             <Route path="developers" element={<DevelopersPage />} />
+            <Route path="privacy" element={<PrivacyPage />} />
+            <Route path="ai-engineering/*" element={<DomainPage />} />
+            <Route path="ai-engineering" element={<DomainPage />} />
+            <Route path="software-engineering" element={<DomainPage />} />
+            <Route path="software-services" element={<DomainPage />} />
+            <Route path="experience" element={<DomainPage />} />
+            <Route path="open-source" element={<DomainPage />} />
 
             {/* Legacy redirects */}
             <Route path="services" element={<Navigate to="/contact" replace />} />

@@ -59,4 +59,14 @@ export {
 } from "./elsewhere";
 export { archive } from "./archive";
 export { capabilities } from "./capabilities";
+export {
+  domains,
+  childDomains,
+  evidenceLevelLabels,
+  getDomainByPath,
+  homeDomains,
+  renderDomainBody,
+} from "./domains";
+export { privacySections, contactSections } from "./policies";
+export type { PolicySection } from "./policies";
 export { searchIndex, buildSearchIndex } from "./searchIndex";

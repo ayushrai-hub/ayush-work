@@ -1,12 +1,35 @@
 import { readFileSync } from "node:fs";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import { resolve } from "node:path";
 import type { Connect, Plugin } from "vite";
-import { corsHeaders, dispatchAgentApi } from "./http";
+import { API_CATALOG_CONTENT_TYPE, API_CATALOG_PATH } from "./apiCatalog";
+import { agentApiResponse } from "./http";
+import { renderNotFoundMarkdown } from "./markdown";
+import {
+  AI_CATALOG_CONTENT_TYPE,
+  AI_CATALOG_PATH,
+  LEGACY_SERVER_CARD_PATH,
+  MCP_ENDPOINT_PATH,
+  SERVER_CARD_HEADERS,
+  SERVER_CARD_PATH,
+} from "./mcpCard";
+import { handleMcpRequest } from "./mcpHttp";
+import { clientKeyFrom } from "./rateLimit";
 import {
   agentFiles,
+  MARKDOWN_HEADERS,
   markdownForRequestPath,
-  wantsMarkdown,
+  negotiateMarkdown,
+  type MarkdownNegotiation,
 } from "./surfaces";
+
+const DISCOVERY_CORS = { "Access-Control-Allow-Origin": "*" };
+
+const WELL_KNOWN_TYPES: Record<string, Record<string, string>> = {
+  [API_CATALOG_PATH]: { "Content-Type": API_CATALOG_CONTENT_TYPE, ...DISCOVERY_CORS },
+  [AI_CATALOG_PATH]: { "Content-Type": AI_CATALOG_CONTENT_TYPE, ...DISCOVERY_CORS },
+  [LEGACY_SERVER_CARD_PATH]: SERVER_CARD_HEADERS,
+};
 
 function send(
   res: {
@@ -28,6 +51,32 @@ function send(
   res.end(body);
 }
 
+async function serveMcp(req: IncomingMessage, res: ServerResponse, url: URL) {
+  const chunks: Buffer[] = [];
+  for await (const chunk of req) chunks.push(chunk as Buffer);
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (typeof value === "string" && key !== "content-length") headers.set(key, value);
+  }
+  const method = (req.method ?? "GET").toUpperCase();
+  const response = await handleMcpRequest(
+    new Request(url, {
+      method,
+      headers,
+      body: method === "POST" ? Buffer.concat(chunks).toString("utf8") : undefined,
+    }),
+  );
+  res.statusCode = response.status;
+  response.headers.forEach((value, key) => res.setHeader(key, value));
+  res.end(await response.text());
+}
+
+function explicitMarkdown(pathname: string): MarkdownNegotiation {
+  const markdown = markdownForRequestPath(pathname);
+  if (markdown) return { status: 200, body: markdown };
+  return { status: 404, body: renderNotFoundMarkdown() };
+}
+
 function attach(middlewares: Connect.Server) {
   middlewares.use((req, res, next) => {
     const raw = req.url ?? "/";
@@ -41,17 +90,28 @@ function attach(middlewares: Connect.Server) {
     const pathname = url.pathname;
     const method = (req.method ?? "GET").toUpperCase();
 
+    if (pathname === MCP_ENDPOINT_PATH || pathname === SERVER_CARD_PATH) {
+      void serveMcp(req, res, url).catch(next);
+      return;
+    }
+
+    const wellKnownType = WELL_KNOWN_TYPES[pathname];
+    if (wellKnownType) {
+      const { "Content-Type": type, ...headers } = wellKnownType;
+      send(res, 200, type, agentFiles()[pathname.slice(1)] ?? "", headers);
+      return;
+    }
+
     if (pathname.startsWith("/api/")) {
-      const result = dispatchAgentApi(pathname, method, url.searchParams);
-      const body =
-        method === "HEAD" || result.status === 204 || result.body == null
-          ? ""
-          : JSON.stringify(result.body);
-      const origin = typeof req.headers.origin === "string" ? req.headers.origin : undefined;
-      send(res, result.status, "application/json; charset=utf-8", body, {
-        ...corsHeaders(origin),
-        "Cache-Control": "public, max-age=300",
+      const response = agentApiResponse({
+        pathname,
+        method,
+        params: url.searchParams,
+        origin: typeof req.headers.origin === "string" ? req.headers.origin : undefined,
+        clientKey: req.socket.remoteAddress ?? clientKeyFrom(req.headers),
       });
+      const { "Content-Type": type, ...headers } = response.headers;
+      send(res, response.status, type, response.body ?? "", headers);
       return;
     }
 
@@ -76,24 +136,17 @@ function attach(middlewares: Connect.Server) {
       return;
     }
 
-    const accept = typeof req.headers.accept === "string" ? req.headers.accept : undefined;
-    const explicitMarkdown = pathname.endsWith(".md");
-    if (explicitMarkdown || wantsMarkdown(accept)) {
-      const markdown = markdownForRequestPath(pathname);
-      if (markdown) {
-        const body = method === "HEAD" ? "" : markdown;
-        send(res, 200, "text/markdown; charset=utf-8", body, { Vary: "Accept" });
-        return;
-      }
-      if (explicitMarkdown) {
-        send(
-          res,
-          404,
-          "text/markdown; charset=utf-8",
-          "No markdown twin for this path.\n\nSee /llms.txt\n",
+    const markdownResult = pathname.endsWith(".md")
+      ? explicitMarkdown(pathname)
+      : negotiateMarkdown(
+          pathname,
+          typeof req.headers.accept === "string" ? req.headers.accept : undefined,
         );
-        return;
-      }
+    if (markdownResult) {
+      const { "Content-Type": type, ...headers } = MARKDOWN_HEADERS;
+      const body = method === "HEAD" ? "" : markdownResult.body;
+      send(res, markdownResult.status, type, body, headers);
+      return;
     }
 
     next();

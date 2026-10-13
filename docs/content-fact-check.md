@@ -173,3 +173,21 @@ Full audit: `docs/flagship-products-audit.md`.
 | MedVoice commit-level personal authorship | UNVERIFIED | Sampled commits are authored as MedVoice Agent. |
 | 26 Aug 2026 MedVoice commit mentioning Tally, Razorpay, e-invoice, Supabase | UNVERIFIED against the overview | Not promoted to implemented. |
 
+---
+
+## 14. Domain pages (11 October 2026)
+
+Positioning line **AI Engineer & AI Product Builder** is a self-description, not a ranking, certification, or years-of-experience claim. Status: **self-reported**, consistent with the FoCDoT title "SDE — AI Engineer" and the product work. It does not replace the fact-check rows above.
+
+| Claim on the new pages | Status | Where it lives |
+| --- | --- | --- |
+| FoCDoT, April 2024–August 2025, evaluation and STEM/coding-task analysis | SELF-REPORTED | `src/content/experience.ts`. Still VERIFYING against an offer letter. |
+| Outlier contract from August 2025, frontier-lab programs via the platform | SELF-REPORTED | Same file. Not direct lab employment. |
+| RLHF-oriented evaluation, without reward-model or policy training | SELF-REPORTED, scoped | Experience highlights say "RLHF-oriented evaluation". The domain page refuses training claims. |
+| MedVoice: speech proposes, rules decide; no public demo; ERP adapters mock/CSV only | VERIFIED as site documentation | Product and case-study records. Not a live wholesaler deployment. |
+| AGENYRA public repo proves the site, not a placement network | VERIFIED as site documentation | Case study. |
+| Legal NLP retrieval page is an investigation, metrics withheld | VERIFIED as the research record | Older percentages stay UNVERIFIED and are not repeated. |
+| Inference, quantization, and distributed systems as shipped specialties | NOT CLAIMED | No URLs were created. |
+| Software services rates, SLAs, or team size | NOT CLAIMED | `/software-services` has no prices. |
+| Open-source star counts or third-party maintainer roles | NOT CLAIMED | Only repositories already linked from this site. |
+

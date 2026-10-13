@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
-import { pageUpdatedAt, person } from "../content";
+import SectionHeading from "../components/editorial/SectionHeading";
+import { contactSections, pageUpdatedAt, person } from "../content";
 import EmailService from "../lib/emailService";
 
 const INTENTS = [
@@ -162,6 +164,13 @@ export default function ContactPage() {
               Open mail app
             </a>
           </div>
+          <p className="text-sm text-ink-muted">
+            The form sends your message by email and does not store it. See{" "}
+            <Link to="/privacy" className="link-accent">
+              privacy
+            </Link>
+            .
+          </p>
           {statusMsg && (
             <p
               role="status"
@@ -173,6 +182,17 @@ export default function ContactPage() {
             </p>
           )}
         </form>
+
+        {contactSections.map((section) => (
+          <section key={section.heading} className="mt-12">
+            <SectionHeading title={section.heading} />
+            <Prose>
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </Prose>
+          </section>
+        ))}
       </div>
     </>
   );

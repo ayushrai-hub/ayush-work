@@ -1,5 +1,6 @@
 import { getProjectBySlug, getWorkBySlug, person, projects } from "../../content";
 import type { Project } from "../../content";
+import { paginate, type Page } from "./pagination";
 
 export interface PublicProject {
   slug: string;
@@ -33,6 +34,7 @@ export type CompareResult =
   | { ok: false; code: "invalid_compare"; message: string };
 
 const COMPARE_LIMIT = 4;
+const PROJECT_DEFAULT_LIMIT = 50;
 
 export function toPublicProject(project: Project): PublicProject {
   const work =
@@ -59,13 +61,26 @@ export function toPublicProject(project: Project): PublicProject {
   };
 }
 
-export function listPublicProjects(filters: ProjectListFilters = {}): PublicProject[] {
+function filterPublicProjects(filters: ProjectListFilters): PublicProject[] {
   let list = projects.map(toPublicProject);
   if (!filters.includeArchive) list = list.filter((item) => !item.archive);
   if (filters.category) list = list.filter((item) => item.category === filters.category);
   if (filters.type) list = list.filter((item) => item.type === filters.type);
-  const limit = filters.limit ?? 50;
-  return list.slice(0, Math.min(50, Math.max(1, limit)));
+  return list;
+}
+
+function projectLimit(filters: ProjectListFilters): number {
+  return Math.min(PROJECT_DEFAULT_LIMIT, Math.max(1, filters.limit ?? PROJECT_DEFAULT_LIMIT));
+}
+
+export function listPublicProjects(filters: ProjectListFilters = {}): PublicProject[] {
+  return filterPublicProjects(filters).slice(0, projectLimit(filters));
+}
+
+export function pagePublicProjects(
+  filters: ProjectListFilters & { offset?: number } = {},
+): Page<PublicProject> {
+  return paginate(filterPublicProjects(filters), filters.offset ?? 0, projectLimit(filters));
 }
 
 export function getPublicProject(

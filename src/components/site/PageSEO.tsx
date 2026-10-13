@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
-import { person } from "../../content";
+import { pageUpdatedAt, person } from "../../content";
 import { defaultSEO } from "../../constants/seo";
+import { canonicalUrl, personId, websiteId } from "../../lib/canonical";
 
 interface PageSEOProps {
   title?: string;
@@ -23,8 +24,10 @@ export default function PageSEO({
   personSchema = false,
   jsonLd: extraJsonLd,
 }: PageSEOProps) {
-  const pageTitle = title ? `${title} · Ayush Rai` : "Ayush Rai";
-  const canonical = `${person.siteUrl}${path === "/" ? "/" : path}`;
+  const pageTitle = title
+    ? `${title} · ${person.name}`
+    : `${person.name} · ${person.roleTitle}`;
+  const canonical = canonicalUrl(path);
   const ogImage = image?.startsWith("http")
     ? image
     : `${person.siteUrl}${image?.startsWith("/") ? image : `/${image}`}`;
@@ -32,16 +35,40 @@ export default function PageSEO({
   const jsonLd = personSchema
     ? {
         "@context": "https://schema.org",
-        "@type": "Person",
-        name: person.name,
-        url: person.siteUrl,
-        email: person.email,
-        jobTitle: "AI-focused software engineer",
-        workLocation: {
-          "@type": "Place",
-          name: person.location,
-        },
-        sameAs: person.sameAs,
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": websiteId(),
+            name: person.name,
+            url: canonicalUrl("/"),
+            description: person.tagline,
+            publisher: { "@id": personId() },
+          },
+          {
+            "@type": "Person",
+            "@id": personId(),
+            name: person.name,
+            url: canonicalUrl("/"),
+            email: person.email,
+            jobTitle: person.roleTitle,
+            description: person.tagline,
+            image: `${person.siteUrl}/IMG_0029.jpeg`,
+            workLocation: {
+              "@type": "Place",
+              name: person.location,
+            },
+            sameAs: person.sameAs,
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": `${canonicalUrl("/")}#profile`,
+            url: canonicalUrl("/"),
+            name: person.name,
+            dateModified: pageUpdatedAt("home"),
+            mainEntity: { "@id": personId() },
+            isPartOf: { "@id": websiteId() },
+          },
+        ],
       }
     : null;
 

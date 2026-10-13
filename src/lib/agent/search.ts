@@ -1,5 +1,6 @@
 import type { SearchItem } from "../../content";
 import { searchIndex } from "../../content";
+import { paginate } from "./pagination";
 
 /** Empty-query size used by the search dialog. */
 export const SEARCH_DEFAULT_LIMIT = 8;
@@ -24,6 +25,7 @@ export const SEARCH_TYPES = [
   "writing",
   "elsewhere",
   "capability",
+  "domain",
 ] as const;
 
 export type SearchType = (typeof SEARCH_TYPES)[number];
@@ -59,35 +61,48 @@ export function lexicalScore(item: SearchItem, query: string): number {
   return 0;
 }
 
-export function searchPortfolio(
-  query: string,
-  filters: SearchFilters = {},
-  items: SearchItem[] = searchIndex,
-): SearchItem[] {
+function searchLimit(query: string, filters: SearchFilters): number {
+  const fallback = normalizeQuery(query) ? SEARCH_QUERY_LIMIT : SEARCH_DEFAULT_LIMIT;
+  return clampLimit(filters.limit, fallback);
+}
+
+/** Every match in ranked order. An empty query keeps content order. */
+function rankPortfolio(query: string, type: string | undefined, items: SearchItem[]): SearchItem[] {
   const q = normalizeQuery(query);
-  const fallback = q ? SEARCH_QUERY_LIMIT : SEARCH_DEFAULT_LIMIT;
-  const limit = clampLimit(filters.limit, fallback);
   let pool = items;
-  if (filters.type) {
-    const type = filters.type.trim().toLowerCase();
-    pool = pool.filter((item) => item.type === type);
+  if (type) {
+    const wanted = type.trim().toLowerCase();
+    pool = pool.filter((item) => item.type === wanted);
   }
-  if (!q) return pool.slice(0, limit);
+  if (!q) return pool;
 
   return pool
     .map((item, index) => ({ item, index, score: lexicalScore(item, q) }))
     .filter((row) => row.score > 0)
     .sort((a, b) => b.score - a.score || a.index - b.index)
-    .slice(0, limit)
     .map((row) => row.item);
 }
 
-export function searchPayload(query: string, filters: SearchFilters = {}) {
+export function searchPortfolio(
+  query: string,
+  filters: SearchFilters = {},
+  items: SearchItem[] = searchIndex,
+): SearchItem[] {
+  return rankPortfolio(query, filters.type, items).slice(0, searchLimit(query, filters));
+}
+
+export function searchPayload(query: string, filters: SearchFilters & { offset?: number } = {}) {
+  const page = paginate(
+    rankPortfolio(query, filters.type, searchIndex),
+    filters.offset ?? 0,
+    searchLimit(query, filters),
+  );
   return {
     query,
     match: "lexical",
     ranking:
       "Lexical only: exact title, title substring, tag or type, then summary. Ties keep content order. This is not semantic search.",
-    results: searchPortfolio(query, filters),
+    results: page.items,
+    nextCursor: page.nextCursor,
   };
 }

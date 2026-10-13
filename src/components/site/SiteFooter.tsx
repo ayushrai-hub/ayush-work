@@ -4,9 +4,10 @@ import { formatUpdated, now, person, siteMeta } from "../../content";
 const FOOTER_LINKS = [
   { to: "/work", label: "Work" },
   { to: "/products", label: "Products" },
+  { to: "/ai-engineering", label: "AI engineering" },
+  { to: "/software-engineering", label: "Software" },
+  { to: "/experience", label: "Experience" },
   { to: "/about", label: "About" },
-  { to: "/now", label: "Now" },
-  { to: "/writing", label: "Writing" },
   { to: "/contact", label: "Contact" },
   { to: "/resume", label: "Resume" },
 ] as const;
@@ -34,6 +35,9 @@ export default function SiteFooter() {
           <a href="/llms.txt" className="link-underline text-sm">
             llms.txt
           </a>
+          <Link to="/privacy" className="link-underline text-sm">
+            Privacy
+          </Link>
         </nav>
 
         <div className="mt-8 meta-row gap-x-4">
