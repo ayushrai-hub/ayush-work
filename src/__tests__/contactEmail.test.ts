@@ -2,9 +2,10 @@
  * Unit tests for the framework-neutral contact handler behind the /api/send-email function.
  *
  * Verifies that OPTIONS returns 200 without sending, that an invalid email
- * returns 400 "Invalid email format" without sending, and that a valid POST
- * sets the SendGrid key from SENDGRID_API_KEY and sends to CONTACT_EMAIL from
- * FROM_EMAIL with the visitor as reply-to.
+ * returns 400 "Invalid email format" without sending, that malformed JSON and
+ * non-string fields return 400, that a valid POST sets the SendGrid key from
+ * SENDGRID_API_KEY and sends to CONTACT_EMAIL from FROM_EMAIL with the visitor
+ * as reply-to, and that visitor text is HTML-escaped in the email body.
  *
  * SendGrid is replaced by hoisted spies so no network call is made; env vars
  * are stubbed per test and restored afterwards.
@@ -93,5 +94,41 @@ describe("contact email service", () => {
         },
       }),
     );
+  });
+
+  it("answers malformed JSON and non-string fields with 400", async () => {
+    await expect(handleContactEmail("POST", "{not json")).resolves.toEqual({
+      status: 400,
+      body: { success: false, message: "Request body must be valid JSON" },
+    });
+    await expect(
+      handleContactEmail("POST", {
+        name: { first: "Visitor" },
+        email: "visitor@example.com",
+        subject: "Hello",
+        message: "Test message",
+      }),
+    ).resolves.toEqual({
+      status: 400,
+      body: { success: false, message: "Missing required fields" },
+    });
+    expect(sendGrid.send).not.toHaveBeenCalled();
+  });
+
+  it("escapes visitor text in the email HTML", async () => {
+    sendGrid.send.mockResolvedValue(undefined);
+
+    await handleContactEmail("POST", {
+      name: "<b>Visitor</b>",
+      email: "visitor@example.com",
+      subject: "Hello",
+      message: `<script>alert("x")</script> & 'quotes'`,
+    });
+
+    const html = sendGrid.send.mock.calls[0][0].html as string;
+    expect(html).not.toContain("<script>");
+    expect(html).not.toContain("<b>Visitor</b>");
+    expect(html).toContain("&lt;b&gt;Visitor&lt;/b&gt;");
+    expect(html).toContain("&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt; &amp; &#39;quotes&#39;");
   });
 });

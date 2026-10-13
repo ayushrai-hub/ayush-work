@@ -8,13 +8,14 @@
  * /software-engineering/distributed-systems) have no record; that every domain
  * is in the search index; and that a rendered dossier has exactly one h1, a
  * trailing-slash canonical link, and JSON-LD with a BreadcrumbList but no
- * aggregateRating.
+ * aggregateRating. Also checks that every Markdown twin has a prerendered HTML
+ * page and that every /timeline link lands on a prerendered page.
  *
  * Connects to:
  * - src/content/domains.ts and src/content/searchIndex.ts (via src/content)
  * - src/lib/agent/markdown.ts, src/lib/agent/routes.ts, src/lib/canonical.ts,
  *   src/lib/publicRoutes.ts
- * - src/App.tsx (AppRoutes) and src/pages/DomainPage.tsx
+ * - src/App.tsx (AppRoutes), src/pages/DomainPage.tsx, and src/pages/TimelinePage.tsx
  */
 import { render, screen, waitFor } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
@@ -26,10 +27,11 @@ import {
   getDomainByPath,
   searchIndex,
 } from "../content";
-import { renderPageMarkdown } from "../lib/agent/markdown";
+import { listAgentPages, renderPageMarkdown } from "../lib/agent/markdown";
 import { isKnownRoute, pathnameOf } from "../lib/agent/routes";
 import { canonicalUrl } from "../lib/canonical";
-import { sitemapRoutes } from "../lib/publicRoutes";
+import { prerenderRoutes, sitemapRoutes } from "../lib/publicRoutes";
+import TimelinePage from "../pages/TimelinePage";
 
 /** Domain records, their Markdown and search projections, and the rendered dossier page. */
 describe("domain knowledge pages", () => {
@@ -46,6 +48,14 @@ describe("domain knowledge pages", () => {
     }
     expect(sitemapRoutes()).not.toContain("/design-system");
     expect(new Set(sitemapRoutes()).size).toBe(sitemapRoutes().length);
+  });
+
+  it("prerenders an HTML page for every Markdown twin", () => {
+    const html = new Set(prerenderRoutes());
+    const missing = listAgentPages()
+      .map((page) => page.path)
+      .filter((path) => !html.has(path));
+    expect(missing).toEqual([]);
   });
 
   it("generates markdown from the same records, with a canonical source URL", () => {
@@ -103,5 +113,25 @@ describe("domain knowledge pages", () => {
     const data = JSON.parse(raw ?? "");
     expect(JSON.stringify(data)).toContain("BreadcrumbList");
     expect(JSON.stringify(data)).not.toContain("aggregateRating");
+  });
+});
+
+/** Every link on /timeline must land on a prerendered page, not a "not found" detail view. */
+describe("timeline links", () => {
+  it("links each related entry to a page that exists", () => {
+    render(
+      <HelmetProvider>
+        <MemoryRouter>
+          <TimelinePage />
+        </MemoryRouter>
+      </HelmetProvider>,
+    );
+    const pages = new Set(prerenderRoutes());
+    const hrefs = Array.from(document.querySelectorAll("a"))
+      .map((anchor) => anchor.getAttribute("href") ?? "")
+      .filter((href) => href.startsWith("/"));
+    expect(hrefs.length).toBeGreaterThan(0);
+    expect(hrefs.filter((href) => !pages.has(pathnameOf(href)))).toEqual([]);
+    expect(hrefs).toContain("/research/legal-nlp-contracts");
   });
 });

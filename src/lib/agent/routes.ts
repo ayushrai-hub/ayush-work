@@ -16,7 +16,7 @@ const STATIC_PATHS = new Set(prerenderRoutes());
 
 /**
  * Detail routes from `src/App.tsx`. These match any slug, including ones with no content record
- * and, for `/writing/{slug}`, ones with no prerendered page.
+ * and therefore no prerendered page.
  */
 const DYNAMIC_PATTERNS = [
   /^\/work\/[^/]+$/,

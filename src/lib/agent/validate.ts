@@ -57,19 +57,24 @@ export function validateSearchType(value: string | null): FieldError | null {
   return null;
 }
 
-/** Optional project `category`; must be a key of `projectCategoryLabels`. */
+/** Own-property check, so inherited names such as `toString` are not treated as labels. */
+function ownKey(labels: object, value: string): boolean {
+  return Object.prototype.hasOwnProperty.call(labels, value);
+}
+
+/** Optional project `category`; must be an own key of `projectCategoryLabels`. */
 export function validateProjectCategory(value: string | null): FieldError | null {
   if (!value) return null;
-  if (!(value in projectCategoryLabels)) {
+  if (!ownKey(projectCategoryLabels, value)) {
     return { code: "invalid_filter", message: `Unknown category "${value}".` };
   }
   return null;
 }
 
-/** Optional project `type`; must be a key of `projectTypeLabels`. */
+/** Optional project `type`; must be an own key of `projectTypeLabels`. */
 export function validateProjectType(value: string | null): FieldError | null {
   if (!value) return null;
-  if (!(value in projectTypeLabels)) {
+  if (!ownKey(projectTypeLabels, value)) {
     return { code: "invalid_filter", message: `Unknown project type "${value}".` };
   }
   return null;

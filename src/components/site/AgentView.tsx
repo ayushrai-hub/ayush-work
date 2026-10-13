@@ -68,7 +68,8 @@ export default function AgentView() {
     anchor.href = url;
     anchor.download = filename;
     anchor.click();
-    URL.revokeObjectURL(url);
+    // Revoking in the same task can cancel the download in Safari and Firefox.
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
   if (!markdown) {

@@ -16,6 +16,11 @@ dist-server
 *.tsbuildinfo
 *.local
 
+# Test output (regenerated on every run; CI uploads it as an artifact)
+coverage
+playwright-report
+test-results
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

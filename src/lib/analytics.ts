@@ -8,7 +8,8 @@
  *
  * Connects to:
  * - Live site: src/App.tsx calls initGA once on mount. index.html already loads gtag.js and configures
- *   the same measurement ID inline, so the property is configured twice on each page load.
+ *   the same measurement ID inline, so initGA finds that script and skips injection; it only loads GA
+ *   when the page has no snippet.
  * - Legacy only (not routed): src/components/Contact.tsx uses trackContactForm and trackServiceInterest.
  * - src/__tests__/analytics.test.ts covers initGA and trackEvent. trackPageView,
  *   trackGoogleAnalyticsEvent, trackPortfolioInteraction, trackProjectClick, and trackSocialClick
@@ -22,7 +23,8 @@ type GtagEventParams = Record<string, string | number | boolean | null | undefin
  * Initialize Google Analytics 4.
  *
  * Appends gtag.js and an inline script that defines `window.gtag` and configures the property with
- * IP anonymization and ad features off. Not idempotent: each call appends both scripts again.
+ * IP anonymization and ad features off. Does nothing when a gtag.js script for the same ID is
+ * already on the page, which is the case for every page built from index.html.
  *
  * @returns void
  * @side-effects: Appends scripts to document.head, sets up global gtag function
@@ -32,6 +34,11 @@ export const initGA = () => {
 
   if (typeof window === 'undefined') {
     console.log('Google Analytics not initialized - running on server');
+    return;
+  }
+
+  // index.html already loads and configures this property; a second config sends a second page_view.
+  if (document.querySelector(`script[src*="gtag/js?id=${GA_MEASUREMENT_ID}"]`)) {
     return;
   }
 

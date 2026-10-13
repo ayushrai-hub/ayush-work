@@ -7,8 +7,8 @@
  * summary and EmptyNote, since there is no on-site body field.
  *
  * Connects to:
- * - Routed in src/App.tsx as `writing/:slug`. Not prerendered and not in the sitemap:
- *   src/lib/publicRoutes.ts has no writing detail routes. WritingPage and HomePage link here
+ * - Routed in src/App.tsx as `writing/:slug`. Prerendered by `prerenderRoutes()` in
+ *   src/lib/publicRoutes.ts but kept out of the sitemap. WritingPage and HomePage link here
  *   only for entries without `url`.
  * - Content from src/content (`writing`); components PageSEO, PageHeader, Prose, EmptyNote.
  * - Markdown twin `/writing/<slug>.md` built in `buildPages()` in src/lib/agent/markdown.ts.

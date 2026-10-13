@@ -4,6 +4,7 @@
  * On mount, looks for a `modelContext` object with `registerTool` on `document`, falling back to
  * `navigator`. If none exists it does nothing. Otherwise it registers the tool definition from
  * PORTFOLIO_SEARCH_TOOL with an AbortSignal and aborts on unmount, which unregisters the tool.
+ * A failed registration is logged as a warning instead of surfacing as an unhandled rejection.
  * Renders nothing.
  *
  * Connects to:
@@ -43,18 +44,25 @@ export default function PortfolioWebMcp() {
     const context = modelContext();
     if (!context) return;
     const controller = new AbortController();
-    void context.registerTool(
-      {
-        name: PORTFOLIO_SEARCH_TOOL.name,
-        description: PORTFOLIO_SEARCH_TOOL.description,
-        inputSchema: PORTFOLIO_SEARCH_TOOL.inputSchema,
-        annotations: PORTFOLIO_SEARCH_TOOL.annotations,
-        execute(args) {
-          return executePortfolioSearch(args);
-        },
-      },
-      { signal: controller.signal },
-    );
+    // The API is experimental: registration may throw or reject, and that must not break the page.
+    Promise.resolve()
+      .then(() =>
+        context.registerTool(
+          {
+            name: PORTFOLIO_SEARCH_TOOL.name,
+            description: PORTFOLIO_SEARCH_TOOL.description,
+            inputSchema: PORTFOLIO_SEARCH_TOOL.inputSchema,
+            annotations: PORTFOLIO_SEARCH_TOOL.annotations,
+            execute(args) {
+              return executePortfolioSearch(args);
+            },
+          },
+          { signal: controller.signal },
+        ),
+      )
+      .catch((error: unknown) => {
+        console.warn("WebMCP tool registration failed", error);
+      });
     return () => controller.abort();
   }, []);
 

@@ -66,6 +66,8 @@ describe("JSON errors", () => {
       ["/api/v1/search", "q=" + "x".repeat(201), 400, "invalid_query"],
       ["/api/v1/projects/Bad_Slug", "", 400, "invalid_slug"],
       ["/api/v1/projects", "limit=99", 400, "invalid_filter"],
+      ["/api/v1/projects", "category=toString", 400, "invalid_filter"],
+      ["/api/v1/projects", "type=constructor", 400, "invalid_filter"],
       ["/api/v1/compare", "slugs=one", 400, "invalid_compare"],
       ["/api/v1/projects", "cursor=nope", 400, "invalid_cursor"],
       ["/api/v1/projects/no-such-project", "", 404, "not_found"],

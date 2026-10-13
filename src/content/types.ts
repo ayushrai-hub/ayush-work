@@ -113,7 +113,8 @@ export type ProjectCategory =
 /**
  * Kind of a /timeline entry. src/pages/TimelinePage.tsx uses it to decide
  * where `TimelineEntry.relatedSlug` links: "project" and "product" link to
- * /work/:slug, the others to their list page, and "life" never links.
+ * /work/:slug or, for a research slug, /research/:slug; the others link to
+ * their list page, and "life" never links.
  */
 export type TimelineKind =
   | "education"
@@ -519,8 +520,8 @@ export interface TimelineEntry {
   title: string;
   summary: string;
   /**
-   * Slug of the related record. For "project" and "product" entries it must
-   * be a `WorkItem` slug, because TimelinePage links it to /work/:slug.
+   * Slug of the related record. For "project" and "product" entries it should
+   * be a `WorkItem` or `ResearchItem` slug; TimelinePage drops the link otherwise.
    */
   relatedSlug?: string;
 }

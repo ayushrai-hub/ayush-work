@@ -1,8 +1,9 @@
 /**
  * Unit tests for the Google Analytics 4 helpers in src/lib/analytics.ts.
  *
- * initGA: logs and returns early when `window` is undefined, and otherwise
- * creates and appends two scripts (the gtag.js loader and the inline config).
+ * initGA: logs and returns early when `window` is undefined, skips injection
+ * when a gtag.js script for the same ID is already present (the index.html
+ * snippet), and otherwise appends two scripts (the loader and the inline config).
  * trackEvent: is a no-op without a global `gtag`, and forwards
  * ('event', name, params) to it when present.
  *
@@ -62,6 +63,20 @@ describe('analytics', () => {
 
       expect(createElementSpy).toHaveBeenCalledWith('script');
       expect(appendChildSpy).toHaveBeenCalledTimes(2);
+      vi.restoreAllMocks();
+    });
+
+    it('skips injection when index.html already loaded gtag.js for the property', () => {
+      const existing = document.createElement('script');
+      existing.src = 'https://www.googletagmanager.com/gtag/js?id=G-VBS0YJ07R8';
+      document.head.appendChild(existing);
+      const appendChildSpy = vi.spyOn(document.head, 'appendChild');
+
+      initGA();
+
+      expect(appendChildSpy).not.toHaveBeenCalled();
+      appendChildSpy.mockRestore();
+      existing.remove();
     });
   });
 
