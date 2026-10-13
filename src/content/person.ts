@@ -1,5 +1,5 @@
 /**
- * Public identity of Ayush Rai: name, contact email, role lines, canonical URL, resume links and profile URLs.
+ * Public identity of Ayush Rai: name, contact email and phone, role lines, canonical URL, resume links and profile URLs.
  *
  * A single `person` object. Other content modules interpolate it (for example
  * policies.ts uses the email and reply time), and `siteUrl` is the canonical
@@ -19,17 +19,17 @@ import type { Person } from "./types";
 /**
  * The site owner's public identity record.
  *
- * Phone numbers must never appear on public pages or in machine-readable
- * output: `phone` and `phoneDisplay` stay empty, and
- * src/__tests__/agentSurfaces.test.ts fails if they are filled.
+ * `phone`, `phoneDisplay`, and `whatsappUrl` are published on purpose. They are the only
+ * phone number allowed in public output; src/__tests__/publicOutput.test.ts fails on any other.
  */
 export const person: Person = {
   name: "Ayush Rai",
   shortName: "Ayush",
   location: "Remote",
   email: "ayushrai0211@gmail.com",
-  phone: "",
-  phoneDisplay: "",
+  phone: "+917440567944",
+  phoneDisplay: "+91 7440567944",
+  whatsappUrl: "https://wa.me/917440567944",
   responseTime: "<24 hrs",
   roleTitle: "AI Engineer & AI Product Builder",
   tagline:

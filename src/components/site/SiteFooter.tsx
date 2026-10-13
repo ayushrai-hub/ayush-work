@@ -1,5 +1,5 @@
 /**
- * Site-wide footer: one-line positioning, footer navigation, email, location, and freshness dates.
+ * Site-wide footer: one-line positioning, footer navigation, email, phone, location, and freshness dates.
  *
  * Stateless. The opening line is `person.footerLine`, a dedicated field rather than a cut of
  * `person.positioning`, so abbreviations or version numbers in the positioning cannot truncate it.
@@ -56,6 +56,10 @@ export default function SiteFooter() {
         <div className="mt-8 meta-row gap-x-4">
           <a href={`mailto:${person.email}`} className="link-accent">
             {person.email}
+          </a>
+          <span aria-hidden="true">·</span>
+          <a href={`tel:${person.phone}`} className="link-accent">
+            {person.phoneDisplay}
           </a>
           <span aria-hidden="true">·</span>
           <span>{person.location}</span>

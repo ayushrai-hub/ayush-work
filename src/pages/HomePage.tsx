@@ -515,6 +515,17 @@ export default function HomePage() {
           <a href={`mailto:${person.email}`} className="btn-primary">
             {person.email}
           </a>
+          <a href={`tel:${person.phone}`} className="btn-secondary">
+            {person.phoneDisplay}
+          </a>
+          <a
+            href={person.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary"
+          >
+            WhatsApp
+          </a>
           <a
             href={person.primaryProfiles.cal}
             target="_blank"

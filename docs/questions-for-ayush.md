@@ -9,7 +9,7 @@ Answer in-line or in a shared doc; then update `content-fact-check.md`.
 
 ## A. Privacy & contact
 
-1. Confirm: **phone must stay private** on the public site (UI, WhatsApp, JSON-LD)?  
+1. ~~Confirm: phone must stay private?~~ Answered 14 October 2026: publish +91 7440567944 everywhere, with a call link and WhatsApp.  
 2. Preferred public contact: email only, or email + LinkedIn, or add a calendar link?  
 3. Is `ayushrai0211@gmail.com` the canonical public email?  
 4. City-level location OK (“Bhopal, India”), or country only?

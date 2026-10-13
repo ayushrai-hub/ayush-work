@@ -3,7 +3,7 @@
  *
  * Category groups drop archived profiles and any profile already shown under Primary; empty
  * groups are hidden. Archived profiles sit behind a toggle (`showArchive` state). Uses its own
- * header markup instead of PageHeader, and no phone numbers are listed.
+ * header markup instead of PageHeader.
  *
  * Connects to:
  * - Routed in src/App.tsx as `elsewhere`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
@@ -67,7 +67,7 @@ export default function ElsewherePage() {
     <>
       <PageSEO
         title="Elsewhere"
-        description="Profiles across code, research, writing, and community, no phone numbers."
+        description="Profiles across code, research, writing, and community."
         path="/elsewhere"
       />
       <div className="site-shell py-10 md:py-14">

@@ -1,5 +1,6 @@
 /**
- * `/contact`: contact page with an intent picker, a message form, and direct email/Calendly links.
+ * `/contact`: contact page with an intent picker, a message form, and direct email, phone, WhatsApp,
+ * and Calendly links.
  *
  * Keeps form state locally (intent, name, email, message, send status). Submitting calls
  * `EmailService.sendContactEmail` (src/lib/emailService.ts), which POSTs JSON to `/api/send-email`;
@@ -102,6 +103,19 @@ export default function ContactPage() {
             Direct email always works:{" "}
             <a href={`mailto:${person.email}`} className="link-accent">
               {person.email}
+            </a>
+            . Phone:{" "}
+            <a href={`tel:${person.phone}`} className="link-accent">
+              {person.phoneDisplay}
+            </a>
+            , or message me on{" "}
+            <a
+              href={person.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-accent"
+            >
+              WhatsApp
             </a>
             . For a scheduled call, use{" "}
             <a

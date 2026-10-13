@@ -591,7 +591,7 @@ export const domains: DomainRecord[] = [
       {
         heading: "How I try to keep the software honest",
         paragraphs: [
-          "Stage labels live in one module so a page cannot quietly upgrade itself. Public pages and Markdown twins read the same content records. Phone numbers and withheld award claims are omitted from machine-readable output as well as from the HTML.",
+          "Stage labels live in one module so a page cannot quietly upgrade itself. Public pages and Markdown twins read the same content records. Withheld award claims are omitted from machine-readable output as well as from the HTML.",
           "For client work, the outcome I will write down is the one in the case study. Iha by Himani is a responsive studio site. An older '300% inquiries' line was unverified and is not used.",
         ],
       },
@@ -711,7 +711,7 @@ export const domains: DomainRecord[] = [
       {
         href: "/contact",
         label: "Contact",
-        note: "Email and Calendly. No phone number on the public site.",
+        note: "Email, phone, WhatsApp, and Calendly.",
       },
     ],
     related: [

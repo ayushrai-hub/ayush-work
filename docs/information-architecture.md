@@ -121,7 +121,7 @@ Single page, clear sections (anchor IDs, not separate thin routes):
 - Keep contact form if deliverability works.  
 - Optional: calendar link later.  
 - Collaboration framing: what kinds of problems are interesting; what is out of scope.  
-- **No phone, no WhatsApp with number, no pricing table.**
+- **No pricing table.** Phone and WhatsApp are public since 14 October 2026 (`person.phone`).
 
 ---
 
@@ -134,7 +134,7 @@ Single page, clear sections (anchor IDs, not separate thin routes):
 
 ### Secondary (footer)
 
-Elsewhere · Privacy note (no phone) · Source / colophon optional · Theme toggle if retained  
+Elsewhere · Privacy note · Source / colophon optional · Theme toggle if retained  
 
 ### Kill
 

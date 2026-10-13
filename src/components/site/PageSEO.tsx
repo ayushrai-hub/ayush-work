@@ -3,7 +3,7 @@
  *
  * Title is `<title> · Ayush Rai`, or `Ayush Rai · <person.roleTitle>` when no title is passed
  * (the homepage). Description and image fall back to `defaultSEO`; relative images are made
- * absolute against `person.siteUrl`. The Person node's image is `person.portrait`. The canonical comes from `canonicalUrl(path)`, which adds a
+ * absolute against `person.siteUrl`. The Person node's image is `person.portrait` and its telephone is `person.phone`. The canonical comes from `canonicalUrl(path)`, which adds a
  * trailing slash to non-root paths. With `personSchema`, emits one `@graph` holding WebSite,
  * Person, and ProfilePage nodes linked by `@id`; `jsonLd` adds a second, page-specific script.
  * Tags are written through react-helmet-async, so the prerender (entry-server) captures them too.
@@ -73,6 +73,7 @@ export default function PageSEO({
             name: person.name,
             url: canonicalUrl("/"),
             email: person.email,
+            telephone: person.phone,
             jobTitle: person.roleTitle,
             description: person.tagline,
             image: absoluteUrl(person.portrait),

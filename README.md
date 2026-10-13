@@ -60,7 +60,7 @@ Every source file starts with a header comment that says what the module is for,
 
 ### Legacy code
 
-The previous single-page portfolio's components, their tests, and the packages only they used (three.js, chart.js, framer-motion, web-vitals, and others) were removed from `main`. The old site is preserved on branch [`archive/portfolio-spa-2026`](https://github.com/ayushrai-hub/ayush-work/tree/archive/portfolio-spa-2026) and tag `legacy-portfolio-spa` ([`docs/preserving-old-site.md`](docs/preserving-old-site.md)). Some of those files contain a phone number and withheld claims, so do not copy them back without review. Deleting them from `main` does not remove them from git history.
+The previous single-page portfolio's components, their tests, and the packages only they used (three.js, chart.js, framer-motion, web-vitals, and others) were removed from `main`. The old site is preserved on branch [`archive/portfolio-spa-2026`](https://github.com/ayushrai-hub/ayush-work/tree/archive/portfolio-spa-2026) and tag `legacy-portfolio-spa` ([`docs/preserving-old-site.md`](docs/preserving-old-site.md)). Some of those files contain withheld claims, so do not copy them back without review. Deleting them from `main` does not remove them from git history.
 
 ## Routes
 
@@ -74,7 +74,7 @@ The previous single-page portfolio's components, their tests, and the packages o
 | `/writing`, `/writing/:slug`, `/notes`, `/notes/:slug` | Publication surface |
 | `/ai-engineering`, `/software-engineering`, `/software-services`, `/experience`, `/open-source` (and sub-pages) | Evidence dossiers from `src/content/domains.ts` |
 | `/now`, `/ideas`, `/principles`, `/uses`, `/archive`, `/resume` | Status, thinking, tools |
-| `/elsewhere`, `/contact`, `/privacy` | Profiles (no phone), contact form, privacy |
+| `/elsewhere`, `/contact`, `/privacy` | Profiles, contact form with email, phone, and WhatsApp, privacy |
 | `/developers` | Public guide to Markdown, the API, and MCP |
 | `/design-system` | Internal tokens (prerendered, `noindex`, not in the sitemap) |
 
@@ -112,7 +112,7 @@ In `docs/`: `known-issues.md` (open issues and suggested fixes), `site-audit.md`
 
 ## Privacy
 
-Public pages and machine-readable output never include phone numbers. Unconfirmed awards and leadership claims stay in the `*NeedsConfirmation` lists in `src/content/` and are not published. Contact is by email or Calendly.
+The phone number in `src/content/person.ts` is published on purpose (contact page, footer, JSON-LD, Markdown, `llms.txt`); a test fails if any other number appears. Unconfirmed awards and leadership claims stay in the `*NeedsConfirmation` lists in `src/content/` and are not published. Contact is by email, phone, WhatsApp, or Calendly.
 
 ## Design direction
 
