@@ -1,40 +1,20 @@
 /**
- * Projects.tsx, Featured projects showcase component with live demos and technologies.
+ * Legacy featured-projects grid: six project cards with image, tags, two features, Code/Demo links, and summary counters.
  *
- * This comprehensive component displays Ayush Rai's key projects through an interactive
- * card-based layout featuring project descriptions, technologies used, key features, and
- * live demo links. Includes responsive grid design with smooth animations and achievement
- * metrics. Projects span multiple domains including web development, AI, and community platforms.
+ * Legacy: not imported by the current site (src/App.tsx routes /projects and
+ * /work to src/pages components that read src/content/). Kept for reference;
+ * excluded from tsconfig.app.json. Covered only by
+ * src/__tests__/legacy/Projects.test.tsx, which Vitest excludes.
  *
- * The component includes:
- * - Featured project cards with images and descriptions
- * - Technology stack visualization per project
- * - Live demo and code repository links
- * - Key features and impact metrics
- * - Responsive grid adapting to screen sizes
- * - Professional project statistics
+ * Project data is hard-coded. Five cards use images bundled from src/assets/;
+ * the first uses a remote Pexels URL. The counters ("10+ Projects", "100%
+ * Success", "24/7 Support") and impact figures are unverified and are not
+ * repeated by the current site.
  *
- * Projects showcased:
- * - Overlay Text Box Extension (Browser Extension)
- * - Personal Portfolio Website (Web Development)
- * - Expert-O (AI Innovation Platform)
- * - Shiksha-Mitra (Community Education Platform)
- * - Iha-By-Himani Art Studio Website (Web Design)
- * - Praful H. Professional Website (Enterprise Portfolio & Leadership)
- *
- * @component
- * @example
- * ```tsx
- * import Projects from './components/Projects';
- *
- * function App() {
- *   return <Projects />;
- * }
- * ```
- *
- * @see {@link src/components/Skills.tsx} for technologies overview
- * @see {@link src/components/Experience.tsx} for project context
- * @see {@link src/assets/} for project images
+ * Connects to:
+ * - No importers in src/
+ * - src/assets/ (porfolio.jpeg, experto.jpeg, shikshMitra.png, ihabyhimani.jpeg, prafful.png)
+ * - framer-motion, react-intersection-observer, react-countup, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -54,21 +34,9 @@ import ihabyhimaniImage from "../assets/ihabyhimani.jpeg";
 import prafulImage from "../assets/prafful.png";
 
 /**
- * Projects, Featured projects portfolio showcase component.
- *
- * Renders an interactive project portfolio with detailed project cards,
- * technology stacks, live demos, and achievement metrics. Provides comprehensive
- * overview of development capabilities across multiple domains and technologies.
- *
- * @component
- * @returns {JSX.Element} The rendered Projects section
- *
- * @example
- * ```tsx
- * <Projects />
- * ```
- *
- * @see {@link src/lib/analytics.ts} for portfolio tracking
+ * Renders `<section id="projects">`. Each card shows the first four
+ * technologies and first two features; `impact` is defined but not rendered.
+ * No analytics events are sent from this component.
  */
 const Projects: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

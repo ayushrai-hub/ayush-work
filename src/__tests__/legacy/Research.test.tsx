@@ -1,6 +1,23 @@
+/**
+ * Legacy tests for the old Research section (project titles, awards list, two h2 headings).
+ *
+ * Renders <Research /> with no providers. The award titles it expects are listed in
+ * `researchAwardsNeedsConfirmation` in src/content/research.ts, so the current site
+ * withholds them; this suite only reflects what the legacy component hard-codes.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Research'
+ * import resolves to src/__tests__/components/Research, which does not exist; the component
+ * is src/components/Research.tsx, itself unused by the current site (/research renders
+ * src/pages/ResearchPage.tsx). Assertions have not been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Research.tsx (intended target)
+ */
 import { render } from '@testing-library/react';
 import Research from '../components/Research';
 
+/** Static content and heading count of the Research section. */
 describe('Research Component', () => {
   it('renders without crashing', () => {
     const { container } = render(<Research />);
@@ -24,6 +41,6 @@ describe('Research Component', () => {
   it('has accessible markup for headings', () => {
     const { getAllByRole } = render(<Research />);
     const headings = getAllByRole('heading', { level: 2 });
-    expect(headings).toHaveLength(2); // Research Projects and Awards & Achievements
+    expect(headings).toHaveLength(2);
   });
 });

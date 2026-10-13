@@ -1,3 +1,15 @@
+/**
+ * Tests the product build-log page's empty state for a product with no dated log entries.
+ *
+ * Partially mocks src/content so getProductBySlug("empty-log-fixture") returns a
+ * copy of the first product with an empty `log` and no links, while all other
+ * slugs resolve normally. Renders /products/empty-log-fixture/log and checks the
+ * h1, the "No verified build-log entries yet" message, and that no list renders.
+ *
+ * Connects to:
+ * - src/pages/ProductLogPage.tsx
+ * - src/content (products, getProductBySlug)
+ */
 import { render, screen } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -26,6 +38,7 @@ vi.mock("../content", async () => {
   };
 });
 
+/** Empty-state copy for /products/:slug/log when a product has no log entries. */
 describe("empty product build log", () => {
   it("explains that dates are withheld until a record exists", () => {
     render(

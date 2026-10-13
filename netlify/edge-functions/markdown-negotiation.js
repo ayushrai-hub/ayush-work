@@ -1,9 +1,19 @@
 /**
- * Production content negotiation. Netlify redirect Accept conditions did not
- * fire on the live host (the homepage still returned HTML). This runs only
- * when the client asks for Markdown and does not also ask for HTML.
- * Mirrors negotiateMarkdown in src/lib/agent/surfaces.ts and unknownApiResponse in
- * src/lib/agent/apiRoutes.ts, which Deno cannot import. Tests compare the two.
+ * Netlify Edge Function: JSON 404s for unknown `/api` paths and Markdown content negotiation for pages.
+ *
+ * Unknown `/api/*` paths get a JSON `route_not_found` 404. For GET/HEAD page requests whose Accept
+ * header includes `text/markdown` but not `text/html`, it fetches the deployed `<path>.md` twin (or
+ * `/index.md` for `/`) and returns it as Markdown. With no twin, an existing HTML page (for example
+ * `/design-system`) passes through unchanged; a 404 becomes a Markdown 404 from `/404.md`. Everything
+ * else calls `context.next()`. The Accept-conditioned redirects in netlify.toml did not take effect on
+ * the live host, which is why this function exists.
+ *
+ * Connects to:
+ * - netlify.toml `[[edge_functions]]` binds it to `/*`. Vercel uses middleware.ts instead.
+ * - Plain JS copy of negotiateMarkdown (src/lib/agent/surfaces.ts) and unknownApiResponse /
+ *   isKnownApiPath (src/lib/agent/apiRoutes.ts), because the Deno edge runtime cannot import those
+ *   TS sources. src/__tests__/agentReadiness.test.ts checks that API_ROUTES and isKnownApiPath match
+ *   the TS versions and that misses return JSON; the Markdown branch is not compared.
  */
 const MARKDOWN_HEADERS = {
   "Content-Type": "text/markdown; charset=utf-8",
@@ -13,6 +23,7 @@ const MARKDOWN_HEADERS = {
 
 const NON_PAGE_PREFIXES = ["/api/", "/.netlify/", "/.well-known/", "/assets/"];
 
+/** Known API paths. Must stay identical to API_ROUTES in src/lib/agent/apiRoutes.ts (test-enforced). */
 export const API_ROUTES = [
   "/api/search",
   "/api/projects",
@@ -29,11 +40,13 @@ const PROJECT_DETAIL = /^\/api\/v1\/projects\/[^/]+$/;
 const FALLBACK_NOT_FOUND =
   "# Page not found\n\nThere is no page at this address. See https://www.ayushrai.site/llms.txt for every page.\n";
 
+/** True for a listed API route or `/api/v1/projects/{slug}`; one trailing slash is ignored. */
 export function isKnownApiPath(pathname) {
   const path = pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
   return API_ROUTES.includes(path) || PROJECT_DETAIL.test(path);
 }
 
+/** JSON `route_not_found` 404 in the shared API error shape (`{ error: { code, message, hint, docs } }`). */
 function apiNotFound(pathname) {
   const body = {
     error: {
@@ -54,6 +67,7 @@ function apiNotFound(pathname) {
   });
 }
 
+/** Markdown response with the twin headers; HEAD requests get headers only. */
 function markdown(request, body, status) {
   return new Response(request.method === "HEAD" ? null : body, {
     status,
@@ -61,6 +75,7 @@ function markdown(request, body, status) {
   });
 }
 
+/** Edge entry. `context.next()` continues to Netlify's redirects, static files, and functions. */
 export default async function handler(request, context) {
   const url = new URL(request.url);
   const pathname = url.pathname;

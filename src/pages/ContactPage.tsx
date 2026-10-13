@@ -1,3 +1,20 @@
+/**
+ * `/contact`: contact page with an intent picker, a message form, and direct email/Calendly links.
+ *
+ * Keeps form state locally (intent, name, email, message, send status). Submitting calls
+ * `EmailService.sendContactEmail` (src/lib/emailService.ts), which POSTs JSON to `/api/send-email`;
+ * that function (api/send-email.ts -> src/lib/server/contactEmail.ts) delivers it via SendGrid.
+ * The selected intent sets the email subject and `service` label. "Open mail app" builds a
+ * `mailto:` link from the same subject and current message, so it works without the API.
+ * The policy sections below the form come from `contactSections`.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `contact` (legacy `/services` redirects here); prerendered via
+ *   STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`person`, `contactSections`, `pageUpdatedAt("contact")`); components
+ *   PageSEO, PageHeader, Prose, SectionHeading.
+ * - Markdown twin `/contact.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
@@ -7,6 +24,7 @@ import SectionHeading from "../components/editorial/SectionHeading";
 import { contactSections, pageUpdatedAt, person } from "../content";
 import EmailService from "../lib/emailService";
 
+/** Intent options shown as a radio group. `subject` becomes the email subject; `label` is sent as `service`. */
 const INTENTS = [
   { id: "work", label: "Work opportunity", subject: "Work opportunity" },
   { id: "product", label: "Product", subject: "Product conversation" },
@@ -17,8 +35,10 @@ const INTENTS = [
   { id: "hello", label: "Hello", subject: "Hello" },
 ] as const;
 
+/** Union of the `id` values in `INTENTS`. */
 type IntentId = (typeof INTENTS)[number]["id"];
 
+/** Contact page component. Lazy-loaded by the `contact` route in src/App.tsx. */
 export default function ContactPage() {
   const [intent, setIntent] = useState<IntentId>("hello");
   const [name, setName] = useState("");
@@ -29,12 +49,14 @@ export default function ContactPage() {
   );
   const [statusMsg, setStatusMsg] = useState("");
 
+  // INTENTS[6] is the "hello" entry; the fallback assumes that array order.
   const selected = INTENTS.find((i) => i.id === intent) ?? INTENTS[6];
 
   const mailtoHref = `mailto:${person.email}?subject=${encodeURIComponent(
     selected.subject
   )}${message ? `&body=${encodeURIComponent(message)}` : ""}`;
 
+  /** Sends the form through `/api/send-email`. Clears the message on success; shows the server message either way. */
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setStatus("sending");

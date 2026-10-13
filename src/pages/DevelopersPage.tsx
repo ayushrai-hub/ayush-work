@@ -1,3 +1,18 @@
+/**
+ * `/developers`: developer documentation for the public REST API and MCP server.
+ *
+ * Renders `developerSections()` from src/lib/agent/developerDocs.ts, the same sections the
+ * Markdown twin uses, so the HTML and `/developers.md` cannot drift. Backtick spans in those
+ * paragraphs become `<code>` via `withCode`. A fixed resource list links the machine-readable
+ * discovery files (OpenAPI, API catalog, MCP Server Card, AI Catalog, llms.txt, AGENTS.md, SKILL.md).
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `developers`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`pageUpdatedAt("developers")`) and src/lib/agent/developerDocs.ts
+ *   (`DEVELOPER_TITLE`, `DEVELOPER_DESCRIPTION`, `developerSections`); components PageSEO,
+ *   PageHeader, Prose, SectionHeading.
+ * - Markdown twin `/developers.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
@@ -10,12 +25,14 @@ import {
   developerSections,
 } from "../lib/agent/developerDocs";
 
+/** Splits on backticks and wraps every odd segment in `<code>`. An unmatched backtick codes the rest of the string. */
 function withCode(text: string) {
   return text.split("`").map((part, index) =>
     index % 2 === 1 ? <code key={index}>{part}</code> : part,
   );
 }
 
+/** Discovery and agent files served by the site or API. Plain `<a>` links because they are not SPA routes. */
 const RESOURCES = [
   { href: "/openapi.json", label: "OpenAPI spec" },
   { href: "/.well-known/api-catalog", label: "API catalog" },
@@ -27,6 +44,7 @@ const RESOURCES = [
   { href: "/developers.md", label: "This page as Markdown" },
 ] as const;
 
+/** Developers page component. Lazy-loaded by the `developers` route in src/App.tsx. */
 export default function DevelopersPage() {
   return (
     <>

@@ -1,3 +1,18 @@
+/**
+ * The set of generated agent files, and the rule for when a page request gets Markdown.
+ *
+ * `agentFiles()` maps output file names to contents: `llms.txt`, `llms-full.txt`, `openapi.json`,
+ * `404.md`, the `.well-known` discovery documents, and one `.md` twin per page. `negotiateMarkdown`
+ * decides, for an extensionless page path, whether to answer with the twin, a Markdown 404, or
+ * the normal HTML.
+ *
+ * Connects to:
+ * - `vitePlugin.ts` emits `agentFiles()` into the build and serves both functions in dev and preview.
+ * - `markdownMiddleware.ts` (Vercel root `middleware.ts`) calls `negotiateMarkdown`.
+ *   `netlify/edge-functions/markdown-negotiation.js` reimplements the same rule for Netlify.
+ * - Depends on `markdown.ts`, `apiCatalog.ts`, `mcpCard.ts`, `openapi.ts`, and `prerenderRoutes()`
+ *   in `src/lib/publicRoutes.ts`.
+ */
 import { prerenderRoutes } from "../publicRoutes";
 import { API_CATALOG_PATH, buildApiCatalog } from "./apiCatalog";
 import { AI_CATALOG_PATH, buildAiCatalog, LEGACY_SERVER_CARD_PATH, serverCardJson } from "./mcpCard";
@@ -12,18 +27,27 @@ import {
   sitePathFromRequest,
 } from "./markdown";
 
+/** Headers for every negotiated Markdown response. `Vary: Accept` keeps caches from mixing HTML and Markdown. */
 export const MARKDOWN_HEADERS = {
   "Content-Type": "text/markdown; charset=utf-8",
   Vary: "Accept",
   "X-Content-Type-Options": "nosniff",
 } as const;
 
+/**
+ * True when `Accept` mentions `text/markdown` and does not mention `text/html`. Browsers
+ * send `text/html` on page loads, so they keep getting HTML. Quality values are not parsed.
+ */
 export function wantsMarkdown(accept: string | undefined): boolean {
   if (!accept) return false;
   if (!accept.toLowerCase().includes("text/markdown")) return false;
   return !accept.toLowerCase().includes("text/html");
 }
 
+/**
+ * Every generated agent file, keyed by output path relative to the site root (no leading slash).
+ * Recomputes the JSON documents on each call; the page twins come from the cached page list.
+ */
 export function agentFiles(): Record<string, string> {
   const files: Record<string, string> = {
     "llms.txt": renderLlmsTxt(),
@@ -41,6 +65,7 @@ export function agentFiles(): Record<string, string> {
   return files;
 }
 
+/** Twin for a raw request path (with or without `.md`), or null when there is none or the path cannot be decoded. */
 export function markdownForRequestPath(urlPath: string): string | null {
   let sitePath: string | null;
   try {
@@ -52,16 +77,19 @@ export function markdownForRequestPath(urlPath: string): string | null {
   return renderPageMarkdown(sitePath);
 }
 
+/** Paths that are never pages, so negotiation leaves them to the host. */
 const NON_PAGE_PREFIXES = ["/api/", "/_vercel/", "/.netlify/", "/.well-known/", "/assets/"];
 
 let htmlRoutes: Set<string> | null = null;
 
+/** True when the build prerenders an HTML file for this path (trailing slashes ignored). */
 function hasHtmlPage(pathname: string): boolean {
   if (!htmlRoutes) htmlRoutes = new Set(prerenderRoutes());
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
   return htmlRoutes.has(path);
 }
 
+/** A Markdown answer: the twin with 200, or the Markdown 404 page with 404. */
 export interface MarkdownNegotiation {
   status: 200 | 404;
   body: string;
@@ -70,6 +98,8 @@ export interface MarkdownNegotiation {
 /**
  * Markdown for an extensionless page request that asked for it, or null to serve the host's
  * normal response. Pages with HTML but no Markdown twin, such as /design-system, stay HTML.
+ * Paths with a file extension and the `NON_PAGE_PREFIXES` are skipped. A path with neither a
+ * twin nor an HTML page gets the Markdown 404 body.
  */
 export function negotiateMarkdown(
   pathname: string,

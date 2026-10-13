@@ -1,9 +1,26 @@
+/**
+ * `/products/:slug/log`: dated build log for one product, newest entry first.
+ *
+ * Looks up the product with `getProductBySlug`. An unknown slug renders an inline "Log not
+ * found" message with no PageSEO. Entries are copied and sorted by `date` descending (string
+ * compare, so dates must be ISO-formatted). An empty log shows a note explaining that entries
+ * need a dated record; the page is still indexable in that case.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `products/:slug/log`. src/lib/publicRoutes.ts prerenders the log
+ *   for every product but lists only non-empty logs in the sitemap. ProductDetailPage and
+ *   ProductsPage link here.
+ * - Content from src/content (`getProductBySlug`); components PageSEO, PageHeader, Prose.
+ * - Markdown twin `/products/<slug>/log.md` built by `productLogPage()` in src/lib/agent/markdown.ts
+ *   (generated for every product, including empty logs).
+ */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import { getProductBySlug } from "../content";
 
+/** Product build log component. Lazy-loaded by the `products/:slug/log` route in src/App.tsx. */
 export default function ProductLogPage() {
   const { slug } = useParams<{ slug: string }>();
   const product = slug ? getProductBySlug(slug) : undefined;

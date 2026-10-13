@@ -1,9 +1,23 @@
+/**
+ * `/writing`: writing index. Lists on-site pieces when any exist, otherwise the external
+ * writing hubs with a pointer to Medium.
+ *
+ * Static render; no state. When `onSiteWriting` is empty, shows EmptyNote and the Medium link,
+ * then lists `writing`. Entries with `url` link out in a new tab; others link to `/writing/:slug`.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `writing`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`writing`, `onSiteWriting`, `person`); components PageSEO,
+ *   PageHeader, EmptyNote.
+ * - Markdown twin `/writing.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import EmptyNote from "../components/editorial/EmptyNote";
 import { onSiteWriting, person, writing } from "../content";
 
+/** Writing index component. Lazy-loaded by the `writing` route in src/App.tsx. */
 export default function WritingPage() {
   const hasOnSite = onSiteWriting.length > 0;
 

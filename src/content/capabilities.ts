@@ -1,7 +1,20 @@
+/**
+ * Capability map: five skill domains, each with a summary and named skills backed by evidence slugs.
+ *
+ * Each skill lists `evidenceSlugs` from other modules (work, products,
+ * projects, research, experience, leadership, ideas, principles). Pages and
+ * Markdown currently show only the skill names; the slugs are not rendered.
+ *
+ * Connects to:
+ * - AboutPage (capabilities section, anchors /about#capability-<domain>).
+ * - Markdown twin /about.md; search items of type "capability".
+ * - Uses `Capability` from types.ts.
+ */
 import type { Capability } from "./types";
 
 /**
- * Capability map, skills linked to work / product / experience slugs as evidence.
+ * Capability map. Skills cite evidence by slug from work, products, projects,
+ * research, experience, leadership, ideas and principles.
  */
 export const capabilities: Capability[] = [
   {

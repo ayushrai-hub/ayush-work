@@ -1,5 +1,18 @@
 /**
- * App component smoke test, new SiteLayout shell.
+ * Smoke test that the full App renders the current SiteLayout shell at "/".
+ *
+ * Renders <App /> inside ThemeProvider and HelmetProvider, as src/main.tsx does,
+ * and checks for a <main> landmark, the brand name, the "Remote" location from
+ * src/content/person.ts, the footer's "continuously evolving" line from
+ * src/components/site/SiteFooter.tsx, and that the old "Bhopal" location is gone.
+ *
+ * Mocks: GTMProvider becomes a pass-through; BrowserRouter (used inside
+ * src/App.tsx) is swapped for MemoryRouter so the test starts at "/"; and
+ * framer-motion is replaced locally, although the current App tree does not import it.
+ *
+ * Connects to:
+ * - src/App.tsx, src/contexts/ThemeContext.tsx, src/components/site/*
+ * - src/setupTests.ts (Helmet pass-through and other global mocks)
  */
 import { render, screen, waitFor } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
@@ -47,6 +60,7 @@ vi.mock("framer-motion", () => ({
   useReducedMotion: () => true,
 }));
 
+/** Renders the whole application once and checks shell content that every page shares. */
 describe("App", () => {
   const renderApp = () =>
     render(
@@ -62,7 +76,7 @@ describe("App", () => {
     await waitFor(() => {
       expect(screen.getByRole("main")).toBeInTheDocument();
     });
-    // Logo / brand in header + footer positioning
+    // Brand text appears in the header and footer; location comes from src/content/person.ts.
     expect(screen.getAllByText("Ayush Rai").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Remote").length).toBeGreaterThanOrEqual(1);
     expect(screen.queryByText(/Bhopal/i)).not.toBeInTheDocument();

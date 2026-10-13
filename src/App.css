@@ -1,1 +1,6 @@
-/* Legacy App.css retained as a thin shim, design tokens live in index.css */
+/**
+ * Empty legacy stylesheet kept so the existing import resolves; it defines no rules.
+ *
+ * Connects to:
+ * - Imported by src/main.tsx after src/index.css, which holds the design tokens and component classes.
+ */

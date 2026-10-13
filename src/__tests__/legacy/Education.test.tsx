@@ -1,6 +1,21 @@
+/**
+ * Legacy tests for the old Education section (degrees, institutions, grades, coursework, degree types).
+ *
+ * Renders <Education /> with no providers and checks static copy and the h2.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Education'
+ * import resolves to src/__tests__/components/Education, which does not exist; the
+ * component is src/components/Education.tsx, itself unused by the current site.
+ * Assertions have not been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Education.tsx (intended target)
+ */
 import { render } from '@testing-library/react';
 import Education from '../components/Education';
 
+/** Static content of the Education section. */
 describe('Education Component', () => {
   it('renders without crashing', () => {
     const { container } = render(<Education />);

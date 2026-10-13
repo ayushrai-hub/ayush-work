@@ -1,3 +1,16 @@
+/**
+ * Shared shell for every route: skip link, header, main#main, footer, search dialog, and WebMCP registration.
+ *
+ * Owns the search dialog's open state and registers global shortcuts: Cmd/Ctrl+K opens search
+ * from anywhere, including inside inputs; "/" opens it only when focus is not in an editable
+ * field. When the URL has `?agent=1`, <main> renders AgentView (the route's Markdown twin)
+ * instead of the matched page via <Outlet />.
+ *
+ * Connects to:
+ * - Used as the parent layout route in App.tsx (AppRoutes), for both the browser app and the
+ *   entry-server prerender
+ * - Renders SkipLink, SiteHeader, SiteFooter, SearchDialog, AgentView, and PortfolioWebMcp
+ */
 import { useCallback, useEffect, useState } from "react";
 import { Outlet, useSearchParams } from "react-router-dom";
 import SkipLink from "./SkipLink";
@@ -7,6 +20,7 @@ import SearchDialog from "./SearchDialog";
 import AgentView from "./AgentView";
 import PortfolioWebMcp from "./PortfolioWebMcp";
 
+/** Layout route component; `searchOpen` is the SearchDialog state, `agentView` mirrors `?agent=1`. */
 export default function SiteLayout() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [params] = useSearchParams();

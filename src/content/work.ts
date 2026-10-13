@@ -1,8 +1,28 @@
+/**
+ * Case studies under /work/:slug: problem, context, role, thinking, execution, outcome and lessons for each piece of work.
+ *
+ * `work` holds every case study; `selected: true` marks the ones featured on
+ * the homepage. Projects and products point here through `relatedWorkSlug`.
+ * Unverified impact metrics are softened or omitted, and the claims behind
+ * them are recorded per item in `needsConfirmation`.
+ *
+ * Connects to:
+ * - WorkPage, WorkDetailPage, HomePage (`selectedWork`, re-ordered for the
+ *   "Role view" by src/lib/agent/audiences.ts) and
+ *   src/components/editorial/WorkRow.tsx.
+ * - Markdown twins /work.md and /work/:slug.md; /index.md and llms.txt list
+ *   `selectedWork`; search items of type "work"; sitemap and prerender routes
+ *   in src/lib/publicRoutes.ts.
+ * - `getWorkBySlug` resolves project `relatedWorkSlug` links in search and in
+ *   the REST API / MCP records (src/lib/agent/projectsQuery.ts).
+ * - Uses `WorkItem` from types.ts.
+ */
 import type { WorkItem } from "./types";
 
 /**
- * Selected work case studies, rewrite of older generic portfolio copy.
- * Soften or omit unverified impact metrics.
+ * All case studies, in display order. Soften or omit unverified impact
+ * metrics. Per-item `needsConfirmation` entries appear on the HTML detail page
+ * as caveats and are left out of the Markdown twin.
  */
 export const work: WorkItem[] = [
   {
@@ -360,8 +380,13 @@ export const work: WorkItem[] = [
   },
 ];
 
+/** Case studies with `selected: true`: the homepage, /index.md and llms.txt "Case studies" list. */
 export const selectedWork = work.filter((w) => w.selected);
 
+/**
+ * Look up a case study by slug. Used by WorkDetailPage, and by search and
+ * projectsQuery.ts to decide whether a project links to /work/:slug.
+ */
 export function getWorkBySlug(slug: string): WorkItem | undefined {
   return work.find((w) => w.slug === slug);
 }

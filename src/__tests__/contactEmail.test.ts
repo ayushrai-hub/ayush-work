@@ -1,5 +1,21 @@
+/**
+ * Unit tests for the framework-neutral contact handler behind the /api/send-email function.
+ *
+ * Verifies that OPTIONS returns 200 without sending, that an invalid email
+ * returns 400 "Invalid email format" without sending, and that a valid POST
+ * sets the SendGrid key from SENDGRID_API_KEY and sends to CONTACT_EMAIL from
+ * FROM_EMAIL with the visitor as reply-to.
+ *
+ * SendGrid is replaced by hoisted spies so no network call is made; env vars
+ * are stubbed per test and restored afterwards.
+ *
+ * Connects to:
+ * - src/lib/server/contactEmail.ts (`handleContactEmail`)
+ * - @sendgrid/mail (mocked here and also, more loosely, in src/setupTests.ts)
+ */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+// vi.hoisted makes the spies available inside the hoisted vi.mock factory below.
 const sendGrid = vi.hoisted(() => ({
   setApiKey: vi.fn(),
   send: vi.fn(),
@@ -11,6 +27,7 @@ vi.mock("@sendgrid/mail", () => ({
 
 import { handleContactEmail } from "../lib/server/contactEmail";
 
+/** Preflight, validation rejection, and successful send through handleContactEmail. */
 describe("contact email service", () => {
   beforeEach(() => {
     vi.clearAllMocks();

@@ -1,3 +1,16 @@
+/**
+ * Builds the MCP server and its four read-only tools over the public project and search records.
+ *
+ * Tools: `list_projects`, `get_project`, `compare_projects`, and `search_portfolio`. Each calls
+ * the same query and validation functions as the REST API, so results match `/api/v1/*`.
+ * Arguments are checked first by each tool's zod `inputSchema` (in the SDK), then by the shared
+ * validators; validator failures and missing records return a tool result with `isError: true`.
+ *
+ * Connects to:
+ * - `mcp/server.ts` (local stdio server) and `mcpHttp.ts` (remote Streamable HTTP via `api/mcp.ts`).
+ * - Depends on `@modelcontextprotocol/sdk`, `zod`, `mcpCard.ts` (server identity), `projectsQuery.ts`,
+ *   `searchTool.ts`, `pagination.ts`, and `validate.ts`.
+ */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { MCP_SERVER_INFO } from "./mcpCard";
@@ -6,17 +19,22 @@ import { comparePublicProjects, getPublicProject, pagePublicProjects } from "./p
 import { executePortfolioSearch } from "./searchTool";
 import { validateProjectCategory, validateProjectType, validateSlug } from "./validate";
 
+/** Tool result whose single text block is `value` as indented JSON. */
 function text(value: unknown) {
   return {
     content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }],
   };
 }
 
+/** Tool result flagged `isError` with a plain-text message, for the model to read and retry. */
 function toolError(message: string) {
   return { isError: true, content: [{ type: "text" as const, text: message }] };
 }
 
-/** Read-only tools over the public project records. Shared by stdio and Streamable HTTP. */
+/**
+ * Read-only tools over the public project records. Shared by stdio and Streamable HTTP.
+ * Returns a new, unconnected server; the caller attaches a transport.
+ */
 export function createPortfolioMcpServer() {
   const server = new McpServer({ ...MCP_SERVER_INFO });
 

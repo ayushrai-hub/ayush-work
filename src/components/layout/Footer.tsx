@@ -1,3 +1,23 @@
+/**
+ * Legacy site footer: brand and primary social icons, quick links, profile links grouped from profilesData, freelance-platform links, and a back-to-top button.
+ *
+ * Legacy: not rendered by the current site, whose footer is
+ * src/components/site/SiteFooter.tsx. Its only importers are the legacy wrappers
+ * in src/components/pages/, which are not routed. Kept for reference; excluded
+ * from tsconfig.app.json. Covered only by src/__tests__/legacy/Footer.test.tsx
+ * and src/__tests__/legacy/Profiles.test.tsx, which Vitest excludes.
+ *
+ * Profiles from src/lib/profilesData.ts are grouped by domain; ids that repeat
+ * a primary social or a bottom-row platform are filtered out. The first two
+ * domain groups fill "Top Platforms" and the rest fill "More Platforms". Every
+ * external click and the back-to-top click push a GTM event through useGTM.
+ * Quick links scroll to old single-page section ids that the current "/" does not render.
+ *
+ * Connects to:
+ * - src/components/pages/*.tsx (legacy, unrouted)
+ * - src/lib/profilesData.ts (`profiles`), src/hooks/useGTM.ts (trackButton, trackExternal)
+ * - react-router-dom (requires a router ancestor), framer-motion, lucide-react
+ */
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -29,21 +49,27 @@ import {
 import { profiles } from '../../lib/profilesData';
 import { useGTM } from '../../hooks/useGTM';
 
+/** Renders the `<footer>`. The copyright year is the hard-coded string 2025. */
 const Footer: React.FC = () => {
   const { trackButton, trackExternal } = useGTM();
   const location = useLocation();
   const navigate = useNavigate();
 
+  /** Sends the `back_to_top` GTM event and smooth-scrolls the window to the top. */
   const scrollToTop = () => {
     trackButton('back_to_top', 'footer');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /** Records an outbound click via useGTM().trackExternal; the anchor itself performs the navigation. */
   const handleExternalLink = (url: string, name: string) => {
     trackExternal(url, name);
   };
 
-  // Handle navigation to sections
+  /**
+   * "/" navigates home; "/#id" scrolls to that id, first navigating to "/" and
+   * waiting a fixed 100ms when on another route.
+   */
   const handleSectionNavigation = (href: string) => {
     if (href === '/') {
       navigate('/');
@@ -69,9 +95,9 @@ const Footer: React.FC = () => {
   };
 
   /**
-   * Gets the appropriate icon component based on the icon name
-   * @param iconName - The name of the icon to retrieve
-   * @returns The React component for the specified icon, or Globe as fallback
+   * Maps a profilesData `icon` name to a lucide icon, defaulting to Globe.
+   * `replace('-', '')` removes only the first hyphen, so the hyphenated keys
+   * ('bar-chart-2', 'book-open', 'edit-3', 'layout-grid') never match and fall back to Globe.
    */
   const getIcon = (iconName: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -364,6 +390,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
           <motion.button
+            // The class list has both `fixed` and `relative`; Tailwind emits `relative` later, so the button is not pinned to the viewport.
             onClick={scrollToTop}
             className="fixed bottom-6 right-6 bg-secondary hover:bg-secondary-600 text-white p-2 rounded-full shadow-lg transition-all duration-300 z-50 relative overflow-hidden group"
             aria-label="Back to top"

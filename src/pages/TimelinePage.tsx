@@ -1,8 +1,27 @@
+/**
+ * `/timeline`: reverse-chronological list of education, roles, projects, products,
+ * leadership, recognition, and life entries.
+ *
+ * Sorts a copy of `timeline` by `date` descending (string compare, so dates must be
+ * ISO-formatted). Entry titles link to a related page via `relatedHref` when the entry has a
+ * `relatedSlug` and its kind maps to a page.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `timeline`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   AboutPage and HomePage link here.
+ * - Content from src/content (`timeline`); components PageSEO, PageHeader.
+ * - Markdown twin `/timeline.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { timeline } from "../content";
 
+/**
+ * Page link for a timeline entry, or null when there is no slug or the kind has no page.
+ * Only project and product kinds use the slug (as `/work/<slug>`), so their slugs must be work
+ * slugs; other kinds link to the list page without an anchor.
+ */
 function relatedHref(kind: string, slug?: string) {
   if (!slug) return null;
   switch (kind) {
@@ -22,6 +41,7 @@ function relatedHref(kind: string, slug?: string) {
   }
 }
 
+/** Timeline page component. Lazy-loaded by the `timeline` route in src/App.tsx. */
 export default function TimelinePage() {
   const sorted = [...timeline].sort((a, b) => b.date.localeCompare(a.date));
 

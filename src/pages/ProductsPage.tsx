@@ -1,3 +1,17 @@
+/**
+ * `/products`: product catalog with flagship products first, then the rest grouped by category.
+ *
+ * Static render; no state. `featuredProducts()` returns products with `featured: true`
+ * (currently three, which the dek text assumes); `otherProductsByCategory()` returns the
+ * remaining products grouped by category, and that block is hidden when it is empty.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `products`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   Links to ProductDetailPage and ProductLogPage.
+ * - Content from src/content (`featuredProducts`, `otherProductsByCategory`, `productStageLabels`,
+ *   `productCategoryLabels`, `pageUpdatedAt("products")`, type `Product`); components PageSEO, PageHeader.
+ * - Markdown twin `/products.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
@@ -10,6 +24,7 @@ import {
   type Product,
 } from "../content";
 
+/** One catalog row: title, stage and category, summary, stage explanation, and detail/live/source/log links. */
 function ProductRow({ product }: { product: Product }) {
   return (
     <li className="border-b border-rule py-6">
@@ -80,6 +95,7 @@ function ProductRow({ product }: { product: Product }) {
   );
 }
 
+/** Products index component. Lazy-loaded by the `products` route in src/App.tsx. */
 export default function ProductsPage() {
   const featured = featuredProducts();
   const groups = otherProductsByCategory();

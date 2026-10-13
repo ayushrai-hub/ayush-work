@@ -1,7 +1,19 @@
+/**
+ * `/education`: full education list with dates, grades, coursework, and notes.
+ *
+ * Static render of `education`; no state. The date/grade line is omitted when a record has none of them.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `education`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ *   AboutPage links here ("Full education list") and TimelinePage links education entries here.
+ * - Content from src/content (`education`); components PageSEO, PageHeader.
+ * - Markdown twin `/education.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { education } from "../content";
 
+/** Education page component. Lazy-loaded by the `education` route in src/App.tsx. */
 export default function EducationPage() {
   return (
     <>

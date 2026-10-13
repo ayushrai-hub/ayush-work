@@ -1,44 +1,17 @@
 /**
- * ExtraCurriculars.tsx, Extracurricular activities and achievements showcase component.
+ * Legacy extracurricular-activities section: category chips, activity cards, and summary stats.
  *
- * This component displays Ayush Rai's extracurricular activities spanning social welfare,
- * performing arts, events organization, and community service. Features categorized
- * activities with detailed descriptions, impact metrics, and skills developed through
- * each initiative. Provides a comprehensive view of personal development outside academics
- * and professional work, showcasing leadership and community engagement.
+ * Legacy: not imported by the live routes in src/App.tsx. Its only importer is
+ * the legacy src/components/pages/ExtraCurricularsPage.tsx, which is itself not
+ * routed. Kept for reference; excluded from tsconfig.app.json. No test covers it.
  *
- * The component includes:
- * - Activity categorization (Events, Social Work, Drama, Leadership)
- * - Impact assessment and measurable outcomes for each activity
- * - Skills development tracking and competency building
- * - Timeline and duration tracking for activities
- * - Verification status and credibility indicators
- * - Community engagement statistics and reach metrics
+ * Activities, category counts, and the "Life Beyond Work" numbers are separate
+ * hard-coded values. The chips are display-only (no filtering), and each card's
+ * "Learn More" button has no handler.
  *
- * Activity Categories:
- * - Events: Organization and management of community events
- * - Social Work: Community service and welfare initiatives
- * - Drama: Performing arts and cultural activities
- * - Leadership: Leadership roles and organizational contributions
- *
- * Impact Areas:
- * - Social welfare and community betterment
- * - Cultural enrichment and arts engagement
- * - Leadership skill development and organizational management
- * - Cross-functional collaboration and team building
- *
- * @component
- * @example
- * ```tsx
- * import ExtraCurriculars from './components/ExtraCurriculars';
- *
- * function App() {
- *   return <ExtraCurriculars />;
- * }
- * ```
- *
- * @see {@link src/components/CommunityLeadership.tsx} for community leadership initiatives
- * @see {@link src/components/AboutMe.tsx} for personal profile integration
+ * Connects to:
+ * - src/components/pages/ExtraCurricularsPage.tsx (legacy, unrouted)
+ * - framer-motion, react-intersection-observer, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -46,21 +19,8 @@ import { useInView } from "react-intersection-observer";
 import { Heart, Users, BookOpen, Calendar, ExternalLink, CheckCircle } from "lucide-react";
 
 /**
- * ExtraCurriculars, Extracurricular activities showcase component.
- *
- * Displays comprehensive extracurricular achievements and activities across
- * multiple domains including social service, arts, events, and leadership.
- * Features categorization, impact metrics, and skills development tracking.
- *
- * @component
- * @returns {JSX.Element} The rendered ExtraCurriculars section
- *
- * @example
- * ```tsx
- * <ExtraCurriculars />
- * ```
- *
- * @see {@link src/components/About.tsx} for personal story context
+ * Renders `<section id="extracurriculars">`. The card icon is chosen from the
+ * activity's category, and at most four skills are shown per card.
  */
 const ExtraCurriculars: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

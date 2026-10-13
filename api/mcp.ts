@@ -1,5 +1,19 @@
+/**
+ * Serverless entry for the remote MCP endpoint (`POST /api/mcp`, Streamable HTTP) and its Server Card.
+ *
+ * Netlify Functions v2 pass a Web Request, which goes straight to handleMcpRequest. Vercel's Node
+ * runtime passes (req, res): the request is rebuilt as a Web Request, and the Web Response is copied
+ * back onto `res`. All protocol, rate-limit, and Server Card logic lives in handleMcpRequest.
+ *
+ * Connects to:
+ * - Netlify: `api/` is the functions directory; netlify.toml routes `/api/*` to `/.netlify/functions/:splat`
+ *   and `/api/mcp/server-card` to `/.netlify/functions/mcp?resource=server-card`.
+ * - Vercel: vercel.json rewrites `/api/mcp/server-card` to `/api/mcp?resource=server-card`.
+ * - src/lib/agent/mcpHttp.ts (handleMcpRequest), which builds the server from src/lib/agent/mcpServer.ts.
+ */
 import { handleMcpRequest } from "../src/lib/agent/mcpHttp";
 
+/** The subset of Vercel's Node request this adapter reads. Vercel parses JSON bodies into `body`. */
 type NodeRequest = {
   method?: string;
   url?: string;
@@ -7,14 +21,21 @@ type NodeRequest = {
   body?: unknown;
 };
 
+/** The subset of Vercel's Node response this adapter writes to. */
 type NodeResponse = {
   status: (code: number) => NodeResponse;
   setHeader: (name: string, value: string) => void;
   end: (body?: string) => void;
 };
 
+// The body is re-serialized below, so the original length and hop-by-hop headers no longer apply.
 const DROPPED_HEADERS = new Set(["content-length", "connection", "transfer-encoding"]);
 
+/**
+ * Rebuilds a Vercel Node request as a Web Request for handleMcpRequest.
+ * Joins multi-value headers, re-serializes a parsed POST body as JSON, and resolves the URL
+ * against the request's Host header (falling back to the canonical host).
+ */
 function toWebRequest(req: NodeRequest): Request {
   const headers = new Headers();
   for (const [key, value] of Object.entries(req.headers)) {
@@ -34,8 +55,9 @@ function toWebRequest(req: NodeRequest): Request {
 }
 
 /**
- * Remote MCP endpoint (Streamable HTTP).
- * Netlify passes a Web Request. Vercel passes a Node request and response.
+ * Remote MCP endpoint (Streamable HTTP, stateless JSON responses).
+ * Netlify passes a Web Request and receives the Web Response back. Vercel passes a Node request
+ * and response; the result is written to `res` and nothing is returned.
  */
 export default async function handler(request: unknown, response?: unknown) {
   if (request instanceof Request) return handleMcpRequest(request);

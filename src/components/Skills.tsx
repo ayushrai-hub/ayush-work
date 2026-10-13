@@ -1,51 +1,23 @@
 /**
- * Skills.tsx, Technical skills visualization component with categorized display.
+ * Legacy skills section: six category cards, each with an icon and four skill tags.
  *
- * This component presents Ayush Rai's technical expertise across multiple domains
- * through an interactive grid layout showcasing distinct skill categories with icons
- * and animated skill tags. Features responsive design with smooth hover interactions
- * and scroll-based animations using Framer Motion.
+ * Legacy: not imported by the current site (src/App.tsx routes use src/pages).
+ * Kept for reference; excluded from tsconfig.app.json. Covered only by
+ * src/__tests__/legacy/Skills.test.tsx, which Vitest excludes.
  *
- * The component includes:
- * - Six core skill categories (AI & ML, Web Dev, Data Science, etc.)
- * - Visual skill tag cloud for each category
- * - Responsive grid layout adapting to screen sizes
- * - Smooth animations and hover effects
- * - Icon-based category representation
+ * Categories and skills are hard-coded. Cards and tags fade in with staggered
+ * delays once the heading enters the viewport.
  *
- * @component
- * @example
- * ```tsx
- * import Skills from './components/Skills';
- *
- * function App() {
- *   return <Skills />;
- * }
- * ```
- *
- * @see {@link src/components/Experience.tsx} for specific technology usage in work
- * @see {@link src/components/Projects.tsx} for practical skill applications
+ * Connects to:
+ * - No importers in src/
+ * - framer-motion, react-intersection-observer, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Code, Brain, Database, Cloud, Users, Lightbulb } from "lucide-react";
 
-/**
- * Skills, Technical skills visualization component.
- *
- * Renders an interactive skills showcase with categorized expertise areas,
- * featuring animated skill tags, responsive grid layout, and smooth hover effects.
- * Provides clear overview of technical capabilities across multiple domains.
- *
- * @component
- * @returns {JSX.Element} The rendered Skills section
- *
- * @example
- * ```tsx
- * <Skills />
- * ```
- */
+/** Renders `<section id="skills">` from the local `skillCategories` array. */
 const Skills: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 

@@ -1,8 +1,23 @@
+/**
+ * In-page "Agent view": shows the current route's Markdown twin with copy and download controls.
+ *
+ * Reads the pathname from the router, looks up the generated Markdown for that path, and renders
+ * it in a <pre>. Copy tries the async Clipboard API, then a hidden-textarea execCommand fallback,
+ * and if both fail selects the <pre> text and asks the user to copy manually. Download saves the
+ * Markdown as a Blob named after the `.md` URL. Paths without a twin get a short notice linking
+ * to llms.txt. The view sets `robots: noindex, follow` and no title or canonical of its own,
+ * because the page's PageSEO is not rendered while this view replaces the route outlet.
+ *
+ * Connects to:
+ * - Rendered by SiteLayout in place of <Outlet /> when the URL has `?agent=1` (toggled from SiteHeader)
+ * - lib/agent/markdown: renderPageMarkdown (same Markdown served at `<path>.md`) and markdownPublicPath
+ */
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useLocation } from "react-router-dom";
 import { markdownPublicPath, renderPageMarkdown } from "../../lib/agent/markdown";
 
+/** Agent view for the current pathname; `copied` and `copyFailed` drive the button label and live-region text. */
 export default function AgentView() {
   const { pathname } = useLocation();
   const markdown = renderPageMarkdown(pathname);
@@ -11,6 +26,7 @@ export default function AgentView() {
   const filePath = markdownPublicPath(pathname);
   const filename = filePath.split("/").pop() || "page.md";
 
+  /** Copies the Markdown: Clipboard API, then execCommand fallback, then select-and-prompt. */
   async function copy() {
     if (!markdown) return;
     setCopyFailed(false);
@@ -43,6 +59,7 @@ export default function AgentView() {
     window.setTimeout(() => setCopied(false), 2000);
   }
 
+  /** Downloads the Markdown as a file named after the page's `.md` URL (e.g. `index.md`). */
   function download() {
     if (!markdown) return;
     const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });

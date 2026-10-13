@@ -1,5 +1,21 @@
+/**
+ * Paid roles, internships and titled programs.
+ *
+ * `experience` is a flat list in display order (not strictly chronological).
+ * Each role has a narrative for /about, bullet
+ * highlights for /resume, and technologies used as search tags. Ended roles
+ * keep `current: false` and a concrete `end` month.
+ *
+ * Connects to:
+ * - AboutPage, ResumePage and DomainPage (the /experience dossier and others).
+ * - Markdown twins /about.md and /resume.md; search items of type
+ *   "experience" linking to /about#slug.
+ * - Slugs are cited by timeline.ts, notes.ts and capabilities.ts.
+ * - Uses `Experience` from types.ts.
+ */
 import type { Experience } from "./types";
 
+/** All roles, in display order. */
 export const experience: Experience[] = [
   {
     slug: "focdot-sde-ai",
@@ -90,8 +106,10 @@ export const experience: Experience[] = [
 
 ];
 
+/** Roles with `current: true`. Exported but not used by any page today. */
 export const currentExperience = experience.filter((e) => e.current);
 
+/** Look up a role by slug. Exported but not used by any page today. */
 export function getExperienceBySlug(slug: string): Experience | undefined {
   return experience.find((e) => e.slug === slug);
 }

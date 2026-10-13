@@ -1,44 +1,19 @@
 /**
- * Profiles.tsx, Social media and online platform integrations showcase component.
+ * Legacy profiles directory: searchable, domain-filtered, collapsible groups of external profile links.
  *
- * This component displays a comprehensive collection of Ayush Rai's online presence
- * across multiple platforms including coding profiles, social media, design portfolios,
- * and professional networking sites. Features dynamic filtering, platform categorization,
- * and direct links to all online profiles with verification and engagement metrics.
+ * Legacy: not imported by the current site (src/App.tsx routes use src/pages;
+ * external profiles now appear on src/pages/ElsewherePage.tsx via src/content/elsewhere.ts).
+ * Kept for reference; excluded from tsconfig.app.json. No test renders it:
+ * src/__tests__/legacy/Profiles.test.tsx actually renders the legacy Footer.
  *
- * The component includes:
- * - Platform categorization by domain (development, design, social, business)
- * - Dynamic filtering by platform category
- * - Profile verification and credibility indicators
- * - Professional network attribution and impact metrics
- * - Platform-specific visual branding and icons
- * - Responsive grid layout adapting to screen size
+ * Profiles and domains come from src/lib/profilesData.ts (40 profiles in 7
+ * domains at the time of writing). A text search and a domain filter narrow the
+ * list, which is then grouped by domain; each group header toggles its card grid.
  *
- * Platform Categories:
- * - Development: GitHub, LeetCode, Kaggle, Hugging Face
- * - Design: Behance, Dribbble, Canva
- * - Social: LinkedIn, Twitter, Instagram, Facebook
- * - Business: Upwork, Fiverr, Freelancer, Guru
- *
- * Features:
- * - Comprehensive profile coverage across 50+ platforms
- * - Real-time activity and engagement links
- * - Professional networking and collaboration portals
- * - Creative portfolio and design showcases
- * - Developer community contributions and repositories
- *
- * @component
- * @example
- * ```tsx
- * import Profiles from './components/Profiles';
- *
- * function App() {
- *   return <Profiles />;
- * }
- * ```
- *
- * @see {@link src/lib/profilesData.ts} for comprehensive profile data
- * @see {@link src/components/Footer.tsx} for selective profile integrations
+ * Connects to:
+ * - No importers in src/
+ * - src/lib/profilesData.ts (`profiles`, `domains`), also used by src/components/layout/Footer.tsx and src/content/elsewhere.ts
+ * - framer-motion (including AnimatePresence for collapse), react-intersection-observer, lucide-react
  */
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -62,29 +37,21 @@ import {
 import { profiles, domains, Profile, Domain } from '../lib/profilesData';
 
 /**
- * Profiles, Comprehensive online platforms showcase component.
- *
- * Displays professional profiles across multiple platforms with filtering
- * capabilities and platform categorization. Enables visitors to explore
- * online presence and connect across different digital platforms.
- *
- * @component
- * @returns {JSX.Element} The rendered Profiles section
- *
- * @example
- * ```tsx
- * <Profiles />
- * ```
- *
- * @see {@link src/lib/profilesData.ts} for platform data management
+ * Renders `<section id="profiles">`. All domain groups start expanded.
  */
 const Profiles: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<string>('all');
   const [expandedDomains, setExpandedDomains] = useState<Set<string>>(new Set(domains.map(d => d.name)));
+  // The observer ref is discarded and never attached, so inView stays false and
+  // every block animated on `inView` stays at its hidden initial state.
   const [, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  // Icon mapping based on platform characteristics
+  /**
+   * Maps a profilesData `icon` name to a lucide icon, defaulting to Globe.
+   * `replace('-', '')` removes only the first hyphen, so hyphenated keys such as
+   * 'bar-chart-2' or 'book-open' never match and also fall back to Globe.
+   */
   const getIcon = (iconName: string) => {
     const icons: { [key: string]: LucideIcon } = {
       github: Code,
@@ -134,7 +101,7 @@ const Profiles: React.FC = () => {
     return groups;
   }, [filteredProfiles]);
 
-  // Toggle domain expansion for detailed viewing
+  /** Adds or removes a domain from the expanded set (click or Enter on its header). */
   const toggleDomain = (domainName: string) => {
     const newExpanded = new Set(expandedDomains);
     if (newExpanded.has(domainName)) {
@@ -145,7 +112,7 @@ const Profiles: React.FC = () => {
     setExpandedDomains(newExpanded);
   };
 
-  // Retrieve domain configuration for styling and metadata
+  /** Looks up a domain's description and gradient; groups without a matching domain are not rendered. */
   const getDomain = (domainName: string): Domain | undefined => {
     return domains.find(d => d.name === domainName);
   };

@@ -1,3 +1,14 @@
+/**
+ * Ideas in progress, each tied to a theme from real work, with a status, rationale and next step.
+ *
+ * A flat list in display order. Slugs double as /ideas#slug anchors and are
+ * cited as evidence in capabilities.ts.
+ *
+ * Connects to:
+ * - IdeasPage and HomePage.
+ * - Markdown twin /ideas.md; search items of type "idea".
+ * - Uses `Idea` from types.ts.
+ */
 import type { Idea } from "./types";
 
 /**

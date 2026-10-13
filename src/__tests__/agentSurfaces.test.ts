@@ -1,3 +1,20 @@
+/**
+ * Tests the agent surfaces built from src/content: search, project API, Markdown twins, negotiation, catalogs, and MCP tools.
+ *
+ * Verifies that every search-index href resolves to a real route, record, or
+ * anchor; that lexical ranking puts title hits before summary hits and matches
+ * /api/search; that project list, detail, compare, archive, and traversal cases
+ * return the right statuses; that Markdown and llms files omit the phone number
+ * and every needsConfirmation claim; that role view only reorders work; that
+ * Accept: text/markdown negotiation returns Markdown or a Markdown 404; that
+ * cursors page through all projects; that the RFC 9727 catalog lists only
+ * deployed APIs; and that the stateless MCP endpoint initializes, lists four
+ * tools, answers get_project, and rejects GET with 405.
+ *
+ * Connects to:
+ * - src/content (records, search index, needsConfirmation lists)
+ * - src/lib/agent/{audiences,http,markdown,markdownMiddleware,mcpHttp,surfaces,searchTool,openapi,projectsQuery,routes,search}.ts
+ */
 import { describe, expect, it } from "vitest";
 import {
   capabilities,
@@ -37,6 +54,10 @@ import { isExternalHref, isKnownRoute, pathnameOf } from "../lib/agent/routes";
 import { searchPortfolio } from "../lib/agent/search";
 import { work } from "../content";
 
+/**
+ * Returns true when `href` is external, or is a known route whose slug and
+ * optional #anchor match an existing content record.
+ */
 function hrefResolves(href: string): boolean {
   if (isExternalHref(href)) return true;
   const path = pathnameOf(href);
@@ -74,6 +95,7 @@ function hrefResolves(href: string): boolean {
   return false;
 }
 
+/** Content-derived agent outputs and the HTTP handlers that serve them. */
 describe("agent surfaces", () => {
   it("points every search result at a real route or external URL", () => {
     const broken = searchIndex.filter((item) => !hrefResolves(item.href));
@@ -172,6 +194,7 @@ describe("agent surfaces", () => {
     expect(compare.status).toBe(400);
   });
 
+  // The literal phone number below is a guard value: it must never appear in generated output.
   it("writes markdown twins and llms.txt without phone numbers or withheld awards", () => {
     const workPage = renderPageMarkdown("/work/the-open-framework");
     expect(workPage).toContain("The Open Framework");
@@ -219,6 +242,7 @@ describe("agent surfaces", () => {
     expect(body.match).toBe("lexical");
   });
 
+  // Also checks the WebMCP search tool's type validation and phone-number omission.
   it("publishes an OpenAPI document for the read API", () => {
     const spec = buildOpenApiDocument();
     expect(spec.paths["/api/search"]).toBeTruthy();

@@ -1,5 +1,20 @@
+/**
+ * Reader profiles for the homepage "Role view": section order and work ordering per audience.
+ *
+ * The audience comes from the `?audience=` query parameter. Each audience has a fixed homepage
+ * section order, and work items are stably re-sorted by a keyword score over their type, title,
+ * summary, and technologies. Nothing is added, hidden, or rewritten, and the Markdown twins do
+ * not change.
+ *
+ * Connects to:
+ * - `src/pages/HomePage.tsx` (`parseAudience`, `rankWorkForAudience`, `HOME_SECTION_ORDER`) and
+ *   `src/components/site/RoleSelector.tsx` (`AUDIENCES`, `parseAudience`).
+ * - Tested in `src/__tests__/agentSurfaces.test.ts`.
+ * - Depends on the `WorkItem` type from `src/content`.
+ */
 import type { WorkItem } from "../../content";
 
+/** Selectable audiences in menu order. `description` is the text the role selector shows. */
 export const AUDIENCES = [
   {
     id: "general",
@@ -39,6 +54,7 @@ export const AUDIENCES = [
 
 export type AudienceId = (typeof AUDIENCES)[number]["id"];
 
+/** Homepage sections that `HOME_SECTION_ORDER` can reorder. */
 export type HomeSectionId =
   | "now"
   | "work"
@@ -49,6 +65,7 @@ export type HomeSectionId =
   | "principles"
   | "contact";
 
+/** Lowercase substrings matched against a work item's text by `scoreWork`. */
 const AI_TERMS = [
   "rlhf",
   "llm",
@@ -74,6 +91,7 @@ const SOFTWARE_TERMS = [
   "vite",
 ];
 
+/** Homepage section order for each audience. Every list contains every section exactly once. */
 export const HOME_SECTION_ORDER: Record<AudienceId, HomeSectionId[]> = {
   general: [
     "now",
@@ -137,6 +155,7 @@ export const HOME_SECTION_ORDER: Record<AudienceId, HomeSectionId[]> = {
   ],
 };
 
+/** Friendlier `?audience=` values accepted in addition to the ids. */
 const AUDIENCE_ALIASES: Record<string, AudienceId> = {
   overview: "general",
   hiring: "recruiter",
@@ -145,6 +164,7 @@ const AUDIENCE_ALIASES: Record<string, AudienceId> = {
   evaluation: "research",
 };
 
+/** Resolves a `?audience=` value or alias to an id. Missing or unknown values become `general`. Case-sensitive. */
 export function parseAudience(value: string | null | undefined): AudienceId {
   if (!value) return "general";
   const aliased = AUDIENCE_ALIASES[value] ?? value;
@@ -152,16 +172,22 @@ export function parseAudience(value: string | null | undefined): AudienceId {
   return match?.id ?? "general";
 }
 
+/** Description text for an audience id. Not imported anywhere at present. */
 export function audienceDescription(id: AudienceId): string {
   return AUDIENCES.find((audience) => audience.id === id)?.description ?? "";
 }
 
+/** Lowercased type, title, summary, and technologies of a work item, for keyword matching. */
 function workBlob(item: WorkItem): string {
   return [item.type, item.title, item.summary, ...item.technologies]
     .join(" ")
     .toLowerCase();
 }
 
+/**
+ * Sort weight of a work item for an audience; higher sorts first. Recruiter favors selected,
+ * then shipped work; product favors `type === "product"`; the rest score 10 on any keyword hit.
+ */
 function scoreWork(item: WorkItem, audience: AudienceId): number {
   const text = workBlob(item);
   if (audience === "recruiter") {
@@ -182,7 +208,10 @@ function scoreWork(item: WorkItem, audience: AudienceId): number {
   return 0;
 }
 
-/** Stable reorder of the existing work records. General keeps the content order. */
+/**
+ * Stable reorder of the existing work records by `scoreWork`; ties keep content order.
+ * General keeps the content order. Returns a new array and never drops items.
+ */
 export function rankWorkForAudience(
   audience: AudienceId,
   items: readonly WorkItem[],

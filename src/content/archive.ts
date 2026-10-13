@@ -1,3 +1,16 @@
+/**
+ * Pointers to earlier sites and superseded work on /archive.
+ *
+ * A flat list. Items may carry an external `pointer` URL and a `relatedSlug`
+ * that matches an archived entry in projects.ts. This is separate from the
+ * `archive` flag on projects, recognition and profiles, which de-emphasizes a
+ * record inside its own list.
+ *
+ * Connects to:
+ * - ArchivePage.
+ * - Markdown twin /archive.md. Not indexed for search.
+ * - Uses `ArchiveItem` from types.ts.
+ */
 import type { ArchiveItem } from "./types";
 
 /**

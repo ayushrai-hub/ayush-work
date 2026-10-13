@@ -1,8 +1,20 @@
+/**
+ * `/resume`: short on-site resume with positioning, experience highlights, and education.
+ *
+ * Static render; no state. No download link is rendered here (`person.resumeUrl` is not used
+ * on this page), even though the meta description mentions a download.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `resume`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`person`, `experience`, `education`); components PageSEO, PageHeader, Prose.
+ * - Markdown twin `/resume.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import { education, experience, person } from "../content";
 
+/** Resume page component. Lazy-loaded by the `resume` route in src/App.tsx. */
 export default function ResumePage() {
   return (
     <>

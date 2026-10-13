@@ -1,6 +1,23 @@
+/**
+ * Legacy tests for the old Hero section (greeting, headline, contact links, CTAs, stats labels, status badges).
+ *
+ * Renders <Hero /> with no providers and checks static copy, the mailto, tel,
+ * GitHub, and LinkedIn hrefs, and the h1 text. The tel: assertion expects a
+ * phone link, which AGENTS.md keeps off the current site.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Hero'
+ * import resolves to src/__tests__/components/Hero, which does not exist; the component
+ * is src/components/Hero.tsx, itself unused by the current site. Assertions have not
+ * been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Hero.tsx (intended target)
+ */
 import { render, screen } from '@testing-library/react';
 import Hero from '../components/Hero';
 
+/** Static content and links of the legacy Hero. */
 describe('Hero Component', () => {
   it('renders without crashing', () => {
     const { container } = render(<Hero />);
@@ -37,9 +54,9 @@ describe('Hero Component', () => {
     expect(getByText('View My Work')).toBeInTheDocument();
   });
 
+  // Checks stat labels only, not the numbers.
   it('displays statistics', () => {
     render(<Hero />);
-    // Check the labels
     expect(screen.getByText('Years Experience')).toBeInTheDocument();
     expect(screen.getByText('Companies Worked')).toBeInTheDocument();
     expect(screen.getByText('Projects Completed')).toBeInTheDocument();
@@ -51,7 +68,7 @@ describe('Hero Component', () => {
   it('shows status badges', () => {
     render(<Hero />);
 
-    // Check for the status badge text (including emojis as they appear in the component)
+    // The expected strings include the emoji prefixes the component renders.
     expect(screen.getByText('🟢 Available for Freelance Projects')).toBeInTheDocument();
     expect(screen.getByText('🔵 Open to Full-time Opportunities')).toBeInTheDocument();
     expect(screen.getByText('🟡 Actively Learning: Advanced AI/ML')).toBeInTheDocument();

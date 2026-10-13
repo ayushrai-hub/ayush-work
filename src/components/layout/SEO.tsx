@@ -1,47 +1,21 @@
 /**
- * SEO.tsx, Search engine optimization component with structured data support.
+ * Legacy react-helmet-async head manager: title, description, keywords, Open Graph/Twitter tags, icons, canonical, and two JSON-LD blocks.
  *
- * This component provides comprehensive SEO metadata management for the React application.
- * Dynamically generates meta tags, OpenGraph data, Twitter cards, and structured data (JSON-LD)
- * based on current route and provided props. Integrates with react-helmet-async for server-side
- * rendering compatibility and optimizes for search engines and social media platforms.
+ * Legacy: not imported anywhere in src/. The current site sets head tags per
+ * page with src/components/site/PageSEO.tsx. Kept for reference; excluded from
+ * tsconfig.app.json. No test covers it.
  *
- * The component includes:
- * - Dynamic meta tag generation (title, description, keywords)
- * - OpenGraph and Twitter Card support for social sharing
- * - JSON-LD structured data for rich search results
- * - Route-aware SEO defaults for different pages
- * - Server-side rendering compatibility with React Helmet
- * - Automatic canonical URL generation
+ * Titles and descriptions come from props, else a small switch on four legacy
+ * paths, else defaultSEO. Unless `url` is passed, og:url and the canonical are
+ * always defaultSEO.url (the site root), so every page would canonicalise to
+ * the home page. The og/twitter image falls back to `${url}/og-image.jpg`, and
+ * the icon links point at /apple-touch-icon.png and /favicon-*.png; none of
+ * those files exist in public/.
  *
- * SEO Features:
- * - Route-based meta content generation
- * - Schema.org structured data integration
- * - Social media preview optimization
- * - Mobile and desktop meta tag handling
- * - Favicon and icon management
- *
- * Search Engine Optimization:
- * - Google search console support
- * - Bing webmaster tools compatibility
- * - Mobile-friendly meta viewport
- * - Canonical URL management
- *
- * @component
- * @example
- * ```tsx
- * import SEO from './components/SEO';
- *
- * // Custom SEO for a project page
- * <SEO
- *   title="AI Chatbot Project"
- *   description="Revolutionary AI-powered chatbot with natural language processing"
- *   keywords="AI, chatbot, NLP, machine learning"
- * />
- * ```
- *
- * @see {@link src/lib/seo.ts} for structured data schemas
- * @see {@link src/constants/seo.ts} for default SEO configuration
+ * Connects to:
+ * - No importers in src/
+ * - src/lib/seo.ts (`structuredData`, `organizationStructuredData`), src/constants/seo.ts (`defaultSEO`)
+ * - react-helmet-async (needs HelmetProvider), react-router-dom `useLocation` (needs a router)
  */
 import React from "react";
 import { Helmet } from "react-helmet-async";
@@ -61,31 +35,13 @@ interface SEOProps {
   keywords?: string;
   /** Optional custom OpenGraph image URL */
   image?: string;
-  /** Optional custom canonical URL */
+  /** Optional canonical and og:url; when omitted both use defaultSEO.url regardless of route. */
   url?: string;
 }
 
 /**
- * SEO, Search engine optimization component with structured data.
- *
- * Provides comprehensive SEO metadata, social media cards, and structured data
- * for optimal search engine visibility and social sharing. Automatically adapts
- * content based on current route and allows override through props.
- *
- * @component
- * @param {SEOProps} props - SEO configuration props
- * @returns {JSX.Element} Helmet component with SEO metadata
- *
- * @example
- * ```tsx
- * <SEO
- *   title="Custom Page Title"
- *   description="Custom description for search engines"
- *   keywords="keyword1, keyword2, keyword3"
- * />
- * ```
- *
- * @see {@link src/pages/} for route-specific SEO integration
+ * Renders a `<Helmet>` block. The resolved title gets a " | Ayush Rai" suffix
+ * unless it equals defaultSEO.title.
  */
 const SEO: React.FC<SEOProps> = ({
   title,
@@ -96,6 +52,7 @@ const SEO: React.FC<SEOProps> = ({
 }) => {
   const location = useLocation();
 
+  /** Returns per-path title, description, and keywords for /research, /leadership, /certifications, and /services; defaultSEO otherwise. */
   const getMetaTags = () => {
     switch (location.pathname) {
       case '/research':

@@ -1,6 +1,22 @@
+/**
+ * Legacy tests for the old Featured Projects section (titles, tech tags, Code and Live Demo links, impact stats, categories).
+ *
+ * Renders <Projects /> with no providers and checks static copy, that each of the
+ * six projects has a "Code" and a "Live Demo" link, and the h2.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Projects'
+ * import resolves to src/__tests__/components/Projects, which does not exist; the component
+ * is src/components/Projects.tsx, itself unused by the current site. Assertions have not
+ * been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Projects.tsx (intended target)
+ */
 import { render } from '@testing-library/react';
 import Projects from '../components/Projects';
 
+/** Static content and links of the Featured Projects section. */
 describe('Projects Component', () => {
   it('renders without crashing', () => {
     const { container } = render(<Projects />);
@@ -36,7 +52,7 @@ describe('Projects Component', () => {
     const codeLinks = getAllByText('Code');
     const demoLinks = getAllByText('Live Demo');
 
-    expect(codeLinks.length).toBe(6); // 6 projects
+    expect(codeLinks.length).toBe(6);
     expect(demoLinks.length).toBe(6);
   });
 

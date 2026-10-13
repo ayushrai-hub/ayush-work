@@ -1,30 +1,18 @@
 /**
- * AboutMe.tsx, Detailed personal profile component with analytics integration.
+ * Legacy "About Me" profile card: photo, short bio, highlight tiles, skill tags, and two CTAs.
  *
- * This component provides an in-depth personal profile section featuring professional background,
- * skills showcase, key achievements, and interactive call-to-action buttons. It integrates
- * Google Tag Manager (GTM) analytics tracking for user engagement measurement.
+ * Legacy: not imported by the current site (src/App.tsx routes use src/pages).
+ * Kept for reference; excluded from tsconfig.app.json. No test covers it.
  *
- * The component includes:
- * - Professional background and current education
- * - Skills tag cloud with key technologies
- * - Achievement metrics and statistics
- * - Interactive buttons with analytics tracking
- * - Responsive design with animations
+ * All copy is hard-coded here. The "Let's Connect" button pushes a GTM event via
+ * useGTM().trackButton and scrolls to an element with id "contact" (rendered by
+ * the legacy src/components/Contact.tsx). The "2+ / 20+" tiles are unsourced
+ * numbers that the current site does not repeat.
  *
- * @component
- * @example
- * ```tsx
- * import { AboutMe } from './components/AboutMe';
- *
- * function App() {
- *   return <AboutMe />;
- * }
- * ```
- *
- * @see {@link src/hooks/useGTM.ts} for analytics integration
- * @see {@link src/components/Contact.tsx} for contact form
- * @see {@link src/lib/profilesData.ts} for profiles configuration
+ * Connects to:
+ * - No importers in src/
+ * - src/hooks/useGTM.ts for the click event
+ * - /IMG_0029.jpeg from public/, with an Unsplash placeholder on load error
  */
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -32,19 +20,8 @@ import { useInView } from 'react-intersection-observer';
 import { useGTM } from '../hooks/useGTM';
 
 /**
- * AboutMe, Comprehensive personal profile component.
- *
- * Renders a detailed personal profile section with professional background,
- * skills showcase, achievements, and interactive CTAs. Features smooth animations,
- * responsive design, and integrates with Google Tag Manager for analytics tracking.
- *
- * @component
- * @returns {JSX.Element} The rendered AboutMe section
- *
- * @example
- * ```tsx
- * <AboutMe />
- * ```
+ * Renders `<section id="aboutme">`. Exported both as a named and a default export.
+ * Children animate in with staggered framer-motion variants once in view.
  */
 export const AboutMe: React.FC = () => {
   const [ref, inView] = useInView({
@@ -54,6 +31,7 @@ export const AboutMe: React.FC = () => {
 
   const { trackButton } = useGTM();
 
+  /** Sends the `lets_connect_cta` GTM click event, then smooth-scrolls to `#contact` if it is on the page. */
   const handleConnectClick = () => {
     // Track the button click for analytics
     trackButton('lets_connect_cta', 'about_me_section');

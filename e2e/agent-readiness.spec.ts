@@ -1,3 +1,18 @@
+/**
+ * Browser tests for agent-facing behaviour (Playwright, `npx playwright test`).
+ *
+ * They run against the Vite dev server started by `playwright.config.ts`, where the
+ * agent middleware in src/lib/agent/vitePlugin.ts serves `.md` twins and `/api/*`.
+ * Covered: the homepage Role view ("Hiring" sets `?audience=recruiter` and keeps the
+ * selected-work section), the in-page Agent view (`?agent=1`) with its Human view link
+ * and Markdown URL, and the content types of a Markdown twin and `/api/search`.
+ * Human-site behaviour lives in `site.spec.ts`.
+ *
+ * Connects to:
+ * - src/pages/HomePage.tsx, src/components/site/RoleSelector.tsx, src/lib/agent/audiences.ts
+ * - src/components/site/AgentView.tsx
+ * - src/lib/agent/vitePlugin.ts (dev-server routing for Markdown and API)
+ */
 import { expect, test } from "@playwright/test";
 
 test("homepage role view reorders sections without a second biography", async ({ page }) => {

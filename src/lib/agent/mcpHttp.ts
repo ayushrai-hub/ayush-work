@@ -1,3 +1,16 @@
+/**
+ * The remote MCP endpoint `/api/mcp` and its Server Card, as one Web `Request` handler.
+ *
+ * Each POST builds a fresh server from `mcpServer.ts`, connects it to a stateless SDK transport
+ * with JSON responses, handles the one request, and closes. Requests for the Server Card are
+ * answered here too, with ETag and If-None-Match support. Both share the per-instance rate limit.
+ *
+ * Connects to:
+ * - `api/mcp.ts` (Netlify passes a Web Request; Vercel's Node request is converted first).
+ *   `netlify.toml` and `vercel.json` rewrite `/api/mcp/server-card` to `/api/mcp?resource=server-card`.
+ * - `vitePlugin.ts` calls it for `/api/mcp` and `/api/mcp/server-card` in dev and preview.
+ * - Depends on `@modelcontextprotocol/sdk`, `mcpServer.ts`, `mcpCard.ts`, `rateLimit.ts`, `apiError.ts`.
+ */
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { apiErrorBody } from "./apiError";
 import { SERVER_CARD_HEADERS, SERVER_CARD_PATH, serverCardEtag, serverCardJson } from "./mcpCard";
@@ -10,6 +23,7 @@ import {
   takeRateLimit,
 } from "./rateLimit";
 
+/** Any origin may call the MCP endpoint; it is read-only and needs no credentials. */
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -17,12 +31,17 @@ const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Expose-Headers": RATE_LIMIT_EXPOSED_HEADERS,
 };
 
+/** Copy of `response` with `extra` headers set, overriding any with the same name. */
 function withHeaders(response: Response, extra: Record<string, string>): Response {
   const headers = new Headers(response.headers);
   for (const [key, value] of Object.entries(extra)) headers.set(key, value);
   return new Response(response.body, { status: response.status, headers });
 }
 
+/**
+ * JSON-RPC 2.0 error response with `id: null`, used before the SDK sees the request.
+ * Code -32000 is the server-error range; `data` can carry the REST-style error object.
+ */
 function jsonRpcError(status: number, message: string, headers: Record<string, string>, data?: unknown) {
   return new Response(
     JSON.stringify({ jsonrpc: "2.0", error: { code: -32000, message, ...(data ? { data } : {}) }, id: null }),
@@ -30,7 +49,11 @@ function jsonRpcError(status: number, message: string, headers: Record<string, s
   );
 }
 
-/** Vercel rewrites the card path to `/api/mcp?resource=server-card`; Netlify keeps the original URL. */
+/**
+ * `vercel.json` and `netlify.toml` both rewrite the card path to the MCP function with
+ * `?resource=server-card`. The path check covers requests that still carry the original URL,
+ * such as the Vite dev server.
+ */
 function isServerCardRequest(url: URL): boolean {
   return (
     url.pathname.replace(/\/$/, "") === SERVER_CARD_PATH ||
@@ -38,6 +61,10 @@ function isServerCardRequest(url: URL): boolean {
   );
 }
 
+/**
+ * Serves the Server Card: 200 with an ETag, 304 when If-None-Match matches (or is `*`),
+ * and 405 JSON for methods other than GET, HEAD, and OPTIONS.
+ */
 function serveServerCard(request: Request, rateHeaders: Record<string, string>): Response {
   if (request.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: SERVER_CARD_HEADERS });
@@ -61,6 +88,8 @@ function serveServerCard(request: Request, rateHeaders: Record<string, string>):
 /**
  * Stateless Streamable HTTP: every POST gets a fresh server and a JSON response, so the
  * endpoint runs as an ordinary serverless function. There are no sessions and no GET stream.
+ * OPTIONS is answered before the rate limit; everything else, the Server Card included, counts
+ * against it. Non-POST methods on `/api/mcp` get a 405 JSON-RPC error.
  */
 export async function handleMcpRequest(request: Request): Promise<Response> {
   const url = new URL(request.url);

@@ -1,8 +1,22 @@
+/**
+ * Serverless entry for the contact form: `POST /api/send-email` (plus `OPTIONS` preflight).
+ *
+ * Adapts each host's calling convention to handleContactEmail, which validates the fields and sends
+ * through SendGrid. Netlify Functions v2 pass a Web Request and expect a Web Response. Vercel's Node
+ * runtime passes (req, res). A legacy Lambda-style event branch (`{ httpMethod, body }` in,
+ * `{ statusCode, headers, body }` out) remains for older callers. Any thrown error becomes a 500.
+ *
+ * Connects to:
+ * - src/lib/emailService.ts posts here; src/pages/ContactPage.tsx calls that service.
+ * - Netlify: netlify.toml routes `/api/*` to `/.netlify/functions/:splat`. Vercel serves it as `/api/send-email`.
+ * - src/lib/server/contactEmail.ts (handleContactEmail): env SENDGRID_API_KEY, FROM_EMAIL, optional CONTACT_EMAIL.
+ */
 import {
   handleContactEmail,
   type ContactEmailResult,
 } from "../src/lib/server/contactEmail";
 
+/** CORS and content-type headers sent on every response, including errors and preflight. */
 const headers: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "Content-Type",
@@ -10,6 +24,7 @@ const headers: Record<string, string> = {
   "Content-Type": "application/json",
 };
 
+/** The subset of Vercel's Node response this handler writes to. */
 type NodeResponse = {
   status: (code: number) => NodeResponse;
   setHeader: (name: string, value: string) => void;
@@ -17,6 +32,7 @@ type NodeResponse = {
   end: (body?: string) => void;
 };
 
+/** True when the second argument looks like Vercel's Node response (has `status` and `setHeader`). */
 function isNodeResponse(value: unknown): value is NodeResponse {
   if (!value || typeof value !== "object") return false;
   const candidate = value as Partial<NodeResponse>;
@@ -26,6 +42,7 @@ function isNodeResponse(value: unknown): value is NodeResponse {
   );
 }
 
+/** Writes a result to a Node response: shared headers, then JSON, or an empty body when `body` is null. */
 function sendNode(res: NodeResponse, result: ContactEmailResult) {
   for (const [key, value] of Object.entries(headers)) res.setHeader(key, value);
   if (result.body == null) {
@@ -36,9 +53,11 @@ function sendNode(res: NodeResponse, result: ContactEmailResult) {
 }
 
 /**
- * Contact form handler.
- * Netlify calls this with an event and expects { statusCode, headers, body }.
- * Vercel calls it with a Node request and response, or a Web Request.
+ * Contact form handler. Branches on the argument shape:
+ * - Web Request (Netlify Functions v2): returns a Web Response.
+ * - Node (req, res) (Vercel): writes to `res` and returns undefined.
+ * - Lambda-style event (legacy callers only): returns `{ statusCode, headers, body }`.
+ * Errors are logged and answered with a generic 500 in the same shape as the request.
  */
 export default async function handler(
   eventOrRequest: unknown,

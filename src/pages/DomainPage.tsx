@@ -1,3 +1,24 @@
+/**
+ * Domain dossier pages: `/ai-engineering` and its children `/ai-engineering/{llm-evaluation,
+ * rlhf,llm-systems,agents,rag}`, `/software-engineering`, `/software-services`,
+ * `/experience`, and `/open-source`. Each shows evidence-backed prose, evidence links, and named gaps.
+ *
+ * One component serves every domain: it looks up the record for the current pathname with
+ * `getDomainByPath` and falls back to NotFoundPage when no record matches (so unknown
+ * `/ai-engineering/*` paths render the 404 page). Breadcrumbs are built from each path prefix,
+ * using the matching domain title or the raw segment. Emits WebPage + BreadcrumbList JSON-LD.
+ * `/experience` additionally lists `experience` roles; `/open-source` lists deduplicated
+ * repository links from products, projects, and the GitHub profile.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `ai-engineering`, `ai-engineering/*`, `software-engineering`,
+ *   `software-services`, `experience`, and `open-source`. Every `domains[].path` is prerendered
+ *   and listed in the sitemap via src/lib/publicRoutes.ts.
+ * - Content from src/content (`getDomainByPath`, `childDomains`, `evidenceLevelLabels` from
+ *   domains.ts; `experience`, `products`, `projects`, `person`, `pageUpdatedAt("domains")`) and
+ *   src/lib/canonical.ts; components PageSEO, PageHeader, Prose, SectionHeading, NotFoundPage.
+ * - Markdown twins `<path>.md` built from `renderDomainBody` in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link, useLocation } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
@@ -16,6 +37,10 @@ import {
 } from "../content";
 import { canonicalUrl, personId, websiteId } from "../lib/canonical";
 
+/**
+ * Link for evidence, related, and further-reading entries (not the breadcrumb, despite the name).
+ * Absolute `http` URLs open in a new tab; site paths use a router `Link`.
+ */
 function CrumbLink({ href, children }: { href: string; children: string }) {
   if (href.startsWith("http")) {
     return (
@@ -31,6 +56,7 @@ function CrumbLink({ href, children }: { href: string; children: string }) {
   );
 }
 
+/** Domain dossier component, selected by pathname. Lazy-loaded by the domain routes in src/App.tsx. */
 export default function DomainPage() {
   const { pathname } = useLocation();
   const page = getDomainByPath(pathname);
@@ -261,6 +287,7 @@ export default function DomainPage() {
   );
 }
 
+/** Repository links for `/open-source`: product GitHub URLs, then project GitHub links, then the profile, first occurrence wins. */
 function uniqueRepos(): { href: string; label: string; note: string }[] {
   const rows: { href: string; label: string; note: string }[] = [];
   const seen = new Set<string>();

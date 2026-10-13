@@ -1,3 +1,21 @@
+/**
+ * Tests the evidence-backed domain dossiers (/ai-engineering, /software-engineering, and so on).
+ *
+ * Verifies that domain paths, titles, and descriptions are unique and listed in
+ * the sitemap; that each dossier's Markdown twin contains its h1, description,
+ * and canonical URL; that internal evidence and related links resolve to known
+ * routes; that the intentional gaps (/ai-engineering/inference,
+ * /software-engineering/distributed-systems) have no record; that every domain
+ * is in the search index; and that a rendered dossier has exactly one h1, a
+ * trailing-slash canonical link, and JSON-LD with a BreadcrumbList but no
+ * aggregateRating.
+ *
+ * Connects to:
+ * - src/content/domains.ts and src/content/searchIndex.ts (via src/content)
+ * - src/lib/agent/markdown.ts, src/lib/agent/routes.ts, src/lib/canonical.ts,
+ *   src/lib/publicRoutes.ts
+ * - src/App.tsx (AppRoutes) and src/pages/DomainPage.tsx
+ */
 import { render, screen, waitFor } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
 import { MemoryRouter } from "react-router-dom";
@@ -13,6 +31,7 @@ import { isKnownRoute, pathnameOf } from "../lib/agent/routes";
 import { canonicalUrl } from "../lib/canonical";
 import { sitemapRoutes } from "../lib/publicRoutes";
 
+/** Domain records, their Markdown and search projections, and the rendered dossier page. */
 describe("domain knowledge pages", () => {
   it("keeps unique paths, titles, and descriptions inside the sitemap", () => {
     const paths = domains.map((page) => page.path);
@@ -52,6 +71,7 @@ describe("domain knowledge pages", () => {
   });
 
   it("renders one h1 and parseable structured data", async () => {
+    // AppRoutes loads DomainPage with React.lazy; importing it first keeps the Suspense wait short.
     await import("../pages/DomainPage");
     render(
       <HelmetProvider>

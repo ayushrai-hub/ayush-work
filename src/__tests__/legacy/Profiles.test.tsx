@@ -1,10 +1,30 @@
+/**
+ * Legacy tests for the profile links shown in the old layout Footer. Despite the file name, it renders Footer, not src/components/Profiles.tsx.
+ *
+ * Renders <Footer /> inside BrowserRouter with useGTM mocked, and checks the
+ * brand line, "Connect:" social links, Quick Links, "Top Platforms", the
+ * conditional "More Platforms" block, the hard-coded "© 2025 Ayush Rai" line
+ * with extra platform names, the back-to-top button, and rel="noopener noreferrer"
+ * on every target="_blank" link.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The
+ * '../components/layout/Footer', '../lib/profilesData', and '../hooks/useGTM' paths
+ * resolve under src/__tests__/, where none exist; the targets are
+ * src/components/layout/Footer.tsx (unused by the current site), src/lib/profilesData.ts,
+ * and src/hooks/useGTM.ts. Assertions have not been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/layout/Footer.tsx (intended target), src/lib/profilesData.ts, src/hooks/useGTM.ts
+ * - legacy/Footer.test.tsx covers the same component
+ */
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import Footer from '../components/layout/Footer';
 import * as profilesData from '../lib/profilesData';
 
-// Mock IntersectionObserver
+// Overrides the global IntersectionObserver mock from src/setupTests.ts for this file.
 beforeAll(() => {
   global.IntersectionObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
@@ -13,7 +33,7 @@ beforeAll(() => {
   }));
 });
 
-// Mock useGTM hook
+// Footer calls trackButton and trackExternal from useGTM; the spies keep dataLayer untouched.
 vi.mock('../hooks/useGTM', () => ({
   useGTM: () => ({
     trackButton: vi.fn(),
@@ -21,13 +41,14 @@ vi.mock('../hooks/useGTM', () => ({
   }),
 }));
 
-// Wrapper component for Router context
+/** Supplies the router context that Footer's useLocation and useNavigate need. */
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
     {children}
   </BrowserRouter>
 );
 
+/** Profile and navigation links rendered by the legacy Footer. */
 describe('Footer Profiles Integration', () => {
   it('renders footer with brand information', () => {
     render(
@@ -46,7 +67,7 @@ describe('Footer Profiles Integration', () => {
       </TestWrapper>
     );
     expect(screen.getByText('Connect:')).toBeInTheDocument();
-    // Check for social media links (they should be present as icons)
+    // Counts every link in the footer, not only the icon-only social links.
     const socialLinks = screen.getAllByRole('link');
     expect(socialLinks.length).toBeGreaterThan(0);
   });
@@ -81,7 +102,6 @@ describe('Footer Profiles Integration', () => {
       </TestWrapper>
     );
 
-    // Check if there are more than 2 domains to show "More Platforms"
     if (profilesData.domains.length > 2) {
       expect(screen.getByText('More Platforms')).toBeInTheDocument();
     }

@@ -1,3 +1,17 @@
+/**
+ * Unit tests for the Google Analytics 4 helpers in src/lib/analytics.ts.
+ *
+ * initGA: logs and returns early when `window` is undefined, and otherwise
+ * creates and appends two scripts (the gtag.js loader and the inline config).
+ * trackEvent: is a no-op without a global `gtag`, and forwards
+ * ('event', name, params) to it when present.
+ *
+ * The browser case spies on document.createElement and document.head.appendChild
+ * so no real script tags are added.
+ *
+ * Connects to:
+ * - src/lib/analytics.ts (initGA, trackEvent)
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { initGA, trackEvent } from '../lib/analytics';
 
@@ -11,11 +25,13 @@ declare global {
   var gtag: GtagFunction | undefined;
 }
 
+/** GA4 helper behaviour with and without a browser environment and gtag global. */
 describe('analytics', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
+  /** Server guard and script injection. */
   describe('initGA', () => {
     it('should not initialize when running on server', () => {
       // Mock window as undefined for server environment
@@ -49,6 +65,7 @@ describe('analytics', () => {
     });
   });
 
+  /** Safe no-op without gtag, and argument forwarding with it. */
   describe('trackEvent', () => {
     it('should not throw error when gtag is not available', () => {
       // Mock window.gtag as undefined

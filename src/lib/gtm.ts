@@ -1,8 +1,19 @@
-// Type definitions for GTM
+/**
+ * Google Tag Manager helpers: container ID, dataLayer setup, and typed dataLayer event pushers.
+ *
+ * Every helper pushes a plain object onto `window.dataLayer`; none of them call gtag. GTM_ID comes
+ * from VITE_GTM_ID and falls back to GTM-NJZ5ZBX4, the container index.html already loads inline.
+ *
+ * Connects to:
+ * - Live site: src/main.tsx renders src/components/layout/GTMProvider.tsx, which uses initGTM and
+ *   GTM_ID (it injects gtm.js only when GTM_ID differs from the default).
+ * - Legacy only (not routed): src/hooks/useGTM.ts wraps the track* helpers for
+ *   src/components/AboutMe.tsx and src/components/layout/Footer.tsx.
+ */
 type GtagParameters = Record<string, string | number | boolean | null | undefined>;
 type GTMEvent = Record<string, unknown>;
 
-// Google Tag Manager utility functions
+// Also declared, with a different gtag signature, in src/vite-env.d.ts; skipLibCheck hides the conflict.
 declare global {
   interface Window {
     dataLayer: unknown[];
@@ -10,23 +21,24 @@ declare global {
   }
 }
 
+/** GTM container ID: VITE_GTM_ID at build time, else the container hard-coded in index.html. */
 export const GTM_ID = import.meta.env.VITE_GTM_ID || 'GTM-NJZ5ZBX4';
 
-// Initialize GTM dataLayer
+/** Ensures `window.dataLayer` exists. No-op on the server. */
 export const initGTM = () => {
   if (typeof window !== 'undefined') {
     window.dataLayer = window.dataLayer || [];
   }
 };
 
-// Push events to GTM dataLayer
+/** Pushes one event object onto the dataLayer; dropped if the dataLayer has not been created. */
 export const gtmPush = (event: GTMEvent) => {
   if (typeof window !== 'undefined' && window.dataLayer) {
     window.dataLayer.push(event);
   }
 };
 
-// Track page views
+/** Pushes a `page_view` event; the title defaults to `document.title`. */
 export const trackPageView = (url: string, title?: string) => {
   gtmPush({
     event: 'page_view',
@@ -35,7 +47,7 @@ export const trackPageView = (url: string, title?: string) => {
   });
 };
 
-// Track custom events
+/** Pushes a custom event with its parameters spread into the same object. */
 export const trackEvent = (eventName: string, parameters: GtagParameters = {}) => {
   gtmPush({
     event: eventName,
@@ -43,7 +55,7 @@ export const trackEvent = (eventName: string, parameters: GtagParameters = {}) =
   });
 };
 
-// Track form submissions
+/** Pushes a `form_submit` event; `success` defaults to true. */
 export const trackFormSubmission = (formName: string, success: boolean = true) => {
   gtmPush({
     event: 'form_submit',
@@ -52,7 +64,7 @@ export const trackFormSubmission = (formName: string, success: boolean = true) =
   });
 };
 
-// Track button clicks
+/** Pushes a `button_click` event. */
 export const trackButtonClick = (buttonName: string, location?: string) => {
   gtmPush({
     event: 'button_click',
@@ -61,7 +73,7 @@ export const trackButtonClick = (buttonName: string, location?: string) => {
   });
 };
 
-// Track downloads
+/** Pushes a `file_download` event. */
 export const trackDownload = (fileName: string, fileType?: string) => {
   gtmPush({
     event: 'file_download',
@@ -70,7 +82,7 @@ export const trackDownload = (fileName: string, fileType?: string) => {
   });
 };
 
-// Track external link clicks
+/** Pushes an `external_link_click` event. */
 export const trackExternalLink = (url: string, linkText?: string) => {
   gtmPush({
     event: 'external_link_click',
@@ -79,7 +91,7 @@ export const trackExternalLink = (url: string, linkText?: string) => {
   });
 };
 
-// Track scroll depth
+/** Pushes a `scroll_depth` event with the percentage scrolled. */
 export const trackScrollDepth = (percentage: number) => {
   gtmPush({
     event: 'scroll_depth',

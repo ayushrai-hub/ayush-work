@@ -1,3 +1,23 @@
+/**
+ * Tests the agent-facing API contract: JSON errors, rate limits, OpenAPI, MCP discovery, agent instructions, and the CLI.
+ *
+ * Errors: every client error returns { error: { code, message, hint, docs } };
+ * unknown /api paths get a JSON 404 from both the Vercel middleware and the
+ * Netlify edge function, whose route list must match src/lib/agent/apiRoutes.ts.
+ * Rate limits: draft-11 RateLimit headers, 429 with Retry-After, window reset,
+ * and the same limit on /api/mcp. OpenAPI: every operation has one typed
+ * response schema per status and a 429. MCP discovery: the SEP-2127 Server
+ * Card, its media type, caching and ETag 304, and its listing in the AI Catalog
+ * and RFC 9727 API catalog. Agent instructions: llms.txt, /developers Markdown,
+ * and AGENTS.md (read from disk) state when to use the site. CLI: argument
+ * parsing, URL building, and exit codes 0, 1, and 64 against the in-process API.
+ *
+ * Connects to:
+ * - src/lib/agent/{apiCatalog,apiRoutes,http,markdown,markdownMiddleware,mcpCard,mcpHttp,openapi,rateLimit,surfaces}.ts
+ * - netlify/edge-functions/markdown-negotiation.js
+ * - packages/cli/bin/ayushrai.mjs
+ * - AGENTS.md at the repository root
+ */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { SUPPORTED_PROTOCOL_VERSIONS } from "@modelcontextprotocol/sdk/types.js";
@@ -26,6 +46,7 @@ import { agentFiles } from "../lib/agent/surfaces";
 
 const ORIGIN = "https://www.ayushrai.site";
 
+/** Sends a GET through agentApiResponse, which applies rate limiting per `clientKey`. */
 function apiCall(pathname: string, clientKey = "203.0.113.7", search = "") {
   return agentApiResponse({
     pathname,
@@ -35,8 +56,10 @@ function apiCall(pathname: string, clientKey = "203.0.113.7", search = "") {
   });
 }
 
+// The rate-limit store is module state shared by every test in this file.
 beforeEach(() => resetRateLimits());
 
+/** Error envelope shape for API, Vercel middleware, and Netlify edge misses. */
 describe("JSON errors", () => {
   it("returns code, message, hint, and docs for every client error", () => {
     const cases: Array<[string, string, number, string]> = [
@@ -92,6 +115,7 @@ describe("JSON errors", () => {
   });
 });
 
+/** Per-client fixed-window limits on the REST API and the MCP endpoint. */
 describe("rate limits", () => {
   it("sends draft-11 RateLimit headers and a 429 with Retry-After past the quota", () => {
     const first = apiCall("/api/v1/projects", "198.51.100.1");
@@ -143,6 +167,7 @@ describe("rate limits", () => {
   });
 });
 
+/** Response schemas in the generated OpenAPI document. */
 describe("OpenAPI", () => {
   it("gives every operation a typed JSON schema for success and errors", () => {
     const spec = buildOpenApiDocument();
@@ -171,6 +196,7 @@ describe("OpenAPI", () => {
   });
 });
 
+/** Server Card content, HTTP delivery, and catalog listings. */
 describe("MCP discovery", () => {
   it("publishes a Server Card that matches SEP-2127 and the live serverInfo", () => {
     const card = buildServerCard();
@@ -226,6 +252,7 @@ describe("MCP discovery", () => {
   });
 });
 
+/** Usage guidance in llms.txt, /developers, and AGENTS.md. */
 describe("agent instructions", () => {
   it("tells agents when to use the site and when not to, in llms.txt and /developers", () => {
     const llms = renderLlmsTxt();
@@ -248,6 +275,7 @@ describe("agent instructions", () => {
   });
 });
 
+/** packages/cli request building and run() exit codes, with fetch routed to the in-process API. */
 describe("CLI", () => {
   it("maps commands to the v1 endpoints", () => {
     const url = (argv: string[]) => {

@@ -1,29 +1,33 @@
 /**
- * Analytics utilities, Provides Google Analytics 4 integration for user tracking.
+ * Google Analytics 4 helpers: script loader plus thin `window.gtag` event wrappers.
  *
- * This module initializes GA4, tracks page views, and handles various custom events for portfolio interactions. It ensures client-side only execution and provides reusable functions for consistent tracking.
+ * initGA injects gtag.js and a `gtag('config', ...)` call for the hard-coded measurement ID
+ * G-VBS0YJ07R8. The track* helpers call `window.gtag` only when it exists, so they are no-ops on the
+ * server and before the script loads. vite-env.d.ts and gtm.ts only declare the `gtag` type; the
+ * function itself comes from the injected script (or the inline snippet in index.html).
  *
- * Notes:
- * - Only runs on client side (checks typeof window)
- * - Uses gtag global function assumed available from vite-env.d.ts
- * - Measurement ID hardcoded (consider moving to environment variable for better security)
- *
- * Exports: initGA, trackPageView, trackEvent, trackGoogleAnalyticsEvent, trackPortfolioInteraction, trackContactForm, trackProjectClick, trackSocialClick, trackServiceInterest
+ * Connects to:
+ * - Live site: src/App.tsx calls initGA once on mount. index.html already loads gtag.js and configures
+ *   the same measurement ID inline, so the property is configured twice on each page load.
+ * - Legacy only (not routed): src/components/Contact.tsx uses trackContactForm and trackServiceInterest.
+ * - src/__tests__/analytics.test.ts covers initGA and trackEvent. trackPageView,
+ *   trackGoogleAnalyticsEvent, trackPortfolioInteraction, trackProjectClick, and trackSocialClick
+ *   have no callers.
  */
 
-// Parameter types for analytics events
+/** Event parameter bag accepted by gtag. */
 type GtagEventParams = Record<string, string | number | boolean | null | undefined>;
 
 /**
  * Initialize Google Analytics 4.
  *
- * Loads the GA4 script and initializes tracking with privacy-focused settings.
+ * Appends gtag.js and an inline script that defines `window.gtag` and configures the property with
+ * IP anonymization and ad features off. Not idempotent: each call appends both scripts again.
  *
  * @returns void
  * @side-effects: Appends scripts to document.head, sets up global gtag function
  */
 export const initGA = () => {
-  // Use the provided measurement ID
   const GA_MEASUREMENT_ID = 'G-VBS0YJ07R8';
 
   if (typeof window === 'undefined') {
@@ -31,13 +35,11 @@ export const initGA = () => {
     return;
   }
 
-  // Load Google Analytics script
   const script1 = document.createElement('script');
   script1.async = true;
   script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
   document.head.appendChild(script1);
 
-  // Initialize gtag
   const script2 = document.createElement('script');
   script2.innerHTML = `
     window.dataLayer = window.dataLayer || [];
@@ -59,7 +61,8 @@ export const initGA = () => {
 /**
  * Track page view events for SPA route changes.
  *
- * Updates GA4 with the current page path and optional title.
+ * Re-sends `config` with the new path and optional title. No code calls this, so client-side route
+ * changes are not reported from here.
  *
  * @param pagePath - the path of the page e.g. '/home'
  * @param pageTitle - optional page title
@@ -90,13 +93,7 @@ export const trackEvent = (
   }
 };
 
-/**
- * Alternative function to track GA events with specific parameter interface.
- *
- * @param eventName - name of the event
- * @param parameters - event parameters with specific keys
- * @returns void
- */
+/** GA event parameters with the common keys spelled out; any other key is also allowed. */
 interface GAParameters {
   event_category?: string;
   event_label?: string;
@@ -108,6 +105,13 @@ interface GAParameters {
   [key: string]: string | number | boolean | null | undefined;
 }
 
+/**
+ * Same as trackEvent, typed with GAParameters and defaulting to an empty parameter object.
+ *
+ * @param eventName - name of the event
+ * @param parameters - event parameters with specific keys
+ * @returns void
+ */
 export const trackGoogleAnalyticsEvent = (eventName: string, parameters: GAParameters = {}) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', eventName, parameters);

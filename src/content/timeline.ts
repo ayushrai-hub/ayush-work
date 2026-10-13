@@ -1,7 +1,22 @@
+/**
+ * Chronological spine of education, roles, projects, products, leadership, recognition and life markers.
+ *
+ * A flat list; consumers sort it newest first by `date` string, so array
+ * order does not matter. `relatedSlug` points into other modules (education,
+ * experience, work, leadership, recognition, research) and TimelinePage turns
+ * it into a link based on `kind`.
+ *
+ * Connects to:
+ * - TimelinePage.
+ * - Markdown twin /timeline.md. Not indexed for search.
+ * - Uses `TimelineEntry` from types.ts.
+ */
 import type { TimelineEntry } from "./types";
 
 /**
- * Chronological spine 2019–2026. Prefer cautious summaries.
+ * Chronological spine 2019–2026. Prefer cautious summaries. For "project"
+ * and "product" entries, `relatedSlug` must be a work.ts slug because it is
+ * linked as /work/:slug.
  */
 export const timeline: TimelineEntry[] = [
   {

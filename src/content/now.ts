@@ -1,8 +1,23 @@
+/**
+ * Current focus for the /now page: what Ayush is working on, researching, learning, thinking about, reading and prioritizing.
+ *
+ * One `now` object with a date and six string lists. Update the date and the
+ * bullets as reality changes. TODO comments mark bullets whose specifics
+ * (papers, courses, reading list) are not yet confirmed.
+ *
+ * Connects to:
+ * - NowPage renders every list; HomePage shows the first three `workingOn`
+ *   items and the `lastUpdated` date; SiteFooter shows `lastUpdated`.
+ * - Markdown twins: /now.md (all lists) and /index.md (first three
+ *   `workingOn` items), also included in llms-full.txt.
+ * - Uses `NowStatus` from types.ts.
+ */
 import type { NowStatus } from "./types";
 
 /**
- * Living "now" page. Update dates and bullets as reality changes.
- * TODO placeholders are intentional where details are not yet confirmed.
+ * The current /now record. `lastUpdated` is the date shown as "Now section
+ * updated"; the /now page's own Updated label comes from
+ * `pageUpdatedAt("now")` in siteMeta.ts, which is maintained separately.
  */
 export const now: NowStatus = {
   lastUpdated: "2026-09-29",

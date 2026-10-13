@@ -1,10 +1,30 @@
+/**
+ * Legacy tests for the old layout Header (logo, nav items, nav landmark, mobile menu button, initial classes).
+ *
+ * Renders <Header /> inside ThemeProvider and MemoryRouter with framer-motion
+ * and lucide-react replaced by plain elements, and with window.scrollY,
+ * innerWidth, and matchMedia stubbed per test. Setting innerWidth to 600 does not
+ * hide anything in jsdom, so the mobile test only checks that a "menu" button
+ * exists.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The
+ * '../components/layout/Header' and '../contexts/ThemeContext' imports resolve under
+ * src/__tests__/, where neither exists; the targets are src/components/layout/Header.tsx
+ * (unused by the current site, whose header is src/components/site/SiteHeader.tsx) and
+ * src/contexts/ThemeContext.tsx. Assertions have not been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/layout/Header.tsx (intended target)
+ * - src/contexts/ThemeContext.tsx
+ */
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import { ThemeProvider } from '../contexts/ThemeContext';
 import { vi } from 'vitest';
 
-// Mock the motion component from framer-motion
+// Motion elements become plain tags, so animation props are passed to the DOM unchanged.
 vi.mock('framer-motion', () => ({
   motion: {
     header: 'header',
@@ -14,7 +34,7 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-// Mock the lucide-react icons
+// Header imports Menu, X, and ChevronDown; ThemeToggle imports Sun and Moon. Monitor is not imported by either.
 vi.mock('lucide-react', () => ({
   Menu: () => <div data-testid="menu-icon">MenuIcon</div>,
   X: () => <div data-testid="close-icon">XIcon</div>,
@@ -24,17 +44,15 @@ vi.mock('lucide-react', () => ({
   Monitor: () => <div data-testid="monitor-icon">MonitorIcon</div>,
 }));
 
+/** Static structure of the legacy Header at the top of the page. */
 describe('Header Component', () => {
   const originalScrollY = window.scrollY;
   
   beforeEach(() => {
-    // Mock window.scrollY
     Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
     
-    // Mock window.innerWidth for responsive testing
     Object.defineProperty(window, 'innerWidth', { value: 1024, writable: true });
     
-    // Mock matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: vi.fn().mockImplementation(query => ({
@@ -51,7 +69,6 @@ describe('Header Component', () => {
   });
   
   afterEach(() => {
-    // Restore original scrollY
     window.scrollY = originalScrollY;
     vi.clearAllMocks();
   });
@@ -117,18 +134,15 @@ describe('Header Component', () => {
     const nav = screen.getByRole('navigation');
     expect(nav).toBeInTheDocument();
 
-    // Check if navigation buttons are present
     const buttons = screen.getAllByRole('button');
     expect(buttons.length).toBeGreaterThan(0);
 
-    // Check if Home button is present
     const homeButton = screen.getByText('Home');
     expect(homeButton).toBeInTheDocument();
     expect(homeButton.tagName).toBe('BUTTON');
   });
 
   it('shows mobile menu button on small screens', () => {
-    // Set small screen size
     window.innerWidth = 600;
 
     render(
@@ -139,7 +153,6 @@ describe('Header Component', () => {
       </ThemeProvider>
     );
 
-    // Menu button should be visible on mobile
     const menuButton = screen.getByRole('button', { name: /menu/i });
     expect(menuButton).toBeInTheDocument();
   });

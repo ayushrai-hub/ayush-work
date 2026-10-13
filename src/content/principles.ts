@@ -1,5 +1,17 @@
+/**
+ * Working principles: a statement plus how each one shows up in the work.
+ *
+ * A flat list in display order. Slugs double as /principles#slug anchors;
+ * "evidence-over-adjectives" is also cited in capabilities.ts.
+ *
+ * Connects to:
+ * - PrinciplesPage and HomePage.
+ * - Markdown twin /principles.md; search items of type "principle".
+ * - Uses `Principle` from types.ts.
+ */
 import type { Principle } from "./types";
 
+/** All principles, in display order. */
 export const principles: Principle[] = [
   {
     slug: "usefulness-over-hype",

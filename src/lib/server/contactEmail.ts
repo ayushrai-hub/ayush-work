@@ -1,5 +1,19 @@
+/**
+ * Host-independent contact form logic: validate the submitted fields and send them as an email via SendGrid.
+ *
+ * handleContactEmail takes an HTTP method and a raw body (JSON string, bytes, or an already parsed
+ * object) and returns a status plus JSON body; it never touches a request or response object. It
+ * reads env SENDGRID_API_KEY (required), FROM_EMAIL (sender), and CONTACT_EMAIL (recipient inbox);
+ * the last two fall back to hard-coded defaults. The visitor's address is set as reply-to.
+ *
+ * Connects to:
+ * - api/send-email.ts, which adapts Netlify, Vercel, and legacy event calls to this function.
+ * - src/__tests__/contactEmail.test.ts (mocks @sendgrid/mail).
+ * - @sendgrid/mail.
+ */
 import sgMail from "@sendgrid/mail";
 
+/** Fields the contact form posts. All are optional here because the body is untrusted. */
 type ContactFields = {
   name?: string;
   email?: string;
@@ -8,11 +22,16 @@ type ContactFields = {
   service?: string;
 };
 
+/** HTTP status and JSON body for the caller to send. A null body means an empty response (preflight). */
 export type ContactEmailResult = {
   status: number;
   body: { success?: boolean; message: string } | null;
 };
 
+/**
+ * Normalizes the body: parses a JSON string or UTF-8 bytes, treats empty/null as `{}`, and passes
+ * objects through. Malformed JSON throws, which api/send-email.ts reports as a 500.
+ */
 function readFields(raw: unknown): ContactFields {
   if (typeof raw === "string" || raw == null) {
     return JSON.parse(raw && raw.length > 0 ? raw : "{}") as ContactFields;
@@ -26,6 +45,9 @@ function readFields(raw: unknown): ContactFields {
 /**
  * Validate a contact request and send it through SendGrid.
  *
+ * OPTIONS returns 200 with no body; other non-POST methods return 405. Missing name, email,
+ * subject, or message, or a malformed email, returns 400. A missing SENDGRID_API_KEY returns 500.
+ * SendGrid errors are not caught here; they propagate to the caller.
  * Runtime-specific request and response adaptation stays in api/send-email.ts.
  */
 export async function handleContactEmail(
@@ -67,6 +89,7 @@ export async function handleContactEmail(
   }
 
   sgMail.setApiKey(sendgridApiKey);
+  // The FROM_EMAIL fallback is a placeholder; SendGrid only accepts a verified sender.
   await sgMail.send({
     to: process.env.CONTACT_EMAIL || "ayushrai0211@gmail.com",
     from: {

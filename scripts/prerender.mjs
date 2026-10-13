@@ -1,3 +1,18 @@
+/**
+ * Final build step: writes a static HTML file for every public route, plus dist/404.html and dist/sitemap.xml.
+ *
+ * Loads the SSR bundle from dist-server/entry-server.js, renders each route from getRoutes() into the
+ * client build's dist/index.html shell (default title, description, canonical, Open Graph, Twitter,
+ * and robots tags stripped so each page's Helmet tags replace them), and writes it to
+ * dist/<route>/index.html. The sitemap lists getSitemapRoutes() with today's date as lastmod. The
+ * SSR bundle directory is deleted afterwards. Must run from the repository root.
+ *
+ * Connects to:
+ * - package.json `build`: `vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && node scripts/prerender.mjs`.
+ * - src/entry-server.tsx (getRoutes, getSitemapRoutes, render), which reads src/lib/publicRoutes.ts.
+ * - Netlify serves dist/404.html for unknown paths (netlify.toml `/*` rule). The generated sitemap
+ *   overwrites the copy of public/sitemap.xml that Vite placed in dist.
+ */
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -7,7 +22,7 @@ const dist = path.resolve("dist");
 const server = await import(pathToFileURL(path.resolve("dist-server/entry-server.js")).href);
 const template = fs.readFileSync(path.join(dist, "index.html"), "utf8");
 
-// strip the shell's default head tags; Helmet output replaces them per page
+// Strip the shell's default head tags; Helmet output replaces them per page.
 const stripped = template
   .replace(/<title>[\s\S]*?<\/title>/, "")
   .replace(/<meta\s+name="description"[\s\S]*?\/>\s*/, "")
@@ -45,6 +60,7 @@ fs.writeFileSync(
 );
 
 const today = new Date().toISOString().slice(0, 10);
+/** Absolute sitemap URL; non-root pages end in a slash, matching src/lib/canonical.ts. */
 const loc = (u) => (u === "/" ? `${SITE}/` : `${SITE}${u}/`);
 const sm = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
   indexed.map((u) => `  <url><loc>${loc(u)}</loc><lastmod>${today}</lastmod></url>`).join("\n") +

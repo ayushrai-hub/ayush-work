@@ -1,7 +1,30 @@
+/**
+ * Legacy tests for the old ThreeJSHero section (name, headline, CTA labels, `#home` id).
+ *
+ * Mocks React's lazy/Suspense, framer-motion, @react-three/fiber, drei, three, the
+ * ThreeJSContent module, and ThreeJSHero itself, so only the text overlay is
+ * checked. Several mocks do not line up with the component:
+ * - 'react' is mocked twice with identical factories.
+ * - The 'react' mocks override the named `lazy` and `Suspense` exports, but
+ *   ThreeJSHero calls `React.lazy` on the default import.
+ * - The ThreeJSHero mock adds an `isWebGLAvailable` export, but the component keeps
+ *   that function private, so the mock does not change its behaviour.
+ * - The 'three' mock exports a `THREE` member, while ThreeJSContent uses
+ *   `import * as THREE`; it is moot because ThreeJSContent is mocked too.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The
+ * '../components/backgrounds/...' paths resolve under src/__tests__/, where they do not
+ * exist; the component is src/components/backgrounds/ThreeJSHero.tsx, itself unused by
+ * the current site. Assertions have not been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/backgrounds/ThreeJSHero.tsx (intended target)
+ * - src/components/backgrounds/ThreeJSContent.tsx (mocked out)
+ */
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
-// Mock React's lazy and Suspense before importing ThreeJSHero
 vi.mock('react', async () => {
   const actualReact = await vi.importActual('react');
   return {
@@ -14,14 +37,12 @@ vi.mock('react', async () => {
   };
 });
 
-// Mock ThreeJSContent before importing ThreeJSHero
 vi.mock('../components/backgrounds/ThreeJSContent', () => ({
   ThreeJSContent: () => null,
 }));
 
 import ThreeJSHero from '../components/backgrounds/ThreeJSHero';
 
-// Mock component props interfaces
 interface MockMotionProps {
   children?: React.ReactNode;
   [key: string]: unknown;
@@ -39,7 +60,7 @@ interface MockPresentationControlsProps {
   children?: React.ReactNode;
 }
 
-// Mock framer-motion
+// Animation props such as `initial` and `animate` are spread onto plain DOM elements.
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: MockMotionProps) => <div {...props}>{children}</div>,
@@ -50,14 +71,13 @@ vi.mock('framer-motion', () => ({
   },
 }));
 
-// Mock three.js and react-three-fiber
 vi.mock('@react-three/fiber', () => ({
   Canvas: ({ children }: MockCanvasProps) => <div data-testid="canvas">{children}</div>,
   useFrame: vi.fn(),
   useThree: vi.fn(() => ({ camera: {}, mouse: { x: 0, y: 0 } })),
 }));
 
-// Mock React's Suspense and lazy
+// Duplicate of the 'react' mock at the top of the file.
 vi.mock('react', async () => {
   const actualReact = await vi.importActual('react');
   return {
@@ -70,7 +90,7 @@ vi.mock('react', async () => {
   };
 });
 
-// Mock the isWebGLAvailable function
+// ThreeJSHero does not export isWebGLAvailable, so this extra export has no effect on the component.
 vi.mock('../components/backgrounds/ThreeJSHero', async () => {
   const actual = await vi.importActual('../components/backgrounds/ThreeJSHero');
   return {
@@ -96,6 +116,7 @@ vi.mock('three', () => ({
   },
 }));
 
+/** Text overlay and section id of ThreeJSHero with the 3D scene mocked out. */
 describe('ThreeJSHero', () => {
   it('renders the hero section', () => {
     render(<ThreeJSHero />);

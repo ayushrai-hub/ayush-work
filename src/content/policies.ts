@@ -1,13 +1,30 @@
+/**
+ * Prose for the /privacy page and the explanatory sections beside the contact form.
+ *
+ * Each export is a list of `PolicySection`s (a heading plus paragraphs). The
+ * same arrays render as HTML and as Markdown, so the two never diverge.
+ * Paragraphs interpolate `person.email` and `person.responseTime`.
+ *
+ * Connects to:
+ * - `privacySections`: PrivacyPage and /privacy.md.
+ * - `contactSections`: ContactPage and /contact.md.
+ * - `PolicySection` is also reused by src/lib/agent/developerDocs.ts for the
+ *   /developers page body.
+ * - Reads `person` from person.ts; defines its own `PolicySection` type
+ *   rather than one from types.ts.
+ */
 import { person } from "./person";
 
+/** One headed block of policy prose. Each paragraph is plain text. */
 export interface PolicySection {
   heading: string;
   paragraphs: string[];
 }
 
 /**
- * Describes what the shipped code does. Update it when analytics, hosting, or the
- * contact form change. Do not add retention periods or guarantees that are not configured.
+ * Privacy notice rendered on /privacy and /privacy.md. Describes what the
+ * shipped code does. Update it when analytics, hosting, or the contact form
+ * change. Do not add retention periods or guarantees that are not configured.
  */
 export const privacySections: PolicySection[] = [
   {
@@ -50,7 +67,10 @@ export const privacySections: PolicySection[] = [
   },
 ];
 
-/** Context shown with the contact form. */
+/**
+ * Context shown beside the contact form on /contact and appended to
+ * /contact.md. Keeps the rule that no phone number is published.
+ */
 export const contactSections: PolicySection[] = [
   {
     heading: "What to write about",

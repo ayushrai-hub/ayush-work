@@ -1,34 +1,19 @@
 /**
- * Research.tsx, Academic research projects and achievements showcase component.
+ * Legacy research section: three research-project cards followed by three award cards.
  *
- * This component displays Ayush Rai's research contributions spanning AI/ML, IoT, and
- * educational technology domains. Features academic project details, research impact metrics,
- * and achievement acknowledgments with interactive exploration. Includes both completed
- * research initiatives and academic recognitions with comprehensive project documentation.
+ * Legacy: not imported by the live routes in src/App.tsx (/research renders
+ * src/pages/ResearchPage.tsx). Its only importer is the legacy
+ * src/components/pages/ResearchPage.tsx, which is itself not routed. Kept for
+ * reference; excluded from tsconfig.app.json. Covered only by
+ * src/__tests__/legacy/Research.test.tsx, which Vitest excludes.
  *
- * The component includes:
- * - Research project showcase with detailed descriptions
- * - Technology stack and implementation details for each project
- * - Impact assessment and measurable outcomes
- * - Academic awards and competition recognition
- * - Institutional affiliations and funding sources
- * - Technology domains: AI/ML, IoT, Agricultural Tech, Smart Campus
+ * Data is hard-coded. The funding labels, outcome numbers, and all three awards
+ * are unverified: src/content/research.ts lists them under needsConfirmation /
+ * researchAwardsNeedsConfirmation, and AGENTS.md forbids copying them elsewhere.
  *
- * Research Domains Covered:
- * - Agricultural AI applications and Computer Vision
- * - NLP and legal document analysis
- * - Smart Campus energy optimization and IoT
- * - Academic collaborations and impact assessment
- *
- * @component
- * @example
- * ```tsx
- * import Research from './components/Research';
- *
- * function App() {
- *   return <Research />;
- * }
- * ```
+ * Connects to:
+ * - src/components/pages/ResearchPage.tsx (legacy, unrouted)
+ * - framer-motion, react-intersection-observer, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -36,22 +21,8 @@ import { useInView } from "react-intersection-observer";
 import { Microscope, Award } from "lucide-react";
 
 /**
- * Research, Academic research showcase component.
- *
- * Displays comprehensive research portfolio including AI/ML projects,
- * IoT implementations, and academic achievements. Features detailed
- * project documentation with impact assessment and technology stacks.
- *
- * @component
- * @returns {JSX.Element} The rendered Research section
- *
- * @example
- * ```tsx
- * <Research />
- * ```
- *
- * @see {@link src/components/Education.tsx} for academic background
- * @see {@link src/components/Projects.tsx} for web development work
+ * Renders `<section id="research">`. Both grids animate in once the projects
+ * block enters the viewport.
  */
 const Research: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

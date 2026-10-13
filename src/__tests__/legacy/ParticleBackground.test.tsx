@@ -1,14 +1,31 @@
+/**
+ * Legacy tests for the old canvas ParticleBackground (canvas element, size, 2d context, resize listener cleanup).
+ *
+ * Fixes the window size to 1024x768 and stubs requestAnimationFrame so the
+ * animation loop never advances, then checks the `particle-canvas` test id, the
+ * canvas width and height attributes, the getContext('2d') call, and that the
+ * resize listener is added and removed. The component never calls
+ * cancelAnimationFrame, so that stub is unused.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The
+ * '../components/backgrounds/ParticleBackground' import resolves under src/__tests__/,
+ * where it does not exist; the component is src/components/backgrounds/ParticleBackground.tsx,
+ * itself unused by the current site. Assertions have not been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/backgrounds/ParticleBackground.tsx (intended target)
+ */
 import { render, screen, cleanup } from '@testing-library/react';
 import { vi } from 'vitest';
 import ParticleBackground from '../components/backgrounds/ParticleBackground';
 
+/** Canvas setup and resize-listener lifecycle. */
 describe('ParticleBackground', () => {
   beforeEach(() => {
-    // Mock window properties
     Object.defineProperty(window, 'innerWidth', { value: 1024 });
     Object.defineProperty(window, 'innerHeight', { value: 768 });
     
-    // Mock requestAnimationFrame and cancelAnimationFrame
     global.requestAnimationFrame = vi.fn(() => 1);
     
     global.cancelAnimationFrame = vi.fn((id) => {
@@ -37,7 +54,7 @@ describe('ParticleBackground', () => {
   it('calls getContext to get 2d rendering context', () => {
     const mockGetContext = vi.fn();
     
-    // Mock the canvas getContext method
+    // Replaces the prototype method for the rest of the file; it is not restored.
     HTMLCanvasElement.prototype.getContext = mockGetContext.mockImplementation(() => ({
       fillRect: vi.fn(),
       clearRect: vi.fn(),
@@ -74,19 +91,15 @@ describe('ParticleBackground', () => {
 
     const { unmount } = render(<ParticleBackground />);
 
-    // Simulate window resize using Object.defineProperty
     Object.defineProperty(window, 'innerWidth', { value: 800, writable: true });
     Object.defineProperty(window, 'innerHeight', { value: 600, writable: true });
     window.dispatchEvent(new Event('resize'));
 
-    // Cleanup
     unmount();
 
-    // Verify event listeners were added and removed
     expect(addEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
     expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
 
-    // Clean up spies
     addEventListenerSpy.mockRestore();
     removeEventListenerSpy.mockRestore();
   });
@@ -96,23 +109,20 @@ describe('ParticleBackground', () => {
     
     const { unmount } = render(<ParticleBackground />);
     
-    // Get the resize handler that was added
+    // Read from the remove spy before unmount, so this is normally undefined and the
+    // identity check below is skipped; it never compares against the added handler.
     const resizeHandler = removeEventListenerSpy.mock.calls.find(
       call => call[0] === 'resize'
     )?.[1];
     
-    // Unmount the component
     unmount();
     
-    // Verify the resize event listener was removed
     expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
     
-    // If we found the handler, verify it was the same one that was added
     if (resizeHandler) {
       expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', resizeHandler);
     }
     
-    // Clean up spy
     removeEventListenerSpy.mockRestore();
   });
 });

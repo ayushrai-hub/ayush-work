@@ -1,9 +1,26 @@
+/**
+ * Legacy tests for the old Experience timeline (roles, companies, locations, job types, tags, metrics, axe audit).
+ *
+ * Renders <Experience /> with no providers and checks static copy, exact
+ * occurrence counts for repeated labels, the hard-coded metrics block, the number
+ * of `.card` elements, and a jest-axe audit.
+ *
+ * Legacy: this file never runs. vite.config.ts excludes src/__tests__/legacy/** from
+ * Vitest and tsconfig.app.json excludes it from type checking. The '../components/Experience'
+ * import resolves to src/__tests__/components/Experience, which does not exist; the
+ * component is src/components/Experience.tsx, itself unused by the current site.
+ * Assertions have not been re-checked against the component.
+ *
+ * Connects to:
+ * - src/components/Experience.tsx (intended target)
+ * - jest-axe (matcher registered in src/setupTests.ts)
+ */
 import { render, screen } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { vi } from 'vitest';
 import Experience from '../components/Experience';
 
-// Mock IntersectionObserver
+// Overrides the global IntersectionObserver mock from src/setupTests.ts for this file.
 beforeAll(() => {
   global.IntersectionObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
@@ -12,6 +29,7 @@ beforeAll(() => {
   }));
 });
 
+/** Static content, counts, and accessibility of the Experience section. */
 describe('Experience', () => {
   it('renders the main heading', () => {
     render(<Experience />);
@@ -51,6 +69,7 @@ describe('Experience', () => {
     expect(screen.getAllByText('Chennai, India')).toHaveLength(2);
   });
 
+  // Checks job-type labels and their counts only; no styling is asserted.
   it('displays job types with correct styling', () => {
     render(<Experience />);
     expect(screen.getByText('Full-time')).toBeInTheDocument();
@@ -98,6 +117,7 @@ describe('Experience', () => {
     expect(results).toHaveNoViolations();
   });
 
+  // `card` is only a selector hook here; no stylesheet in the repo defines that class.
   it('renders with correct structure for timelines and cards', () => {
     const { container } = render(<Experience />);
     const cards = container.querySelectorAll('.card');

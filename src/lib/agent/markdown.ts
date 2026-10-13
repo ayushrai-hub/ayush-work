@@ -1,3 +1,19 @@
+/**
+ * Generates the Markdown twin of every public page, plus `llms.txt`, `llms-full.txt`, and the Markdown 404.
+ *
+ * `buildPages()` turns the records in `src/content` into one `AgentPage` per site path, and the
+ * result is cached for the life of the process. Each page has a title, `Source:` (canonical HTML URL),
+ * `Markdown:` (its `.md` URL), a description, the body, and a closing note on what is left out.
+ * No page reads `person.phone` or `person.phoneDisplay`.
+ *
+ * Connects to:
+ * - `surfaces.ts` (static files for the build, request-time negotiation) and `vitePlugin.ts`
+ *   (dev/preview 404 body).
+ * - `src/components/site/AgentView.tsx` shows `renderPageMarkdown` output on the site.
+ * - Tests: `agentSurfaces.test.ts`, `agentReadiness.test.ts`, `domainSurfaces.test.tsx`,
+ *   `flagshipProducts.test.tsx` in `src/__tests__/`.
+ * - Depends on `src/content` (all page records), `../canonical`, and `developerDocs.ts`.
+ */
 import {
   archive,
   capabilities,
@@ -38,6 +54,7 @@ import {
   WHEN_TO_USE,
 } from "./developerDocs";
 
+/** One Markdown twin. `path` is the site path without `.md` (`/` for the homepage). */
 export interface AgentPage {
   path: string;
   title: string;
@@ -45,26 +62,33 @@ export interface AgentPage {
   markdown: string;
 }
 
+/** Closing note on every page and in `llms.txt`. */
 const OMISSION =
   "Private phone numbers and unverified award metrics are omitted. Wording matches the public site.";
 
+/** Renders heading-plus-paragraphs sections (contact, privacy, developers) as `##` blocks. */
 function policyBody(sections: PolicySection[]): string {
   return sections
     .map((section) => `## ${section.heading}\n\n${section.paragraphs.join("\n\n")}`)
     .join("\n\n");
 }
 
+/** Absolute URL on `person.siteUrl` for a site path; `http(s)` URLs pass through unchanged. */
 function abs(path: string): string {
   if (path.startsWith("http")) return path;
   const base = person.siteUrl.replace(/\/$/, "");
   return path === "/" ? `${base}/` : `${base}${path}`;
 }
 
-/** Escape characters that would change Markdown structure. Used for titles and fixtures. */
+/** Escape characters that would change Markdown structure. Applied to page titles in `doc()`; tests call it directly. */
 export function escapeMarkdownText(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/([`*_{}[\]()#+.!|])/g, "\\$1");
 }
 
+/**
+ * Assembles one page: escaped `#` title, Source and Markdown URLs, description, body, and the
+ * omission note. Only the title is escaped; `description` and `body` are inserted as Markdown.
+ */
 function doc(path: string, title: string, description: string, body: string): AgentPage {
   const markdown = [
     `# ${escapeMarkdownText(title)}`,
@@ -82,15 +106,18 @@ function doc(path: string, title: string, description: string, body: string): Ag
   return { path, title, description: description.trim(), markdown };
 }
 
+/** Public `.md` URL path for a site path: `/` becomes `/index.md`, anything else gets `.md` appended. */
 export function markdownPublicPath(path: string): string {
   if (path === "/") return "/index.md";
   return `${path}.md`;
 }
 
+/** Markdown bullet list, one line per item. */
 function bullets(items: readonly string[]): string {
   return items.map((item) => `- ${item}`).join("\n");
 }
 
+/** Bullet list of the recorded architecture layers; empty string when none are set. */
 function architectureBlock(architecture: Product["architecture"]): string {
   const lines = [
     architecture.frontend && `- Frontend: ${architecture.frontend}`,
@@ -103,6 +130,7 @@ function architectureBlock(architecture: Product["architecture"]): string {
   return lines.join("\n");
 }
 
+/** `/work/{slug}`: a case study from problem to lessons, technologies, and links. */
 function workPage(item: (typeof work)[number]): AgentPage {
   const links = [
     item.links?.demo && `- Demo: ${item.links.demo}`,
@@ -154,6 +182,7 @@ function workPage(item: (typeof work)[number]): AgentPage {
   );
 }
 
+/** `/products/{slug}`: stage, thesis, audience, approach, architecture, maturity, and open questions. */
 function productPage(item: (typeof products)[number]): AgentPage {
   const maturity = item.maturity
     ? [
@@ -209,6 +238,7 @@ function productPage(item: (typeof products)[number]): AgentPage {
   );
 }
 
+/** `/products/{slug}/log`: dated build-log entries. Generated for every product, even with no entries. */
 function productLogPage(item: (typeof products)[number]): AgentPage {
   const entries = item.log
     .map((entry) => `### ${entry.date}: ${entry.title}\n\n${entry.body}`)
@@ -221,6 +251,11 @@ function productLogPage(item: (typeof products)[number]): AgentPage {
   );
 }
 
+/**
+ * Every Markdown twin, in site order: home, about, list and detail pages, the static pages,
+ * developers, privacy, then the domain dossiers from `src/content/domains.ts`.
+ * A page added to the React app needs an entry here to get a twin.
+ */
 function buildPages(): AgentPage[] {
   const pages: AgentPage[] = [];
 
@@ -681,16 +716,26 @@ function buildPages(): AgentPage[] {
 
 let pageCache: AgentPage[] | null = null;
 
+/** All twins, built once per process and then reused. Content only changes on redeploy. */
 export function listAgentPages(): AgentPage[] {
   if (!pageCache) pageCache = buildPages();
   return pageCache;
 }
 
+/**
+ * Markdown for an exact site path (no `.md`, no trailing slash; `""` means `/`), or null when
+ * no twin exists. Use `sitePathFromRequest` first for raw request paths.
+ */
 export function renderPageMarkdown(pathname: string): string | null {
   const path = pathname === "" ? "/" : pathname;
   return listAgentPages().find((page) => page.path === path)?.markdown ?? null;
 }
 
+/**
+ * `/llms.txt`: the site index for language models. A summary, when (not) to use the site, then
+ * links to domains, flagship products, case studies, profiles, and the developer surfaces.
+ * It lists the pages worth opening first, not every page.
+ */
 export function renderLlmsTxt(): string {
   const lines = [
     `# ${person.name}`,
@@ -758,13 +803,17 @@ export function renderLlmsTxt(): string {
   return lines.join("\n");
 }
 
+/** `/llms-full.txt`: every twin from `listAgentPages()` joined with `---` separators. */
 export function renderLlmsFull(): string {
   return listAgentPages()
     .map((page) => page.markdown)
     .join("\n\n---\n\n");
 }
 
-/** Body for a 404 sent to a Markdown reader. Static so hosts can serve it as /404.md. */
+/**
+ * Body for a 404 sent to a Markdown reader. Static so hosts can serve it as /404.md:
+ * `surfaces.ts` emits it as that file, and the Netlify edge function fetches it from there.
+ */
 export function renderNotFoundMarkdown(): string {
   return [
     "# Page not found",
@@ -782,7 +831,11 @@ export function renderNotFoundMarkdown(): string {
   ].join("\n");
 }
 
-/** Map a request path such as /work/foo.md or /index.md to a site path. */
+/**
+ * Map a request path such as /work/foo.md or /index.md to a site path. Drops the query string
+ * and one trailing slash. Throws on malformed percent-encoding (`decodeURIComponent`); the
+ * caller in `surfaces.ts` catches that.
+ */
 export function sitePathFromRequest(urlPath: string): string | null {
   let path = decodeURIComponent(urlPath.split("?")[0] ?? "/");
   if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);

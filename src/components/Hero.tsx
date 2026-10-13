@@ -1,31 +1,19 @@
 /**
- * Hero.tsx, Landing section component with animated introduction and key statistics.
+ * Legacy landing hero: photo, rotating headline, intro paragraph, link buttons, count-up stats, and availability badges.
  *
- * This component serves as the main landing section of the portfolio website, featuring
- * a dynamic headline rotator, animated profile image, key statistics with count-up animations,
- * and prominent call-to-action buttons. Includes social media links and current availability
- * status. Uses Framer Motion for smooth animations and responsive design for all screen sizes.
+ * Legacy: not imported by the current site (src/App.tsx renders src/pages/HomePage.tsx
+ * at "/"). Kept for reference; excluded from tsconfig.app.json. Covered only by
+ * src/__tests__/legacy/Hero.test.tsx, which Vitest excludes.
  *
- * The component includes:
- * - Dynamic headline rotation showcasing different expertise areas
- * - Profile image with hover effects and accessibility features
- * - Key achievement statistics with animated counters
- * - Social media links and contact information
- * - Call-to-action buttons for portfolio exploration
- * - Current availability status indicators
+ * A 3-second interval cycles through `headlines`. The stats are hard-coded and
+ * unverified, and the section links a phone number, which AGENTS.md keeps off
+ * the current site. In-page links target `#contact` and `#projects`, which only
+ * exist when the legacy Contact and Projects sections are on the same page.
  *
- * @component
- * @example
- * ```tsx
- * import Hero from './components/Hero';
- *
- * function App() {
- *   return <Hero />;
- * }
- * ```
- *
- * @see {@link src/components/AboutMe.tsx} for detailed personal introduction
- * @see {@link src/components/Projects.tsx} for work showcase
+ * Connects to:
+ * - No importers in src/
+ * - framer-motion, react-countup, react-intersection-observer, lucide-react
+ * - /IMG_0029.jpeg from public/
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -34,21 +22,9 @@ import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 
 /**
- * Hero, Main landing section component with animated introduction.
- *
- * Renders the primary hero section with dynamic content, statistics, and navigation
- * to other portfolio sections. Features animated elements, responsive design, and
- * key portfolio information at a glance.
- *
- * @component
- * @returns {JSX.Element} The rendered Hero section
- *
- * @example
- * ```tsx
- * <Hero />
- * ```
- *
- * @see {@link src/components/AboutMe.tsx} for extended introduction
+ * Renders `<section id="home">`. The entrance animations play on mount; only the
+ * CountUp counters wait for the stats grid to enter the viewport. The headline
+ * `exit` animation never runs because the element is not inside AnimatePresence.
  */
 const Hero: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true });

@@ -1,3 +1,17 @@
+/**
+ * `/research/:slug`: one research note or investigation with period, status, technologies,
+ * disclaimer, and optional context, methods, findings, funding note, and confirmation list.
+ *
+ * Looks up the record with `getResearchBySlug`. An unknown slug renders an inline "Research not
+ * found" message with no PageSEO. The `needsConfirmation` list is shown on this HTML page but is
+ * not included in the Markdown twin.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `research/:slug`; every `research[].slug` is prerendered and in the
+ *   sitemap via src/lib/publicRoutes.ts. ResearchPage and HomePage link here.
+ * - Content from src/content (`getResearchBySlug`); components PageSEO, PageHeader, Prose, MetaList.
+ * - Markdown twin `/research/<slug>.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
@@ -5,6 +19,7 @@ import Prose from "../components/editorial/Prose";
 import MetaList from "../components/editorial/MetaList";
 import { getResearchBySlug } from "../content";
 
+/** Research detail component. Lazy-loaded by the `research/:slug` route in src/App.tsx. */
 export default function ResearchDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const item = slug ? getResearchBySlug(slug) : undefined;

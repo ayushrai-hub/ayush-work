@@ -1,3 +1,18 @@
+/**
+ * Text of the developer documentation, shared by the `/developers` HTML page and `developers.md`.
+ *
+ * Content is returned as `PolicySection` records (heading plus paragraphs). Notes on access,
+ * rate limits, and versioning come from `openapi.ts`, so the docs and the OpenAPI description use
+ * the same wording.
+ *
+ * Connects to:
+ * - `src/pages/DevelopersPage.tsx` renders `developerSections()` with `DEVELOPER_TITLE` and
+ *   `DEVELOPER_DESCRIPTION`.
+ * - `markdown.ts` builds the `/developers` Markdown twin from the same sections and puts
+ *   `WHEN_TO_USE` / `WHEN_NOT_TO_USE` into `llms.txt`.
+ * - Depends on `src/content` (`person`), and on the paths and notes in `apiCatalog.ts`, `mcpCard.ts`,
+ *   and `openapi.ts`.
+ */
 import { person } from "../../content";
 import type { PolicySection } from "../../content";
 import { API_CATALOG_PATH } from "./apiCatalog";
@@ -7,7 +22,10 @@ import { API_ACCESS_NOTE, API_RATE_LIMIT_NOTE, API_VERSIONING_POLICY } from "./o
 export const DEVELOPER_TITLE = `${person.name} API and MCP server`;
 export const DEVELOPER_DESCRIPTION = `Developer docs for ${person.name}'s public read-only REST API, OpenAPI spec, and remote MCP server: endpoints, pagination, versioning, and discovery.`;
 
-/** Jobs this site answers well, each with the call to make. Shared by llms.txt, AGENTS.md checks, and /developers. */
+/**
+ * Jobs this site answers well, each with the call to make. Rendered into `llms.txt` and the
+ * `/developers` page. `AGENTS.md` keeps a hand-written copy that is not generated from this list.
+ */
 export const WHEN_TO_USE: readonly string[] = [
   `Answering who ${person.name} is, what he works on, or how to contact him: read \`/index.md\`, \`/about.md\`, and \`/contact.md\`.`,
   "Checking whether he has built something in an area (agents, retrieval, extensions, research): call `GET /api/v1/search?q=<topic>` and open the `href` of each hit with `.md` appended.",
@@ -15,6 +33,7 @@ export const WHEN_TO_USE: readonly string[] = [
   "Citing a claim: quote the Markdown page that states it and link its HTML URL. Pages mark unverified numbers; do not repeat those as fact.",
 ];
 
+/** Requests this site cannot answer. `/developers` prefixes each with "Not for:". */
 export const WHEN_NOT_TO_USE: readonly string[] = [
   "General programming help, other people, or companies: this site only covers one person's work.",
   "Live data such as availability, prices, or job openings: the content changes when the site is redeployed, not in real time.",
@@ -22,7 +41,10 @@ export const WHEN_NOT_TO_USE: readonly string[] = [
   "Phone numbers or unconfirmed award details: they are deliberately not published.",
 ];
 
-/** Paragraphs may use `code` spans; the HTML page renders them as <code>. */
+/**
+ * Sections of the developer docs, in page order, with MCP URLs made absolute from `person.siteUrl`.
+ * Paragraphs may use `code` spans; the HTML page renders them as <code>.
+ */
 export function developerSections(): PolicySection[] {
   const origin = person.siteUrl.replace(/\/$/, "");
   return [

@@ -1,71 +1,39 @@
 /**
- * ThreeJSHero.tsx, 3D enhanced hero section with Three.js integration and fallback handling.
+ * Legacy landing hero with a rotating headline, three CTA links, social icons, and an optional Three.js background.
  *
- * This component provides an immersive hero section that combines 2D content with optional
- * Three.js 3D environments. Features graceful WebGL detection, loading states, error boundaries,
- * and progressive enhancement with fallback content. Optimized for performance with mobile
- * device considerations and battery life preservation.
+ * Legacy: not imported anywhere in src/ (the current "/" is src/pages/HomePage.tsx).
+ * Kept for reference; src/components/backgrounds is excluded from
+ * tsconfig.app.json. Covered only by src/__tests__/legacy/ThreeJSHero.test.tsx,
+ * which Vitest excludes.
  *
- * The component includes:
- * - Dynamic headline transitions with rotating text animation
- * - Profile image display with professional presentation
- * - Call-to-action buttons (Resume download, View Work, Connect)
- * - Social media integration with accessible links
- * - Optional Three.js background scene with particle effects
- * - Progressive enhancement for devices without WebGL support
+ * The 3D scene is lazy-loaded and shown only when WebGL is detected; on small
+ * screens it is hidden with CSS (`hidden md:block`) but still mounted. There is
+ * no Suspense boundary around the lazy component and no error boundary, so
+ * rendering this outside a parent <Suspense> throws while the chunk loads.
+ * There is no profile image, and the icon-only social links have no aria-label.
  *
- * Performance Features:
- * - WebGL availability detection before Three.js initialization
- * - Graceful fallback to standard hero layout without 3D elements
- * - Mobile device optimization (3D disabled on battery-constrained devices)
- * - Error boundary integration for Three.js failures
- *
- * Accessibility Considerations:
- * - Semantic HTML structure with proper heading hierarchy
- * - Screen reader compatible with aria-labels and descriptions
- * - Keyboard navigation support for all interactive elements
- * - High contrast color alternatives for gradient text
- *
- * Content Strategy:
- * - Headline rotation showcasing key expertise areas
- * - Professional biography with current focus and expertise
- * - Multiple call-to-action options (passive to aggressive conversion)
- * - Social proof through professional profile links
- *
- * @component
- * @example
- * ```tsx
- * import ThreeJSHero from './components/ThreeJSHero';
- *
- * function HomePage() {
- *   return <ThreeJSHero />;
- * }
- * ```
- *
- * @see {@link src/components/ThreeJSContent.tsx} for 3D scene implementation
- * @see {@link src/components/ErrorBoundary.tsx} for error handling wrapper
+ * Connects to:
+ * - No importers in src/
+ * - ./ThreeJSContent (src/components/backgrounds/ThreeJSContent.tsx) via React.lazy
+ * - framer-motion, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 
-// Dynamic import for performance optimization
+/** Lazy wrapper that maps the module's named `ThreeJSContent` export to the default export React.lazy expects. */
 const ThreeJSContent = React.lazy(() =>
   import('./ThreeJSContent').then(module => ({ default: module.ThreeJSContent }))
 );
 
-/**
- * Headlines for animated rotation
- */
+/** Lines cycled under the name every 3 seconds. */
 const headlines = [
   "SDE - AI Engineer | Generative AI Specialist",
   "Full-Stack Developer | Data Science Enthusiast",
   "Product Builder | Lifelong learner",
 ];
 
-/**
- * WebGL availability detection utility
- */
+/** Returns true if a webgl or experimental-webgl context can be created (duplicated inside ThreeJSContent.tsx). */
 const isWebGLAvailable = () => {
   try {
     const canvas = document.createElement('canvas');
@@ -77,21 +45,9 @@ const isWebGLAvailable = () => {
 };
 
 /**
- * ThreeJSHero, 3D enhanced hero section with progressive enhancement.
- *
- * Provides an immersive landing section with optional 3D graphics and
- * animated content. Features graceful degradation for devices without
- * WebGL support and optimized performance for mobile devices.
- *
- * @component
- * @returns {JSX.Element} The rendered hero section
- *
- * @example
- * ```tsx
- * <ThreeJSHero />
- * ```
- *
- * @see {@link src/components/Hero.tsx} for standard hero fallback
+ * Renders `<section id="home">`. `webGLAvailable` starts true and is corrected
+ * after mount, so the lazy scene is requested on the first render regardless.
+ * The `#projects` and `#contact` links rely on legacy sections being on the same page.
  */
 const ThreeJSHero: React.FC = () => {
   const [currentHeadline, setCurrentHeadline] = React.useState(0);

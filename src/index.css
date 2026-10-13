@@ -1,7 +1,20 @@
+/**
+ * Global stylesheet: Tailwind layers, light/dark design tokens, base element styles, and shared component classes.
+ *
+ * Tokens are CSS custom properties on :root (light) and .dark (dark). ThemeContext toggles the
+ * `light`/`dark` class on <html>, and tailwind.config.js maps its paper/ink/rule/accent/signal/focus
+ * colors to these variables, so utilities like `bg-paper` follow the theme. The components layer
+ * defines the site-wide classes (site-shell, prose-site, label, btn-*, link-*, skip-link, ...).
+ *
+ * Connects to:
+ * - Imported by src/main.tsx; processed by postcss.config.js (Tailwind, Autoprefixer).
+ * - tailwind.config.js (token names), src/contexts/ThemeContext.tsx (theme class).
+ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Light theme tokens (default). */
 :root {
   --bg: #f3f2f0;
   --bg-elevated: #faf9f7;
@@ -15,6 +28,7 @@
   --focus: #1d4ed8;
 }
 
+/* Dark theme tokens; applied when ThemeContext sets the `dark` class on <html>. */
 .dark {
   --bg: #161615;
   --bg-elevated: #1e1e1c;
@@ -33,6 +47,7 @@
     scroll-behavior: smooth;
   }
 
+  /* Effectively disables smooth scrolling, animations, and transitions for reduced-motion users. */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -55,6 +70,7 @@
     min-height: 100vh;
   }
 
+  /* `.dark` alone matches <html>, so the dark gradients also paint the root element. */
   .dark body,
   .dark {
     background-image:
@@ -119,6 +135,7 @@
     text-decoration-color: var(--accent);
   }
 
+  /* Base button; the btn-* variants below @apply it. */
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus;
   }

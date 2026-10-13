@@ -1,7 +1,27 @@
+/**
+ * Public identity of Ayush Rai: name, contact email, role lines, canonical URL, resume links and profile URLs.
+ *
+ * A single `person` object. Other content modules interpolate it (for example
+ * policies.ts uses the email and reply time), and `siteUrl` is the canonical
+ * origin used to build absolute URLs.
+ *
+ * Connects to:
+ * - Pages: HomePage, AboutPage, ContactPage, ResumePage, WritingPage,
+ *   ProductDetailPage, DomainPage; components SiteFooter and PageSEO;
+ *   src/lib/seo.ts and src/lib/canonical.ts (JSON-LD, canonical URLs).
+ * - Agent surfaces: Markdown twins and llms.txt (src/lib/agent/markdown.ts),
+ *   API records' `htmlUrl` (projectsQuery.ts), OpenAPI document, MCP server
+ *   card, API catalog, API error bodies and developer docs.
+ * - Uses `Person` from types.ts.
+ */
 import type { Person } from "./types";
 
 /**
- * Public identity.
+ * The site owner's public identity record.
+ *
+ * Phone numbers must never appear on public pages or in machine-readable
+ * output: `phone` and `phoneDisplay` stay empty, and
+ * src/__tests__/agentSurfaces.test.ts fails if they are filled.
  */
 export const person: Person = {
   name: "Ayush Rai",

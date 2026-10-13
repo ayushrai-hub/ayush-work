@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+/**
+ * Zero-dependency command-line client for the public v1 REST API (search, projects, compare).
+ *
+ * Parses argv into a command, positionals, and flags, maps them to one `/api/v1/*` GET URL, fetches
+ * it, and prints the JSON body. Exit codes: 0 success, 1 API error or non-JSON reply, 2 network
+ * error, 64 usage error. Not published to npm.
+ *
+ * Connects to:
+ * - packages/cli/package.json declares it as the `ayushrai` bin.
+ * - src/__tests__/agentReadiness.test.ts imports parseArgs, buildRequest, and run, injecting fetch
+ *   and output sinks.
+ * - The v1 endpoints served by api/search.ts and api/projects.ts (default origin www.ayushrai.site).
+ */
 import { pathToFileURL } from "node:url";
 
 const DEFAULT_BASE_URL = "https://www.ayushrai.site";
@@ -29,6 +42,10 @@ Docs: ${DEFAULT_BASE_URL}/developers/`;
 const VALUE_FLAGS = new Set(["type", "category", "limit", "cursor", "base-url"]);
 const BOOLEAN_FLAGS = new Set(["archive", "compact", "help"]);
 
+/**
+ * Splits argv into `{ command, args, flags }`. Accepts `--flag value`, `--flag=value`, and `-h`.
+ * Throws UsageError for unknown options or a value flag with no value.
+ */
 export function parseArgs(argv) {
   const positionals = [];
   const flags = {};
@@ -56,8 +73,13 @@ export function parseArgs(argv) {
   return { command: positionals[0], args: positionals.slice(1), flags };
 }
 
+/** Bad command-line input; run() turns it into usage text on stderr and exit code 64. */
 class UsageError extends Error {}
 
+/**
+ * Returns the full GET URL for a command, applying only the flags that command supports.
+ * Throws UsageError for an unknown command or the wrong number of positionals.
+ */
 export function buildRequest(command, args, flags) {
   const params = new URLSearchParams();
   const set = (key, value) => {
@@ -100,6 +122,11 @@ export function buildRequest(command, args, flags) {
   return `${base}${path}${query ? `?${query}` : ""}`;
 }
 
+/**
+ * Runs one CLI invocation and resolves to its exit code instead of exiting the process.
+ * `io` can replace `fetch`, `stdout`, and `stderr` for tests. API errors are printed to stderr
+ * as JSON; a 429 also prints its Retry-After value.
+ */
 export async function run(argv, io = {}) {
   const fetchImpl = io.fetch ?? globalThis.fetch;
   const stdout = io.stdout ?? ((text) => process.stdout.write(text));
@@ -151,6 +178,7 @@ export async function run(argv, io = {}) {
   return 0;
 }
 
+// Run only when executed directly, so tests can import the exports without side effects.
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   process.exitCode = await run(process.argv.slice(2));
 }

@@ -1,5 +1,15 @@
+/**
+ * Section heading with an optional section number and an optional trailing link.
+ *
+ * Stateless. Renders `title` as an <h2> by default, or <h3> via `as`. `number` is shown in mono
+ * before the title, and `link` renders a router Link aligned to the right (for example a "see all" link).
+ *
+ * Connects to:
+ * - Rendered by HomePage, AboutPage, ContactPage, DevelopersPage, PrivacyPage, and DomainPage
+ */
 import { Link } from "react-router-dom";
 
+/** Props for SectionHeading. */
 interface SectionHeadingProps {
   number?: string;
   title: string;
@@ -7,6 +17,7 @@ interface SectionHeadingProps {
   as?: "h2" | "h3";
 }
 
+/** Section heading row; `as` picks the heading level. */
 export default function SectionHeading({
   number,
   title,

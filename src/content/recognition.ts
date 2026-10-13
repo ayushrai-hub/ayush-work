@@ -1,8 +1,24 @@
+/**
+ * Certificates and course completions, split into featured and archived.
+ *
+ * `recognition` is the full list; `featuredRecognition` and
+ * `archivedRecognition` are filtered views for the page. Links point to
+ * Drive-hosted copies of the certificates.
+ *
+ * Connects to:
+ * - RecognitionPage (`featuredRecognition`, `archivedRecognition`).
+ * - Markdown twin /recognition.md (full list, archived entries marked);
+ *   search items of type "recognition".
+ * - Slugs are cited by timeline.ts.
+ * - Award claims without evidence do not belong here; see
+ *   `researchAwardsNeedsConfirmation` in research.ts.
+ * - Uses `RecognitionItem` from types.ts.
+ */
 import type { RecognitionItem } from "./types";
 
 /**
- * Certifications from Certifications.tsx, featured vs archive.
- * No vanity "100% verified" stats here; links are Drive-hosted copies.
+ * All certificates, featured vs archive. No vanity "100% verified" stats
+ * here; links are Drive-hosted copies.
  */
 export const recognition: RecognitionItem[] = [
   {
@@ -93,5 +109,7 @@ export const recognition: RecognitionItem[] = [
   },
 ];
 
+/** Certificates with `featured: true`; the lead list on RecognitionPage. */
 export const featuredRecognition = recognition.filter((r) => r.featured);
+/** Certificates with `archive: true`; the archive list on RecognitionPage. */
 export const archivedRecognition = recognition.filter((r) => r.archive);

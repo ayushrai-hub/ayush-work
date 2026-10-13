@@ -1,6 +1,24 @@
 /**
- * Content layer, single source of truth for Ayush Rai's digital home.
- * Import from `@/content` or `../content` rather than hardcoding copy in components.
+ * Barrel module that re-exports every content record, helper and type in src/content/.
+ *
+ * src/content is the single source of truth for public facts. Pages and
+ * components import from here (as `../content` or `../../content`) instead of
+ * hardcoding copy, so a change in a data module reaches the HTML pages, the
+ * Markdown twins, llms.txt, search, the REST API and the MCP tools together.
+ * Not every module's private constants are re-exported (for example
+ * `productCategoryOrder` and `projectCategoryOrder`).
+ *
+ * Connects to:
+ * - Pages in src/pages/ and components in src/components/site and
+ *   src/components/editorial.
+ * - Agent surfaces: src/lib/agent/markdown.ts (Markdown twins, llms.txt,
+ *   llms-full.txt), src/lib/agent/search.ts (search API, MCP and WebMCP
+ *   search), src/lib/agent/projectsQuery.ts (REST API and MCP project tools),
+ *   plus openapi.ts, validate.ts, mcpCard.ts, apiCatalog.ts and apiError.ts.
+ * - src/lib/publicRoutes.ts, src/lib/canonical.ts and
+ *   src/components/editorial/UpdatedMeta.tsx import individual modules
+ *   directly rather than through this barrel.
+ * - Re-exports all of types.ts plus `PolicySection` from policies.ts.
  */
 
 export * from "./types";

@@ -1,3 +1,23 @@
+/**
+ * `/`: homepage with the intro, domain hubs, "Go deeper" links, the role selector, and a
+ * sequence of summary sections (now, work, products, research, journey, writing, principles, contact).
+ *
+ * Role view: `?audience=` is parsed by `parseAudience` (unknown values fall back to "general").
+ * The audience picks the order of the summary sections from `HOME_SECTION_ORDER` (section
+ * numbers follow that order) and re-ranks `selectedWork` with `rankWorkForAudience`. It only
+ * reorders existing content. Any non-empty `audience` param sets `noIndex` so reordered variants
+ * are not indexed. PageSEO is rendered with `personSchema`, which emits the site's
+ * WebSite/Person/ProfilePage JSON-LD.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as the index route; prerendered via STATIC_PAGES ("/") in src/lib/publicRoutes.ts.
+ * - Content from src/content (`person`, `now`, `selectedWork`, `featuredProducts`, `research`,
+ *   `ideas`, `writing`, `principles`, `homeDomains`, product label maps, `formatUpdated`,
+ *   `pageUpdatedAt("home")`) and src/lib/agent/audiences.ts; components PageSEO, SectionHeading,
+ *   WorkRow, Prose, UpdatedMeta, RoleSelector.
+ * - Markdown twin `/index.md` (path "/") built in `buildPages()` in src/lib/agent/markdown.ts.
+ *   The role view does not change that Markdown.
+ */
 import { Fragment } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
@@ -28,14 +48,17 @@ import {
   type HomeSectionId,
 } from "../lib/agent/audiences";
 
+/** Homepage component. Lazy-loaded by the index route in src/App.tsx. */
 export default function HomePage() {
   const [params] = useSearchParams();
   const audience = parseAudience(params.get("audience"));
   const rankedWork = rankWorkForAudience(audience, selectedWork);
   const sectionOrder = HOME_SECTION_ORDER[audience];
+  /** Two-digit heading number for a section, from its position in the audience's order. */
   const sectionNumber = (id: HomeSectionId) =>
     String(sectionOrder.indexOf(id) + 1).padStart(2, "0");
 
+  // The principles section is skipped if `principles` is empty.
   const pullQuote = principles[0];
 
   return (

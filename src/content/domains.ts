@@ -1,17 +1,36 @@
 /**
- * Domain dossiers. Prose lives here so HTML, Markdown, and search share it.
- * Evidence links point at records already in this content layer.
- * Gaps stay visible. Reading about a topic is not treated as production experience.
+ * Evidence-backed domain dossiers: the pages under /ai-engineering (and its
+ * subpages), /software-engineering, /software-services, /experience and /open-source.
+ *
+ * Each `DomainRecord` holds a page's prose, evidence links, related links,
+ * further reading and named gaps. Prose lives here so HTML, Markdown, and
+ * search share it. Evidence links point at records already in this content
+ * layer. Gaps stay visible: reading about a topic is not treated as production
+ * experience, and topics without evidence (for example inference or
+ * distributed systems) are listed as gaps, not given empty pages.
+ *
+ * Connects to:
+ * - src/pages/DomainPage.tsx renders each record (routes in src/App.tsx);
+ *   HomePage lists `homeDomains()`.
+ * - Markdown twins via `renderDomainBody` in src/lib/agent/markdown.ts;
+ *   llms.txt "Domains" list; search items of type "domain" (searchIndex.ts).
+ * - src/lib/publicRoutes.ts adds every `path` to the sitemap and prerender list.
+ * - Defines its own types (`EvidenceLevel`, `DomainLink`, `DomainSection`,
+ *   `DomainRecord`); nothing from types.ts.
  */
 
+/** How much of a domain is backed by shipped work. Labels in `evidenceLevelLabels`. */
 export type EvidenceLevel = "shipped" | "mixed" | "investigation";
 
+/** A link inside a dossier: site-relative or external. */
 export interface DomainLink {
   href: string;
   label: string;
+  /** Short qualifier rendered after the label. */
   note?: string;
 }
 
+/** One headed prose block in a dossier. */
 export interface DomainSection {
   heading: string;
   paragraphs: string[];
@@ -20,28 +39,47 @@ export interface DomainSection {
   diagram?: string;
 }
 
+/** One dossier page. */
 export interface DomainRecord {
+  /**
+   * Route path without a trailing slash, e.g. "/ai-engineering/rlhf". Child
+   * pages are found by path prefix (`childDomains`).
+   */
   path: string;
+  /** Short title used for the SEO title, breadcrumbs, lists, search and llms.txt. */
   title: string;
+  /** Page heading and Markdown title. */
   h1: string;
+  /** Meta description; also the search summary and llms.txt blurb. */
   description: string;
+  /** Eyebrow label above the heading; also a search tag. */
   label: string;
+  /** Standfirst paragraph under the heading; also shown when the page is listed as a child or on the homepage. */
   dek: string;
   evidenceLevel: EvidenceLevel;
+  /** Listed in the homepage domain section via `homeDomains()`. */
   showOnHome?: boolean;
   sections: DomainSection[];
+  /** Links to records that support the page's claims. */
   evidence: DomainLink[];
   related: DomainLink[];
+  /** Outside reading. Not evidence of production experience. */
   reading: DomainLink[];
+  /** What is not evidenced. Kept visible on the page and in Markdown. */
   gaps: string[];
 }
 
+/** Human-readable label for each evidence level, shown on DomainPage and in Markdown. */
 export const evidenceLevelLabels: Record<EvidenceLevel, string> = {
   shipped: "Grounded in work I can point to",
   mixed: "Mixed: shipped pieces and explicit limits",
   investigation: "Investigation or notes, not a production system",
 };
 
+/**
+ * All dossier pages, parents before their children. This order is kept by the
+ * homepage list, llms.txt, the sitemap and search ranking ties.
+ */
 export const domains: DomainRecord[] = [
   {
     path: "/ai-engineering",
@@ -780,20 +818,32 @@ export const domains: DomainRecord[] = [
   },
 ];
 
+/** Find the dossier for a pathname, ignoring trailing slashes. Used by DomainPage. */
 export function getDomainByPath(pathname: string): DomainRecord | undefined {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
   return domains.find((page) => page.path === path);
 }
 
+/**
+ * Every dossier whose path starts with `path/` (all descendants, not only
+ * direct children). Feeds the "In this section" list on DomainPage and in Markdown.
+ */
 export function childDomains(path: string): DomainRecord[] {
   const prefix = path.endsWith("/") ? path : `${path}/`;
   return domains.filter((page) => page.path.startsWith(prefix));
 }
 
+/** Dossiers flagged `showOnHome`, in `domains` order, for the HomePage domain list. */
 export function homeDomains(): DomainRecord[] {
   return domains.filter((page) => page.showOnHome);
 }
 
+/**
+ * Markdown body for a dossier's Markdown twin (used by
+ * src/lib/agent/markdown.ts): evidence level, child pages, sections,
+ * evidence, related links, further reading, gaps and a contact pointer.
+ * Empty evidence, related and gap lists render as "_None listed._".
+ */
 export function renderDomainBody(page: DomainRecord): string {
   const children = childDomains(page.path)
     .map((child) => `- [${child.title}](${child.path}.md): ${child.description}`)

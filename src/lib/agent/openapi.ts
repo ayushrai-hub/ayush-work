@@ -1,17 +1,35 @@
+/**
+ * The OpenAPI 3.1 document for the public REST API, served as `/openapi.json`.
+ *
+ * Enums and limits come from the code that enforces them (search types, project categories and
+ * types, rate-limit numbers, error codes), so the spec follows the implementation. The policy
+ * notes exported here are reused word for word on the `/developers` page.
+ *
+ * Connects to:
+ * - `surfaces.ts` `agentFiles()` writes `openapi.json`; `vitePlugin.ts` serves it in dev and preview.
+ * - `developerDocs.ts` imports `API_ACCESS_NOTE`, `API_RATE_LIMIT_NOTE`, and `API_VERSIONING_POLICY`.
+ * - Tested in `src/__tests__/agentSurfaces.test.ts` and `agentReadiness.test.ts`.
+ * - Depends on `src/content` (`person`, project label maps), `apiError.ts`, `mcpCard.ts`,
+ *   `rateLimit.ts`, and `search.ts`.
+ */
 import { person, projectCategoryLabels, projectTypeLabels } from "../../content";
 import type { ApiErrorCode } from "./apiError";
 import { SERVER_CARD_CONTENT_TYPE, SERVER_CARD_PATH, SERVER_CARD_SCHEMA } from "./mcpCard";
 import { RATE_LIMIT_QUOTA, RATE_LIMIT_WINDOW_SECONDS } from "./rateLimit";
 import { SEARCH_MAX_QUERY, SEARCH_TYPES } from "./search";
 
+/** Versioning and deprecation policy text, shared with the developer docs. */
 export const API_VERSIONING_POLICY =
   "Versioned in the URL path. /api/v1 is stable: fields may be added, but none are removed or renamed. Breaking changes ship under a new path such as /api/v2. A replaced version keeps working for at least 90 days; during that window its responses carry Deprecation and Sunset headers and a Link with rel=\"successor-version\", and the dates are listed on /developers. The unversioned /api/search and /api/projects are aliases of v1 and follow the same policy. No version is deprecated today.";
 
+/** Access and caching note, shared with the developer docs. */
 export const API_ACCESS_NOTE =
   "Free and public. No account, API key, or sandbox is needed because every endpoint is read-only over published content. Clients may cache responses for five minutes.";
 
+/** Rate-limit note built from the constants in `rateLimit.ts`, shared with the developer docs. */
 export const API_RATE_LIMIT_NOTE = `${RATE_LIMIT_QUOTA} requests per ${RATE_LIMIT_WINDOW_SECONDS} seconds per client address, counted per server instance. Every response carries RateLimit-Policy and RateLimit headers (draft-ietf-httpapi-ratelimit-headers-11). Over the limit, the API returns 429 with a Retry-After header in seconds and error code rate_limited.`;
 
+/** Enum for `ErrorResponse.error.code`. Must list every `ApiErrorCode`; the type does not enforce completeness. */
 const ERROR_CODES: ApiErrorCode[] = [
   "invalid_query",
   "invalid_slug",
@@ -24,13 +42,16 @@ const ERROR_CODES: ApiErrorCode[] = [
   "rate_limited",
 ];
 
+/** `application/json` content object that references a component schema by name. */
 const json = (ref: string) => ({ "application/json": { schema: { $ref: `#/components/schemas/${ref}` } } });
 
+/** RateLimit header references used by the 200 and 429 responses. */
 const rateLimitHeaders = {
   RateLimit: { $ref: "#/components/headers/RateLimit" },
   "RateLimit-Policy": { $ref: "#/components/headers/RateLimitPolicy" },
 };
 
+/** A 200 response with rate-limit headers and a JSON body of the named schema. */
 function ok(description: string, schema: string) {
   return { "200": { description, headers: rateLimitHeaders, content: json(schema) } };
 }
@@ -55,6 +76,7 @@ const archiveParameter = {
   schema: { type: "string", enum: ["1"] },
 };
 
+/** GET operation for a search path; used for both `/api/v1/search` and its `/api/search` alias. */
 function searchOperation(operationId: string, summary: string) {
   return {
     get: {
@@ -93,6 +115,11 @@ function searchOperation(operationId: string, summary: string) {
   };
 }
 
+/**
+ * The full OpenAPI 3.1 document: search, projects, compare, and Server Card paths with shared
+ * components. `/api/mcp` itself is only described in `info.description`, because it is JSON-RPC
+ * over POST rather than REST.
+ */
 export function buildOpenApiDocument() {
   const origin = person.siteUrl.replace(/\/$/, "");
   const categories = Object.keys(projectCategoryLabels);

@@ -1,3 +1,17 @@
+/**
+ * MCP server identity and discovery documents: the SEP-2127 Server Card and the AI Catalog.
+ *
+ * The Server Card describes the remote Streamable HTTP endpoint at `/api/mcp`. It is served live
+ * at `/api/mcp/server-card` with an ETag, and as a static file at the legacy
+ * `/.well-known/mcp/server-card.json`. The AI Catalog at `/.well-known/ai-catalog.json` points to
+ * the live card. All URLs are built from `person.siteUrl`.
+ *
+ * Connects to:
+ * - `mcpServer.ts` (`MCP_SERVER_INFO` as serverInfo), `mcpHttp.ts` (serves the card),
+ *   `surfaces.ts` (emits the catalog and legacy card files), `vitePlugin.ts` (dev routing).
+ * - `apiCatalog.ts`, `openapi.ts`, and `developerDocs.ts` read its paths and media type.
+ * - Tested in `src/__tests__/agentReadiness.test.ts`. Depends on `src/content` (`person`).
+ */
 import { person } from "../../content";
 
 /** Mirrors the SDK's SUPPORTED_PROTOCOL_VERSIONS; a test fails when the SDK changes them. */
@@ -19,6 +33,7 @@ export const AI_CATALOG_CONTENT_TYPE = "application/ai-catalog+json";
 /** SEP-1649 location. Superseded by SEP-2127, kept so older scanners still find the card. */
 export const LEGACY_SERVER_CARD_PATH = "/.well-known/mcp/server-card.json";
 
+/** Response headers for the Server Card. `netlify.toml` and `vercel.json` repeat them for the legacy static file. */
 export const SERVER_CARD_HEADERS: Record<string, string> = {
   "Content-Type": SERVER_CARD_CONTENT_TYPE,
   "Cache-Control": "public, max-age=3600",
@@ -28,10 +43,12 @@ export const SERVER_CARD_HEADERS: Record<string, string> = {
   "Access-Control-Expose-Headers": "ETag",
 };
 
+/** Canonical site origin without a trailing slash. */
 function origin() {
   return person.siteUrl.replace(/\/$/, "");
 }
 
+/** The Server Card object: identity from `MCP_SERVER_INFO` and one streamable-http remote. */
 export function buildServerCard() {
   return {
     $schema: SERVER_CARD_SCHEMA,
@@ -51,6 +68,7 @@ export function buildServerCard() {
   };
 }
 
+/** AI Catalog with a single entry that links to the live Server Card URL. */
 export function buildAiCatalog() {
   return {
     specVersion: "1.0",
@@ -64,6 +82,7 @@ export function buildAiCatalog() {
   };
 }
 
+/** The Server Card as pretty-printed JSON with a trailing newline; the exact bytes the ETag covers. */
 export function serverCardJson(): string {
   return `${JSON.stringify(buildServerCard(), null, 2)}\n`;
 }

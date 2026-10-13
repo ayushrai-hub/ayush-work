@@ -1,3 +1,16 @@
+/**
+ * `/about`: biography page with portrait, roles, education, leadership, and capabilities.
+ *
+ * Static render of content records; no state. Experience roles and capability entries get
+ * `id` anchors (`#<role.slug>`, `#capability-<domain>`) so other pages and search hits can
+ * deep-link. Only the first four leadership entries are shown; the rest live on /leadership.
+ *
+ * Connects to:
+ * - Routed in src/App.tsx as `about`; prerendered via STATIC_PAGES in src/lib/publicRoutes.ts.
+ * - Content from src/content (`person`, `experience`, `education`, `leadership`, `capabilities`,
+ *   `pageUpdatedAt("about")`); components PageSEO, PageHeader, Prose, SectionHeading.
+ * - Markdown twin `/about.md` built in `buildPages()` in src/lib/agent/markdown.ts.
+ */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
@@ -12,6 +25,7 @@ import {
   person,
 } from "../content";
 
+/** About page component. Lazy-loaded by the `about` route in src/App.tsx. */
 export default function AboutPage() {
   return (
     <>

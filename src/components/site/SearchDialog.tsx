@@ -1,12 +1,29 @@
+/**
+ * Modal site search over the public content index.
+ *
+ * Controlled by the `open` and `onClose` props. While open it focuses the input after a short
+ * timeout, closes on Escape or a backdrop click, and locks body scroll; closing clears the query.
+ * Results are recomputed on every keystroke with searchPortfolio, the same lexical ranking used by
+ * GET /api/search: an empty query shows the first 8 index entries in content order, a non-empty
+ * query shows up to 12 matches. Choosing a result navigates with a router Link and closes the
+ * dialog. There is no arrow-key navigation or focus trap; Tab moves through the result links.
+ *
+ * Connects to:
+ * - Rendered once by SiteLayout, which owns the open state and the "/" and Cmd/Ctrl+K shortcuts;
+ *   SiteHeader's search buttons also open it
+ * - lib/agent/search: searchPortfolio (default index from content/searchIndex)
+ */
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { searchPortfolio } from "../../lib/agent/search";
 
+/** Props for SearchDialog; the parent owns the open state. */
 interface SearchDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
+/** Search modal; returns null while closed. */
 export default function SearchDialog({ open, onClose }: SearchDialogProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);

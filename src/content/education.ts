@@ -1,5 +1,20 @@
+/**
+ * Formal education and structured coursework.
+ *
+ * A flat list in display order. Entries with unknown dates keep `start` and
+ * `end` as empty strings; EducationPage hides the date row in that case, but
+ * the Markdown twins still print the " – " separator.
+ *
+ * Connects to:
+ * - EducationPage, AboutPage and ResumePage.
+ * - Markdown twins /education.md, /about.md and /resume.md; search items of
+ *   type "education" linking to /education#slug.
+ * - Slugs are cited by timeline.ts.
+ * - Uses `Education` from types.ts.
+ */
 import type { Education } from "./types";
 
+/** All education entries, in display order. */
 export const education: Education[] = [
   {
     slug: "lncts-btech-cse",

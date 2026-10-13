@@ -1,34 +1,17 @@
 /**
- * Products.tsx, Products showcase component featuring DPI and commercial products.
+ * Legacy products section: cards for The Open Framework and AyushMushrooms.
  *
- * This component displays Ayush Rai's key products including Digital Public Infrastructure
- * (DPI) projects and commercial applications. Features detailed product descriptions,
- * technology stacks, key highlights, and impact. Includes responsive design with smooth
- * animations and product categorization.
+ * Legacy: not imported by the current site (src/App.tsx routes /products to
+ * src/pages/ProductsPage.tsx, which reads src/content/). Kept for reference;
+ * excluded from tsconfig.app.json. No test covers it.
  *
- * The component includes:
- * - Product cards with descriptions and links
- * - Technology stack visualization per product
- * - Key features and highlights
- * - Impact and outcomes
- * - Responsive grid layout
+ * Product data is hard-coded. Each card shows the description, a trimmed
+ * overview list, the first `solution` line when present, up to four tech-stack
+ * entries (text before any "·"), and a "View Live" link.
  *
- * Products showcased:
- * - The Open Framework (DPI for India's NGOs/CSOs)
- * - AyushMushrooms (Agrotech Brand Website MVP)
- *
- * @component
- * @example
- * ```tsx
- * import Products from './components/Products';
- *
- * function App() {
- *   return <Products />;
- * }
- * ```
- *
- * @see {@link src/components/Projects.tsx} for project implementations
- * @see {@link src/components/Services.tsx} for service offerings
+ * Connects to:
+ * - No importers in src/
+ * - framer-motion, react-intersection-observer, lucide-react
  */
 import React from "react";
 import { motion } from "framer-motion";
@@ -41,19 +24,8 @@ import {
 } from "lucide-react";
 
 /**
- * Products, Products portfolio showcase component.
- *
- * Renders an interactive products portfolio with detailed product cards,
- * technology stacks, live demos, and impact metrics. Provides comprehensive
- * overview of products across DPI and commercial domains.
- *
- * @component
- * @returns {JSX.Element} The rendered Products section
- *
- * @example
- * ```tsx
- * <Products />
- * ```
+ * Renders `<section id="products">`. Fields such as `problem`, `highlights`, and
+ * `outcome` exist on the data but are never rendered.
  */
 const Products: React.FC = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
