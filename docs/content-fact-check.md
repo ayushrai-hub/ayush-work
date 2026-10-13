@@ -191,3 +191,23 @@ Positioning line **AI Engineer & AI Product Builder** is a self-description, not
 | Software services rates, SLAs, or team size | NOT CLAIMED | `/software-services` has no prices. |
 | Open-source star counts or third-party maintainer roles | NOT CLAIMED | Only repositories already linked from this site. |
 
+---
+
+## 15. Inconsistencies found in the code review (14 October 2026)
+
+Found while documenting every source file. The data was not changed; each needs a decision from Ayush.
+
+| Issue | Where | Suggested resolution |
+| --- | --- | --- |
+| Research `fundingNote` values such as "LNCT Internal Research Grant — needsConfirmation." and "BHOPAL SMART CITY INITIATIVE — needsConfirmation." render verbatim on the public research pages and their Markdown twins | `src/content/research.ts` | Remove the funding note until confirmed, or move it into the record's `needsConfirmation` list. |
+| The Open Framework is listed under Next.js, PostgreSQL, and Docker on `/uses`, and `/principles` says it "starts from RBAC" and "ships as MVP", while the case study says it is a Vite/React prototype with mock auth at the `building` stage | `src/content/uses.ts`, `src/content/principles.ts` vs `work.ts`, `products.ts` | Align `/uses` and `/principles` with section 13. |
+| Timeline dates disagree with other records: The Open Framework appears under 2024 (repository and work record start in 2025); the Google Cloud entry is 2020 while recognition says 2020–2024 | `src/content/timeline.ts` | Confirm dates. |
+| `/now` shows two dates: `now.lastUpdated` 2026-09-29 and `siteMeta.pages.now` 2026-08-08 | `src/content/now.ts`, `siteMeta.ts` | Keep one. |
+| IIT Madras entry has empty start and end; the Markdown twin prints a bare " – " | `src/content/education.ts` | Add dates or omit the range in Markdown. |
+| `uses.ts` says Netlify hosts the site; the privacy page says Netlify and possibly Vercel | `src/content/uses.ts`, `policies.ts` | Both hosts now build from `main`; state it once. |
+| `EmptyNote` shows the internal path `docs/questions-for-ayush.md` to visitors on `/writing`, `/uses`, and `/now` | `src/components/editorial/EmptyNote.tsx` | Replace with visitor-facing copy. |
+| `/resume` meta description promises a download; the page has no download link | `src/pages/ResumePage.tsx` | Add the file or change the description. |
+| Legacy components and tests still contain the phone number, withheld awards, and old service prices | `src/components/Hero.tsx`, `Contact.tsx`, `Research.tsx`, `Services.tsx`, `src/lib/profilesData.ts`, `src/__tests__/legacy/` | Not shipped (not imported by the live site). Delete the legacy folder or scrub it. |
+
+Fixed in code on the same day: the timeline's Legal NLP entry linked to a non-existent `/work/legal-nlp-contracts` and now links to `/research/legal-nlp-contracts`; `/writing/:slug` pages had Markdown twins but no HTML and are now prerendered.
+

@@ -1,7 +1,7 @@
 # OpenMemory Guide
 
 ## Overview
-Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com/ayushrai-hub/ayush-work). Vite + React + TypeScript + Tailwind + Framer Motion. Deployed historically on Netlify/Vercel. Evolving into a personal digital home with a typed content layer as the single source of truth.
+Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com/ayushrai-hub/ayush-work). Vite 7 + React 18 + TypeScript + Tailwind (Framer Motion only in legacy components). Production: Netlify serves www.ayushrai.site; Vercel also deploys `main` through its GitHub integration. Deploy = merge a PR into `main`. Evolving into a personal digital home with a typed content layer as the single source of truth.
 
 ## Architecture
 - **Entry:** `src/main.tsx` → `src/App.tsx` (react-router, lazy pages)
@@ -13,7 +13,9 @@ Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com
 - **Serverless:** Thin Netlify/Vercel adapters under `api/`, with shared contact validation and SendGrid delivery in `src/lib/server/contactEmail.ts`; read-only search and project endpoints remain in `api/search.ts` and `api/projects.ts`. `/api/v1/projects`, `/api/v1/projects/:slug`, and `/api/v1/compare` rewrite onto the projects function
 - **Agent surfaces:** `src/lib/agent/` serializes the same content into Markdown twins, `/llms.txt`, `/llms-full.txt`, `/openapi.json`, `/AGENTS.md`, and `/SKILL.md` (Vite plugin emits them and serves them in dev). `Accept: text/markdown` negotiation (twin with `Vary: Accept`, or 404 with `dist/404.md`) is `negotiateMarkdown` in `surfaces.ts`, used by the Vite plugin and root `middleware.ts` on Vercel; `netlify/edge-functions/markdown-negotiation.js` mirrors it in JS. Netlify redirect `Accept` conditions and Vercel rewrites do not negotiate over prerendered HTML. Search is lexical, not semantic. Role view reorders the homepage (`?audience=`). Agent view is `?agent=1`. WebMCP tool `search_portfolio_projects` calls the same search function. MCP tools live in `src/lib/agent/mcpServer.ts`; transports are stdio (`mcp/server.ts`, `npm run mcp`) and stateless Streamable HTTP (`api/mcp.ts` → `src/lib/agent/mcpHttp.ts`). List endpoints use opaque cursors (`src/lib/agent/pagination.ts`, `cursor` in, `nextCursor` out). `/api/v1` versioning and 90-day deprecation policy text lives in `openapi.ts` (`API_VERSIONING_POLICY`) and feeds `/developers` via `developerDocs.ts`. RFC 9727 catalog: `apiCatalog.ts`, emitted as `dist/.well-known/api-catalog`. MCP discovery (SEP-2127): `mcpCard.ts` builds the Server Card (served by the MCP function at `/api/mcp/server-card` with ETag/304; `MCP_SERVER_INFO` is also the runtime serverInfo `site.ayushrai/portfolio`), the AI Catalog `/.well-known/ai-catalog.json`, and a legacy copy at `/.well-known/mcp/server-card.json`. Errors: `apiError.ts` gives every error `{code, message, hint, docs}`; unknown `/api/*` paths return JSON `route_not_found` via `apiRoutes.ts` (`API_ROUTES`, mirrored in the Netlify edge function and test-compared). Rate limit: `rateLimit.ts`, per-instance fixed window 60/60s, draft-11 `RateLimit`/`RateLimit-Policy` headers, 429 + `Retry-After`; REST goes through `agentApiResponse()` in `http.ts`, MCP through `mcpHttp.ts`. OpenAPI types every response (`PublicProject`, `SearchItem`, `ErrorResponse`, 429). `WHEN_TO_USE`/`WHEN_NOT_TO_USE` in `developerDocs.ts` feed `llms.txt` (before the first H2, per llmstxt format) and `/developers`. Unpublished CLI: `packages/cli/bin/ayushrai.mjs` (package `ayushrai`, `private: true` until a license and npm publish are approved). Privacy and contact copy: `src/content/policies.ts` (describes shipped analytics/hosting/SendGrid only)
 - **Canonical host:** `https://www.ayushrai.site` (`person.siteUrl`). Apex `ayushrai.site` 301s to www. `ayush-me.netlify.app` is not the live host
-- **Tests:** Vitest + Testing Library; legacy UI tests under `src/__tests__/legacy/` (excluded). Playwright e2e
+- **Tests:** Vitest + Testing Library (`npx vitest run`); legacy UI tests under `src/__tests__/legacy/` are excluded from Vitest and their imports do not resolve. Playwright e2e in `e2e/site.spec.ts` and `e2e/agent-readiness.spec.ts` (Chromium; reuses a dev server on 5173 outside CI). Key guards: `domainSurfaces.test.tsx` asserts every Markdown twin has a prerendered HTML route and every /timeline link lands on a prerendered page
+- **CI:** `.github/workflows/tests.yml` on push/PR to `main`, Node 22: `npm ci`, lint, typecheck, `test:coverage` (no threshold), build, Playwright. Netlify `NODE_VERSION = "22"`. Generated `coverage/`, `playwright-report/`, `test-results/` are gitignored
+- **Local Node:** use arm64 Node from nvm (`$HOME/.nvm/versions/node/v24.21.0/bin`); the x64 Node in `/usr/local/bin` breaks Rollup/esbuild native binaries
 
 ## User Defined Namespaces
 - [Leave blank - user populates]
@@ -30,7 +32,11 @@ Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com
 ## Patterns
 - **Content SSOT:** Prefer `import { … } from '../content'` instead of hardcoding copy. Search, Markdown, REST, WebMCP, and MCP must call `src/lib/agent/` rather than a second dataset. Omit phone numbers from public pages and machine output. Keep `needsConfirmation` / withheld award lists out of machine output
 - **Flagship products:** `featured` on `src/content/products.ts` orders The Open Framework, AGENYRA, and MedVoice. Stages include `building` and `experimental` via `productStageLabels`. The product page and the `/work/:slug` case study share a slug and say different things. MedVoice has no demo URL until one is verified. AGENYRA waitlist admin and MedVoice demo credentials stay out of public copy. Audit: `docs/flagship-products-audit.md`.
-- **Search ranking:** substring match on title, summary, type, and tags; original index order; empty query returns 8, a query returns 12. Do not add a separate score
+- **Search ranking:** lexical tiers shared by the dialog, REST, MCP, and WebMCP (`src/lib/agent/search.ts`): exact title, title substring, tag or type, then summary; ties keep content order. Not semantic
+- **Code documentation:** every source file starts with a `/** */` header (what it is for, how it works, "Connects to:" with grep-verified callers and dependencies); every function/component/hook has a short JSDoc. Legacy files say they are not routed. Keep these accurate when code changes
+- **Prerender list:** `src/lib/publicRoutes.ts` — `sitemapRoutes()` (indexable) and `prerenderRoutes()` (adds all product logs, writing detail pages, `/design-system`). Anything with a Markdown twin must be prerendered
+- **Contact email:** `src/lib/server/contactEmail.ts` HTML-escapes visitor fields, returns 400 for malformed JSON or non-string fields
+- **Analytics:** GA4 `G-VBS0YJ07R8` loads from the inline snippet in `index.html`; `initGA()` skips injection when that script exists (prevents double page_view). GTM `GTM-NJZ5ZBX4` also loads from `index.html`
 - **SPA fallback:** do not set Netlify `force` on `/*` → `/index.html`. Static HTML, `.md`, `llms.txt`, and the sitemap must win over the shell
 - **Deployment ownership:** Keep host-required `vercel.json`, `netlify.toml`, and public `api/*.ts` entry points at the repository root. Put reusable server-only logic in `src/lib/server/` and deployment notes in `docs/deployment/`
 - External links: `target="_blank"` + `rel="noopener noreferrer"`
@@ -55,6 +61,7 @@ Product direction for the site rebuild (Vite + React Router MPA — not Next.js)
 | `docs/seo/keyword-and-content-strategy.md` | Qualitative search intents, no invented volumes |
 | `docs/seo/measurement-plan.md` | Search Console and analytics review, no fake metrics |
 | `docs/deployment/vercel.md` | Vercel layout, variables, preview checks, and safe rollout |
+| `docs/API_ENDPOINTS.md` | Every endpoint, parameters, errors, rate limit, CORS, contact API |
 | `docs/personal-positioning.md` | Positioning narrative and checks |
 | `docs/migration-plan.md` | Phased migration on current stack |
 | `docs/content-style.md` | Voice, banned hype, copy patterns |

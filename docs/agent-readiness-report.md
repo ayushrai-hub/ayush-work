@@ -2,7 +2,20 @@
 
 Date: 2026-10-11
 
-Branch: `agent-readiness` (from `9214d7d`). Not committed, not merged, not deployed.
+Branch: `agent-readiness` (from `9214d7d`). Not committed, not merged, not deployed at the time of writing.
+
+## Status update (2026-10-14)
+
+The report below is the 2026-10-11 snapshot. Since then:
+
+- The branch was committed, merged into `main`, and deployed. See `docs/API_ENDPOINTS.md` and `/developers` for the current surface.
+- Remote MCP exists: `POST /api/mcp` (stateless Streamable HTTP, `api/mcp.ts`), plus a `search_portfolio` tool, a SEP-2127 Server Card at `/api/mcp/server-card`, and `/.well-known/ai-catalog.json`.
+- Every API error carries `code`, `message`, `hint`, and `docs`. Unknown `/api/*` paths return JSON 404. Responses carry draft-11 `RateLimit` headers; 429 adds `Retry-After`. List endpoints use cursor pagination. `/.well-known/api-catalog` (RFC 9727) is published.
+- A zero-dependency CLI lives in `packages/cli`. It is not published to npm.
+- ESLint was fixed by upgrading `typescript-eslint`; `npm run lint` is clean.
+- `e2e/example.spec.ts` was replaced by `e2e/site.spec.ts`. Playwright now runs in CI on Chromium, together with lint, typecheck, Vitest with coverage, and the build.
+- Category and type filters now reject inherited object keys such as `toString`.
+- The "Deferred" list below is out of date for remote MCP and Playwright. Still deferred: publishing an SDK or the CLI, an A2A card, and registry listings.
 
 OpenMemory’s remote store was unavailable in this session. Project notes were updated in `openmemory.md` only.
 

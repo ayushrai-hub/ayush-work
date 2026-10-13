@@ -26,6 +26,12 @@ belongs under `src/lib/server/`, while `api/` remains a thin adapter layer.
 - Command: `npm run build`
 - Output: `dist`
 - Framework preset: Vite
+- Node: 22.x (Vite 7 needs `^20.19.0 || >=22.12.0`; see `engines` in `package.json`)
+
+Production deploys come from the GitHub integration: every merge into `main`
+creates a Vercel production deployment, and every other branch gets a preview.
+`.github/workflows/tests.yml` runs lint, typecheck, Vitest, the build, and
+Playwright on the same pushes and pull requests.
 
 The build emits static HTML for known routes. Unknown routes must resolve to
 `dist/404.html`; do not add a catch-all rewrite to `index.html`.

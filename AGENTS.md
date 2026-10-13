@@ -107,3 +107,5 @@ Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, 
 - Change public facts in `src/content/`, then let Markdown, search, and MCP follow.
 - Do not add a second sitemap or prerender pipeline. Host rewrites must keep `force` off for the SPA fallback so existing HTML files win.
 - Phone numbers stay off public pages and machine-readable output. Withheld award and leadership claims stay in `needsConfirmation` lists and must not be copied into new endpoints.
+- Every source file opens with a header comment (purpose, mechanism, and what it connects to), and every function has a short doc comment. Update them with the code. Files in the legacy component folders say they are not routed; do not wire them back in.
+- Before pushing, run `npm run lint`, `npm run typecheck`, `npx vitest run`, `npm run build`, and `npm run test:e2e`. CI runs the same steps on every pull request to `main`, and merging to `main` deploys.
