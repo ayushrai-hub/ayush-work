@@ -24,7 +24,7 @@ Vite + React Router is client-rendered by default:
 | Crawlers seeing empty shell | Ensure critical meta in `index.html`; per-route meta via existing `SEO` component on navigation; consider prerender (`vite-plugin-ssr` alternatives, `vite-plugin-prerender`, or host prerender) for `/`, `/work`, `/about`, `/connect` |
 | Soft 404s on refresh | Host rewrites: all routes → `index.html` |
 | Duplicate thin URLs | Merge pages (see IA); 301 legacy routes |
-| Phone in schema | **Remove** `telephone` from JSON-LD |
+| Phone in schema | `telephone` is set from `person.phone` (published at Ayush's request, 14 October 2026) |
 
 **Not migrating to Next.js** for SEO alone; prerender or SSR-lite later if needed.
 
@@ -89,7 +89,7 @@ Vite + React Router is client-rendered by default:
 }
 ```
 
-**Do not include:** telephone, fake AggregateRating, Service catalog with prices, unverified awards as `Award` entities until verified.
+**Do not include:** fake AggregateRating, Service catalog with prices, unverified awards as `Award` entities until verified.
 
 **CreativeWork** optional per case study when pages are rich enough.
 
@@ -129,7 +129,7 @@ Vite + React Router is client-rendered by default:
 
 - [ ] Final domain decided; HTTPS  
 - [ ] Update `defaultSEO.url` and OG URLs  
-- [ ] Remove phone from schema + pages  
+- [x] ~~Remove phone from schema + pages~~ (reversed: the phone is now public)  
 - [ ] Host redirects for `/research`, `/leadership`, `/certifications`, `/services`, `/extracurriculars`  
 - [ ] Sitemap submitted  
 - [ ] Prerender or confirm crawler rendering for key routes  

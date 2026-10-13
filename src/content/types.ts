@@ -183,18 +183,20 @@ export interface ProfileLink {
  * resume pages, Markdown twins, llms.txt, API error bodies, the OpenAPI
  * document and the MCP server card.
  *
- * Phone numbers must never appear on public pages or in machine-readable
- * output; `phone` and `phoneDisplay` stay empty strings and a test asserts it.
+ * The phone number is public: pages, Markdown, llms files, and JSON-LD read
+ * it from here. No other number may appear in public output; a test asserts it.
  */
 export interface Person {
   name: string;
   shortName: string;
   location: string;
   email: string;
-  /** Withheld. Leave empty. Do not publish a number here. */
+  /** E.164 form, used for `tel:` links and JSON-LD `telephone`. */
   phone: string;
-  /** Withheld display form. Leave empty. */
+  /** Human-readable form shown on pages and in Markdown. */
   phoneDisplay: string;
+  /** WhatsApp chat link for `phone` (wa.me). */
+  whatsappUrl: string;
   /** Typical reply window for contact */
   responseTime: string;
   tagline: string;

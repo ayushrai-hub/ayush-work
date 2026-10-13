@@ -69,7 +69,7 @@ export const privacySections: PolicySection[] = [
 
 /**
  * Context shown beside the contact form on /contact and appended to
- * /contact.md. Keeps the rule that no phone number is published.
+ * /contact.md. The phone line reads `person.phoneDisplay`.
  */
 export const contactSections: PolicySection[] = [
   {
@@ -83,7 +83,7 @@ export const contactSections: PolicySection[] = [
     heading: "What happens next",
     paragraphs: [
       `The form delivers your message to my inbox; it is not stored on this site. I reply from ${person.email}, usually within ${person.responseTime}. If the form fails, the "Open mail app" button opens the same message in your email client.`,
-      "I do not share a phone number on this site. If a call helps, book a time through Calendly.",
+      `You can also call me or message me on WhatsApp at ${person.phoneDisplay}. For a longer conversation, book a time through Calendly.`,
     ],
   },
 ];

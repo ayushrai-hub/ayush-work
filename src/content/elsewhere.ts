@@ -3,22 +3,20 @@
  *
  * `elsewhereProfiles` is the flat list; `elsewhere` groups it by category in
  * a fixed order, and `primaryElsewhere` / `archivedElsewhere` are filtered
- * views. Phone numbers must never appear on public pages or in machine
- * output, so WhatsApp and phone links are excluded. The legacy
- * src/lib/profilesData.ts still contains a WhatsApp phone link; do not copy
- * entries from it without removing that.
+ * views. The WhatsApp entry reads its link and number from `person`.
  *
  * Connects to:
  * - ElsewherePage (`elsewhere`, `primaryElsewhere`, `archivedElsewhere`).
  * - Markdown twin /elsewhere.md and search items of type "elsewhere" (both
  *   read `elsewhereProfiles`).
- * - Uses `ProfileLink` and `ElsewhereGroup` from types.ts.
+ * - Uses `person` (WhatsApp link) and `ProfileLink` and `ElsewhereGroup` from types.ts.
  */
+import { person } from "./person";
 import type { ElsewhereGroup, ProfileLink } from "./types";
 
 /**
  * Every external profile, grouped in source by the section comments below.
- * Excludes WhatsApp / phone. Primary vs archive flagged per link.
+ * Primary vs archive flagged per link.
  */
 export const elsewhereProfiles: ProfileLink[] = [
   // Code
@@ -301,7 +299,14 @@ export const elsewhereProfiles: ProfileLink[] = [
     description: "Personal life/systems site",
   },
 
-  // Social, no WhatsApp / phone
+  // Social
+  {
+    id: "whatsapp",
+    name: "WhatsApp",
+    url: person.whatsappUrl,
+    category: "social",
+    description: `Message ${person.phoneDisplay}`,
+  },
   {
     id: "twitter",
     name: "Twitter / X",

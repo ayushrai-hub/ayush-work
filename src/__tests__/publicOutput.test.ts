@@ -5,7 +5,8 @@
  * Renders each prerendered route with the same `render()` the build uses (src/entry-server.tsx), and
  * collects every generated agent file (`agentFiles()`: Markdown twins, llms files, OpenAPI, catalogs,
  * Server Card) plus the search index and REST project payloads. None of them may contain the internal
- * `needsConfirmation` marker, a withheld award, leadership, or funding claim, or the phone number.
+ * `needsConfirmation` marker, a withheld award, leadership, or funding claim, or any phone number other
+ * than the published `person.phone`.
  * Hand-written developer files (AGENTS.md, SKILL.md) are excluded: they describe the rule by name.
  *
  * Runs in the node environment because that is where the prerender runs.
@@ -19,6 +20,7 @@ import { describe, expect, it } from "vitest";
 import {
   leadershipNeedsConfirmation,
   researchAwardsNeedsConfirmation,
+  person,
   researchFundingNeedsConfirmation,
   searchIndex,
 } from "../content";
@@ -28,8 +30,9 @@ import { agentFiles } from "../lib/agent/surfaces";
 import { prerenderRoutes } from "../lib/publicRoutes";
 
 const INTERNAL_MARKER = "needsConfirmation";
-// Any Indian mobile number, bare or spaced as 5+5 digits; kept as a pattern so the repo holds no number.
-const PHONE = /(?<!\d)[6-9]\d{4}[\s-]?\d{5}(?!\d)/;
+// Any Indian mobile number, with or without +91 and 5+5 spacing. Only person.phone may match.
+const PHONE = /(?<!\d)(?:\+?91[\s-]?)?([6-9]\d{4}[\s-]?\d{5})(?!\d)/g;
+const OWN_NUMBER = person.phone.slice(-10);
 const WITHHELD = [
   ...leadershipNeedsConfirmation,
   ...researchAwardsNeedsConfirmation,
@@ -40,7 +43,10 @@ const WITHHELD = [
 function leaks(label: string, text: string): string[] {
   const found: string[] = [];
   if (text.includes(INTERNAL_MARKER)) found.push(`${label}: ${INTERNAL_MARKER}`);
-  if (PHONE.test(text)) found.push(`${label}: phone`);
+  for (const match of text.matchAll(PHONE)) {
+    const digits = match[1].replace(/\D/g, "");
+    if (digits !== OWN_NUMBER) found.push(`${label}: phone ${digits}`);
+  }
   const lower = text.toLowerCase();
   for (const claim of WITHHELD) {
     if (lower.includes(claim.toLowerCase())) found.push(`${label}: ${claim}`);
@@ -83,6 +89,20 @@ describe("public output", () => {
     }
     expect(found).toEqual([]);
   }, 60_000);
+
+  it("publishes the owner's phone and WhatsApp on the contact page, JSON-LD, and Markdown", async () => {
+    const contact = await render("/contact");
+    expect(contact.html).toContain(`href="tel:${person.phone}"`);
+    expect(contact.html).toContain(`href="${person.whatsappUrl}"`);
+    const home = await render("/");
+    const homeHead = `${home.helmet?.script.toString() ?? ""}${home.html}`.replace(/&quot;/g, '"');
+    expect(homeHead).toContain(`"telephone":"${person.phone}"`);
+    const files = agentFiles();
+    expect(files["contact.md"]).toContain(`Phone: ${person.phoneDisplay}`);
+    expect(files["contact.md"]).toContain(`WhatsApp: ${person.whatsappUrl}`);
+    expect(files["llms.txt"]).toContain(person.phoneDisplay);
+    expect(leaks("fixture", "call +91 90000 00000")).toEqual(["fixture: phone 9000000000"]);
+  });
 
   it("withholds the specific funding sources while keeping the neutral public note", async () => {
     for (const slug of Object.keys(researchFundingNeedsConfirmation)) {

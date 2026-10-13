@@ -142,7 +142,7 @@ export function buildOpenApiDocument() {
     info: {
       title: "Ayush Rai public API",
       version: "1.0.0",
-      description: `Read-only API over the same public content as Ayush Rai's website. Phone numbers and unverified award metrics are omitted. There is no separate dataset for this API.\n\nAccess: ${API_ACCESS_NOTE}\n\nRate limits: ${API_RATE_LIMIT_NOTE}\n\nErrors: every error body is { "error": { "code", "message", "hint", "docs" } }. code is stable; hint says how to fix the request.\n\nVersioning: ${API_VERSIONING_POLICY}\n\nMCP: the same project and search tools are available over Streamable HTTP at POST /api/mcp. Its Server Card is at GET ${SERVER_CARD_PATH}.`,
+      description: `Read-only API over the same public content as Ayush Rai's website. Unverified award metrics are omitted. There is no separate dataset for this API.\n\nAccess: ${API_ACCESS_NOTE}\n\nRate limits: ${API_RATE_LIMIT_NOTE}\n\nErrors: every error body is { "error": { "code", "message", "hint", "docs" } }. code is stable; hint says how to fix the request.\n\nVersioning: ${API_VERSIONING_POLICY}\n\nMCP: the same project and search tools are available over Streamable HTTP at POST /api/mcp. Its Server Card is at GET ${SERVER_CARD_PATH}.`,
       contact: { name: person.name, email: person.email, url: `${origin}/developers/` },
     },
     externalDocs: { description: "Developer notes", url: `${origin}/developers/` },

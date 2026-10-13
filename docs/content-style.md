@@ -133,7 +133,7 @@ Never invent precision (“~85%”) to look careful.
 ## 9. Privacy & safety in copy
 
 - Public: email, city/country, professional links.  
-- Not public: phone, personal address, private Drive links that expose PII, client secrets.  
+- Public: email and the phone number in `person.ts`. Not public: personal address, private Drive links that expose PII, client secrets.  
 - Client work: get permission; offer anonymization (“professional site for a leadership consultant”).  
 
 ---
@@ -165,6 +165,6 @@ No price list. No package tiers. No “starting at $2000.”
 - [ ] No title stacking  
 - [ ] No unverified numbers  
 - [ ] Status labels accurate  
-- [ ] Phone absent  
+- [ ] No phone number other than `person.phone`  
 - [ ] Adjectives earn their keep or get cut  
 - [ ] Reads fine aloud in ~20 seconds for home hero

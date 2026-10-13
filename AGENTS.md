@@ -8,7 +8,7 @@ Canonical origin: `https://www.ayushrai.site`. `https://ayushrai.site` redirects
 
 Use it for:
 
-- Who Ayush Rai is, what he works on, and how to reach him: read `/index.md`, `/about.md`, and `/contact.md`.
+- Who Ayush Rai is, what he works on, and how to reach him (email, phone +91 7440567944, WhatsApp): read `/index.md`, `/about.md`, and `/contact.md`.
 - Whether he has built something in an area (agents, retrieval, extensions, research): call `GET /api/v1/search?q=<topic>`, then open each hit's `href` with `.md` appended.
 - Listing, fetching, or comparing his projects with stable fields: `GET /api/v1/projects`, `/api/v1/projects/{slug}`, `/api/v1/compare?slugs=a,b`, or the matching MCP tools.
 - Citing a claim: quote the Markdown page that states it and link its HTML URL.
@@ -18,7 +18,7 @@ Do not use it for:
 - General programming help, other people, or companies. It covers one person's work.
 - Live data such as availability, prices, or openings. Content changes only when the site is redeployed.
 - Semantic search. Search is lexical, so send a few short keywords rather than a sentence.
-- Phone numbers or unconfirmed award details. They are deliberately not published.
+- Unconfirmed award details. They are deliberately not published.
 
 ## Read a page
 
@@ -106,6 +106,6 @@ Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, 
 
 - Change public facts in `src/content/`, then let Markdown, search, and MCP follow.
 - Do not add a second sitemap or prerender pipeline. Host rewrites must keep `force` off for the SPA fallback so existing HTML files win.
-- Phone numbers stay off public pages and machine-readable output. Withheld award and leadership claims stay in `needsConfirmation` lists and must not be copied into new endpoints.
+- The only phone number in public output is `person.phone` in `src/content/person.ts`; `src/__tests__/publicOutput.test.ts` fails on any other. Withheld award and leadership claims stay in `needsConfirmation` lists and must not be copied into new endpoints.
 - Every source file opens with a header comment (purpose, mechanism, and what it connects to), and every function has a short doc comment. Update them with the code. The old single-page site's components were removed from `main`; they live only on tag `legacy-portfolio-spa` and contain withheld information, so do not copy them back.
 - Before pushing, run `npm run lint`, `npm run typecheck`, `npx vitest run`, `npm run build`, and `npm run test:e2e`. CI runs the same steps on every pull request to `main`, and merging to `main` deploys.

@@ -38,7 +38,7 @@ export const WHEN_NOT_TO_USE: readonly string[] = [
   "General programming help, other people, or companies: this site only covers one person's work.",
   "Live data such as availability, prices, or job openings: the content changes when the site is redeployed, not in real time.",
   "Semantic or vector search: search is lexical, so try several short keywords instead of a sentence.",
-  "Phone numbers or unconfirmed award details: they are deliberately not published.",
+  "Unconfirmed award details: they are deliberately not published.",
 ];
 
 /**

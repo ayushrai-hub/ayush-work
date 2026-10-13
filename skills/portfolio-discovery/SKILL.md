@@ -11,7 +11,7 @@ Canonical site: https://www.ayushrai.site
 
 1. Start at https://www.ayushrai.site/llms.txt
 2. Open the linked `.md` URL for a page. Home is https://www.ayushrai.site/index.md
-3. Treat that Markdown as the public copy. Do not promote numbers the text says are unverified. Do not look up a phone number; it is omitted on purpose.
+3. Treat that Markdown as the public copy. Do not promote numbers the text says are unverified. The phone and WhatsApp contact are in `/contact.md`.
 
 ## Search
 

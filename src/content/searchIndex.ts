@@ -50,7 +50,7 @@ export function buildSearchIndex(): SearchItem[] {
       type: "person",
       summary: person.tagline,
       href: "/",
-      tags: ["ayush", "about", "contact", person.location],
+      tags: ["ayush", "about", "contact", "phone", "whatsapp", person.location],
     },
   ];
 

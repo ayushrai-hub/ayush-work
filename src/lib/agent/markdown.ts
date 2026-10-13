@@ -4,7 +4,7 @@
  * `buildPages()` turns the records in `src/content` into one `AgentPage` per site path, and the
  * result is cached for the life of the process. Each page has a title, `Source:` (canonical HTML URL),
  * `Markdown:` (its `.md` URL), a description, the body, and a closing note on what is left out.
- * No page reads `person.phone` or `person.phoneDisplay`.
+ * The home and contact twins and `llms.txt` list `person.phoneDisplay` beside the email.
  *
  * Connects to:
  * - `surfaces.ts` (static files for the build, request-time negotiation) and `vitePlugin.ts`
@@ -64,8 +64,7 @@ export interface AgentPage {
 }
 
 /** Closing note on every page and in `llms.txt`. */
-const OMISSION =
-  "Private phone numbers and unverified award metrics are omitted. Wording matches the public site.";
+const OMISSION = "Unverified award metrics are omitted. Wording matches the public site.";
 
 /** Renders heading-plus-paragraphs sections (contact, privacy, developers) as `##` blocks. */
 function policyBody(sections: PolicySection[]): string {
@@ -288,6 +287,7 @@ function buildPages(): AgentPage[] {
         "",
         `Location: ${person.location}.`,
         `Email: ${person.email}`,
+        `Phone: ${person.phoneDisplay} (WhatsApp: ${person.whatsappUrl})`,
         `GitHub: ${person.primaryProfiles.github}`,
         `LinkedIn: ${person.primaryProfiles.linkedin}`,
         `Resume: ${person.resumeUrl}`,
@@ -642,15 +642,15 @@ function buildPages(): AgentPage[] {
     doc(
       "/contact",
       "Contact",
-      "Email about work, products, research, or a quiet hello.",
+      "Email, call, or WhatsApp about work, products, research, or a quiet hello.",
       [
         `Email: ${person.email}`,
+        `Phone: ${person.phoneDisplay}`,
+        `WhatsApp: ${person.whatsappUrl}`,
         `Usual reply time: ${person.responseTime}.`,
         `Calendly: ${person.primaryProfiles.cal}`,
         "",
         "Intents: work opportunity, product, research, collaboration, speaking, consulting, hello.",
-        "",
-        "A phone number is not included in machine-readable pages.",
         "",
         policyBody(contactSections),
       ].join("\n"),
@@ -814,7 +814,7 @@ export function renderLlmsTxt(): string {
     "",
     `- [About](${abs("/about.md")})`,
     `- [Experience](${abs("/experience.md")})`,
-    `- [Contact](${abs("/contact.md")}): ${person.email}`,
+    `- [Contact](${abs("/contact.md")}): ${person.email}, ${person.phoneDisplay}`,
     `- [Privacy](${abs("/privacy.md")}): what the site collects and who processes it.`,
     `- GitHub: ${person.primaryProfiles.github}`,
     `- LinkedIn: ${person.primaryProfiles.linkedin}`,

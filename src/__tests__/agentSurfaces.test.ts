@@ -4,8 +4,8 @@
  * Verifies that every search-index href resolves to a real route, record, or
  * anchor; that lexical ranking puts title hits before summary hits and matches
  * /api/search; that project list, detail, compare, archive, and traversal cases
- * return the right statuses; that Markdown and llms files omit the phone number
- * and every needsConfirmation claim; that role view only reorders work; that
+ * return the right statuses; that Markdown and llms files list the published phone
+ * number and omit every needsConfirmation claim; that role view only reorders work; that
  * Accept: text/markdown negotiation returns Markdown or a Markdown 404; that
  * cursors page through all projects; that the RFC 9727 catalog lists only
  * deployed APIs; and that the stateless MCP endpoint initializes, lists four
@@ -55,9 +55,6 @@ import { comparePublicProjects, getPublicProject } from "../lib/agent/projectsQu
 import { isExternalHref, isKnownRoute, pathnameOf } from "../lib/agent/routes";
 import { SEARCH_TYPES, searchPortfolio } from "../lib/agent/search";
 import { work } from "../content";
-
-// Any Indian mobile number, bare or spaced as 5+5 digits; kept as a pattern so the repo holds no number.
-const MOBILE_NUMBER = /(?<!\d)[6-9]\d{4}[\s-]?\d{5}(?!\d)/;
 
 /**
  * Returns true when `href` is external, or is a known route whose slug and
@@ -199,14 +196,13 @@ describe("agent surfaces", () => {
     expect(compare.status).toBe(400);
   });
 
-  it("writes markdown twins and llms.txt without phone numbers or withheld awards", () => {
+  it("writes markdown twins and llms.txt with the published phone and without withheld awards", () => {
     const workPage = renderPageMarkdown("/work/the-open-framework");
     expect(workPage).toContain("The Open Framework");
     expect(workPage).toContain("https://www.ayushrai.site/work/the-open-framework");
     const full = `${renderLlmsTxt()}\n${renderLlmsFull()}`;
-    expect(full).not.toMatch(MOBILE_NUMBER);
-    expect(person.phone).toBe("");
-    expect(person.phoneDisplay).toBe("");
+    expect(full).toContain(person.phoneDisplay);
+    expect(full).toContain(person.whatsappUrl);
     for (const claim of leadershipNeedsConfirmation) {
       expect(full).not.toContain(claim);
     }
@@ -246,7 +242,7 @@ describe("agent surfaces", () => {
     expect(body.match).toBe("lexical");
   });
 
-  // Also checks the WebMCP search tool's type validation and phone-number omission.
+  // Also checks the WebMCP search tool's type validation, and that "phone" finds the person record.
   it("publishes an OpenAPI document for the read API", () => {
     const spec = buildOpenApiDocument();
     expect(spec.paths["/api/search"]).toBeTruthy();
@@ -259,7 +255,7 @@ describe("agent surfaces", () => {
     expect(tool.isError).toBe(true);
     const found = executePortfolioSearch({ query: "open framework" });
     expect(found.isError).toBeUndefined();
-    expect(JSON.stringify(found)).not.toMatch(MOBILE_NUMBER);
+    expect(searchPortfolio("phone").map((item) => item.id)).toContain("person");
   });
 
   it("negotiates Markdown for pages and a Markdown 404 for unknown paths", async () => {
@@ -514,7 +510,7 @@ describe("agent surfaces", () => {
       expect(isKnownRoute(path)).toBe(true);
     }
     expect(renderPageMarkdown("/privacy")).toContain("Google Analytics");
-    expect(renderPageMarkdown("/privacy")).not.toMatch(MOBILE_NUMBER);
+    expect(renderPageMarkdown("/contact")).toContain(`Phone: ${person.phoneDisplay}`);
   });
 
   it("prints each record's public caveats in its Markdown twin, as on the HTML page", () => {

@@ -30,7 +30,7 @@ Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com
 - `src/pages/HomePage.tsx` — narrative home arc; “Go deeper” links About/Work/Timeline/Writing + MyLifeOS. “Things I build” lists `featuredProducts()` only.
 
 ## Patterns
-- **Content SSOT:** Prefer `import { … } from '../content'` instead of hardcoding copy. Search, Markdown, REST, WebMCP, and MCP must call `src/lib/agent/` rather than a second dataset. Omit phone numbers from public pages and machine output. Keep `needsConfirmation` / withheld award lists out of machine output
+- **Content SSOT:** Prefer `import { … } from '../content'` instead of hardcoding copy. Search, Markdown, REST, WebMCP, and MCP must call `src/lib/agent/` rather than a second dataset. The only phone number in public output is `person.phone` (published on purpose; `publicOutput.test.ts` rejects any other). Keep `needsConfirmation` / withheld award lists out of machine output
 - **Flagship products:** `featured` on `src/content/products.ts` orders The Open Framework, AGENYRA, and MedVoice. Stages include `building` and `experimental` via `productStageLabels`. The product page and the `/work/:slug` case study share a slug and say different things. MedVoice has no demo URL until one is verified. AGENYRA waitlist admin and MedVoice demo credentials stay out of public copy. Audit: `docs/flagship-products-audit.md`.
 - **Search ranking:** lexical tiers shared by the dialog, REST, MCP, and WebMCP (`src/lib/agent/search.ts`): exact title, title substring, tag or type, then summary; ties keep content order. Not semantic
 - **Code documentation:** every source file starts with a `/** */` header (what it is for, how it works, "Connects to:" with grep-verified callers and dependencies); every function/component/hook has a short JSDoc. Keep these accurate when code changes
@@ -44,7 +44,7 @@ Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com
 - **SPA fallback:** do not set Netlify `force` on `/*` → `/index.html`. Static HTML, `.md`, `llms.txt`, and the sitemap must win over the shell
 - **Deployment ownership:** Keep host-required `vercel.json`, `netlify.toml`, and public `api/*.ts` entry points at the repository root. Put reusable server-only logic in `src/lib/server/` and deployment notes in `docs/deployment/`
 - External links: `target="_blank"` + `rel="noopener noreferrer"`
-- **Public safety:** No phone/WhatsApp in UI; research is Note|Investigation|Experiment; inflated leadership claims stay out of grounded pages
+- **Public safety:** Phone +91 7440567944 and WhatsApp (`person.phone`, `person.whatsappUrl`) are public since Oct 2026 on contact, home, footer, JSON-LD, Markdown, llms; research is Note|Investigation|Experiment; inflated leadership claims stay out of grounded pages
 - **Public location:** Current place is `person.location` = `Remote` (home, about, footer, SEO). Do not publish a city. Historical school and org places stay (LNCTS Bhopal, past role cities).
 - Legacy redirects: `/services` → `/contact`, `/certifications` → `/recognition`, `/extracurriculars` → `/leadership`
 - Empty/TODO surfaces use `EmptyNote` pointing at `docs/questions-for-ayush.md`
@@ -59,7 +59,7 @@ Product direction for the site rebuild (Vite + React Router MPA — not Next.js)
 | `docs/content-strategy.md` | Pillars, keep/cut, audiences |
 | `docs/content-fact-check.md` | Claim verification log (metrics, awards, PII) |
 | `docs/design-system.md` | Visual direction, anti-clichés, motion |
-| `docs/seo-strategy.md` | Meta, schema (no phone), SPA mitigations |
+| `docs/seo-strategy.md` | Meta, schema, SPA mitigations |
 | `docs/seo/live-audit.md` | Observed production HTTP audit |
 | `docs/seo/domain-evidence-map.md` | Domain pages mapped to existing evidence |
 | `docs/seo/keyword-and-content-strategy.md` | Qualitative search intents, no invented volumes |
@@ -72,4 +72,4 @@ Product direction for the site rebuild (Vite + React Router MPA — not Next.js)
 | `docs/content-style.md` | Voice, banned hype, copy patterns |
 | `docs/questions-for-ayush.md` | Decision blockers for Ayush |
 
-**Positioning:** Public role line is `person.roleTitle`: "AI Engineer & AI Product Builder". It is a self-description, not a ranking. Digital home, not portfolio brochure. Phone/WhatsApp number must not be public. Non-root canonical URLs use a trailing slash. Unknown paths must 404, not reuse the homepage. Netlify read functions must return a Web `Response`. Vercel must not use `trailingSlash: true` (it 308s `/api/*`); an explicit page-only redirect in `vercel.json` adds the slash.
+**Positioning:** Public role line is `person.roleTitle`: "AI Engineer & AI Product Builder". It is a self-description, not a ranking. Digital home, not portfolio brochure. Phone/WhatsApp number is public (user decision, Oct 2026). Non-root canonical URLs use a trailing slash. Unknown paths must 404, not reuse the homepage. Netlify read functions must return a Web `Response`. Vercel must not use `trailingSlash: true` (it 308s `/api/*`); an explicit page-only redirect in `vercel.json` adds the slash.
