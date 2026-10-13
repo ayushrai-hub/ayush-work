@@ -24,7 +24,7 @@ import ThreeJSHero from '../components/backgrounds/ThreeJSHero';
 // Mock component props interfaces
 interface MockMotionProps {
   children?: React.ReactNode;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface MockCanvasProps {

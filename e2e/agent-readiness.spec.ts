@@ -11,7 +11,7 @@ test("homepage role view reorders sections without a second biography", async ({
 test("agent view links back to the human page and a markdown URL", async ({ page }) => {
   await page.goto("/work/the-open-framework?agent=1");
   await expect(page.getByRole("heading", { name: "Agent view" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Human view" })).toBeVisible();
+  await expect(page.locator("#main").getByRole("link", { name: "Human view" })).toBeVisible();
   await expect(page.getByRole("link", { name: "/work/the-open-framework.md" })).toBeVisible();
 });
 

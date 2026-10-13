@@ -3,7 +3,7 @@ import { initGA, trackEvent } from '../lib/analytics';
 
 // Google Analytics gtag function type
 interface GtagFunction {
-  (...args: any[]): void;
+  (...args: unknown[]): void;
 }
 
 // Declare global gtag property

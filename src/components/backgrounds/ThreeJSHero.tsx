@@ -45,7 +45,7 @@
  * @see {@link src/components/ThreeJSContent.tsx} for 3D scene implementation
  * @see {@link src/components/ErrorBoundary.tsx} for error handling wrapper
  */
-import React, { Suspense, useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 
@@ -71,7 +71,7 @@ const isWebGLAvailable = () => {
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     return !!gl;
-  } catch (e) {
+  } catch {
     return false;
   }
 };

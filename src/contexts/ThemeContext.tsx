@@ -9,6 +9,8 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// The hook stays beside its provider; editing this file triggers a full reload instead of Fast Refresh.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {

@@ -65,9 +65,11 @@ describe("JSON errors", () => {
 
   it("answers unknown /api paths with JSON 404 on Vercel and leaves known routes alone", async () => {
     const miss = markdownMiddleware(new Request(`${ORIGIN}/api/nope`, { headers: { accept: "text/html" } }));
-    expect(miss?.status).toBe(404);
-    expect(miss?.headers.get("content-type")).toContain("application/json");
-    expect((await miss?.json()).error.code).toBe("route_not_found");
+    expect(miss).toBeInstanceOf(Response);
+    if (!miss) return;
+    expect(miss.status).toBe(404);
+    expect(miss.headers.get("content-type")).toContain("application/json");
+    expect((await miss.json()).error.code).toBe("route_not_found");
 
     for (const path of ["/api/search", "/api/v1/projects/overlay-text-box", "/api/mcp", "/api/mcp/server-card", "/api/send-email"]) {
       expect(markdownMiddleware(new Request(`${ORIGIN}${path}`, { method: "POST" })), path).toBeUndefined();

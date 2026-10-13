@@ -40,14 +40,13 @@
  * @see {@link src/lib/profilesData.ts} for comprehensive profile data
  * @see {@link src/components/Footer.tsx} for selective profile integrations
  */
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
   ExternalLink,
   Search,
   Filter,
-  Users,
   Code,
   Palette,
   BarChart3,
@@ -57,7 +56,8 @@ import {
   Heart,
   ChevronDown,
   ChevronUp,
-  Sparkles
+  Sparkles,
+  type LucideIcon,
 } from 'lucide-react';
 import { profiles, domains, Profile, Domain } from '../lib/profilesData';
 
@@ -82,11 +82,11 @@ const Profiles: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<string>('all');
   const [expandedDomains, setExpandedDomains] = useState<Set<string>>(new Set(domains.map(d => d.name)));
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   // Icon mapping based on platform characteristics
   const getIcon = (iconName: string) => {
-    const icons: { [key: string]: any } = {
+    const icons: { [key: string]: LucideIcon } = {
       github: Code,
       code: Code, // LeetCode
       award: Code, // Unstop
@@ -335,7 +335,7 @@ const Profiles: React.FC = () => {
                         variants={containerVariants}
                         className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
                       >
-                        {domainProfiles.map((profile, index) => {
+                        {domainProfiles.map((profile) => {
                           const IconComponent = getIcon(profile.icon);
                           return (
                             <motion.div

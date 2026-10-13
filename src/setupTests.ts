@@ -3,6 +3,8 @@ import "@testing-library/jest-dom";
 import { vi } from "vitest";
 import "jest-axe/extend-expect";
 
+type MockProps = { children?: React.ReactNode; [key: string]: unknown };
+
 interface MotionProps {
   children?: React.ReactNode;
   className?: string;
@@ -117,7 +119,7 @@ vi.mock("chart.js", () => {
   }));
 
   // Add register method to Chart class
-  (ChartClass as any).register = vi.fn();
+  (ChartClass as unknown as { register: unknown }).register = vi.fn();
 
   return {
     Chart: ChartClass,
@@ -384,20 +386,20 @@ vi.mock('@react-three/fiber', () => ({
   })),
   extend: vi.fn(),
   // Add lowercase elements that might be used
-  ambientLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'ambient-light', ...props }, children),
-  directionalLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'directional-light', ...props }, children),
-  pointLight: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'point-light', ...props }, children),
-  group: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'group', ...props }, children),
-  meshStandardMaterial: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'mesh-standard-material', ...props }, children),
+  ambientLight: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'ambient-light', ...props }, children),
+  directionalLight: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'directional-light', ...props }, children),
+  pointLight: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'point-light', ...props }, children),
+  group: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'group', ...props }, children),
+  meshStandardMaterial: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'mesh-standard-material', ...props }, children),
 }));
 
 // Mock @react-three/drei
 vi.mock('@react-three/drei', () => ({
   __esModule: true,
-  Sphere: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'sphere', ...props }, children),
-  Box: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'box', ...props }, children),
-  Octahedron: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'octahedron', ...props }, children),
-  Float: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'float', ...props }, children),
-  MeshDistortMaterial: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'mesh-distort-material', ...props }, children),
-  PresentationControls: ({ children, ...props }: any) => React.createElement('div', { 'data-testid': 'presentation-controls', ...props }, children),
+  Sphere: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'sphere', ...props }, children),
+  Box: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'box', ...props }, children),
+  Octahedron: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'octahedron', ...props }, children),
+  Float: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'float', ...props }, children),
+  MeshDistortMaterial: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'mesh-distort-material', ...props }, children),
+  PresentationControls: ({ children, ...props }: MockProps) => React.createElement('div', { 'data-testid': 'presentation-controls', ...props }, children),
 }));

@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import userEvent from '@testing-library/user-event';
 import Contact from '../components/Contact';
 
 // Mock Formspree fetch globally since we can't mock individual fetch calls easily in tests
@@ -13,8 +12,6 @@ vi.mock('react-intersection-observer', () => ({
 }));
 
 describe('Contact Form with Formspree', () => {
-  const user = userEvent.setup();
-
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock successful fetch response by default

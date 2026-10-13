@@ -1,17 +1,22 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "ayushrai-site",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && node scripts/prerender.mjs",
     "lint": "eslint .",
+    "typecheck": "tsc -b",
     "preview": "vite preview",
     "netlify:dev": "netlify dev",
     "test": "vitest",
-    "mcp": "tsx mcp/server.ts",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "mcp": "tsx mcp/server.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
@@ -52,7 +57,7 @@
     "axe-core": "^4.10.3",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.11",
+    "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^15.9.0",
     "jest-axe": "^10.0.0",
     "jsdom": "^26.1.0",
@@ -65,7 +70,7 @@
     "terser": "^5.44.0",
     "tsx": "^4.23.15",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.3.0",
+    "typescript-eslint": "^8.71.2",
     "vite": "^7.2.2",
     "vitest": "^3.2.4"
   }

@@ -1,6 +1,6 @@
 import { renderToPipeableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
+import { HelmetProvider, type HelmetServerState } from "react-helmet-async";
 import { Writable } from "node:stream";
 import { AppRoutes } from "./App";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -14,9 +14,11 @@ export function getSitemapRoutes(): string[] {
   return sitemapRoutes();
 }
 
-export function render(url: string): Promise<{ html: string; helmet: any }> {
+export function render(
+  url: string,
+): Promise<{ html: string; helmet: HelmetServerState | undefined }> {
   return new Promise((resolve, reject) => {
-    const helmetContext: any = {};
+    const helmetContext: { helmet?: HelmetServerState } = {};
     let html = "";
     const sink = new Writable({
       write(chunk, _enc, cb) {

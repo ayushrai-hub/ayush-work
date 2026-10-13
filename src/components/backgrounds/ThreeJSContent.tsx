@@ -111,7 +111,7 @@ function ThreeJSContent() {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       return !!gl;
-    } catch (e) {
+    } catch {
       return false;
     }
   };
@@ -147,7 +147,7 @@ function ThreeJSContent() {
           context.getExtension('WEBGL_debug_renderer_info');
         }
       }}
-      onError={(error: any) => {
+      onError={(error: React.SyntheticEvent<HTMLDivElement>) => {
         console.warn('Three.js Canvas error:', error);
       }}
     >

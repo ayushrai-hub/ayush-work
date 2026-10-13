@@ -44,7 +44,7 @@
  * @see {@link src/components/Header.tsx} for main navigation bar
  * @see {@link src/components/Footer.tsx} for footer navigation
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
