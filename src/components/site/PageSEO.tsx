@@ -4,8 +4,9 @@
  * Title is `<title> · Ayush Rai`, or `Ayush Rai · <person.roleTitle>` when no title is passed
  * (the homepage). Description and image fall back to `defaultSEO`; relative images are made
  * absolute against `person.siteUrl`. The Person node's image is `person.portrait` and its telephone is `person.phone`. The canonical comes from `canonicalUrl(path)`, which adds a
- * trailing slash to non-root paths. With `personSchema`, emits one `@graph` holding WebSite,
- * Person, and ProfilePage nodes linked by `@id`; `jsonLd` adds a second, page-specific script.
+ * trailing slash to non-root paths. Indexable pages advertise a Markdown alternate
+ * (`rel="alternate" type="text/markdown"`). With `personSchema`, emits one `@graph` holding
+ * WebSite, Person, and ProfilePage nodes linked by `@id`; `jsonLd` adds a second script.
  * Tags are written through react-helmet-async, so the prerender (entry-server) captures them too.
  *
  * Connects to:
@@ -54,6 +55,11 @@ export default function PageSEO({
     : `${person.name} · ${person.roleTitle}`;
   const canonical = canonicalUrl(path);
   const ogImage = absoluteUrl(image);
+  /** Twin URL: `/` → `/index.md`, otherwise `<path>.md` (no trailing slash on the twin). */
+  const markdownHref =
+    path === "/" || path === ""
+      ? `${person.siteUrl.replace(/\/$/, "")}/index.md`
+      : `${person.siteUrl.replace(/\/$/, "")}${path.endsWith("/") ? path.slice(0, -1) : path}.md`;
 
   const jsonLd = personSchema
     ? {
@@ -77,6 +83,14 @@ export default function PageSEO({
             jobTitle: person.roleTitle,
             description: person.tagline,
             image: absoluteUrl(person.portrait),
+            // Topics grounded in published domain dossiers and experience — not aspirational skills.
+            knowsAbout: [
+              "LLM evaluation",
+              "Preference feedback",
+              "RLHF-oriented evaluation",
+              "AI product development",
+              "Software engineering",
+            ],
             workLocation: {
               "@type": "Place",
               name: person.location,
@@ -101,6 +115,9 @@ export default function PageSEO({
       <title>{pageTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={canonical} />
+      {!noIndex && (
+        <link rel="alternate" type="text/markdown" href={markdownHref} title="Markdown" />
+      )}
       {noIndex && <meta name="robots" content="noindex, follow" />}
 
       <meta property="og:title" content={pageTitle} />

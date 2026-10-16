@@ -16,19 +16,23 @@ import { readFileSync } from "node:fs";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { resolve } from "node:path";
 import type { Connect, Plugin } from "vite";
+import { agentModeJson, wantsAgentMode } from "./agentMode";
 import { API_CATALOG_CONTENT_TYPE, API_CATALOG_PATH } from "./apiCatalog";
 import { agentApiResponse } from "./http";
 import { renderNotFoundMarkdown } from "./markdown";
 import {
   AI_CATALOG_CONTENT_TYPE,
   AI_CATALOG_PATH,
+  ARD_CONTENT_TYPE,
+  ARD_PATH,
   LEGACY_SERVER_CARD_PATH,
   MCP_ENDPOINT_PATH,
   SERVER_CARD_HEADERS,
   SERVER_CARD_PATH,
 } from "./mcpCard";
 import { handleMcpRequest } from "./mcpHttp";
-import { clientKeyFrom } from "./rateLimit";
+import { buildAskResponse, extractAskQuery } from "./nlwebAsk";
+import { clientKeyFrom, takeRateLimit } from "./rateLimit";
 import {
   agentFiles,
   MARKDOWN_HEADERS,
@@ -43,6 +47,7 @@ const DISCOVERY_CORS = { "Access-Control-Allow-Origin": "*" };
 const WELL_KNOWN_TYPES: Record<string, Record<string, string>> = {
   [API_CATALOG_PATH]: { "Content-Type": API_CATALOG_CONTENT_TYPE, ...DISCOVERY_CORS },
   [AI_CATALOG_PATH]: { "Content-Type": AI_CATALOG_CONTENT_TYPE, ...DISCOVERY_CORS },
+  [ARD_PATH]: { "Content-Type": ARD_CONTENT_TYPE, ...DISCOVERY_CORS },
   [LEGACY_SERVER_CARD_PATH]: SERVER_CARD_HEADERS,
 };
 
@@ -116,6 +121,82 @@ function attach(middlewares: Connect.Server) {
     const pathname = url.pathname;
     const method = (req.method ?? "GET").toUpperCase();
 
+    if (wantsAgentMode(pathname, url.searchParams) && (method === "GET" || method === "HEAD")) {
+      send(res, 200, "application/json; charset=utf-8", method === "HEAD" ? "" : agentModeJson(), {
+        "Cache-Control": "public, max-age=300",
+        ...DISCOVERY_CORS,
+      });
+      return;
+    }
+
+    if (pathname === "/ask" || pathname === "/api/ask") {
+      void (async () => {
+        if (method === "OPTIONS") {
+          send(res, 204, "text/plain", "", {
+            "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Accept",
+            ...DISCOVERY_CORS,
+          });
+          return;
+        }
+        const limit = takeRateLimit(req.socket.remoteAddress ?? clientKeyFrom(req.headers));
+        if (!limit.allowed) {
+          send(
+            res,
+            429,
+            "application/json; charset=utf-8",
+            JSON.stringify({
+              _meta: { version: "0.55", response_type: "failure" },
+              error: { code: "rate_limited", message: "Too many requests." },
+            }),
+            { ...limit.headers, "Cache-Control": "no-store", ...DISCOVERY_CORS },
+          );
+          return;
+        }
+        let body: unknown;
+        if (method === "POST") {
+          const chunks: Buffer[] = [];
+          for await (const chunk of req) chunks.push(chunk as Buffer);
+          const text = Buffer.concat(chunks).toString("utf8");
+          if (text) {
+            try {
+              body = JSON.parse(text) as unknown;
+            } catch {
+              send(
+                res,
+                400,
+                "application/json; charset=utf-8",
+                JSON.stringify({
+                  _meta: { version: "0.55", response_type: "failure" },
+                  error: { code: "invalid_query", message: "POST body must be JSON." },
+                }),
+                limit.headers,
+              );
+              return;
+            }
+          }
+        }
+        const extracted = extractAskQuery({ params: url.searchParams, body });
+        const answer = extracted.error
+          ? {
+              status: 200,
+              body: {
+                _meta: { version: "0.55", response_type: "failure", response_format: "conversational_search" },
+                error: { code: "invalid_query", message: extracted.error },
+              },
+            }
+          : buildAskResponse(extracted.query);
+        send(
+          res,
+          answer.status,
+          "application/json; charset=utf-8",
+          method === "HEAD" ? "" : JSON.stringify(answer.body),
+          { ...limit.headers, ...DISCOVERY_CORS },
+        );
+      })().catch(next);
+      return;
+    }
+
     if (pathname === MCP_ENDPOINT_PATH || pathname === SERVER_CARD_PATH) {
       void serveMcp(req, res, url).catch(next);
       return;
@@ -141,9 +222,9 @@ function attach(middlewares: Connect.Server) {
       return;
     }
 
-    if (pathname === "/AGENTS.md" || pathname === "/SKILL.md") {
+    if (pathname === "/AGENTS.md" || pathname === "/agents.md" || pathname === "/SKILL.md") {
       const docs = documentationFiles();
-      const key = pathname.slice(1);
+      const key = pathname === "/agents.md" ? "AGENTS.md" : pathname.slice(1);
       send(res, 200, "text/markdown; charset=utf-8", docs[key] ?? "");
       return;
     }
@@ -151,13 +232,18 @@ function attach(middlewares: Connect.Server) {
     if (
       pathname === "/llms.txt" ||
       pathname === "/llms-full.txt" ||
-      pathname === "/openapi.json"
+      pathname === "/developers/llms.txt" ||
+      pathname === "/openapi.json" ||
+      pathname === "/auth.md" ||
+      pathname === "/agent-mode.json"
     ) {
       const files = agentFiles();
       const key = pathname.slice(1);
       const type = pathname.endsWith(".json")
         ? "application/json; charset=utf-8"
-        : "text/plain; charset=utf-8";
+        : pathname.endsWith(".md")
+          ? "text/markdown; charset=utf-8"
+          : "text/plain; charset=utf-8";
       send(res, 200, type, files[key] ?? "");
       return;
     }
@@ -167,6 +253,7 @@ function attach(middlewares: Connect.Server) {
       : negotiateMarkdown(
           pathname,
           typeof req.headers.accept === "string" ? req.headers.accept : undefined,
+          typeof req.headers["user-agent"] === "string" ? req.headers["user-agent"] : undefined,
         );
     if (markdownResult) {
       const { "Content-Type": type, ...headers } = MARKDOWN_HEADERS;
@@ -181,8 +268,10 @@ function attach(middlewares: Connect.Server) {
 
 /** `AGENTS.md` and `SKILL.md`, read from disk relative to the working directory on each call. */
 function documentationFiles(): Record<string, string> {
+  const agents = readFileSync(resolve(process.cwd(), "AGENTS.md"), "utf8");
   return {
-    "AGENTS.md": readFileSync(resolve(process.cwd(), "AGENTS.md"), "utf8"),
+    "AGENTS.md": agents,
+    "agents.md": agents,
     "SKILL.md": readFileSync(
       resolve(process.cwd(), "skills/portfolio-discovery/SKILL.md"),
       "utf8",

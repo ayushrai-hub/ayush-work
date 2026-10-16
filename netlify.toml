@@ -34,6 +34,18 @@
   to = "/.netlify/functions/mcp?resource=server-card"
   status = 200
 
+# NLWeb-shaped lexical ask (not under /api so scanners find POST /ask).
+[[redirects]]
+  from = "/ask"
+  to = "/.netlify/functions/ask"
+  status = 200
+
+# Lowercase alias for the root AGENTS.md agent guide.
+[[redirects]]
+  from = "/agents.md"
+  to = "/AGENTS.md"
+  status = 200
+
 # API before the SPA fallback. Existing static files are not forced aside.
 [[redirects]]
   from = "/api/*"
@@ -74,6 +86,13 @@
     Access-Control-Allow-Origin = "*"
 
 [[headers]]
+  for = "/.well-known/ard.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
   for = "/.well-known/mcp/server-card.json"
   [headers.values]
     Content-Type = "application/mcp-server-card+json"
@@ -84,9 +103,22 @@
     Access-Control-Expose-Headers = "ETag"
 
 [[headers]]
+  for = "/auth.md"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/agent-mode.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
   for = "/"
   [headers.values]
-    Link = '</.well-known/api-catalog>; rel="api-catalog"'
+    Link = '</.well-known/api-catalog>; rel="api-catalog", </.well-known/ard.json>; rel="ard", </.well-known/ai-catalog.json>; rel="ai-catalog", </sitemap.xml>; rel="sitemap", </llms.txt>; rel="describedby"'
 
 [[headers]]
   for = "/index.md"

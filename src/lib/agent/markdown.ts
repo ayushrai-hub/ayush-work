@@ -86,24 +86,42 @@ export function escapeMarkdownText(value: string): string {
 }
 
 /**
- * Assembles one page: escaped `#` title, Source and Markdown URLs, description, body, and the
- * omission note. Only the title is escaped; `description` and `body` are inserted as Markdown.
+ * Maps a twin path to a `pageUpdatedAt` key (first path segment, or `home` for `/`).
+ * Unknown keys fall through to `siteUpdatedAt` inside `pageUpdatedAt`.
+ */
+function freshnessKey(path: string): string {
+  if (path === "/") return "home";
+  const segment = path.replace(/^\//, "").split("/")[0] ?? "home";
+  return segment || "home";
+}
+
+/**
+ * Assembles one page: YAML frontmatter, escaped `#` title, Source and Markdown URLs, description,
+ * body, and the omission note. Only the title is escaped; `description` and `body` are Markdown.
  */
 function doc(path: string, title: string, description: string, body: string): AgentPage {
+  const trimmedDescription = description.trim();
   const markdown = [
+    "---",
+    `title: ${JSON.stringify(title)}`,
+    `description: ${JSON.stringify(trimmedDescription)}`,
+    `canonical: ${JSON.stringify(canonicalUrl(path))}`,
+    `last-updated: ${JSON.stringify(pageUpdatedAt(freshnessKey(path)))}`,
+    "---",
+    "",
     `# ${escapeMarkdownText(title)}`,
     "",
     `Source: ${canonicalUrl(path)}`,
     `Markdown: ${abs(markdownPublicPath(path))}`,
     "",
-    description.trim(),
+    trimmedDescription,
     "",
     body.trim(),
     "",
     `_${OMISSION}_`,
     "",
   ].join("\n");
-  return { path, title, description: description.trim(), markdown };
+  return { path, title, description: trimmedDescription, markdown };
 }
 
 /** Public `.md` URL path for a site path: `/` becomes `/index.md`, anything else gets `.md` appended. */
@@ -767,6 +785,28 @@ export function renderPageMarkdown(pathname: string): string | null {
 }
 
 /**
+ * Section index for developer/API surfaces. Linked from the root `/llms.txt`.
+ */
+export function renderDevelopersLlmsTxt(): string {
+  return [
+    `# ${person.name} — Developers`,
+    "",
+    "> Public REST API, OpenAPI, MCP, auth notes, and agent discovery for this site.",
+    "",
+    `- [Developer docs (Markdown)](${abs("/developers.md")})`,
+    `- [Authentication](${abs("/auth.md")}) — public API; no OAuth`,
+    `- [OpenAPI](${abs("/openapi.json")})`,
+    `- [ARD catalog](${abs("/.well-known/ard.json")})`,
+    `- [AI Catalog (legacy)](${abs("/.well-known/ai-catalog.json")})`,
+    `- [MCP Server Card](${abs("/api/mcp/server-card")})`,
+    `- [Agent mode JSON](${abs("/?mode=agent")})`,
+    `- [Ask (NLWeb-shaped, lexical)](${abs("/ask")})`,
+    `- [Root llms.txt](${abs("/llms.txt")})`,
+    "",
+  ].join("\n");
+}
+
+/**
  * `/llms.txt`: the site index for language models. A summary, when (not) to use the site, then
  * links to domains, flagship products, case studies, profiles, and the developer surfaces.
  * It lists the pages worth opening first, not every page.
@@ -780,6 +820,8 @@ export function renderLlmsTxt(): string {
     `${person.roleTitle}. ${person.positioning}`,
     "",
     "Markdown twins use the same content records as the website. Fetch a URL ending in `.md`, or send `Accept: text/markdown` without `text/html`. A full dump of every page is at /llms-full.txt. This file lists the pages worth opening first.",
+    "",
+    "Section indexes: [Developers](/developers/llms.txt).",
     "",
     OMISSION,
     "",
@@ -828,7 +870,10 @@ export function renderLlmsTxt(): string {
     `- [${person.name} API: projects](${abs("/api/v1/projects")}): list. \`/api/v1/projects/{slug}\` fetches one. \`/api/v1/compare?slugs=a,b\` compares.`,
     `- [${person.name} OpenAPI spec](${abs("/openapi.json")}): OpenAPI 3.1 description of those GET endpoints.`,
     `- [${person.name} MCP server](${abs("/api/mcp")}): Streamable HTTP, \`POST /api/mcp\`. Tools: list_projects, get_project, compare_projects, search_portfolio.`,
-    `- [${person.name} MCP Server Card](${abs("/api/mcp/server-card")}): SEP-2127 card for that endpoint, also listed in the AI Catalog at /.well-known/ai-catalog.json.`,
+    `- [${person.name} MCP Server Card](${abs("/api/mcp/server-card")}): SEP-2127 card for that endpoint, listed in ARD at /.well-known/ard.json and the AI Catalog at /.well-known/ai-catalog.json.`,
+    `- [Authentication](${abs("/auth.md")}): public API and MCP need no tokens; OAuth metadata is not published.`,
+    `- [Agent mode](${abs("/?mode=agent")}): JSON capability view for agents.`,
+    `- [Ask](${abs("/ask")}): NLWeb-shaped lexical search (POST or GET ?query=).`,
     `- [${person.name} API catalog](${abs("/.well-known/api-catalog")}): RFC 9727 linkset.`,
     `- [AGENTS.md](${abs("/AGENTS.md")}): instructions for agents reading this site.`,
     `- [SKILL.md](${abs("/SKILL.md")}): examples and limits.`,

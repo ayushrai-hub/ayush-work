@@ -24,7 +24,7 @@ export const API_VERSIONING_POLICY =
 
 /** Access and caching note, shared with the developer docs. */
 export const API_ACCESS_NOTE =
-  "Free and public. No account, API key, or sandbox is needed because every endpoint is read-only over published content. Clients may cache responses for five minutes. REST responses grant CORS only to the site's own origins, so call the REST API from a server, an agent, or the CLI rather than from a browser page on another site. The MCP endpoint and its Server Card allow any origin.";
+  "Free and public. No account or API key is needed because every endpoint is read-only over published content. There is no separate test environment or paid tier. Clients may cache responses for five minutes. REST responses grant CORS only to the site's own origins, so call the REST API from a server, an agent, or the CLI rather than from a browser page on another site. The MCP endpoint and its Server Card allow any origin.";
 
 /** Rate-limit note built from the constants in `rateLimit.ts`, shared with the developer docs. */
 export const API_RATE_LIMIT_NOTE = `${RATE_LIMIT_QUOTA} requests per ${RATE_LIMIT_WINDOW_SECONDS} seconds per client address, counted per server instance. Every response carries RateLimit-Policy and RateLimit headers (draft-ietf-httpapi-ratelimit-headers-11). Over the limit, the API returns 429 with a Retry-After header in seconds and error code rate_limited.`;
@@ -260,6 +260,50 @@ export function buildOpenApiDocument() {
           },
         },
       },
+      "/ask": {
+        get: {
+          operationId: "askGet",
+          summary: "NLWeb-shaped lexical ask (GET)",
+          description:
+            "Natural-language query over the same lexical index as /api/v1/search. Not generative. Pass query or q. Responses include _meta.version (0.55) and _meta.response_type.",
+          parameters: [
+            {
+              name: "query",
+              in: "query",
+              required: false,
+              schema: { type: "string", maxLength: SEARCH_MAX_QUERY },
+            },
+            {
+              name: "q",
+              in: "query",
+              required: false,
+              description: "Alias for query",
+              schema: { type: "string", maxLength: SEARCH_MAX_QUERY },
+            },
+          ],
+          responses: {
+            ...ok("NLWeb conversational_search answer or failure", "AskResponse"),
+            ...commonErrors,
+          },
+        },
+        post: {
+          operationId: "askPost",
+          summary: "NLWeb-shaped lexical ask (POST)",
+          description:
+            "Same as GET /ask. Body may be { \"query\": \"…\" }, { \"query\": { \"text\": \"…\" } }, or { \"q\": \"…\" }.",
+          requestBody: {
+            required: false,
+            content: {
+              "application/json": { schema: { $ref: "#/components/schemas/AskRequest" } },
+            },
+          },
+          responses: {
+            ...ok("NLWeb conversational_search answer or failure", "AskResponse"),
+            "400": { $ref: "#/components/responses/BadRequest" },
+            ...commonErrors,
+          },
+        },
+      },
     },
     components: {
       headers: {
@@ -356,6 +400,51 @@ export function buildOpenApiDocument() {
             ranking: { type: "string" },
             results: { type: "array", items: { $ref: "#/components/schemas/SearchItem" } },
             nextCursor: { $ref: "#/components/schemas/NextCursor" },
+          },
+        },
+        AskRequest: {
+          type: "object",
+          properties: {
+            query: {
+              oneOf: [
+                { type: "string", maxLength: SEARCH_MAX_QUERY },
+                {
+                  type: "object",
+                  properties: { text: { type: "string", maxLength: SEARCH_MAX_QUERY } },
+                },
+              ],
+            },
+            q: { type: "string", maxLength: SEARCH_MAX_QUERY },
+          },
+        },
+        AskResponse: {
+          type: "object",
+          required: ["_meta"],
+          properties: {
+            query: { type: "string" },
+            site: { type: "string" },
+            mode: { type: "string" },
+            total_results: { type: "integer" },
+            results: { type: "array", items: { type: "object" } },
+            error: {
+              type: "object",
+              properties: {
+                code: { type: "string" },
+                message: { type: "string" },
+              },
+            },
+            _meta: {
+              type: "object",
+              required: ["version", "response_type"],
+              properties: {
+                version: { type: "string", const: "0.55" },
+                response_type: { type: "string", enum: ["answer", "failure"] },
+                response_format: { type: "string" },
+                mode: { type: "string" },
+                site: { type: "string" },
+                note: { type: "string" },
+              },
+            },
           },
         },
         ProjectListResponse: {

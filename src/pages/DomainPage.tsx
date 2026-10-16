@@ -8,7 +8,7 @@
  * `/ai-engineering/*` paths render the 404 page). Breadcrumbs are built from each path prefix,
  * using the matching domain title or the raw segment. Emits WebPage + BreadcrumbList JSON-LD.
  * `/experience` additionally lists `experience` roles; `/open-source` lists deduplicated
- * repository links from products, projects, and the GitHub profile.
+ * repository links from products, projects, and the GitHub profile. Ends with ContactCta.
  *
  * Connects to:
  * - Routed in src/App.tsx as `ai-engineering`, `ai-engineering/*`, `software-engineering`,
@@ -16,11 +16,12 @@
  *   and listed in the sitemap via src/lib/publicRoutes.ts.
  * - Content from src/content (`getDomainByPath`, `childDomains`, `evidenceLevelLabels` from
  *   domains.ts; `experience`, `products`, `projects`, `person`, `pageUpdatedAt("domains")`) and
- *   src/lib/canonical.ts; components PageSEO, PageHeader, Prose, SectionHeading, NotFoundPage.
+ *   src/lib/canonical.ts; components PageSEO, ContactCta, PageHeader, Prose, SectionHeading, NotFoundPage.
  * - Markdown twins `<path>.md` built from `renderDomainBody` in `buildPages()` in src/lib/agent/markdown.ts.
  */
 import { Link, useLocation } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import SectionHeading from "../components/editorial/SectionHeading";
@@ -271,17 +272,7 @@ export default function DomainPage() {
           </ul>
         </section>
 
-        <section className="mt-14 border-t border-rule pt-8">
-          <h2 className="font-display text-2xl text-ink">Contact</h2>
-          <p className="mt-3 max-w-measure text-ink-muted">
-            For collaboration on this kind of work, email {person.email}.
-          </p>
-          <p className="mt-4">
-            <Link to="/contact" className="btn-secondary">
-              Contact
-            </Link>
-          </p>
-        </section>
+        <ContactCta prompt={`For collaboration on ${page.title.toLowerCase()}, use contact, resume, or Calendly. Email ${person.email}.`} />
       </article>
     </>
   );

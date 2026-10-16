@@ -13,6 +13,7 @@
  */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import SectionHeading from "../components/editorial/SectionHeading";
@@ -163,7 +164,9 @@ export default function AboutPage() {
           </ul>
         </section>
 
-        <p className="mt-16">
+        <ContactCta prompt="For hiring, contract evaluation, or product-building conversations, use contact, resume, or Calendly." />
+
+        <p className="mt-12">
           <Link to="/timeline" className="link-accent">
             See the timeline →
           </Link>

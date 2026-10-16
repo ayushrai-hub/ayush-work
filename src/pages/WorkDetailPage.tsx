@@ -17,6 +17,7 @@
  */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import ContactCta from "../components/site/ContactCta";
 import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
@@ -53,7 +54,7 @@ export default function WorkDetailPage() {
     <>
       <PageSEO
         title={item.title}
-        description={item.summary}
+        description={`${item.title} by Ayush Rai. ${item.summary}`}
         path={`/work/${item.slug}`}
       />
       <article className="site-shell page-section">
@@ -139,6 +140,11 @@ export default function WorkDetailPage() {
             </ul>
           </aside>
         )}
+
+        <ContactCta
+          title="Discuss this work"
+          prompt={`If this case study is relevant to a role or project, open the resume or book a short call. Status of ${item.title}: ${item.status}.`}
+        />
 
         <p className="mt-12">
           <Link to="/work" className="link-accent">

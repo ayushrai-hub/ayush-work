@@ -11,20 +11,37 @@
  * - Tested in `src/__tests__/agentSurfaces.test.ts` and `agentReadiness.test.ts`.
  * - Depends on `apiRoutes.ts` and `surfaces.ts`.
  */
+import { agentModeJson, wantsAgentMode } from "./agentMode";
 import { unknownApiResponse } from "./apiRoutes";
 import { MARKDOWN_HEADERS, negotiateMarkdown } from "./surfaces";
 
 /**
- * Returns a JSON 404 for unknown API paths or a Markdown response for pages,
- * or undefined so the host serves its normal file or function.
- * The API check runs for every method; Markdown is served only for GET and HEAD (HEAD has no body).
+ * Returns a JSON 404 for unknown API paths, the agent-mode JSON for `/?mode=agent`,
+ * a Markdown response for pages, or undefined so the host serves its normal file or function.
+ * The API check runs for every method; Markdown and agent-mode are served only for GET and HEAD.
  */
 export function markdownMiddleware(request: Request): Response | undefined {
-  const pathname = new URL(request.url).pathname;
+  const url = new URL(request.url);
+  const pathname = url.pathname;
   const apiMiss = unknownApiResponse(pathname);
   if (apiMiss) return apiMiss;
   if (request.method !== "GET" && request.method !== "HEAD") return undefined;
-  const result = negotiateMarkdown(pathname, request.headers.get("accept") ?? undefined);
+  if (wantsAgentMode(pathname, url.searchParams)) {
+    return new Response(request.method === "HEAD" ? null : agentModeJson(), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=300",
+        "Access-Control-Allow-Origin": "*",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  }
+  const result = negotiateMarkdown(
+    pathname,
+    request.headers.get("accept") ?? undefined,
+    request.headers.get("user-agent") ?? undefined,
+  );
   if (!result) return undefined;
   return new Response(request.method === "HEAD" ? null : result.body, {
     status: result.status,

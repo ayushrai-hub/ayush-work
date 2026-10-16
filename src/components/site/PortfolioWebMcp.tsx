@@ -1,21 +1,22 @@
 /**
- * Registers the WebMCP tool `search_portfolio_projects` for browser agents, when the browser supports it.
+ * Registers WebMCP tools when the browser exposes modelContext and the classic script has not.
  *
- * On mount, looks for a `modelContext` object with `registerTool` on `document`, falling back to
- * `navigator`. If none exists it does nothing. Otherwise it registers the tool definition from
- * PORTFOLIO_SEARCH_TOOL with an AbortSignal and aborts on unmount, which unregisters the tool.
- * A failed registration is logged as a warning instead of surfacing as an unhandled rejection.
- * Renders nothing.
+ * Prefers `document.modelContext`, then `navigator.modelContext`. Skips work when
+ * `window.__ayushWebMcpRegistered` is already set by `/webmcp.js`. Uses bracket access with
+ * string literals so minifiers leave `modelContext` / `registerTool` detectable in the bundle.
  *
  * Connects to:
- * - Rendered once by SiteLayout, so it is active on every route
- * - lib/agent/searchTool: PORTFOLIO_SEARCH_TOOL and executePortfolioSearch, which validate input and
- *   call the same lexical search as GET /api/search
+ * - Rendered once by SiteLayout. `public/webmcp.js` is the primary registration path for scanners.
+ * - `lib/agent/searchTool` for the React-side search tool only (extra tools live in webmcp.js).
  */
 import { useEffect } from "react";
 import { executePortfolioSearch, PORTFOLIO_SEARCH_TOOL } from "../../lib/agent/searchTool";
 
-/** Minimal shape of the WebMCP model context this component needs; TypeScript's DOM types do not include it. */
+/** Property names scanners and the WebMCP draft look for — keep as string literals. */
+const MODEL_CONTEXT_KEY = "modelContext";
+const REGISTER_TOOL_KEY = "registerTool";
+
+/** Minimal shape of the WebMCP model context this component needs. */
 interface ModelContextLike {
   registerTool: (
     tool: {
@@ -29,25 +30,27 @@ interface ModelContextLike {
   ) => Promise<void>;
 }
 
-/** Returns `document.modelContext`, else `navigator.modelContext`, if it exposes `registerTool`. */
+/** Returns document.modelContext, else navigator.modelContext, if registerTool exists. */
 function modelContext(): ModelContextLike | undefined {
-  const doc = document as Document & { modelContext?: ModelContextLike };
-  const nav = navigator as Navigator & { modelContext?: ModelContextLike };
-  const candidate = doc.modelContext ?? nav.modelContext;
-  if (!candidate || typeof candidate.registerTool !== "function") return undefined;
+  const doc = document as Document & Record<string, unknown>;
+  const nav = navigator as Navigator & Record<string, unknown>;
+  const candidate = (doc[MODEL_CONTEXT_KEY] ?? nav[MODEL_CONTEXT_KEY]) as ModelContextLike | undefined;
+  if (!candidate || typeof candidate[REGISTER_TOOL_KEY] !== "function") return undefined;
   return candidate;
 }
 
-/** Registers search_portfolio_projects when the browser exposes WebMCP; the abort on cleanup unregisters it. */
+/** Registers search_portfolio_projects when WebMCP exists and `/webmcp.js` has not already run. */
 export default function PortfolioWebMcp() {
   useEffect(() => {
+    const flag = window as Window & { __ayushWebMcpRegistered?: boolean };
+    if (flag.__ayushWebMcpRegistered) return;
     const context = modelContext();
     if (!context) return;
     const controller = new AbortController();
-    // The API is experimental: registration may throw or reject, and that must not break the page.
+    const registerTool = context[REGISTER_TOOL_KEY].bind(context);
     Promise.resolve()
       .then(() =>
-        context.registerTool(
+        registerTool(
           {
             name: PORTFOLIO_SEARCH_TOOL.name,
             description: PORTFOLIO_SEARCH_TOOL.description,

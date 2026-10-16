@@ -17,6 +17,7 @@ type DocWithContext = Document & { modelContext?: { registerTool: ReturnType<typ
 
 afterEach(() => {
   delete (document as DocWithContext).modelContext;
+  delete (window as Window & { __ayushWebMcpRegistered?: boolean }).__ayushWebMcpRegistered;
   vi.restoreAllMocks();
 });
 

@@ -42,7 +42,7 @@ export const work: WorkItem[] = [
     execution:
       "The shipped artifact is a Vite, React, and TypeScript app with Tailwind, shadcn/ui, React Router, and TanStack Query. Sign-in stores a mock user in localStorage. Screens cover NGO, donor, and talent entry, governance, and a registry search. None of those screens talk to a verification service.",
     outcome:
-      "The concept site is public at the-open-frameworks.vercel.app, and the source is public. It is not deployed infrastructure, and it has no evidenced institutional adoption. The live copy still shows illustrative scale figures and partner names. Those are prototype text.",
+      "The concept site is public at the-open-frameworks.vercel.app, and the source is public. It is not deployed infrastructure, and it has no evidenced institutional adoption. The live copy still shows illustrative scale figures and partner names. Those are prototype text. What works today: a clickable Vite/React prototype covering NGO, donor, and talent journeys. What remains incomplete: any verification service, institutional deployment, and production-shaped backend claims.",
     lessons: [
       "A wide clickable prototype teaches the journeys, and it also makes unfinished systems look operational.",
       "Architecture claims have to name the file that implements them. This repo implements a front end.",
@@ -86,7 +86,7 @@ export const work: WorkItem[] = [
     execution:
       "The public app is Next.js 16, React 19, and Tailwind CSS v4 on Vercel. Waitlist rows go to Supabase through server-side access, with row-level security and no client key. The product model on the site is six stages: discover, understand, classify, match, distribute, and measure. Foundation work is marked building. Structured search is experimental. Distribution is exploring. Network capabilities are planned. Contextual intelligence is research.",
     outcome:
-      "Visitors can read the model and join a waitlist. They cannot search a public product graph, and the site says the private build is not open. No usage, customer, or revenue figures are part of this write-up.",
+      "Visitors can read the model and join a waitlist. They cannot search a public product graph, and the site says the private build is not open. No usage, customer, or revenue figures are part of this write-up. What works today: the public Next.js site, waitlist to Supabase, and an explicit stage vocabulary. What remains incomplete: a public product graph, intent-aware matching, and any claim that distribution is launched.",
     lessons: [
       "A stage enum is a product decision. Without it, the homepage and the roadmap drift apart.",
       "Publishing the ambition early is useful only if the repository boundary stays visible: this repo is the site, not the matcher.",
@@ -129,7 +129,7 @@ export const work: WorkItem[] = [
     execution:
       "The repo is a pnpm monorepo. Domain code and a NestJS API implement matching, order state, confirmation, integer-paise GST on the voice path, and in-memory idempotent invoicing. A Next.js admin can search the demo catalog, list orders, and inspect voice sessions without raw audio. Mock and CSV ERP adapters exist. The Android worker is a Kotlin scaffold with a push-to-talk recorder. Speech defaults to a mock provider. Postgres and Redis are prepared. The API still runs on an in-memory demo catalog unless that wiring is finished.",
     outcome:
-      "The documented founding loop can run locally with mock speech and fixture medicines. A real warehouse catalog, production speech, a field-ready Android app, stock reservation, invoice PDFs, and live ERP posting are still ahead. The stack choice is explicitly provisional.",
+      "The documented founding loop can run locally with mock speech and fixture medicines. A real warehouse catalog, production speech, a field-ready Android app, stock reservation, invoice PDFs, and live ERP posting are still ahead. The stack choice is explicitly provisional. What works today: domain matching, order state, confirmation, integer-paise GST on the voice path, in-memory idempotent invoicing, Next.js admin over a demo catalog, and mock/CSV ERP adapters. What remains incomplete: production speech, live ERP posting, stock reservation, invoice PDFs, and a field-ready Android app.",
     lessons: [
       "In a billing system, the model's job ends at a candidate list.",
       "A local mock loop is real engineering, and it is not a deployment. The docs are right to keep those sentences apart.",

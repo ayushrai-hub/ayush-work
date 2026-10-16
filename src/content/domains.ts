@@ -88,7 +88,7 @@ export const domains: DomainRecord[] = [
     label: "Domain",
     showOnHome: true,
     description:
-      "How I approach LLM evaluation, preference feedback, and AI products, with the work and the limits named.",
+      "Ayush Rai on AI engineering: LLM evaluation, preference feedback, and AI products, with the work and the limits named.",
     dek: "A map of the AI work I can point to. It is not a claim that every subfield below is a production specialty.",
     evidenceLevel: "mixed",
     sections: [
@@ -169,7 +169,7 @@ export const domains: DomainRecord[] = [
     label: "AI engineering",
     showOnHome: true,
     description:
-      "How I think about rubrics, review loops, and reliability for LLM outputs, grounded in contract evaluation work.",
+      "Ayush Rai on LLM evaluation: rubrics, review loops, and reliability for model outputs, grounded in contract evaluation work.",
     dek: "Judgment criteria, not model names, are the part of this work I can talk about in public.",
     evidenceLevel: "mixed",
     sections: [
@@ -261,7 +261,7 @@ export const domains: DomainRecord[] = [
     label: "AI engineering",
     showOnHome: true,
     description:
-      "What I mean by RLHF-shaped work: human review and preference signals for model outputs, and the limits of what I can show.",
+      "Ayush Rai on RLHF-shaped work: human review and preference signals for model outputs, scoped to the experience record — not reward-model training.",
     dek: "I have done human-feedback evaluation. I have not trained the reward model or the policy those signals might update.",
     evidenceLevel: "mixed",
     sections: [
@@ -655,7 +655,7 @@ export const domains: DomainRecord[] = [
     label: "Services",
     showOnHome: true,
     description:
-      "What I can actually take on: product framing, web applications, and careful AI features, scoped from work I have already shipped.",
+      "Ayush Rai freelance and contract software services: product framing, web applications, and careful AI features, scoped from work already shipped.",
     dek: "No rate card and no package ladder. If the work fits, the next step is a conversation.",
     evidenceLevel: "shipped",
     sections: [
@@ -734,7 +734,7 @@ export const domains: DomainRecord[] = [
     label: "Background",
     showOnHome: true,
     description:
-      "Employment, contract evaluation, and earlier internships and community roles, in the words already used on this site.",
+      "Ayush Rai experience: FoCDoT and Outlier contract AI evaluation, plus earlier software and internship roles, with dates and organizations named.",
     dek: "Roles with dates. The narratives stay on the records below rather than being rewritten into a highlight reel.",
     evidenceLevel: "shipped",
     sections: [

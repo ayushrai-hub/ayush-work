@@ -88,11 +88,31 @@ function acceptQuality(accept, mediaType) {
   return best;
 }
 
-/** Copy of wantsMarkdown in src/lib/agent/surfaces.ts: Markdown only when its q beats text/html's. */
-export function wantsMarkdown(accept) {
-  if (!accept) return false;
+/** Same agent-bot tokens as `AGENT_BOT_UA` in src/lib/agent/surfaces.ts (test-enforced). */
+const AGENT_BOT_UA =
+  /(?:GPTBot|ClaudeBot|ChatGPT-User|PerplexityBot|Google-Extended|Applebot-Extended|ora-agent|DeepSeekBot)/i;
+
+/**
+ * Copy of wantsMarkdown in src/lib/agent/surfaces.ts: Markdown when Accept prefers it, or when a
+ * known agent bot omits an HTML preference.
+ */
+export function wantsMarkdown(accept, userAgent) {
+  if (accept) {
+    const markdown = acceptQuality(accept, "text/markdown");
+    if (markdown > 0 && markdown > acceptQuality(accept, "text/html")) return true;
+  }
+  if (!userAgent || !AGENT_BOT_UA.test(userAgent)) return false;
+  if (!accept) return true;
+  const html = acceptQuality(accept, "text/html");
+  if (html === 0) return true;
   const markdown = acceptQuality(accept, "text/markdown");
-  return markdown > 0 && markdown > acceptQuality(accept, "text/html");
+  return markdown > 0 && markdown >= html;
+}
+
+/** True when the homepage was requested with `?mode=agent`. */
+function wantsAgentMode(pathname, searchParams) {
+  const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+  return (path === "/" || path === "") && searchParams.get("mode") === "agent";
 }
 
 /** Edge entry. `context.next()` continues to Netlify's redirects, static files, and functions. */
@@ -101,7 +121,27 @@ export default async function handler(request, context) {
   const pathname = url.pathname;
   if (pathname.startsWith("/api/") && !isKnownApiPath(pathname)) return apiNotFound(pathname);
 
-  if (!wantsMarkdown(request.headers.get("accept"))) return context.next();
+  if (
+    wantsAgentMode(pathname, url.searchParams) &&
+    (request.method === "GET" || request.method === "HEAD")
+  ) {
+    const twin = await fetch(new URL("/agent-mode.json", url.origin));
+    if (twin.ok) {
+      return new Response(request.method === "HEAD" ? null : await twin.text(), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "public, max-age=300",
+          "Access-Control-Allow-Origin": "*",
+          "X-Content-Type-Options": "nosniff",
+        },
+      });
+    }
+  }
+
+  if (!wantsMarkdown(request.headers.get("accept"), request.headers.get("user-agent"))) {
+    return context.next();
+  }
   if (request.method !== "GET" && request.method !== "HEAD") return context.next();
 
   if (NON_PAGE_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {

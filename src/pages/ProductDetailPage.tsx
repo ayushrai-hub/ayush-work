@@ -17,6 +17,7 @@
  */
 import { Link, useParams } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import ContactCta from "../components/site/ContactCta";
 import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
@@ -78,7 +79,7 @@ export default function ProductDetailPage() {
     <>
       <PageSEO
         title={product.title}
-        description={product.summary}
+        description={`${product.title} by Ayush Rai. ${product.summary}`}
         path={`/products/${product.slug}`}
         jsonLd={productJsonLd(product)}
       />
@@ -243,6 +244,11 @@ export default function ProductDetailPage() {
             </Prose>
           </section>
         )}
+
+        <ContactCta
+          title="Discuss this product"
+          prompt={`If ${product.title} is relevant to a role or engagement, open the resume or schedule a conversation. Current stage: ${stageLabel}.`}
+        />
 
         <p className="mt-12">
           <Link to="/products" className="link-accent">

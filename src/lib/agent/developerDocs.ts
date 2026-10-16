@@ -16,7 +16,7 @@
 import { person } from "../../content";
 import type { PolicySection } from "../../content";
 import { API_CATALOG_PATH } from "./apiCatalog";
-import { AI_CATALOG_PATH, SERVER_CARD_PATH } from "./mcpCard";
+import { AI_CATALOG_PATH, ARD_PATH, SERVER_CARD_PATH } from "./mcpCard";
 import { API_ACCESS_NOTE, API_RATE_LIMIT_NOTE, API_VERSIONING_POLICY } from "./openapi";
 
 export const DEVELOPER_TITLE = `${person.name} API and MCP server`;
@@ -92,8 +92,14 @@ export function developerSections(): PolicySection[] {
       paragraphs: [
         `Endpoint: \`POST ${origin}/api/mcp\` over Streamable HTTP. It is stateless: each request gets a JSON response, with no session and no GET event stream. No authentication.`,
         "Tools: `list_projects` (with `cursor`), `get_project`, `compare_projects`, and `search_portfolio`. All are read-only and return the same records as the REST API.",
-        `Server Card (SEP-2127): \`GET ${origin}${SERVER_CARD_PATH}\`, media type \`application/mcp-server-card+json\`. Domain discovery: the AI Catalog at \`${AI_CATALOG_PATH}\`.`,
+        `Server Card (SEP-2127): \`GET ${origin}${SERVER_CARD_PATH}\`, media type \`application/mcp-server-card+json\`. Domain discovery: ARD at \`${ARD_PATH}\` (canonical) and the AI Catalog at \`${AI_CATALOG_PATH}\` (legacy path).`,
         `Client config: \`{ "mcpServers": { "ayush-portfolio": { "url": "${origin}/api/mcp" } } }\`. The repository also runs the same server over stdio with \`npx tsx mcp/server.ts\`.`,
+      ],
+    },
+    {
+      heading: "Natural-language ask",
+      paragraphs: [
+        "`POST /ask` (also GET with `?query=` or `?q=`) accepts an NLWeb-shaped request and returns lexical search hits over the same index as `/api/v1/search`. It is not a generative model. Responses include `_meta.response_type` and `_meta.version` (`0.55`).",
       ],
     },
     {
@@ -109,14 +115,14 @@ export function developerSections(): PolicySection[] {
     {
       heading: "Discovery",
       paragraphs: [
-        `API catalog (RFC 9727): \`${API_CATALOG_PATH}\`. MCP discovery: \`${AI_CATALOG_PATH}\`. Index of pages: \`/llms.txt\`. Agent notes: \`/AGENTS.md\` and \`/SKILL.md\`.`,
+        `API catalog (RFC 9727): \`${API_CATALOG_PATH}\`. ARD: \`${ARD_PATH}\`. MCP discovery: \`${AI_CATALOG_PATH}\`. Auth notes: \`/auth.md\`. Agent view: \`/?mode=agent\`. Index of pages: \`/llms.txt\`. Agent notes: \`/AGENTS.md\` and \`/SKILL.md\`.`,
         "Every page has a Markdown version at the same path plus `.md`, and `Accept: text/markdown` on a page URL returns it.",
       ],
     },
     {
       heading: "Not provided",
       paragraphs: [
-        "There is no published SDK or CLI package, API key, sandbox, or paid tier, and the MCP server is not listed in a registry. The API is small enough to call directly from the OpenAPI spec.",
+        "There is no published SDK or CLI package, API key, OAuth, separate test environment, or paid tier, and the MCP server is not listed in a registry. There is no A2A agent-card because no A2A JSON-RPC endpoint is implemented. The API is small enough to call directly from the OpenAPI spec.",
       ],
     },
   ];

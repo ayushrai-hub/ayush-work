@@ -19,9 +19,9 @@ interface SEOMetadata {
 export const defaultSEO: SEOMetadata = {
   title: "Ayush Rai · AI Engineer & AI Product Builder",
   description:
-    "Ayush Rai, AI engineer and AI product builder. LLM evaluation, preference feedback, and software products with the limits written down.",
+    "Ayush Rai (ayushrai.site): remote AI engineer and AI product builder. LLM evaluation, preference feedback, and shipped software products with limits written down.",
   keywords:
-    "Ayush Rai, AI engineer, software, products, research, remote, RLHF, Open Framework, personal site",
+    "Ayush Rai, AI engineer, LLM evaluation, RLHF, preference feedback, AI product builder, remote, Open Framework, MedVoice, AGENYRA",
   image: "/IMG_0029.jpeg",
   url: "https://www.ayushrai.site",
 };

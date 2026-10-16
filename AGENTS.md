@@ -42,7 +42,7 @@ OpenAPI: `https://www.ayushrai.site/openapi.json`
 API catalog (RFC 9727): `https://www.ayushrai.site/.well-known/api-catalog`
 Developer docs: `https://www.ayushrai.site/developers`
 
-The API is free, public, and needs no key. There is no sandbox or paid tier.
+The API is free, public, and needs no key. There is no separate test environment or paid tier.
 
 ## Errors and rate limits
 
@@ -94,13 +94,25 @@ Tools: `list_projects`, `get_project`, `compare_projects`, `search_portfolio`. T
 
 Discovery follows SEP-2127. The Server Card is `GET https://www.ayushrai.site/api/mcp/server-card` (`application/mcp-server-card+json`, with `ETag`). The AI Catalog at `/.well-known/ai-catalog.json` lists it. The older `/.well-known/mcp/server-card.json` serves the same card for clients that still look there.
 
-A zero-dependency CLI lives in `packages/cli` (`node packages/cli/bin/ayushrai.mjs search agents`). It is not published to npm yet. An SDK is not published. An A2A agent card is not implemented. This server is not listed on Smithery, mcp.so, or any other registry.
+A zero-dependency CLI lives in `packages/cli` (`node packages/cli/bin/ayushrai.mjs search agents`). It is not published to npm yet. An SDK is not published. An A2A agent card is not implemented (and not advertised). This server is not listed on Smithery, mcp.so, or any other registry.
 
 WebMCP `search_portfolio_projects` registers on `document.modelContext` when that API exists, and does nothing otherwise. `navigator.modelContext` is only a fallback. No experimental Chrome WebMCP browser run was completed in this repository.
 
+## Authentication
+
+The REST API, `/ask`, and MCP server are public and unauthenticated. See `/auth.md`. There is no OAuth protected-resource metadata and no `WWW-Authenticate` challenge on these routes by design.
+
+## Agent mode and discovery
+
+- `GET /?mode=agent` returns JSON (capabilities, API, MCP, docs), not the marketing homepage.
+- ARD v0.91: `/.well-known/ard.json` (canonical). Legacy AI Catalog: `/.well-known/ai-catalog.json`.
+- `POST /ask` is NLWeb-shaped lexical search over the same index as `/api/v1/search` (not generative).
+- WebMCP tools register from `/webmcp.js` when `document.modelContext` exists.
+- An A2A `/.well-known/agent-card.json` is not published: there is no A2A JSON-RPC endpoint.
+
 ## Domains
 
-Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, `/software-services`, `/experience`, and `/open-source`. They are generated from `src/content/domains.ts`. There is no `/ai-engineering/inference` or `/software-engineering/distributed-systems` page: those topics are gaps, not empty URLs. There is no published SDK or CLI, pricing page, or auth guide.
+Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, `/software-services`, `/experience`, and `/open-source`. They are generated from `src/content/domains.ts`. There is no `/ai-engineering/inference` or `/software-engineering/distributed-systems` page: those topics are gaps, not empty URLs. There is no published SDK package, pricing page, or OAuth login.
 
 ## Working in this repo
 

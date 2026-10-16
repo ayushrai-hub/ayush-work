@@ -29,6 +29,14 @@
     {
       "source": "/api/mcp/server-card",
       "destination": "/api/mcp?resource=server-card"
+    },
+    {
+      "source": "/ask",
+      "destination": "/api/ask"
+    },
+    {
+      "source": "/agents.md",
+      "destination": "/AGENTS.md"
     }
   ],
   "headers": [
@@ -93,6 +101,23 @@
       ]
     },
     {
+      "source": "/.well-known/ard.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
       "source": "/.well-known/mcp/server-card.json",
       "headers": [
         {
@@ -122,11 +147,41 @@
       ]
     },
     {
+      "source": "/auth.md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/agent-mode.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300"
+        }
+      ]
+    },
+    {
       "source": "/",
       "headers": [
         {
           "key": "Link",
-          "value": "</.well-known/api-catalog>; rel=\"api-catalog\""
+          "value": "</.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/ard.json>; rel=\"ard\", </.well-known/ai-catalog.json>; rel=\"ai-catalog\", </sitemap.xml>; rel=\"sitemap\", </llms.txt>; rel=\"describedby\""
         }
       ]
     }

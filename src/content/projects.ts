@@ -189,7 +189,7 @@ export const projects: Project[] = [
     yearEnd: "present",
     technologies: ["Web"],
     links: {
-      demo: "https://thelifeofayush.vercel.app/sites/www/",
+      demo: "https://life.ayushrai.site/",
     },
   },
   {

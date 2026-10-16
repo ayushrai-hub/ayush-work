@@ -121,7 +121,7 @@ Vite + React Router is client-rendered by default:
 - Keep GA/GTM only if useful; document IDs in env, not in strategy prose.  
 - Verify property in Google Search Console on final domain.  
 - Track: outbound GitHub/LinkedIn, contact submit, work case opens — not vanity scroll depth alone.  
-- Web vitals: removing Three.js/particles should improve LCP/INP — re-baseline after redesign (`MarkdownDocs/performance-baseline.md` can be updated later).
+- Web vitals: removing Three.js/particles should improve LCP/INP — re-baseline after redesign (`docs/archive/markdown-docs/performance-baseline.md` can be updated later).
 
 ---
 

@@ -35,3 +35,4 @@ test-results
 
 # OpenMemory - IDE/Assistant specific rules
 .cursor/rules/openmemory.mdc
+# Note: root AGENTS.md is the published agent guide for ayushrai.site (tracked), not an IDE-only file.

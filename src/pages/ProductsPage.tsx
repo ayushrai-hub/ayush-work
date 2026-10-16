@@ -14,6 +14,7 @@
  */
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
 import {
   featuredProducts,
@@ -104,7 +105,7 @@ export default function ProductsPage() {
     <>
       <PageSEO
         title="Products"
-        description="Flagship products in progress, plus earlier MVPs. Stages stay specific: building, experimental, and MVP are not the same claim."
+        description="Ayush Rai products: The Open Framework, AGENYRA, and MedVoice, plus earlier MVPs. Stages stay specific — building is not production."
         path="/products"
       />
       <div className="site-shell page-section">
@@ -149,6 +150,8 @@ export default function ProductsPage() {
             ))}
           </div>
         )}
+
+        <ContactCta prompt="To discuss an AI product or software build in this catalog, use contact, resume, or Calendly." />
       </div>
     </>
   );

@@ -33,9 +33,9 @@ export const person: Person = {
   responseTime: "<24 hrs",
   roleTitle: "AI Engineer & AI Product Builder",
   tagline:
-    "AI engineer and AI product builder. I work on LLM evaluation, preference feedback, and software products that have to survive a real workflow.",
+    "Remote AI engineer and AI product builder at ayushrai.site. LLM evaluation, preference feedback, and software products with the limits written down.",
   positioning:
-    "I'm an AI engineer and AI product builder working remotely. My paid work includes contract evaluation for frontier-lab programs. Alongside that I build AI products and client software, from an early civil-society coordination prototype to education and agrotech MVPs. I would rather describe what shipped, and what did not, than sound futuristic.",
+    "I'm Ayush Rai, an AI engineer and AI product builder working remotely (www.ayushrai.site). My paid work includes contract evaluation for frontier-lab programs through FoCDoT and Outlier. Alongside that I build AI products and client software, from an early civil-society coordination prototype to education and agrotech MVPs. I would rather describe what shipped, and what did not, than sound futuristic.",
   footerLine: "I'm an AI engineer and AI product builder working remotely.",
   siteUrl: "https://www.ayushrai.site",
   resumeUrl:
@@ -45,7 +45,7 @@ export const person: Person = {
   portrait: "/IMG_0029.jpeg",
   deepDive: {
     label: "MyLifeOS",
-    url: "https://thelifeofayush.vercel.app/sites/www/",
+    url: "https://life.ayushrai.site/",
     description:
       "A longer personal archive with more of the life, work, and context behind this site.",
   },

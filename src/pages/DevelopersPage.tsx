@@ -36,8 +36,12 @@ function withCode(text: string) {
 const RESOURCES = [
   { href: "/openapi.json", label: "OpenAPI spec" },
   { href: "/.well-known/api-catalog", label: "API catalog" },
+  { href: "/.well-known/ard.json", label: "ARD catalog" },
   { href: "/api/mcp/server-card", label: "MCP Server Card" },
   { href: "/.well-known/ai-catalog.json", label: "AI Catalog" },
+  { href: "/auth.md", label: "auth.md" },
+  { href: "/ask", label: "POST /ask (NLWeb-shaped)" },
+  { href: "/?mode=agent", label: "Agent mode JSON" },
   { href: "/llms.txt", label: "llms.txt" },
   { href: "/AGENTS.md", label: "AGENTS.md" },
   { href: "/SKILL.md", label: "SKILL.md" },

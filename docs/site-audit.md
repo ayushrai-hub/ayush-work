@@ -155,7 +155,7 @@ Rendered in order in `App.tsx`:
 - `Hero.tsx` vs `ThreeJSHero` dual landing paths — consolidate.  
 - SEO constants still “AI & Full-Stack Developer Portfolio” + Netlify URL — outdated positioning.  
 - Tests assert vanity strings (`100%`, phone links) — will need rewrite with content.  
-- Existing docs (`MarkdownDocs/`, `docs/other-pages-consolidation-strategy.md`) describe older consolidation plans; this strategy set supersedes them for product direction.
+- Existing docs (`docs/archive/markdown-docs/`, `docs/other-pages-consolidation-strategy.md`) describe older consolidation plans; this strategy set supersedes them for product direction.
 
 ---
 

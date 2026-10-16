@@ -13,6 +13,7 @@
  */
 import { useMemo, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
+import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
 import WorkRow from "../components/editorial/WorkRow";
 import { work, pageUpdatedAt, type WorkType } from "../content";
@@ -40,7 +41,7 @@ export default function WorkPage() {
     <>
       <PageSEO
         title="Work"
-        description="Selected and indexed work, products, projects, client sites, and experiments."
+        description="Ayush Rai work index: AI product and software case studies, including The Open Framework, MedVoice, AGENYRA, and client sites."
         path="/work"
       />
       <div className="site-shell page-section">
@@ -81,6 +82,8 @@ export default function WorkPage() {
         {items.length === 0 && (
           <p className="py-8 text-ink-faint">No work in this filter.</p>
         )}
+
+        <ContactCta prompt="If a case study matches a role or project you are filling, open the resume or book a short call." />
       </div>
     </>
   );

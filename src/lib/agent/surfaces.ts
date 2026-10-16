@@ -14,12 +14,22 @@
  *   in `src/lib/publicRoutes.ts`.
  */
 import { prerenderRoutes } from "../publicRoutes";
+import { agentModeJson } from "./agentMode";
 import { API_CATALOG_PATH, buildApiCatalog } from "./apiCatalog";
-import { AI_CATALOG_PATH, buildAiCatalog, LEGACY_SERVER_CARD_PATH, serverCardJson } from "./mcpCard";
+import { renderAuthMarkdown } from "./authDocs";
+import {
+  AI_CATALOG_PATH,
+  ARD_PATH,
+  buildAiCatalog,
+  buildArdManifest,
+  LEGACY_SERVER_CARD_PATH,
+  serverCardJson,
+} from "./mcpCard";
 import { buildOpenApiDocument } from "./openapi";
 import {
   listAgentPages,
   markdownPublicPath,
+  renderDevelopersLlmsTxt,
   renderLlmsFull,
   renderLlmsTxt,
   renderNotFoundMarkdown,
@@ -51,14 +61,36 @@ function acceptQuality(accept: string, mediaType: string): number {
 }
 
 /**
+ * User-Agent tokens used by common AI crawlers and the ora scanner. When these clients omit a
+ * Markdown-preferring Accept header (often a wildcard Accept), they still receive Markdown twins.
+ * Ordinary browsers keep the Accept-only rule below.
+ */
+export const AGENT_BOT_UA =
+  /(?:GPTBot|ClaudeBot|ChatGPT-User|PerplexityBot|Google-Extended|Applebot-Extended|ora-agent|DeepSeekBot)/i;
+
+/** True when `userAgent` matches a known agent crawler. */
+export function isAgentBotUserAgent(userAgent: string | undefined): boolean {
+  return Boolean(userAgent && AGENT_BOT_UA.test(userAgent));
+}
+
+/**
  * True when `Accept` gives `text/markdown` a positive quality strictly above `text/html`.
  * Browsers list `text/html` at q=1 on page loads, so they keep getting HTML; a tie also stays
- * HTML. `netlify/edge-functions/markdown-negotiation.js` copies this rule (test-enforced).
+ * HTML. Known agent bots without an HTML preference also get Markdown (test-enforced with the
+ * Netlify edge copy).
  */
-export function wantsMarkdown(accept: string | undefined): boolean {
-  if (!accept) return false;
+export function wantsMarkdown(accept: string | undefined, userAgent?: string): boolean {
+  if (accept) {
+    const markdown = acceptQuality(accept, "text/markdown");
+    if (markdown > 0 && markdown > acceptQuality(accept, "text/html")) return true;
+  }
+  if (!isAgentBotUserAgent(userAgent)) return false;
+  // Agent bots with missing Accept, */*, or no positive text/html preference get Markdown.
+  if (!accept) return true;
+  const html = acceptQuality(accept, "text/html");
+  if (html === 0) return true;
   const markdown = acceptQuality(accept, "text/markdown");
-  return markdown > 0 && markdown > acceptQuality(accept, "text/html");
+  return markdown > 0 && markdown >= html;
 }
 
 /**
@@ -69,10 +101,14 @@ export function agentFiles(): Record<string, string> {
   const files: Record<string, string> = {
     "llms.txt": renderLlmsTxt(),
     "llms-full.txt": renderLlmsFull(),
+    "developers/llms.txt": renderDevelopersLlmsTxt(),
     "openapi.json": `${JSON.stringify(buildOpenApiDocument(), null, 2)}\n`,
     "404.md": renderNotFoundMarkdown(),
+    "auth.md": renderAuthMarkdown(),
+    "agent-mode.json": agentModeJson(),
     [API_CATALOG_PATH.slice(1)]: `${JSON.stringify(buildApiCatalog(), null, 2)}\n`,
     [AI_CATALOG_PATH.slice(1)]: `${JSON.stringify(buildAiCatalog(), null, 2)}\n`,
+    [ARD_PATH.slice(1)]: `${JSON.stringify(buildArdManifest(), null, 2)}\n`,
     [LEGACY_SERVER_CARD_PATH.slice(1)]: serverCardJson(),
   };
   for (const page of listAgentPages()) {
@@ -121,8 +157,9 @@ export interface MarkdownNegotiation {
 export function negotiateMarkdown(
   pathname: string,
   accept: string | undefined,
+  userAgent?: string,
 ): MarkdownNegotiation | null {
-  if (!wantsMarkdown(accept)) return null;
+  if (!wantsMarkdown(accept, userAgent)) return null;
   if (NON_PAGE_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return null;
   if (/\.[a-z0-9]+$/i.test(pathname)) return null;
   const markdown = markdownForRequestPath(pathname);

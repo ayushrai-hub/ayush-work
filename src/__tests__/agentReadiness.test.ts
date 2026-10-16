@@ -33,13 +33,22 @@ import { API_ROUTES, isKnownApiPath } from "../lib/agent/apiRoutes";
 import { agentApiResponse, corsHeaders, dispatchAgentApi } from "../lib/agent/http";
 import { renderLlmsTxt, renderPageMarkdown } from "../lib/agent/markdown";
 import { markdownMiddleware } from "../lib/agent/markdownMiddleware";
+import { buildAgentModeDocument, wantsAgentMode } from "../lib/agent/agentMode";
+import { renderAuthMarkdown } from "../lib/agent/authDocs";
 import {
   buildAiCatalog,
+  buildArdManifest,
+  buildMcpCatalogEntry,
   buildServerCard,
+  MCP_ENTRY_DISPLAY_NAME,
+  MCP_ENTRY_IDENTIFIER,
   MCP_PROTOCOL_VERSIONS,
   MCP_SERVER_INFO,
+  MCP_SERVER_INSTRUCTIONS,
   SERVER_CARD_SCHEMA,
 } from "../lib/agent/mcpCard";
+import { buildAskResponse, extractAskQuery } from "../lib/agent/nlwebAsk";
+import { createPortfolioMcpServer } from "../lib/agent/mcpServer";
 import { handleMcpRequest } from "../lib/agent/mcpHttp";
 import { buildOpenApiDocument } from "../lib/agent/openapi";
 import { clientKeyFrom, RATE_LIMIT_QUOTA, resetRateLimits, takeRateLimit } from "../lib/agent/rateLimit";
@@ -139,6 +148,17 @@ describe("JSON errors", () => {
       expect(wantsMarkdown(accept), String(accept)).toBe(expected);
       expect(edgeWantsMarkdown(accept), `edge ${accept}`).toBe(expected);
     }
+    // Known agent bots get Markdown when Accept is missing or has no HTML preference.
+    for (const ua of ["GPTBot/1.0", "ora-agent/1.0", "ClaudeBot"]) {
+      expect(wantsMarkdown(undefined, ua), ua).toBe(true);
+      expect(edgeWantsMarkdown(undefined, ua), `edge ${ua}`).toBe(true);
+      expect(wantsMarkdown("*/*", ua), `*/* ${ua}`).toBe(true);
+      expect(edgeWantsMarkdown("*/*", ua), `edge */* ${ua}`).toBe(true);
+      expect(wantsMarkdown("text/html", ua), `html ${ua}`).toBe(false);
+      expect(edgeWantsMarkdown("text/html", ua), `edge html ${ua}`).toBe(false);
+    }
+    expect(wantsMarkdown(undefined, "Mozilla/5.0")).toBe(false);
+    expect(edgeWantsMarkdown(undefined, "Mozilla/5.0")).toBe(false);
   });
 });
 
@@ -264,7 +284,7 @@ describe("OpenAPI", () => {
         expect(Object.keys(operation.responses)).toContain("429");
       }
     }
-    expect(operations).toBe(7);
+    expect(operations).toBe(9);
     const errorSchema = schemas.ErrorResponse as { properties: { error: { required: string[] } } };
     expect(errorSchema.properties.error.required).toEqual(["code", "message", "hint", "docs"]);
   });
@@ -317,6 +337,10 @@ describe("MCP discovery", () => {
       expect.objectContaining({ type: "streamable-http", url: `${ORIGIN}/api/mcp` }),
     ]);
     expect(MCP_PROTOCOL_VERSIONS).toEqual([...SUPPORTED_PROTOCOL_VERSIONS]);
+    expect(MCP_SERVER_INSTRUCTIONS.length).toBeGreaterThan(40);
+    expect(MCP_SERVER_INSTRUCTIONS).toContain("lexical");
+    // Constructing the server must accept instructions (initialize identity).
+    expect(() => createPortfolioMcpServer()).not.toThrow();
   });
 
   it("serves the card with its media type, CORS, caching, and ETag revalidation", async () => {
@@ -339,24 +363,77 @@ describe("MCP discovery", () => {
     expect(revalidated.status).toBe(304);
   });
 
-  it("lists the card in the AI Catalog and the RFC 9727 API catalog", () => {
+  it("lists the card in the AI Catalog, ARD manifest, and the RFC 9727 API catalog", () => {
+    const entry = buildMcpCatalogEntry();
+    expect(entry.identifier).toBe(MCP_ENTRY_IDENTIFIER);
+    expect(entry.displayName).toBe(MCP_ENTRY_DISPLAY_NAME);
+    expect(entry.url).toBe(`${ORIGIN}/api/mcp/server-card`);
+    expect(entry).not.toHaveProperty("data");
+    expect(entry.trustManifest.identity).toBe(ORIGIN);
+
     const catalog = buildAiCatalog();
     expect(catalog.specVersion).toBe("1.0");
-    expect(catalog.entries).toEqual([
-      {
-        identifier: "urn:air:ayushrai.site:mcp:portfolio",
-        type: "application/mcp-server-card+json",
-        url: `${ORIGIN}/api/mcp/server-card`,
-      },
-    ]);
+    expect(catalog.entries).toEqual([entry]);
+    const ard = buildArdManifest();
+    expect(ard.specVersion).toBe("0.91");
+    expect(ard.entries).toEqual([entry]);
+
     const files = agentFiles();
     expect(JSON.parse(files[".well-known/ai-catalog.json"])).toEqual(catalog);
+    expect(JSON.parse(files[".well-known/ard.json"])).toEqual(ard);
     expect(JSON.parse(files[".well-known/mcp/server-card.json"])).toEqual(buildServerCard());
+    expect(buildServerCard().icons?.[0]?.src).toContain("/favicon.svg");
     const mcpAnchor = buildApiCatalog().linkset.find((entry) => entry.anchor === `${ORIGIN}/api/mcp`);
     expect(mcpAnchor?.["service-desc"]?.[0]).toEqual({
       href: `${ORIGIN}/api/mcp/server-card`,
       type: "application/mcp-server-card+json",
     });
+  });
+});
+
+/** Auth docs, agent-mode JSON, and NLWeb-shaped /ask. */
+describe("auth, agent mode, and ask", () => {
+  it("documents that the public API needs no authentication", () => {
+    const auth = renderAuthMarkdown();
+    expect(auth).toContain("public, read-only");
+    expect(auth).toContain("no authentication");
+    expect(auth).not.toContain("identity_endpoint");
+    expect(agentFiles()["auth.md"]).toBe(auth);
+  });
+
+  it("builds a distinct agent-mode document for ?mode=agent", () => {
+    expect(wantsAgentMode("/", new URLSearchParams("mode=agent"))).toBe(true);
+    expect(wantsAgentMode("/", new URLSearchParams())).toBe(false);
+    const doc = buildAgentModeDocument();
+    expect(doc.api.authentication).toBe("none");
+    expect(doc.mcp.url).toBe(`${ORIGIN}/api/mcp`);
+    expect(doc.capabilities.a2a).toBe(false);
+    expect(JSON.parse(agentFiles()["agent-mode.json"])).toEqual(doc);
+
+    const response = markdownMiddleware(
+      new Request(`${ORIGIN}/?mode=agent`, { headers: { accept: "text/html" } }),
+    );
+    expect(response).toBeInstanceOf(Response);
+    expect(response?.headers.get("content-type")).toContain("application/json");
+  });
+
+  it("answers NLWeb-shaped ask queries from the lexical index", () => {
+    expect(extractAskQuery({ params: new URLSearchParams("q=overlay") }).query).toBe("overlay");
+    expect(extractAskQuery({ body: { query: { text: "agents" } } }).query).toBe("agents");
+    const empty = buildAskResponse("");
+    expect(empty.body._meta).toMatchObject({ response_type: "failure", version: "0.55" });
+    const hit = buildAskResponse("overlay");
+    expect(hit.body._meta).toMatchObject({ response_type: "answer", version: "0.55" });
+    expect(Array.isArray(hit.body.results)).toBe(true);
+  });
+
+  it("emits YAML frontmatter on Markdown twins and a developers section llms.txt", () => {
+    const about = renderPageMarkdown("/about") ?? "";
+    expect(about.startsWith("---\n")).toBe(true);
+    expect(about).toContain("title:");
+    expect(about).toContain("last-updated:");
+    expect(agentFiles()["developers/llms.txt"]).toContain("/auth.md");
+    expect(agentFiles()["llms.txt"]).toContain("/developers/llms.txt");
   });
 });
 

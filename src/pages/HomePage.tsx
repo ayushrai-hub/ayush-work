@@ -127,12 +127,23 @@ export default function HomePage() {
               >
                 Calendly
               </a>
+              <a
+                href={person.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline"
+              >
+                Resume
+              </a>
             </nav>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/work" className="btn-primary">
                 Work
               </Link>
-              <Link to="/about" className="btn-secondary">
+              <Link to="/contact" className="btn-secondary">
+                Contact
+              </Link>
+              <Link to="/about" className="btn-ghost">
                 About
               </Link>
               <a href="#go-deeper" className="btn-ghost">

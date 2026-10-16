@@ -13,7 +13,7 @@
  */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { MCP_SERVER_INFO } from "./mcpCard";
+import { MCP_SERVER_INFO, MCP_SERVER_INSTRUCTIONS } from "./mcpCard";
 import { decodeCursor } from "./pagination";
 import { comparePublicProjects, getPublicProject, pagePublicProjects } from "./projectsQuery";
 import { executePortfolioSearch } from "./searchTool";
@@ -26,9 +26,15 @@ function text(value: unknown) {
   };
 }
 
-/** Tool result flagged `isError` with a plain-text message, for the model to read and retry. */
-function toolError(message: string) {
-  return { isError: true, content: [{ type: "text" as const, text: message }] };
+/**
+ * Tool result flagged `isError` with a readable message and a stable `code` in structuredContent.
+ */
+function toolError(message: string, code = "tool_error") {
+  return {
+    isError: true,
+    content: [{ type: "text" as const, text: `${code}: ${message}` }],
+    structuredContent: { error: { code, message } },
+  };
 }
 
 /**
@@ -36,7 +42,7 @@ function toolError(message: string) {
  * Returns a new, unconnected server; the caller attaches a transport.
  */
 export function createPortfolioMcpServer() {
-  const server = new McpServer({ ...MCP_SERVER_INFO });
+  const server = new McpServer({ ...MCP_SERVER_INFO }, { instructions: MCP_SERVER_INSTRUCTIONS });
 
   server.registerTool(
     "list_projects",
@@ -57,7 +63,7 @@ export function createPortfolioMcpServer() {
         validateProjectCategory(args?.category ?? null) ??
         validateProjectType(args?.type ?? null) ??
         decodeCursor(args?.cursor).error;
-      if (invalid) return toolError(invalid.message);
+      if (invalid) return toolError(invalid.message, invalid.code);
       const page = pagePublicProjects({
         category: args?.category,
         type: args?.type,
@@ -82,9 +88,9 @@ export function createPortfolioMcpServer() {
     },
     async ({ slug, includeArchive }) => {
       const invalid = validateSlug(slug);
-      if (invalid) return toolError(invalid.message);
+      if (invalid) return toolError(invalid.message, invalid.code);
       const project = getPublicProject(slug, { includeArchive });
-      if (!project) return toolError(`No public project with slug "${slug}".`);
+      if (!project) return toolError(`No public project with slug "${slug}".`, "not_found");
       return text({ project });
     },
   );
@@ -102,7 +108,7 @@ export function createPortfolioMcpServer() {
     },
     async ({ slugs, includeArchive }) => {
       const result = comparePublicProjects(slugs, { includeArchive });
-      if (!result.ok) return toolError(result.message);
+      if (!result.ok) return toolError(result.message, "invalid_compare");
       return text({ projects: result.projects, missing: result.missing });
     },
   );

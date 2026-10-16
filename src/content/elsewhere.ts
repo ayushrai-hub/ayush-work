@@ -294,7 +294,7 @@ export const elsewhereProfiles: ProfileLink[] = [
   {
     id: "mylifeos",
     name: "MyLifeOS",
-    url: "https://thelifeofayush.vercel.app/sites/www/",
+    url: "https://life.ayushrai.site/",
     category: "portfolio",
     description: "Personal life/systems site",
   },
