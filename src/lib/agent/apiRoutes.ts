@@ -21,6 +21,7 @@ export const API_ROUTES = [
   "/api/v1/compare",
   "/api/mcp",
   "/api/mcp/server-card",
+  "/api/ask",
   "/api/send-email",
 ] as const;
 
