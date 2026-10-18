@@ -12,7 +12,7 @@
  *
  * Connects to:
  * - Routed in src/App.tsx as `ai-engineering`, `ai-engineering/*`, `software-engineering`,
- *   `software-services`, `experience`, and `open-source`. Every `domains[].path` is prerendered
+ *   `software-services`, `experience`, `open-source`, and `gtm-revops`. Every `domains[].path` is prerendered
  *   and listed in the sitemap via src/lib/publicRoutes.ts.
  * - Content from src/content (`getDomainByPath`, `childDomains`, `evidenceLevelLabels` from
  *   domains.ts; `experience`, `products`, `projects`, `person`, `pageUpdatedAt("domains")`) and

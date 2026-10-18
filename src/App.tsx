@@ -106,6 +106,7 @@ export function AppRoutes() {
             <Route path="software-services" element={<DomainPage />} />
             <Route path="experience" element={<DomainPage />} />
             <Route path="open-source" element={<DomainPage />} />
+            <Route path="gtm-revops" element={<DomainPage />} />
 
             {/* Legacy redirects */}
             <Route path="services" element={<Navigate to="/contact" replace />} />

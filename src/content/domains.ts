@@ -816,6 +816,118 @@ export const domains: DomainRecord[] = [
       "Public client repositories are listed only when this site already links them.",
     ],
   },
+  {
+    path: "/gtm-revops",
+    title: "GTM and RevOps",
+    h1: "GTM and RevOps systems",
+    label: "Domain",
+    description:
+      "Ayush Rai on GTM engineering and revenue operations: a live revenue-role job platform, a public-source relationship pipeline, and a synthetic scoring demo with a human approval gate.",
+    dek: "Three systems I built around revenue data, with GitHub links. One is live. One is a personal research tool. One runs only on fictional data.",
+    evidenceLevel: "mixed",
+    sections: [
+      {
+        heading: "Scope",
+        paragraphs: [
+          "GTM engineering, as I use the term here, is the data and decision layer behind revenue work: finding accounts, resolving duplicates, keeping track of where each fact came from, scoring fit in a way a person can inspect, and keeping a human between a model's output and anything that leaves the building.",
+          "I have not worked in a RevOps or sales team, and I have no CRM admin, customer, or pipeline-revenue numbers to show. What follows is software I built and the limits its own repositories state.",
+        ],
+      },
+      {
+        heading: "RevenueRoles: a live job platform for revenue-technical roles",
+        paragraphs: [
+          "RevenueRoles finds roles from supported employer career sources, extracts the full description, checks whether a posting is eligible to publish, and classifies it by the work rather than the title. A GTM Engineer is not a Sales Ops role, and the taxonomy reflects that. Each listing links back to the original posting.",
+          "The stack is Next.js, a Python FastAPI worker, Supabase Postgres and Inngest. The live homepage showed 71 verified roles, last updated 23 September 2026, and a compensation coverage figure of 58% when I checked it on 18 October 2026. Those are the site's own counts on that day. They are not user numbers, and I have no revenue or user figures to publish.",
+        ],
+        bullets: [
+          "Pipeline: discover, extract, verify eligibility, classify, deduplicate.",
+          "Concepts it shows: a clean data layer, duplicate resolution, enrichment quality, and how fresh a signal is.",
+          "Known limits: listing freshness, salary extraction that needs unit checks, and merging duplicate postings without losing the apply link.",
+        ],
+      },
+      {
+        heading: "Relationship Intelligence Engine: provenance on every field",
+        paragraphs: [
+          "A TypeScript pipeline that discovers technical founders and companies hiring AI and ML engineers from public sources: the Y Combinator public directory, GitHub signals and accelerator portfolio pages. It normalizes records, resolves entities, verifies fields, detects signals, scores and exports.",
+          "Every important field keeps its value, source, source URL, retrieval time and confidence, and carries one of five statuses: verified, inferred, unverified, conflicting or missing. Unknown values stay empty. The repository says the engine is a research tool and not a lead factory.",
+        ],
+        bullets: [
+          "Concepts it shows: account discovery, buying signals, enrichment in principle, and data provenance.",
+          "Limits: no paid enrichment vendor is wired in, and the audit figures inside the repository are its own notes, not independent checks.",
+        ],
+      },
+      {
+        heading: "Revenue Intelligence Engine: a demo on fictional data",
+        paragraphs: [
+          "A demo GTM pipeline. Given an ICP, it loads 42 labeled fictional companies, drops duplicates, scores the rest on a deterministic 100-point rubric, writes structured account research for the top accounts, and holds everything in an approval queue before any export.",
+          "All companies, contacts and signals in it are synthetic. Enrichment is a mock. It does not send outbound messages, does not write to a live CRM, and has no users or revenue. The number comes from rules, not from a language model; the model is used only for the account research text, with a deterministic fallback when no key is set.",
+        ],
+        bullets: [
+          "Score components: ICP fit, growth signal, hiring signal, technology fit, GTM need and contactability.",
+          "Stack: Python, FastAPI, Next.js, pytest.",
+          "Concepts it shows: orchestration, explainable lead scoring, and a human approval gate.",
+        ],
+      },
+      {
+        heading: "Supporting work",
+        paragraphs: [
+          "SpiderWeb turns the data export LinkedIn gives you into a searchable map of your own network, with duplicate resolution and clearly labeled rules. It is in development and is not deployed in production.",
+          "MailU is a local tool that syncs Gmail, categorizes mail, and answers questions over it with search and a local model. It shows email-data and retrieval skills. I have not re-run its tests for this page.",
+        ],
+      },
+      {
+        heading: "What I would build next",
+        paragraphs: [
+          "Connect one real enrichment provider behind the Revenue Intelligence Engine's existing interface with rate-limit handling, keeping the synthetic mode. Add a step that pushes approved accounts into a CRM sandbox. Write a short note for each system on why it is built that way, what failed, and what it costs to run. None of this is built yet.",
+        ],
+      },
+    ],
+    evidence: [
+      {
+        href: "https://revenueroles.in",
+        label: "RevenueRoles (live site)",
+        note: "The job platform. Counts above are from its homepage on 18 October 2026.",
+      },
+      {
+        href: "https://github.com/ayushrai-hub/RevenueRoles",
+        label: "RevenueRoles repository",
+        note: "Web app, API, Python pipeline worker and database migrations.",
+      },
+      {
+        href: "https://github.com/ayushrai-hub/SYSTEM-job",
+        label: "Relationship Intelligence Engine repository",
+        note: "Public-source pipeline with field-level provenance.",
+      },
+      {
+        href: "https://github.com/ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE",
+        label: "Revenue Intelligence Engine repository",
+        note: "Synthetic-data demo. All data in it is fictional.",
+      },
+      {
+        href: "https://github.com/ayushrai-hub/SpiderWeb",
+        label: "SpiderWeb repository",
+        note: "In development.",
+      },
+      {
+        href: "https://github.com/ayushrai-hub/MailU",
+        label: "MailU repository",
+        note: "Local Gmail tool.",
+      },
+    ],
+    related: [
+      { href: "/ai-engineering/llm-systems", label: "LLM systems in products" },
+      { href: "/ai-engineering/llm-evaluation", label: "LLM evaluation" },
+      { href: "/software-engineering", label: "Software engineering" },
+      { href: "/contact", label: "Contact" },
+    ],
+    reading: [],
+    gaps: [
+      "No experience in a sales, RevOps or CRM-admin role, and no CRM, Clay or Apollo integration in any repository.",
+      "No customer, user or revenue figures for any system on this page.",
+      "The Revenue Intelligence Engine uses fictional data only. It is not evidence of results on real leads.",
+      "The Relationship Intelligence Engine is a personal research tool, and its own audit notes were not independently re-run.",
+    ],
+  },
 ];
 
 /** Find the dossier for a pathname, ignoring trailing slashes. Used by DomainPage. */
