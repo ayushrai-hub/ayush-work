@@ -96,9 +96,17 @@ tokens, or `VERCEL_ENV` into application configuration.
 
 ## Web Analytics
 
-`@vercel/analytics/react` is mounted once in `src/main.tsx`. Enable Web
-Analytics from the Vercel project dashboard after deploying. The package alone
-does not activate collection.
+`@vercel/analytics/react` is mounted once in `src/main.tsx`. Web Analytics is
+enabled on the `ayush-rais-work22/ayush-work` project.
+
+`www.ayushrai.site` resolves to Netlify, which cannot serve `/_vercel/insights`
+itself. `netlify.toml` proxies `/_vercel/insights/*` (the script plus its
+`view`, `event`, and `session` endpoints) to `https://ayush-rai-work.vercel.app`,
+the project's own alias, so live visits are counted in the same project. This
+proxy is not an officially documented Vercel setup. If counts stop, first check
+that `https://www.ayushrai.site/_vercel/insights/script.js` returns JavaScript.
+Visitor location comes from the request Vercel receives, so it may reflect the
+Netlify edge rather than the visitor.
 
 ## Safe rollout
 

@@ -21,7 +21,7 @@ const MARKDOWN_HEADERS = {
   "X-Content-Type-Options": "nosniff",
 };
 
-const NON_PAGE_PREFIXES = ["/api/", "/.netlify/", "/.well-known/", "/assets/"];
+const NON_PAGE_PREFIXES = ["/api/", "/_vercel/", "/.netlify/", "/.well-known/", "/assets/"];
 
 /** Known API paths. Must stay identical to API_ROUTES in src/lib/agent/apiRoutes.ts (test-enforced). */
 export const API_ROUTES = [
