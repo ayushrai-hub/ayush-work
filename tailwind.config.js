@@ -7,7 +7,7 @@
  * replaces Tailwind's defaults: `xs` (320px) is added and `sm` is 480px instead of 640px.
  *
  * Connects to:
- * - postcss.config.js runs Tailwind over src/index.css.
+ * - vite.config.ts (`css.postcss`) runs Tailwind over src/index.css.
  * - Scans index.html and src/**, including legacy components, for class names.
  */
 /** @type {import('tailwindcss').Config} */

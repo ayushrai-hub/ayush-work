@@ -11,6 +11,8 @@
  * - optimizeDeps.exclude: lucide-react is not pre-bundled by the dev server.
  * - manualChunks (client only): react-router-dom, react/react-dom, and
  *   lucide-react + react-helmet-async go into named chunks.
+ * - css.postcss: Tailwind (tailwind.config.js), then Autoprefixer, over src/index.css. There is no
+ *   separate postcss.config.js.
  * - sourcemap is off; terser drops console and debugger statements from production bundles.
  * - Vitest: jsdom, global test API, setup in src/setupTests.ts, e2e excluded, v8 coverage with
  *   minimum thresholds that `npm run test:coverage` (and CI) fails below.
@@ -22,10 +24,15 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 import { agentSurfacesPlugin } from './src/lib/agent/vitePlugin';
 
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react(), agentSurfacesPlugin()],
+  css: {
+    postcss: { plugins: [tailwindcss(), autoprefixer()] },
+  },
   ssr: { noExternal: ['react-helmet-async'] },
   optimizeDeps: {
     exclude: ['lucide-react'],
