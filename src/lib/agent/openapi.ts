@@ -40,6 +40,7 @@ const ERROR_CODES: ApiErrorCode[] = [
   "route_not_found",
   "method_not_allowed",
   "rate_limited",
+  "internal_error",
 ];
 
 /** `application/json` content object that references a component schema by name. */
@@ -56,13 +57,68 @@ function ok(description: string, schema: string) {
   return { "200": { description, headers: rateLimitHeaders, content: json(schema) } };
 }
 
-/** Shared 4xx/429 refs so every operation points at the same ErrorResponse envelope. */
-const commonErrors = {
-  "400": { $ref: "#/components/responses/BadRequest" },
-  "404": { $ref: "#/components/responses/NotFound" },
-  "405": { $ref: "#/components/responses/MethodNotAllowed" },
-  "429": { $ref: "#/components/responses/TooManyRequests" },
+/** `/ask` 200: NLWeb JSON by default, or SSE frames when streaming was requested. */
+function askOk() {
+  return {
+    "200": {
+      description:
+        "NLWeb conversational_search answer or failure. With streaming, text/event-stream frames: start (_meta.streaming true), result ({ index, item }) per hit or error, then complete.",
+      headers: rateLimitHeaders,
+      content: {
+        ...json("AskResponse"),
+        "text/event-stream": { schema: { type: "string" } },
+      },
+    },
+  };
+}
+
+type ErrorStatus = "400" | "404" | "405" | "429" | "500";
+
+/** Description and headers for each REST error status. Bodies are always `ErrorResponse`. */
+const REST_ERRORS: Record<ErrorStatus, { description: string; headers: Record<string, unknown> }> = {
+  "400": {
+    description:
+      "Invalid query, filter, slug, cursor, or compare list. error.code is one of invalid_query, invalid_slug, invalid_filter, invalid_compare, invalid_cursor.",
+    headers: rateLimitHeaders,
+  },
+  "404": {
+    description: "Unknown or archived slug. error.code is not_found.",
+    headers: rateLimitHeaders,
+  },
+  "405": {
+    description: "Unsupported HTTP method. error.code is method_not_allowed. REST accepts GET, HEAD, and OPTIONS.",
+    headers: rateLimitHeaders,
+  },
+  "429": {
+    description: "Rate limit exceeded. error.code is rate_limited.",
+    headers: { ...rateLimitHeaders, "Retry-After": { $ref: "#/components/headers/RetryAfter" } },
+  },
+  "500": {
+    description: "Unexpected server fault, not a problem with the request. error.code is internal_error.",
+    headers: rateLimitHeaders,
+  },
 };
+
+/** `/ask` error statuses. Bodies use the NLWeb failure shape (`AskResponse` with `error`). */
+const ASK_ERRORS: Partial<Record<ErrorStatus, string>> = {
+  "400": "POST body is not JSON. _meta.response_type is failure; error.code is invalid_query.",
+  "405": "Unsupported HTTP method. error.code is method_not_allowed. /ask accepts GET, HEAD, and POST.",
+  "429": "Rate limit exceeded. error.code is rate_limited.",
+};
+
+/**
+ * Inline error responses for one operation, each with a typed JSON body. Only list statuses the
+ * handler can actually return.
+ */
+function errors(statuses: ErrorStatus[], schema: "ErrorResponse" | "AskResponse" = "ErrorResponse") {
+  return Object.fromEntries(
+    statuses.map((status) => {
+      const rest = REST_ERRORS[status];
+      const description = schema === "AskResponse" ? (ASK_ERRORS[status] ?? rest.description) : rest.description;
+      return [status, { description, headers: rest.headers, content: json(schema) }];
+    }),
+  );
+}
 
 const cursorParameter = {
   name: "cursor",
@@ -112,7 +168,7 @@ function searchOperation(operationId: string, summary: string) {
       ],
       responses: {
         ...ok("Matching public records", "SearchResponse"),
-        ...commonErrors,
+        ...errors(["400", "405", "429", "500"]),
       },
     },
   };
@@ -180,7 +236,7 @@ export function buildOpenApiDocument() {
           ],
           responses: {
             ...ok("A page of projects, one project, or a comparison", "ProjectsAliasResponse"),
-            ...commonErrors,
+            ...errors(["400", "404", "405", "429", "500"]),
           },
         },
       },
@@ -193,7 +249,7 @@ export function buildOpenApiDocument() {
           parameters: listParameters,
           responses: {
             ...ok("One page of projects", "ProjectListResponse"),
-            ...commonErrors,
+            ...errors(["400", "405", "429", "500"]),
           },
         },
       },
@@ -212,7 +268,7 @@ export function buildOpenApiDocument() {
           ],
           responses: {
             ...ok("One project", "ProjectResponse"),
-            ...commonErrors,
+            ...errors(["400", "404", "405", "429", "500"]),
           },
         },
       },
@@ -232,7 +288,7 @@ export function buildOpenApiDocument() {
           ],
           responses: {
             ...ok("Projects found, plus slugs that were not", "CompareResponse"),
-            ...commonErrors,
+            ...errors(["400", "405", "429", "500"]),
           },
         },
       },
@@ -253,7 +309,7 @@ export function buildOpenApiDocument() {
               },
             },
             "304": { description: "Not modified since the ETag sent in If-None-Match" },
-            ...commonErrors,
+            ...errors(["405", "429"]),
           },
         },
       },
@@ -277,10 +333,17 @@ export function buildOpenApiDocument() {
               description: "Alias for query",
               schema: { type: "string", maxLength: SEARCH_MAX_QUERY },
             },
+            {
+              name: "streaming",
+              in: "query",
+              required: false,
+              description: "Pass true for a text/event-stream response (start, result, complete events).",
+              schema: { type: "string", enum: ["true"] },
+            },
           ],
           responses: {
-            ...ok("NLWeb conversational_search answer or failure", "AskResponse"),
-            ...commonErrors,
+            ...askOk(),
+            ...errors(["405", "429"], "AskResponse"),
           },
         },
         post: {
@@ -295,8 +358,8 @@ export function buildOpenApiDocument() {
             },
           },
           responses: {
-            ...ok("NLWeb conversational_search answer or failure", "AskResponse"),
-            ...commonErrors,
+            ...askOk(),
+            ...errors(["400", "405", "429"], "AskResponse"),
           },
         },
       },
@@ -314,40 +377,6 @@ export function buildOpenApiDocument() {
         RetryAfter: {
           description: "Seconds to wait before retrying.",
           schema: { type: "integer", minimum: 1 },
-        },
-      },
-      responses: {
-        BadRequest: {
-          description:
-            "Invalid query, filter, slug, cursor, or compare list. error.code is one of invalid_query, invalid_slug, invalid_filter, invalid_compare, invalid_cursor.",
-          headers: rateLimitHeaders,
-          content: json("ErrorResponse"),
-        },
-        NotFound: {
-          description:
-            "Unknown or archived slug, or an unknown /api/ path. error.code is not_found or route_not_found.",
-          headers: rateLimitHeaders,
-          content: json("ErrorResponse"),
-        },
-        MethodNotAllowed: {
-          description:
-            "Unsupported HTTP method. error.code is method_not_allowed. REST accepts GET, HEAD, and OPTIONS; MCP accepts POST.",
-          headers: {
-            ...rateLimitHeaders,
-            Allow: {
-              description: "Methods the resource accepts",
-              schema: { type: "string" },
-            },
-          },
-          content: json("ErrorResponse"),
-        },
-        TooManyRequests: {
-          description: "Rate limit exceeded. error.code is rate_limited.",
-          headers: {
-            ...rateLimitHeaders,
-            "Retry-After": { $ref: "#/components/headers/RetryAfter" },
-          },
-          content: json("ErrorResponse"),
         },
       },
       schemas: {
@@ -425,6 +454,10 @@ export function buildOpenApiDocument() {
               ],
             },
             q: { type: "string", maxLength: SEARCH_MAX_QUERY },
+            prefer: {
+              type: "object",
+              properties: { streaming: { type: "boolean", description: "true selects the SSE response" } },
+            },
           },
         },
         AskResponse: {

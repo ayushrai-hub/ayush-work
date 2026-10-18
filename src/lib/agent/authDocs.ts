@@ -18,17 +18,12 @@ function origin() {
 
 /**
  * Full `/auth.md` body: discovery facts, how to call the API without tokens, and what is not offered.
+ * It opens with the `#` heading rather than YAML frontmatter, because auth.md readers expect a
+ * leading top-level heading.
  */
 export function renderAuthMarkdown(): string {
   const base = origin();
-  return `---
-title: Authentication
-description: This site's public REST API and MCP server require no authentication.
-canonical: ${base}/auth.md
-last-updated: 2026-10-16
----
-
-# Authentication
+  return `# Authentication
 
 ${person.name}'s site exposes a **public, read-only** REST API and MCP server. There is no login, API key, OAuth client, or bearer token for these surfaces today.
 

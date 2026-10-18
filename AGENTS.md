@@ -46,7 +46,7 @@ The API is free, public, and needs no key. There is no separate test environment
 
 ## Errors and rate limits
 
-Every error is JSON: `{ "error": { "code", "message", "hint", "docs" } }`. Branch on `code`; `hint` says how to fix the request. Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400), `not_found` and `route_not_found` (404), `method_not_allowed` (405), `rate_limited` (429). Unknown `/api/` paths return `route_not_found` as JSON.
+Every error is JSON: `{ "error": { "code", "message", "hint", "docs" } }`. Branch on `code`; `hint` says how to fix the request. Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400), `not_found` and `route_not_found` (404), `method_not_allowed` (405), `rate_limited` (429), `internal_error` (500). Unknown `/api/` paths return `route_not_found` as JSON.
 
 The limit is 60 requests per 60 seconds per client address, counted per server instance. Responses carry `RateLimit-Policy: "default";q=60;w=60` and `RateLimit: "default";r=<remaining>;t=<seconds>` (draft-ietf-httpapi-ratelimit-headers-11). A 429 also carries `Retry-After` in seconds.
 

@@ -71,7 +71,7 @@ export function developerSections(): PolicySection[] {
       heading: "Errors",
       paragraphs: [
         "Every error is JSON: `{ \"error\": { \"code\", \"message\", \"hint\", \"docs\" } }`. `code` is stable and safe to branch on; `hint` says how to fix the request.",
-        "Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400); `not_found` and `route_not_found` (404); `method_not_allowed` (405); `rate_limited` (429). Unknown paths under `/api/` return `route_not_found` as JSON, not an HTML page.",
+        "Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400); `not_found` and `route_not_found` (404); `method_not_allowed` (405); `rate_limited` (429); `internal_error` (500, a server fault, not a bad request). Unknown paths under `/api/` return `route_not_found` as JSON, not an HTML page.",
       ],
     },
     {
