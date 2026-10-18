@@ -12,7 +12,7 @@ This site is a **digital home** — selected work, path, and ways to connect —
 
 ## 1. Positioning statement (long)
 
-Ayush works where messy constraints meet builders’ tools: applied AI (including RLHF / LLM workflows), product engineering, and research that needs to become something people can use. He is based in Bhopal, India, with a dual path in computer science (LNCTS) and data science (IIT Madras). The through-line is not collecting titles; it is shipping systems that hold up against real users, real data, and real institutions.
+Ayush works where messy constraints meet builders’ tools: applied AI (including RLHF / LLM workflows), product engineering, and research that needs to become something people can use. He works remotely (the site does not publish a current city), with a dual path in computer science (LNCTS) and data science (IIT Madras). The through-line is not collecting titles; it is shipping systems that hold up against real users, real data, and real institutions.
 
 ---
 
@@ -87,7 +87,7 @@ Avoid listing five simultaneous identity headlines on the hero.
 
 **Supporting sentence:**
 
-> Selected work and notes from Bhopal — applied AI, product builds, and research that has to ship.
+> Selected work and notes — applied AI, product builds, and research that has to ship.
 
 **CTAs:** View work · About · Email  
 

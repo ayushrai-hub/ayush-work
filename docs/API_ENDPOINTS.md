@@ -8,8 +8,8 @@ Base URL in production: `https://www.ayushrai.site`. In development: `http://loc
 
 | Layer | File | Notes |
 | --- | --- | --- |
-| Host function | `api/search.ts`, `api/projects.ts`, `api/mcp.ts`, `api/send-email.ts` | Same files run as Netlify Functions (v2, Web `Request` in, `Response` out) and Vercel Node functions (`req`, `res`). |
-| Host routing | `netlify.toml`, `vercel.json` | Rewrite `/api/v1/*` and `/api/mcp/server-card` to the four functions. |
+| Host function | `api/search.ts`, `api/projects.ts`, `api/mcp.ts`, `api/ask.ts`, `api/send-email.ts` | Same files run as Netlify Functions (v2, Web `Request` in, `Response` out) and Vercel Node functions (`req`, `res`). |
+| Host routing | `netlify.toml`, `vercel.json` | Rewrite `/api/v1/*`, `/api/mcp/server-card`, and `/ask` to those functions. |
 | Unknown `/api/*` | `middleware.ts` (Vercel), `netlify/edge-functions/markdown-negotiation.js` (Netlify) | JSON 404 `route_not_found`. Both use the route list in `src/lib/agent/apiRoutes.ts`; a test keeps the Netlify copy in sync. |
 | Adapter | `src/lib/agent/http.ts` (`handleAgentRequest`, `agentApiResponse`) | Reads the method, path, and query from either host shape, applies the rate limit, adds CORS and cache headers. |
 | Dispatch | `src/lib/agent/http.ts` (`dispatchAgentApi`, `projectsHttp`) | Validates input (`validate.ts`, `pagination.ts`) and calls `search.ts` or `projectsQuery.ts`. |
@@ -59,7 +59,7 @@ Every error body is:
 { "error": { "code": "invalid_filter", "message": "…", "hint": "…", "docs": "https://www.ayushrai.site/developers/" } }
 ```
 
-Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400); `not_found`, `route_not_found` (404); `method_not_allowed` (405); `rate_limited` (429). Messages and hints live in `src/lib/agent/apiError.ts`.
+Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400); `not_found`, `route_not_found` (404); `method_not_allowed` (405); `rate_limited` (429); `internal_error` (500, generic message, when a handler throws). Messages and hints live in `src/lib/agent/apiError.ts`.
 
 ### Rate limit
 
@@ -83,6 +83,17 @@ Streamable HTTP, stateless: JSON responses, no sessions, no `GET` stream, no aut
 ### `GET /api/mcp/server-card`
 
 MCP Server Card (SEP-2127), `application/mcp-server-card+json`, with `ETag` and `304` on `If-None-Match`. Built by `src/lib/agent/mcpCard.ts`. The AI Catalog at `/.well-known/ai-catalog.json` lists it, and `/.well-known/mcp/server-card.json` is a static copy for older scanners.
+
+## Ask
+
+### `GET` or `POST /ask`
+
+NLWeb-shaped (v0.55) lexical search over the same index as `/api/v1/search`. It is not generative: it returns ranked hits, an empty answer, or a `failure`. Logic: `src/lib/agent/nlwebAsk.ts`; host adapter: `api/ask.ts`. It sits outside `/api/` so scanners find it at `/ask`; Netlify routes it to the function and Vercel rewrites it to `/api/ask`.
+
+- Query: `?query=` or `?q=` on GET; on POST a JSON body with `query` as a string, `query.text`, or `q`.
+- Responses carry `_meta.response_type` and `_meta.version`.
+- Streaming: `prefer.streaming: true` in the body, `?streaming=true`, or `Accept: text/event-stream` returns SSE with `start`, `result`, `error`, and `complete` events. A wildcard `Accept` never selects streaming. JSON is the default.
+- Rate-limited like the REST API (`rateLimit.ts`).
 
 ## Contact
 
@@ -125,13 +136,20 @@ There is no CAPTCHA. The rate limit is per instance, so it slows a casual script
 
 Generated at build time by `src/lib/agent/vitePlugin.ts` from `src/content` (and served by the same plugin in dev):
 
-- `/llms.txt`, `/llms-full.txt`, and a `.md` twin for every page (`src/lib/agent/markdown.ts`)
+The full list is `agentFiles()` in `src/lib/agent/surfaces.ts`:
+
+- `/llms.txt`, `/llms-full.txt`, section indexes `/developers/llms.txt`, `/work/llms.txt`, `/products/llms.txt`, and a `.md` twin for every page with YAML frontmatter (`src/lib/agent/markdown.ts`)
+- `/404.md`, `/auth.md` (public, no authentication; opens with `# Authentication`), `/pricing.md` (free; no paid tiers)
+- `/agent-mode.json`, served for `/?mode=agent` (`agentMode.ts`)
 - `/openapi.json` (`openapi.ts`)
 - `/.well-known/api-catalog` (RFC 9727, `apiCatalog.ts`)
-- `/.well-known/ai-catalog.json` and `/.well-known/mcp/server-card.json` (`mcpCard.ts`)
+- `/.well-known/ard.json` (ARD v0.91, canonical), `/.well-known/ai-catalog.json` (legacy), and `/.well-known/mcp/server-card.json` (`mcpCard.ts`)
+- `/schemamap.xml` and `/feeds/portfolio.jsonl`, the Schema Feed that `robots.txt` points to (`schemaFeed.ts`, nodes from `src/lib/structuredData.ts`)
 - `/AGENTS.md`, `/SKILL.md`, `/developers.md`
 
-Content negotiation: a request whose `Accept` header gives `text/markdown` a positive quality higher than `text/html` gets the page's Markdown (Vercel `middleware.ts`, Netlify edge function). `Accept: text/markdown` alone qualifies; a tie, `q=0`, or a wildcard does not. Unknown paths get a Markdown 404. `netlify.toml` no longer has Accept-conditioned redirects; Netlify cannot match on `Accept`, so the edge function does it.
+`public/webmcp.js` is a static script that registers the WebMCP tools on `document.modelContext` when it exists.
+
+Content negotiation: a request whose `Accept` header gives `text/markdown` a positive quality higher than `text/html` gets the page's Markdown (Vercel `middleware.ts`, Netlify edge function). `Accept: text/markdown` alone qualifies; a tie, `q=0`, or a wildcard does not. Known AI-agent User-Agents (`AGENT_BOT_UA` in `surfaces.ts`: GPTBot, ClaudeBot, PerplexityBot, ora-agent, and others) always get Markdown; Googlebot and browsers keep HTML. Markdown responses send `Vary: Accept, User-Agent`. Unknown paths get a Markdown 404. Netlify cannot match redirects on `Accept`, so the edge function does it.
 
 ## Tests
 

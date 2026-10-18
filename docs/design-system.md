@@ -2,7 +2,7 @@
 
 **Direction:** Quiet, typed, image-led. Feels like a small magazine and a personal archive — not a SaaS landing page or “AI engineer portfolio” template.
 
-**Stay on:** Vite + React + Tailwind (tokens via CSS variables). Framer Motion for 2–3 intentional motions only. **No** Three.js particles as brand.
+**Stay on:** Vite + React + Tailwind (tokens via CSS variables in `src/index.css`; the live reference is the `noindex` page `/design-system`). No animation library is installed; keep motion to a few intentional CSS transitions. **No** Three.js particles as brand.
 
 ---
 
@@ -56,7 +56,7 @@ Avoid Inter / Roboto / Arial / system-only stacks as the expressive voice.
 
 | Role | Suggestion | Notes |
 | --- | --- | --- |
-| Display / name | Fraunces, Newsreader, or Source Serif 4 | Hero name + section titles |
+| Display / name | Source Serif 4 (chosen; `tailwind.config.js`) | Hero name + section titles |
 | UI / body | Source Sans 3, IBM Plex Sans, or Geist | Readable, contemporary |
 | Mono / data | IBM Plex Mono or JetBrains Mono | Dates, slugs, stack tags |
 
@@ -94,7 +94,7 @@ Avoid Inter / Roboto / Arial / system-only stacks as the expressive voice.
 | `ContactForm` | Simple fields; no purple gradient button |
 | `LinkElsewhere` | Text list with domain — not rainbow domain chips |
 
-**Retire:** `ParticleBackground`, `ThreeJSHero` as default, CountUp vanity blocks, FloatingNav (or drastically simplify), emoji-led “Other” hubs.
+**Retired (done):** `ParticleBackground`, `ThreeJSHero`, CountUp vanity blocks, FloatingNav, and the emoji-led “Other” hub were deleted with the legacy components.
 
 ---
 

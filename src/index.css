@@ -7,7 +7,7 @@
  * defines the site-wide classes (site-shell, prose-site, label, btn-*, link-*, skip-link, ...).
  *
  * Connects to:
- * - Imported by src/main.tsx; processed by postcss.config.js (Tailwind, Autoprefixer).
+ * - Imported by src/main.tsx; processed by the PostCSS plugins in vite.config.ts (Tailwind, Autoprefixer).
  * - tailwind.config.js (token names), src/contexts/ThemeContext.tsx (theme class).
  */
 @tailwind base;

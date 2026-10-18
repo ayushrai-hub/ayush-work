@@ -1,70 +1,33 @@
-# Contributing to Ayush Rai Portfolio
+# Contributing
 
-We welcome contributions to this portfolio project! This document outlines our guidelines for contributing, with special attention to AI-assisted development since Windsurf/AI helps maintain this repository.
+This is Ayush Rai's personal site. Setup, scripts, and layout are in [README.md](../README.md); rules for agents and anyone editing the repo are in [AGENTS.md](../AGENTS.md).
 
-## 💡 AI-Assisted Development Guidelines
+## Ground rules
 
-Since Windsurf/AI will help maintain this repo, please adhere to these practices:
+- Public facts live only in `src/content/`. Pages, Markdown twins, search, the API, and MCP all read from there; do not add a second copy.
+- Do not publish a claim that `docs/content-fact-check.md` has not cleared. Withheld award and leadership claims stay in the `*NeedsConfirmation` lists.
+- The only phone number allowed in public output is `person.phone`; `src/__tests__/publicOutput.test.ts` fails on any other.
+- Every source file opens with a header comment (purpose, mechanism, what it connects to), and every function has a short doc comment. Update them with the code.
+- Check that a file or function exists before editing it, and prefer small diffs over rewrites.
+- Do not copy code back from the old site (tag `legacy-portfolio-spa`); it contains withheld information.
 
-- [ ] **Verify actual code paths before editing (no hallucinations)**: Always confirm file paths and code structures exist by checking the repository before making changes. Use tools to explore the codebase structure.
+## Making a change
 
-- [ ] **Only tick checkboxes when evidence exists in repo**: When completing tasks, only mark items as done when there is clear evidence (tests passing, code committed, etc.) rather than speculation.
+1. Branch from `main`.
+2. Make the change, with tests for new behavior.
+3. Run the same checks CI runs:
 
-- [ ] **Never overwrite large files unnecessarily — prefer minimal diffs**: Use targeted edits instead of replacing entire files. Prefer `replace_in_file` over `write_to_file` for existing large files.
+   ```bash
+   npm run lint
+   npm run typecheck
+   npx vitest run          # or npm run test:coverage to check the coverage thresholds
+   npm run build
+   npm run test:e2e
+   ```
 
-- [ ] **Always add/update tests for new code**: Every code change should include appropriate test coverage. Update existing tests when modifying functionality.
+4. Update the README, `docs/API_ENDPOINTS.md`, or `docs/known-issues.md` if the change affects them.
+5. Open a pull request to `main`. Merging deploys to production.
 
-- [ ] **Keep docs and code synchronized at every commit**: Documentation must reflect current code state. Update README, API docs, and inline comments when code changes.
+## Reporting issues
 
-## 🛠️ How to Contribute
-
-### Code Contributions
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make your changes following the guidelines above
-4. Ensure tests pass: `npm run test`
-5. Commit your changes: `git commit -m "Add: your feature description"`
-6. Push to your branch: `git push origin feature/your-feature`
-7. Create a Pull Request
-
-### Development Setup
-
-See [README.md](README.md) for detailed installation and setup instructions.
-
-### Code Standards
-
-- Follow existing code style and conventions
-- Use TypeScript for type safety
-- Ensure accessibility compliance
-- Write comprehensive tests
-- Update documentation for any API changes
-
-## 📋 Pull Request Process
-
-1. Update the README.md with details of changes if needed
-2. Update tests to reflect your changes
-3. Ensure all checks pass
-4. Request review from maintainers
-
-## 🔍 Review Process
-
-Pull requests will be reviewed for:
-- Code quality and standards
-- Test coverage
-- Documentation updates
-- Adherence to AI maintenance guidelines
-
-## 🐛 Reporting Issues
-
-Use the GitHub Issues tab to report bugs or suggest features. Please include:
-- Clear description of the issue
-- Steps to reproduce
-- Expected vs actual behavior
-- Browser/OS information
-
-## 📝 Documentation
-
-Keep documentation current and accurate. All new features should include appropriate documentation updates.
-
-Thank you for contributing! 🎉
+Open a GitHub issue with what you saw, the URL, steps to reproduce, and the browser or client you used.

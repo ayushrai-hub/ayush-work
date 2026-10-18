@@ -8,7 +8,7 @@
  * docs/known-issues.md before switching.
  *
  * Connects to:
- * - index.html loads this module; global styles come from src/index.css and src/App.css.
+ * - index.html loads this module; global styles come from src/index.css.
  * - src/App.tsx, src/contexts/ThemeContext.tsx, src/components/layout/GTMProvider.tsx (src/lib/gtm.ts),
  *   @vercel/analytics/react. The SSR counterpart is src/entry-server.tsx.
  * - On Netlify (the live www host), netlify.toml proxies /_vercel/insights/* to the Vercel alias so
@@ -22,7 +22,6 @@ import GTMProvider from "./components/layout/GTMProvider.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 import App from "./App.tsx";
 import "./index.css";
-import "./App.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

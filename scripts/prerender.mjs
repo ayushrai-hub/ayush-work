@@ -10,8 +10,8 @@
  * Connects to:
  * - package.json `build`: `vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && node scripts/prerender.mjs`.
  * - src/entry-server.tsx (getRoutes, getSitemapRoutes, render), which reads src/lib/publicRoutes.ts.
- * - Netlify serves dist/404.html for unknown paths (netlify.toml `/*` rule). The generated sitemap
- *   overwrites the copy of public/sitemap.xml that Vite placed in dist.
+ * - Netlify serves dist/404.html for unknown paths (netlify.toml `/*` rule). This is the only
+ *   sitemap; there is no static copy in public/.
  */
 import fs from "node:fs";
 import path from "node:path";

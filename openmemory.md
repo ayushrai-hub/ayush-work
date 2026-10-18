@@ -1,7 +1,7 @@
 # OpenMemory Guide
 
 ## Overview
-Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com/ayushrai-hub/ayush-work). Vite 7 + React 18 + TypeScript + Tailwind (Framer Motion only in legacy components). Production: Netlify serves www.ayushrai.site; Vercel also deploys `main` through its GitHub integration. Deploy = merge a PR into `main`. Evolving into a personal digital home with a typed content layer as the single source of truth.
+Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com/ayushrai-hub/ayush-work). Vite 7 + React 18 + TypeScript + Tailwind (no animation library). Production: Netlify serves www.ayushrai.site; Vercel also deploys `main` through its GitHub integration. Deploy = merge a PR into `main`. Evolving into a personal digital home with a typed content layer as the single source of truth.
 
 ## Architecture
 - **Entry:** `src/main.tsx` → `src/App.tsx` (react-router, lazy pages)
@@ -11,10 +11,10 @@ Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com
 - **Content layer:** `src/content/` — typed modules (person, now, work, products, projects, research, experience, education, leadership, recognition, ideas, principles, timeline, writing, notes, uses, elsewhere, archive, capabilities, domains, searchIndex). Re-export via `src/content/index.ts`. `domains.ts` is the dossier source for `/ai-engineering` and related routes. Inference and distributed-systems URLs are intentionally absent. Cautious/verified language; vanity metrics and unverified claims go to `needsConfirmation` or are omitted.
 - **Styling:** Tailwind (`tailwind.config.js`) + design tokens in `src/index.css` (paper/ink/rule/accent/signal); theme via `ThemeContext` (light-first)
 - **Serverless:** Thin Netlify/Vercel adapters under `api/`, with shared contact validation and SendGrid delivery in `src/lib/server/contactEmail.ts`; read-only search and project endpoints remain in `api/search.ts` and `api/projects.ts`. `/api/v1/projects`, `/api/v1/projects/:slug`, and `/api/v1/compare` rewrite onto the projects function
-- **Agent surfaces:** `src/lib/agent/` serializes Markdown twins (YAML frontmatter: title/description/canonical/last-updated), `/llms.txt`, section indexes `/developers/llms.txt` `/work/llms.txt` `/products/llms.txt`, `/llms-full.txt`, `/openapi.json`, `/auth.md`, `/pricing.md` (free public API; no paid tiers), `/agent-mode.json`, `/AGENTS.md`, `/SKILL.md`. PageSEO advertises `rel="alternate" type="text/markdown"`. Negotiation via `negotiateMarkdown` (Vite plugin, Vercel `middleware.ts`, Netlify edge); known agent bot UAs (GPTBot, ClaudeBot, PerplexityBot, ora-agent, ...) always get the Markdown twin, even with `Accept: text/html`; Markdown responses send `Vary: Accept, User-Agent`; Googlebot and browsers keep HTML. `/auth.md` must open with `# Authentication` (no frontmatter). OpenAPI error responses are inline per operation (no `components.responses`); REST `safeDispatch` turns throws into 500 `internal_error`. Search is lexical. Human Markdown view `?agent=1`; machine JSON `?mode=agent`. WebMCP: `/webmcp.js` with literal `document.modelContext` / `registerTool` (`search_projects`, `search_articles`, `get_project`, `get_profile`, `find_developer_docs`) + React fallback. MCP: `mcpServer.ts` / Streamable HTTP with `instructions` on initialize; it overrides the SDK `tools/call` handler so unknown tools / zod-invalid args are JSON-RPC `-32602` (`data.code` unknown_tool / invalid_arguments) while validator/not-found failures stay `isError` results. Root `plugin.json` + `mcp.json` (Agent Plugins 1.0) bundle `skills/portfolio-discovery` (skill `name` must equal dir name). Schema Feeds: robots `schemamap:` → `/schemamap.xml` → `/feeds/portfolio.jsonl`, built from `src/lib/structuredData.ts` (shared with PageSEO home graph + ProductDetailPage). NLWeb-shaped `/ask` (SSE `start`/`result`/`complete` when `prefer.streaming`, `?streaming=true`, or Accept event-stream) via `api/ask.ts` (Web Response on Netlify; Node `res` only when `setHeader`/`status`/`end` exist — Netlify context is not `res`). `/api/ask` listed in `API_ROUTES`. OpenAPI ops share BadRequest/NotFound/MethodNotAllowed/TooManyRequests `$ref`s. ARD `/.well-known/ard.json` (canonical) + AI Catalog legacy. No OAuth; no A2A card. Audit: `docs/agent-readiness-audit.md`. Execution: `docs/seo/agent-readiness-execution-report.md`. Orank notes: `docs/seo/orank-*.md`. Archive: `docs/archive/markdown-docs/`.
+- **Agent surfaces:** `src/lib/agent/` serializes Markdown twins (YAML frontmatter: title/description/canonical/last-updated), `/llms.txt`, section indexes `/developers/llms.txt` `/work/llms.txt` `/products/llms.txt`, `/llms-full.txt`, `/openapi.json`, `/auth.md`, `/pricing.md` (free public API; no paid tiers), `/agent-mode.json`, `/AGENTS.md`, `/SKILL.md`. PageSEO advertises `rel="alternate" type="text/markdown"`. Negotiation via `negotiateMarkdown` (Vite plugin, Vercel `middleware.ts`, Netlify edge); known agent bot UAs (GPTBot, ClaudeBot, PerplexityBot, ora-agent, ...) always get the Markdown twin, even with `Accept: text/html`; Markdown responses send `Vary: Accept, User-Agent`; Googlebot and browsers keep HTML. `/auth.md` must open with `# Authentication` (no frontmatter). OpenAPI error responses are inline per operation (no `components.responses`); REST `safeDispatch` turns throws into 500 `internal_error`. Search is lexical. Human Markdown view `?agent=1`; machine JSON `?mode=agent`. WebMCP: `/webmcp.js` with literal `document.modelContext` / `registerTool` (`search_projects`, `search_articles`, `get_project`, `get_profile`, `find_developer_docs`) + React fallback. MCP: `mcpServer.ts` / Streamable HTTP with `instructions` on initialize; it overrides the SDK `tools/call` handler so unknown tools / zod-invalid args are JSON-RPC `-32602` (`data.code` unknown_tool / invalid_arguments) while validator/not-found failures stay `isError` results. Root `plugin.json` + `mcp.json` (Agent Plugins 1.0) bundle `skills/portfolio-discovery` (skill `name` must equal dir name). Schema Feeds: robots `schemamap:` → `/schemamap.xml` → `/feeds/portfolio.jsonl`, built from `src/lib/structuredData.ts` (shared with PageSEO home graph + ProductDetailPage). NLWeb-shaped `/ask` (SSE `start`/`result`/`complete` when `prefer.streaming`, `?streaming=true`, or Accept event-stream) via `api/ask.ts` (Web Response on Netlify; Node `res` only when `setHeader`/`status`/`end` exist — Netlify context is not `res`). `/api/ask` listed in `API_ROUTES`. OpenAPI ops share BadRequest/NotFound/MethodNotAllowed/TooManyRequests `$ref`s. ARD `/.well-known/ard.json` (canonical) + AI Catalog legacy. No OAuth; no A2A card. Audit: `docs/agent-readiness-audit.md`. Execution and rescans: `docs/seo/agent-readiness-execution-report.md`. Older orank and audit snapshots were removed; they are on tag `pre-docs-cleanup-2026-10-18`.
 - **Canonical host:** `https://www.ayushrai.site` (`person.siteUrl`). Apex `ayushrai.site` 301s to www. `ayush-me.netlify.app` is not the live host
-- **Tests:** Vitest + Testing Library (`npx vitest run`); legacy UI tests under `src/__tests__/legacy/` are excluded from Vitest and their imports do not resolve. Playwright e2e in `e2e/site.spec.ts` and `e2e/agent-readiness.spec.ts` (Chromium; reuses a dev server on 5173 outside CI). Key guards: `domainSurfaces.test.tsx` asserts every Markdown twin has a prerendered HTML route and every /timeline link lands on a prerendered page
-- **CI:** `.github/workflows/tests.yml` on push/PR to `main`, Node 22: `npm ci`, lint, typecheck, `test:coverage` (no threshold), build, Playwright. Netlify `NODE_VERSION = "22"`. Generated `coverage/`, `playwright-report/`, `test-results/` are gitignored
+- **Tests:** Vitest + Testing Library (`npx vitest run`). Playwright e2e in `e2e/site.spec.ts` and `e2e/agent-readiness.spec.ts` (Chromium; reuses a dev server on 5173 outside CI). Key guards: `domainSurfaces.test.tsx` asserts every Markdown twin has a prerendered HTML route and every /timeline link lands on a prerendered page
+- **CI:** `.github/workflows/tests.yml` on push/PR to `main`, Node 22: `npm ci`, lint, typecheck, `test:coverage` (thresholds in `vite.config.ts`), build, Playwright. Netlify `NODE_VERSION = "22"`. Generated `coverage/`, `playwright-report/`, `test-results/` are gitignored
 - **Local Node:** use arm64 Node from nvm (`$HOME/.nvm/versions/node/v24.21.0/bin`); the x64 Node in `/usr/local/bin` breaks Rollup/esbuild native binaries
 
 ## User Defined Namespaces
@@ -50,20 +50,17 @@ Personal portfolio site cloned from [ayushrai-hub/ayush-work](https://github.com
 - **Public safety:** Phone +91 7440567944 and WhatsApp (`person.phone`, `person.whatsappUrl`) are public since Oct 2026 on contact, home, footer, JSON-LD, Markdown, llms; research is Note|Investigation|Experiment; inflated leadership claims stay out of grounded pages
 - **Public location:** Current place is `person.location` = `Remote` (home, about, footer, SEO). Do not publish a city. Historical school and org places stay (LNCTS Bhopal, past role cities).
 - Legacy redirects: `/services` → `/contact`, `/certifications` → `/recognition`, `/extracurriculars` → `/leadership`
-- Empty/TODO surfaces use `EmptyNote` pointing at `docs/questions-for-ayush.md`
+- Empty/TODO surfaces use `EmptyNote` ("More here soon."); the open questions are tracked in `docs/questions-for-ayush.md`, named only in a code comment
+- **Doc cleanup:** before removing docs or files from `main`, tag it and push the tag, then record it in `docs/preserving-old-site.md` (precedent: `pre-docs-cleanup-2026-10-18`). There is no static `public/sitemap.xml`; the build generates `dist/sitemap.xml`
 
-## Rebuild strategy docs (`docs/`)
-Product direction for the site rebuild (Vite + React Router MPA — not Next.js). Editorial magazine × personal archive; evidence over vanity; merge thin pages.
+## Docs (`docs/`)
+Living references for the shipped site (Vite + React Router, not Next.js). Editorial magazine × personal archive; evidence over vanity. Rebuild planning docs were removed on 18 Oct 2026 (tag `pre-docs-cleanup-2026-10-18`).
 
 | Doc | Role |
 | --- | --- |
-| `docs/site-audit.md` | Current stack, routes, content inventory, risks |
-| `docs/information-architecture.md` | Target routes, density gates, redirects |
-| `docs/content-strategy.md` | Pillars, keep/cut, audiences |
 | `docs/content-fact-check.md` | Claim verification log (metrics, awards, PII) |
 | `docs/design-system.md` | Visual direction, anti-clichés, motion |
-| `docs/seo-strategy.md` | Meta, schema, SPA mitigations |
-| `docs/seo/live-audit.md` | Observed production HTTP audit |
+| `docs/seo-strategy.md` | Current SEO rules: prerender, indexing, metadata, JSON-LD |
 | `docs/seo/domain-evidence-map.md` | Domain pages mapped to existing evidence |
 | `docs/seo/keyword-and-content-strategy.md` | Qualitative search intents, no invented volumes |
 | `docs/seo/measurement-plan.md` | Search Console and analytics review, no fake metrics |
@@ -71,7 +68,9 @@ Product direction for the site rebuild (Vite + React Router MPA — not Next.js)
 | `docs/API_ENDPOINTS.md` | Every endpoint, parameters, errors, rate limit, CORS, contact API |
 | `docs/known-issues.md` | Open issues (P1–P3) with owner, cause, and suggested fix; update when one is fixed |
 | `docs/personal-positioning.md` | Positioning narrative and checks |
-| `docs/migration-plan.md` | Phased migration on current stack |
+| `docs/flagship-products-audit.md` | What the product repos support for the three featured products |
+| `docs/agent-readiness-audit.md` | Why each agent-readiness finding was built, deferred, or N/A |
+| `docs/preserving-old-site.md` | Restore points (legacy SPA, doc cleanup) and restore commands |
 | `docs/content-style.md` | Voice, banned hype, copy patterns |
 | `docs/questions-for-ayush.md` | Decision blockers for Ayush |
 
