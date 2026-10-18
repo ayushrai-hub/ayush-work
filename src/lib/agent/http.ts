@@ -233,6 +233,19 @@ function routeFromRequest(req: NodeLikeRequest, fallback: "/api/search" | "/api/
   return fallback;
 }
 
+/**
+ * `dispatchAgentApi`, with any thrown error turned into a 500 `internal_error` envelope. The
+ * message is generic so stack traces and file paths never reach the client.
+ */
+export function safeDispatch(pathname: string, method: string, params: URLSearchParams): AgentHttpResult {
+  try {
+    return dispatchAgentApi(pathname, method, params);
+  } catch (error) {
+    console.error("agent API failure", pathname, error instanceof Error ? error.name : typeof error);
+    return apiError(500, { code: "internal_error", message: "Unexpected server error." });
+  }
+}
+
 /** A complete REST response. `body` is null for HEAD, 204, and empty results. */
 export interface AgentApiResponse {
   status: number;
@@ -265,13 +278,15 @@ export function agentApiResponse(input: {
   } else {
     const limit = takeRateLimit(input.clientKey);
     Object.assign(headers, limit.headers);
-    result = limit.allowed
-      ? dispatchAgentApi(input.pathname, method, input.params)
-      : apiError(429, {
-          code: "rate_limited",
-          message: `More than ${RATE_LIMIT_QUOTA} requests in ${RATE_LIMIT_WINDOW_SECONDS} seconds.`,
-        });
-    if (!limit.allowed) headers["Cache-Control"] = "no-store";
+    if (limit.allowed) {
+      result = safeDispatch(input.pathname, method, input.params);
+    } else {
+      result = apiError(429, {
+        code: "rate_limited",
+        message: `More than ${RATE_LIMIT_QUOTA} requests in ${RATE_LIMIT_WINDOW_SECONDS} seconds.`,
+      });
+    }
+    if (!limit.allowed || result.status >= 500) headers["Cache-Control"] = "no-store";
   }
   const body =
     method === "HEAD" || result.status === 204 || result.body == null

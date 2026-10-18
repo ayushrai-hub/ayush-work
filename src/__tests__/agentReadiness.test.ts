@@ -30,7 +30,7 @@ import netlifyEdge, {
 import { buildRequest, parseArgs, run } from "../../packages/cli/bin/ayushrai.mjs";
 import { buildApiCatalog } from "../lib/agent/apiCatalog";
 import { API_ROUTES, isKnownApiPath } from "../lib/agent/apiRoutes";
-import { agentApiResponse, corsHeaders, dispatchAgentApi } from "../lib/agent/http";
+import { agentApiResponse, corsHeaders, dispatchAgentApi, safeDispatch } from "../lib/agent/http";
 import { renderLlmsTxt, renderPageMarkdown } from "../lib/agent/markdown";
 import { markdownMiddleware } from "../lib/agent/markdownMiddleware";
 import { buildAgentModeDocument, wantsAgentMode } from "../lib/agent/agentMode";
@@ -150,17 +150,20 @@ describe("JSON errors", () => {
       expect(wantsMarkdown(accept), String(accept)).toBe(expected);
       expect(edgeWantsMarkdown(accept), `edge ${accept}`).toBe(expected);
     }
-    // Known agent bots get Markdown when Accept is missing or has no HTML preference.
-    for (const ua of ["GPTBot/1.0", "ora-agent/1.0", "ClaudeBot"]) {
-      expect(wantsMarkdown(undefined, ua), ua).toBe(true);
-      expect(edgeWantsMarkdown(undefined, ua), `edge ${ua}`).toBe(true);
-      expect(wantsMarkdown("*/*", ua), `*/* ${ua}`).toBe(true);
-      expect(edgeWantsMarkdown("*/*", ua), `edge */* ${ua}`).toBe(true);
-      expect(wantsMarkdown("text/html", ua), `html ${ua}`).toBe(false);
-      expect(edgeWantsMarkdown("text/html", ua), `edge html ${ua}`).toBe(false);
+    // Known agent bots get Markdown whatever they send, including an explicit text/html.
+    const browserAccept = "text/html,application/xhtml+xml,*/*;q=0.8";
+    for (const ua of ["GPTBot/1.0", "ora-agent/1.0", "ClaudeBot/1.0", "Mozilla/5.0 (compatible; PerplexityBot/1.0)"]) {
+      for (const accept of [undefined, "*/*", "text/html", browserAccept]) {
+        expect(wantsMarkdown(accept, ua), `${accept} ${ua}`).toBe(true);
+        expect(edgeWantsMarkdown(accept, ua), `edge ${accept} ${ua}`).toBe(true);
+      }
     }
-    expect(wantsMarkdown(undefined, "Mozilla/5.0")).toBe(false);
-    expect(edgeWantsMarkdown(undefined, "Mozilla/5.0")).toBe(false);
+    // Browsers and search crawlers keep the Accept-only rule.
+    for (const ua of ["Mozilla/5.0", "Mozilla/5.0 (compatible; Googlebot/2.1)"]) {
+      expect(wantsMarkdown(browserAccept, ua), ua).toBe(false);
+      expect(edgeWantsMarkdown(browserAccept, ua), `edge ${ua}`).toBe(false);
+      expect(wantsMarkdown(undefined, ua), ua).toBe(false);
+    }
   });
 });
 
@@ -265,30 +268,52 @@ describe("rate limits", () => {
 
 /** Response schemas in the generated OpenAPI document. */
 describe("OpenAPI", () => {
-  it("gives every operation a typed JSON schema for success and errors", () => {
+  it("gives every operation a typed JSON schema for success and an inline typed error body", () => {
     const spec = buildOpenApiDocument();
     const schemas = spec.components.schemas as Record<string, unknown>;
-    const responses = spec.components.responses as Record<string, { content: Record<string, { schema: { $ref: string } }> }>;
     const resolve = (ref: string) => ref.split("/").pop() ?? "";
+    type Response = { $ref?: string; content?: Record<string, { schema: { $ref?: string } }> };
     let operations = 0;
     for (const [path, item] of Object.entries(spec.paths)) {
-      for (const operation of Object.values(item as Record<string, { responses: Record<string, unknown> }>)) {
+      for (const operation of Object.values(item as Record<string, { responses: Record<string, Response> }>)) {
         operations += 1;
-        for (const [status, raw] of Object.entries(operation.responses)) {
+        for (const [status, response] of Object.entries(operation.responses)) {
           if (status === "304") continue;
-          const response = (raw as { $ref?: string }).$ref
-            ? responses[resolve((raw as { $ref: string }).$ref)]
-            : (raw as { content: Record<string, { schema: { $ref: string } }> });
-          const media = Object.values(response.content ?? {});
-          expect(media.length, `${path} ${status}`).toBe(1);
-          expect(schemas[resolve(media[0].schema.$ref)], `${path} ${status}`).toBeTruthy();
+          expect(response.$ref, `${path} ${status} is inline`).toBeUndefined();
+          const json = Object.entries(response.content ?? {}).find(([type]) => type !== "text/event-stream");
+          expect(json, `${path} ${status}`).toBeTruthy();
+          const ref = resolve(json?.[1].schema.$ref ?? "");
+          expect(schemas[ref], `${path} ${status}`).toBeTruthy();
+          if (Number(status) >= 400) {
+            expect(path === "/ask" ? "AskResponse" : "ErrorResponse", `${path} ${status}`).toBe(ref);
+          }
         }
         expect(Object.keys(operation.responses)).toContain("429");
+        expect(Object.keys(operation.responses)).toContain("405");
       }
     }
     expect(operations).toBe(9);
+    expect((spec.components as Record<string, unknown>).responses).toBeUndefined();
     const errorSchema = schemas.ErrorResponse as { properties: { error: { required: string[] } } };
     expect(errorSchema.properties.error.required).toEqual(["code", "message", "hint", "docs"]);
+  });
+
+  it("turns an unexpected REST failure into a 500 internal_error without leaking details", () => {
+    const exploding = { get: () => { throw new Error("secret /var/task/path"); } } as unknown as URLSearchParams;
+    const originalError = console.error;
+    console.error = () => {};
+    try {
+      const result = safeDispatch("/api/v1/search", "GET", exploding);
+      expect(result.status).toBe(500);
+      const body = result.body as { error: { code: string; message: string; hint: string } };
+      expect(body.error.code).toBe("internal_error");
+      expect(JSON.stringify(body)).not.toContain("secret");
+      expect(buildOpenApiDocument().components.schemas.ErrorResponse.properties.error.properties.code.enum).toContain(
+        "internal_error",
+      );
+    } finally {
+      console.error = originalError;
+    }
   });
 
   it("documents every query parameter http.ts reads, including on the /api/projects alias", () => {
@@ -311,24 +336,14 @@ describe("OpenAPI", () => {
 
   it("declares RateLimit headers on 400 and 404, matching what the API sends", () => {
     const spec = buildOpenApiDocument();
-    const responses = spec.components.responses as Record<string, { headers?: Record<string, unknown> }>;
-    for (const name of ["BadRequest", "NotFound", "MethodNotAllowed", "TooManyRequests"]) {
-      expect(Object.keys(responses[name].headers ?? {}), name).toEqual(
+    const detail = (spec.paths["/api/v1/projects/{slug}"] as { get: { responses: Record<string, { headers?: object }> } })
+      .get.responses;
+    for (const status of ["400", "404", "405", "429", "500"]) {
+      expect(Object.keys(detail[status].headers ?? {}), status).toEqual(
         expect.arrayContaining(["RateLimit", "RateLimit-Policy"]),
       );
     }
-    for (const [path, item] of Object.entries(spec.paths)) {
-      for (const [method, operation] of Object.entries(
-        item as Record<string, { responses?: Record<string, { $ref?: string }> }>,
-      )) {
-        if (method.startsWith("x-") || !operation.responses) continue;
-        for (const status of ["400", "404", "405", "429"]) {
-          expect(operation.responses[status]?.$ref, `${method.toUpperCase()} ${path} ${status}`).toMatch(
-            /#\/components\/responses\//,
-          );
-        }
-      }
-    }
+    expect(Object.keys(detail["429"].headers ?? {})).toContain("Retry-After");
     const badRequest = apiCall("/api/v1/projects", "203.0.113.20", "limit=99");
     expect(badRequest.status).toBe(400);
     expect(badRequest.headers.RateLimit).toBeTruthy();
@@ -409,6 +424,7 @@ describe("MCP discovery", () => {
 describe("auth, agent mode, and ask", () => {
   it("documents that the public API needs no authentication", () => {
     const auth = renderAuthMarkdown();
+    expect(auth.startsWith("# Authentication\n")).toBe(true);
     expect(auth).toContain("public, read-only");
     expect(auth).toContain("no authentication");
     expect(auth).not.toContain("identity_endpoint");

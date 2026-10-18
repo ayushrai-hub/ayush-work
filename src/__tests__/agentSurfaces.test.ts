@@ -267,7 +267,7 @@ describe("agent surfaces", () => {
     );
     expect(home?.status).toBe(200);
     expect(home?.headers.get("content-type")).toBe("text/markdown; charset=utf-8");
-    expect(home?.headers.get("vary")).toBe("Accept");
+    expect(home?.headers.get("vary")).toBe("Accept, User-Agent");
     expect(await home?.text()).toBe(renderPageMarkdown("/"));
 
     const missing = markdownMiddleware(

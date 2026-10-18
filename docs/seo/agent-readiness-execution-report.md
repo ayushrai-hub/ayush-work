@@ -16,6 +16,19 @@ Still not built, by decision: A2A card, OAuth PRM/AS metadata, `WWW-Authenticate
 
 Checks before deploy: lint, typecheck, 124 Vitest tests, build (58 prerendered routes), 15 Playwright tests.
 
+**Rescan after PR #9 (18 Oct, 07:03 UTC): 90/100, grade A** (was 75/B). Discovery 13, Access 57, Usability 92. Essentials 100.
+
+Second pass (PR #10), from that scan's details:
+
+| Check | Ora detail | Change |
+| --- | --- | --- |
+| auth-md-exists | "no leading heading" (file opened with YAML frontmatter) | `/auth.md` now starts with `# Authentication` |
+| agent-ua-markdown | bots sending `Accept: text/html` got HTML | Known AI-bot UAs always get the Markdown twin; `Vary: Accept, User-Agent`. Browsers and Googlebot unchanged. |
+| api-error-model | error schema "not consistently referenced" | Error responses inlined per operation, each with a typed body; only statuses the handler returns; REST adds a real 500 `internal_error` (generic message); `/ask` errors use the NLWeb `AskResponse` shape it actually sends |
+| agent-plugins-repo | no plugin.json in discovered repos | Manifest is on `main`; GitHub repo homepage pointed at the site so the repo links to the domain |
+
+Not ours: `agent-auth-discovery-metadata` found OAuth metadata on `life.ayushrai.site` (MyLifeOS, a separate app) whose `agent_auth.skill` points at its own `/auth.md`.
+
 ---
 
 ## Original report, 16 Oct 2026

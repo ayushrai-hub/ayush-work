@@ -17,7 +17,7 @@
  */
 const MARKDOWN_HEADERS = {
   "Content-Type": "text/markdown; charset=utf-8",
-  Vary: "Accept",
+  Vary: "Accept, User-Agent",
   "X-Content-Type-Options": "nosniff",
 };
 
@@ -94,20 +94,15 @@ const AGENT_BOT_UA =
   /(?:GPTBot|ClaudeBot|ChatGPT-User|PerplexityBot|Google-Extended|Applebot-Extended|ora-agent|DeepSeekBot)/i;
 
 /**
- * Copy of wantsMarkdown in src/lib/agent/surfaces.ts: Markdown when Accept prefers it, or when a
- * known agent bot omits an HTML preference.
+ * Copy of wantsMarkdown in src/lib/agent/surfaces.ts: Markdown when Accept prefers it, or for any
+ * known agent bot, even one that asks for text/html.
  */
 export function wantsMarkdown(accept, userAgent) {
   if (accept) {
     const markdown = acceptQuality(accept, "text/markdown");
     if (markdown > 0 && markdown > acceptQuality(accept, "text/html")) return true;
   }
-  if (!userAgent || !AGENT_BOT_UA.test(userAgent)) return false;
-  if (!accept) return true;
-  const html = acceptQuality(accept, "text/html");
-  if (html === 0) return true;
-  const markdown = acceptQuality(accept, "text/markdown");
-  return markdown > 0 && markdown >= html;
+  return Boolean(userAgent && AGENT_BOT_UA.test(userAgent));
 }
 
 /** True when the homepage was requested with `?mode=agent`. */

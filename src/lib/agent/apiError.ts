@@ -23,7 +23,8 @@ export type ApiErrorCode =
   | "not_found"
   | "route_not_found"
   | "method_not_allowed"
-  | "rate_limited";
+  | "rate_limited"
+  | "internal_error";
 
 /** One fix-it sentence per code, copied into every error body as `hint`. */
 const HINTS: Record<ApiErrorCode, string> = {
@@ -38,6 +39,7 @@ const HINTS: Record<ApiErrorCode, string> = {
   route_not_found: "This path is not an API endpoint. See /openapi.json or /.well-known/api-catalog for the endpoints.",
   method_not_allowed: "The read API accepts GET, HEAD, and OPTIONS. The MCP endpoint accepts POST.",
   rate_limited: "Wait the number of seconds in Retry-After, then retry. The RateLimit header shows the remaining quota.",
+  internal_error: "The request was valid but the server failed. Retry once; if it keeps failing, report it to the contact on /developers/.",
 };
 
 /** Shape of every JSON error response. Matches the `ErrorResponse` schema in `openapi.ts`. */

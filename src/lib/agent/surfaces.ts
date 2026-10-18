@@ -42,10 +42,13 @@ import {
   sitePathFromRequest,
 } from "./markdown";
 
-/** Headers for every negotiated Markdown response. `Vary: Accept` keeps caches from mixing HTML and Markdown. */
+/**
+ * Headers for every negotiated Markdown response. `Vary: Accept, User-Agent` keeps caches from
+ * mixing HTML and Markdown, since both the Accept header and agent-bot User-Agents select the twin.
+ */
 export const MARKDOWN_HEADERS = {
   "Content-Type": "text/markdown; charset=utf-8",
-  Vary: "Accept",
+  Vary: "Accept, User-Agent",
   "X-Content-Type-Options": "nosniff",
 } as const;
 
@@ -66,8 +69,9 @@ function acceptQuality(accept: string, mediaType: string): number {
 }
 
 /**
- * User-Agent tokens used by common AI crawlers and the ora scanner. When these clients omit a
- * Markdown-preferring Accept header (often a wildcard Accept), they still receive Markdown twins.
+ * User-Agent tokens used by common AI crawlers and the ora scanner. These clients receive the
+ * Markdown twin of a page whatever their Accept header says, including `text/html`; the twin is
+ * the same public content. Search crawlers such as Googlebot are not listed and keep HTML.
  * Ordinary browsers keep the Accept-only rule below.
  */
 export const AGENT_BOT_UA =
@@ -81,21 +85,14 @@ export function isAgentBotUserAgent(userAgent: string | undefined): boolean {
 /**
  * True when `Accept` gives `text/markdown` a positive quality strictly above `text/html`.
  * Browsers list `text/html` at q=1 on page loads, so they keep getting HTML; a tie also stays
- * HTML. Known agent bots without an HTML preference also get Markdown (test-enforced with the
- * Netlify edge copy).
+ * HTML. Known agent bots always get Markdown (test-enforced with the Netlify edge copy).
  */
 export function wantsMarkdown(accept: string | undefined, userAgent?: string): boolean {
   if (accept) {
     const markdown = acceptQuality(accept, "text/markdown");
     if (markdown > 0 && markdown > acceptQuality(accept, "text/html")) return true;
   }
-  if (!isAgentBotUserAgent(userAgent)) return false;
-  // Agent bots with missing Accept, */*, or no positive text/html preference get Markdown.
-  if (!accept) return true;
-  const html = acceptQuality(accept, "text/html");
-  if (html === 0) return true;
-  const markdown = acceptQuality(accept, "text/markdown");
-  return markdown > 0 && markdown >= html;
+  return isAgentBotUserAgent(userAgent);
 }
 
 /**
