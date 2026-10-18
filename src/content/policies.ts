@@ -37,7 +37,7 @@ export const privacySections: PolicySection[] = [
     heading: "Analytics",
     paragraphs: [
       "Every page loads Google Tag Manager and Google Analytics 4. They record which pages you view, some clicks, and the browser, device, referrer, and approximate location data Google collects by default. Google sets cookies so it can tell repeat visits apart. Google keeps that data under its own terms and the property's retention setting.",
-      "When the site is served from Vercel, Vercel Web Analytics also counts page views. It does not set cookies.",
+      "Vercel Web Analytics also counts page views. Its script and requests go through this site's own /_vercel/insights path to Vercel. It does not set cookies.",
     ],
   },
   {

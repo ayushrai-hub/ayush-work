@@ -11,6 +11,8 @@
  * - index.html loads this module; global styles come from src/index.css and src/App.css.
  * - src/App.tsx, src/contexts/ThemeContext.tsx, src/components/layout/GTMProvider.tsx (src/lib/gtm.ts),
  *   @vercel/analytics/react. The SSR counterpart is src/entry-server.tsx.
+ * - On Netlify (the live www host), netlify.toml proxies /_vercel/insights/* to the Vercel alias so
+ *   the Analytics script and its beacons reach the ayush-work project.
  */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";

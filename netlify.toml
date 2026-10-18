@@ -6,6 +6,13 @@
   node_bundler = "esbuild"
   directory = "api"
 
+# Vercel Web Analytics. www is served by Netlify, so the script and its view/event/session
+# endpoints are proxied to the Vercel project's own alias, which ingests them for ayush-work.
+[[redirects]]
+  from = "/_vercel/insights/*"
+  to = "https://ayush-rai-work.vercel.app/_vercel/insights/:splat"
+  status = 200
+
 # Versioned project routes land on the existing projects function.
 # These rules are ahead of the /api/* splat so they match first.
 [[redirects]]
