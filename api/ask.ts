@@ -9,7 +9,13 @@
  * - `src/lib/agent/nlwebAsk.ts` for the response body.
  * - `src/lib/agent/rateLimit.ts` for quotas. Host config: `netlify.toml`, `vercel.json`.
  */
-import { extractAskQuery, buildAskResponse } from "../src/lib/agent/nlwebAsk";
+import {
+  ASK_STREAM_CONTENT_TYPE,
+  askEventStream,
+  buildAskResponse,
+  extractAskQuery,
+  wantsAskStream,
+} from "../src/lib/agent/nlwebAsk";
 import { clientKeyFrom, takeRateLimit } from "../src/lib/agent/rateLimit";
 import { isSiteOrigin } from "../src/lib/siteOrigins";
 
@@ -163,7 +169,8 @@ async function askResponse(req: Request | NodeRequest): Promise<Response> {
     );
   }
 
-  const extracted = extractAskQuery({ params: paramsOf(req), body: bodyJson });
+  const params = paramsOf(req);
+  const extracted = extractAskQuery({ params, body: bodyJson });
   const answer = extracted.error
     ? {
         status: 200,
@@ -173,6 +180,19 @@ async function askResponse(req: Request | NodeRequest): Promise<Response> {
         },
       }
     : buildAskResponse(extracted.query);
+
+  const accept =
+    typeof Request !== "undefined" && req instanceof Request
+      ? req.headers.get("accept")
+      : headerValue((req as NodeRequest).headers, "accept");
+  if (wantsAskStream({ params, body: bodyJson, accept })) {
+    headers["Content-Type"] = ASK_STREAM_CONTENT_TYPE;
+    headers["Cache-Control"] = "no-store";
+    return new Response(method === "HEAD" ? null : askEventStream(answer.body), {
+      status: answer.status,
+      headers,
+    });
+  }
 
   return new Response(method === "HEAD" ? null : JSON.stringify(answer.body), {
     status: answer.status,

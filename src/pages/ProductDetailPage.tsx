@@ -11,8 +11,9 @@
  * Connects to:
  * - Routed in src/App.tsx as `products/:slug`; every `products[].slug` is prerendered and in the
  *   sitemap via src/lib/publicRoutes.ts. ProductsPage, HomePage, and WorkDetailPage link here.
- * - Content from src/content (`getProductBySlug`, `person`, `productStageLabels`,
- *   `productCategoryLabels`, type `Product`); components PageSEO, PageHeader, Prose, MetaList.
+ * - Content from src/content (`getProductBySlug`, `productStageLabels`, `productCategoryLabels`,
+ *   type `Product`); `productNode` from src/lib/structuredData.ts; components PageSEO, PageHeader,
+ *   Prose, MetaList.
  * - Markdown twin `/products/<slug>.md` built by `productPage()` in src/lib/agent/markdown.ts.
  */
 import { Link, useParams } from "react-router-dom";
@@ -24,30 +25,15 @@ import Prose from "../components/editorial/Prose";
 import MetaList from "../components/editorial/MetaList";
 import {
   getProductBySlug,
-  person,
   productCategoryLabels,
   productStageLabels,
   type Product,
 } from "../content";
+import { productNode } from "../lib/structuredData";
 
-/** schema.org CreativeWork for a product, authored by `person`; `sameAs` lists the demo and GitHub URLs when present. */
+/** schema.org CreativeWork for a product, from the node shared with the Schema Feed. */
 function productJsonLd(product: Product) {
-  const sameAs = [product.demoUrl, product.githubUrl].filter(
-    (url): url is string => Boolean(url),
-  );
-  return {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    name: product.title,
-    description: product.summary,
-    url: `${person.siteUrl}/products/${product.slug}`,
-    author: {
-      "@type": "Person",
-      name: person.name,
-      url: person.siteUrl,
-    },
-    ...(sameAs.length > 0 ? { sameAs } : {}),
-  };
+  return { "@context": "https://schema.org", ...productNode(product) };
 }
 
 /** Plain bulleted list used for audience, maturity, and trade-off sections. */

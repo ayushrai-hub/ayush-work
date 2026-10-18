@@ -54,9 +54,13 @@ export function buildAgentModeDocument() {
       about: `${base}/about.md`,
       developers: `${base}/developers.md`,
       auth: `${base}/auth.md`,
+      pricing: `${base}/pricing.md`,
       agents: `${base}/AGENTS.md`,
       llms: `${base}/llms.txt`,
       llmsFull: `${base}/llms-full.txt`,
+      developersLlms: `${base}/developers/llms.txt`,
+      workLlms: `${base}/work/llms.txt`,
+      productsLlms: `${base}/products/llms.txt`,
     },
     api: {
       authentication: "none",

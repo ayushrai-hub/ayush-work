@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ayushrai-portfolio",
+  "version": "1.0.0",
+  "description": "Read-only access to Ayush Rai's public portfolio: a discovery skill plus the remote MCP server at www.ayushrai.site.",
+  "author": {
+    "name": "Ayush Rai",
+    "email": "ayushrai0211@gmail.com",
+    "url": "https://www.ayushrai.site"
+  },
+  "homepage": "https://www.ayushrai.site/developers/",
+  "repository": "https://github.com/ayushrai-hub/ayush-work",
+  "keywords": ["ayush-rai", "portfolio", "mcp", "search", "read-only"]
+}

@@ -795,12 +795,47 @@ export function renderDevelopersLlmsTxt(): string {
     "",
     `- [Developer docs (Markdown)](${abs("/developers.md")})`,
     `- [Authentication](${abs("/auth.md")}) — public API; no OAuth`,
+    `- [Pricing](${abs("/pricing.md")}) — free public API; no paid tiers`,
     `- [OpenAPI](${abs("/openapi.json")})`,
     `- [ARD catalog](${abs("/.well-known/ard.json")})`,
     `- [AI Catalog (legacy)](${abs("/.well-known/ai-catalog.json")})`,
     `- [MCP Server Card](${abs("/api/mcp/server-card")})`,
     `- [Agent mode JSON](${abs("/?mode=agent")})`,
     `- [Ask (NLWeb-shaped, lexical)](${abs("/ask")})`,
+    `- [Root llms.txt](${abs("/llms.txt")})`,
+    "",
+  ].join("\n");
+}
+
+/** Section index for case studies under `/work`. */
+export function renderWorkLlmsTxt(): string {
+  return [
+    `# ${person.name} — Work`,
+    "",
+    "> Case studies: problem, role, execution, and outcomes for shipped work.",
+    "",
+    `- [Work index](${abs("/work.md")})`,
+    ...work.map(
+      (item) => `- [${item.title}](${abs(`/work/${item.slug}.md`)}): ${item.summary}`,
+    ),
+    "",
+    `- [Root llms.txt](${abs("/llms.txt")})`,
+    "",
+  ].join("\n");
+}
+
+/** Section index for products under `/products`. */
+export function renderProductsLlmsTxt(): string {
+  return [
+    `# ${person.name} — Products`,
+    "",
+    "> Flagship and earlier products with stages kept specific.",
+    "",
+    `- [Products index](${abs("/products.md")})`,
+    ...products.map(
+      (item) => `- [${item.title}](${abs(`/products/${item.slug}.md`)}): ${item.summary}`,
+    ),
+    "",
     `- [Root llms.txt](${abs("/llms.txt")})`,
     "",
   ].join("\n");
@@ -821,7 +856,7 @@ export function renderLlmsTxt(): string {
     "",
     "Markdown twins use the same content records as the website. Fetch a URL ending in `.md`, or send `Accept: text/markdown` without `text/html`. A full dump of every page is at /llms-full.txt. This file lists the pages worth opening first.",
     "",
-    "Section indexes: [Developers](/developers/llms.txt).",
+    "Section indexes: [Developers](/developers/llms.txt), [Work](/work/llms.txt), [Products](/products/llms.txt).",
     "",
     OMISSION,
     "",
@@ -872,6 +907,7 @@ export function renderLlmsTxt(): string {
     `- [${person.name} MCP server](${abs("/api/mcp")}): Streamable HTTP, \`POST /api/mcp\`. Tools: list_projects, get_project, compare_projects, search_portfolio.`,
     `- [${person.name} MCP Server Card](${abs("/api/mcp/server-card")}): SEP-2127 card for that endpoint, listed in ARD at /.well-known/ard.json and the AI Catalog at /.well-known/ai-catalog.json.`,
     `- [Authentication](${abs("/auth.md")}): public API and MCP need no tokens; OAuth metadata is not published.`,
+    `- [Pricing](${abs("/pricing.md")}): free public read-only API and MCP; no paid tiers or checkout.`,
     `- [Agent mode](${abs("/?mode=agent")}): JSON capability view for agents.`,
     `- [Ask](${abs("/ask")}): NLWeb-shaped lexical search (POST or GET ?query=).`,
     `- [${person.name} API catalog](${abs("/.well-known/api-catalog")}): RFC 9727 linkset.`,

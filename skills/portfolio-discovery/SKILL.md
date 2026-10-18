@@ -1,5 +1,5 @@
 ---
-name: ayush-portfolio
+name: portfolio-discovery
 description: Read Ayush Rai's public portfolio from llms.txt, Markdown page twins, the search API, or the MCP server. Use when looking up his work, products, projects, or research.
 ---
 

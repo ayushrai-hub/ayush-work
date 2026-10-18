@@ -92,6 +92,8 @@ Local, from this repository after `npm install`:
 
 Tools: `list_projects`, `get_project`, `compare_projects`, `search_portfolio`. They return the same public records as the API. Both transports build the server from `src/lib/agent/mcpServer.ts`. The server identifies itself as `site.ayushrai/portfolio`.
 
+An unknown tool name, or arguments that fail a tool's input schema, is a JSON-RPC error `-32602` with `data.code` set to `unknown_tool` or `invalid_arguments`. A well-formed call that fails at run time (bad cursor, unknown slug, duplicate compare) is a tool result with `isError: true` and the API error code in `structuredContent`.
+
 Discovery follows SEP-2127. The Server Card is `GET https://www.ayushrai.site/api/mcp/server-card` (`application/mcp-server-card+json`, with `ETag`). The AI Catalog at `/.well-known/ai-catalog.json` lists it. The older `/.well-known/mcp/server-card.json` serves the same card for clients that still look there.
 
 A zero-dependency CLI lives in `packages/cli` (`node packages/cli/bin/ayushrai.mjs search agents`). It is not published to npm yet. An SDK is not published. An A2A agent card is not implemented (and not advertised). This server is not listed on Smithery, mcp.so, or any other registry.
@@ -106,13 +108,15 @@ The REST API, `/ask`, and MCP server are public and unauthenticated. See `/auth.
 
 - `GET /?mode=agent` returns JSON (capabilities, API, MCP, docs), not the marketing homepage.
 - ARD v0.91: `/.well-known/ard.json` (canonical). Legacy AI Catalog: `/.well-known/ai-catalog.json`.
-- `POST /ask` is NLWeb-shaped lexical search over the same index as `/api/v1/search` (not generative).
+- `POST /ask` is NLWeb-shaped lexical search over the same index as `/api/v1/search` (not generative). Send `prefer.streaming: true` (or `?streaming=true`, or `Accept: text/event-stream`) for SSE `start` / `result` / `complete` events.
+- Schema Feeds: `robots.txt` has `schemamap: /schemamap.xml`, which lists `/feeds/portfolio.jsonl` (the same schema.org nodes the pages publish).
+- Agent Plugins: `plugin.json` and `mcp.json` at the repository root bundle `skills/portfolio-discovery` with the remote MCP server.
 - WebMCP tools register from `/webmcp.js` when `document.modelContext` exists.
 - An A2A `/.well-known/agent-card.json` is not published: there is no A2A JSON-RPC endpoint.
 
 ## Domains
 
-Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, `/software-services`, `/experience`, and `/open-source`. They are generated from `src/content/domains.ts`. There is no `/ai-engineering/inference` or `/software-engineering/distributed-systems` page: those topics are gaps, not empty URLs. There is no published SDK package, pricing page, or OAuth login.
+Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, `/software-services`, `/experience`, and `/open-source`. They are generated from `src/content/domains.ts`. There is no `/ai-engineering/inference` or `/software-engineering/distributed-systems` page: those topics are gaps, not empty URLs. There is no published SDK package or OAuth login. Pricing for the public API is documented at `/pricing.md` (free; no paid tiers).
 
 ## Working in this repo
 

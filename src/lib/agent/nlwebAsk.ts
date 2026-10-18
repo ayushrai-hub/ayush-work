@@ -4,7 +4,9 @@
  * Accepts GET (`?query=` / `?q=`) and POST JSON (`query` string or `{ text }`). Results come from
  * the same `searchPayload` function as `/api/v1/search`. Responses carry `_meta.response_type` and
  * `_meta.version` per NLWeb v0.55. This is not a generative model: unanswered or empty queries get
- * an honest `failure` or empty `answer`.
+ * an honest `failure` or empty `answer`. When the caller asks for streaming (`prefer.streaming`,
+ * `?streaming=true`, or `Accept: text/event-stream`), the same response is framed as SSE with the
+ * spec's `start`, `result`, `error`, and `complete` events.
  *
  * Connects to:
  * - `api/ask.ts` and `vitePlugin.ts` (dev `/ask`). Rate-limited via `rateLimit.ts`.
@@ -39,6 +41,52 @@ export function extractAskQuery(input: {
   const fromParams = input.params?.get("query") ?? input.params?.get("q") ?? "";
   if (fromParams) return { query: fromParams };
   return { query: "", error: "Provide query as a string, { text }, or ?query= / ?q=." };
+}
+
+/** Content type for streamed `/ask` responses. */
+export const ASK_STREAM_CONTENT_TYPE = "text/event-stream; charset=utf-8";
+
+/**
+ * True when the caller asked for an SSE response: `prefer.streaming: true` in a POST body,
+ * `?streaming=true` on GET, or an Accept header that names `text/event-stream` with q above 0.
+ * Wildcard Accept values never select streaming.
+ */
+export function wantsAskStream(input: { params?: URLSearchParams; body?: unknown; accept?: string | null }): boolean {
+  if (input.body && typeof input.body === "object") {
+    const prefer = (input.body as { prefer?: unknown }).prefer;
+    if (prefer && typeof prefer === "object" && (prefer as { streaming?: unknown }).streaming === true) return true;
+  }
+  if (input.params?.get("streaming") === "true") return true;
+  if (!input.accept) return false;
+  return input.accept.split(",").some((part) => {
+    const [type, ...params] = part.trim().toLowerCase().split(";");
+    if (type.trim() !== "text/event-stream") return false;
+    const q = params.map((p) => p.trim()).find((p) => p.startsWith("q="));
+    return q ? Number(q.slice(2)) > 0 : true;
+  });
+}
+
+/** One SSE frame. */
+function sseEvent(event: string, data: unknown): string {
+  return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+}
+
+/**
+ * Frames a `buildAskResponse` body as NLWeb SSE: `start` with `_meta.streaming`, then one
+ * `result` per item (`index`, `item`) or one `error` for a failure, then `complete`.
+ */
+export function askEventStream(body: Record<string, unknown>): string {
+  const meta = (body._meta ?? {}) as Record<string, unknown>;
+  const base = { response_type: meta.response_type, version: meta.version ?? NLWEB_VERSION };
+  const frames = [sseEvent("start", { _meta: { ...meta, streaming: true } })];
+  if (meta.response_type === "failure") {
+    frames.push(sseEvent("error", { _meta: base, error: body.error }));
+  } else {
+    const results = Array.isArray(body.results) ? body.results : [];
+    results.forEach((item, index) => frames.push(sseEvent("result", { index, item })));
+  }
+  frames.push(sseEvent("complete", { _meta: base }));
+  return frames.join("");
 }
 
 /** One Schema.org-ish result row for conversational_search. */

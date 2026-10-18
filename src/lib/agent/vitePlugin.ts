@@ -31,7 +31,13 @@ import {
   SERVER_CARD_PATH,
 } from "./mcpCard";
 import { handleMcpRequest } from "./mcpHttp";
-import { buildAskResponse, extractAskQuery } from "./nlwebAsk";
+import {
+  ASK_STREAM_CONTENT_TYPE,
+  askEventStream,
+  buildAskResponse,
+  extractAskQuery,
+  wantsAskStream,
+} from "./nlwebAsk";
 import { clientKeyFrom, takeRateLimit } from "./rateLimit";
 import {
   agentFiles,
@@ -186,12 +192,14 @@ function attach(middlewares: Connect.Server) {
               },
             }
           : buildAskResponse(extracted.query);
+        const accept = typeof req.headers.accept === "string" ? req.headers.accept : undefined;
+        const stream = wantsAskStream({ params: url.searchParams, body, accept });
         send(
           res,
           answer.status,
-          "application/json; charset=utf-8",
-          method === "HEAD" ? "" : JSON.stringify(answer.body),
-          { ...limit.headers, ...DISCOVERY_CORS },
+          stream ? ASK_STREAM_CONTENT_TYPE : "application/json; charset=utf-8",
+          method === "HEAD" ? "" : stream ? askEventStream(answer.body) : JSON.stringify(answer.body),
+          { ...limit.headers, ...DISCOVERY_CORS, ...(stream ? { "Cache-Control": "no-store" } : {}) },
         );
       })().catch(next);
       return;
@@ -229,23 +237,22 @@ function attach(middlewares: Connect.Server) {
       return;
     }
 
-    if (
-      pathname === "/llms.txt" ||
-      pathname === "/llms-full.txt" ||
-      pathname === "/developers/llms.txt" ||
-      pathname === "/openapi.json" ||
-      pathname === "/auth.md" ||
-      pathname === "/agent-mode.json"
-    ) {
+    {
       const files = agentFiles();
       const key = pathname.slice(1);
-      const type = pathname.endsWith(".json")
-        ? "application/json; charset=utf-8"
-        : pathname.endsWith(".md")
-          ? "text/markdown; charset=utf-8"
-          : "text/plain; charset=utf-8";
-      send(res, 200, type, files[key] ?? "");
-      return;
+      if (Object.prototype.hasOwnProperty.call(files, key)) {
+        const type = pathname.endsWith(".json")
+          ? "application/json; charset=utf-8"
+          : pathname.endsWith(".jsonl")
+            ? "application/jsonl; charset=utf-8"
+            : pathname.endsWith(".xml")
+              ? "application/xml; charset=utf-8"
+              : pathname.endsWith(".md")
+                ? "text/markdown; charset=utf-8"
+                : "text/plain; charset=utf-8";
+        send(res, 200, type, files[key] ?? "");
+        return;
+      }
     }
 
     const markdownResult = pathname.endsWith(".md")
