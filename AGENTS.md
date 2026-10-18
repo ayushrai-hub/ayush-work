@@ -116,7 +116,7 @@ The REST API, `/ask`, and MCP server are public and unauthenticated. See `/auth.
 
 ## Domains
 
-Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, `/software-services`, `/experience`, and `/open-source`. They are generated from `src/content/domains.ts`. There is no `/ai-engineering/inference` or `/software-engineering/distributed-systems` page: those topics are gaps, not empty URLs. There is no published SDK package or OAuth login. Pricing for the public API is documented at `/pricing.md` (free; no paid tiers).
+Evidence-backed dossiers live under `/ai-engineering`, `/software-engineering`, `/gtm-revops`, `/software-services`, `/experience`, and `/open-source`. They are generated from `src/content/domains.ts`. There is no `/ai-engineering/inference` or `/software-engineering/distributed-systems` page: those topics are gaps, not empty URLs. There is no published SDK package or OAuth login. Pricing for the public API is documented at `/pricing.md` (free; no paid tiers).
 
 ## Working in this repo
 

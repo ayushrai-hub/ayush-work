@@ -7,8 +7,8 @@
  *
  * Connects to:
  * - "Updated" labels via `pageUpdatedAt`: HomePage, AboutPage, WorkPage,
- *   ProductsPage, NowPage, ContactPage, PrivacyPage, DevelopersPage and
- *   DomainPage (also its JSON-LD `dateModified`), PageSEO's homepage
+ *   ProductsPage, NowPage, ContactPage, PrivacyPage, DevelopersPage, GtmPage and
+ *   DomainPage (also their JSON-LD `dateModified`), PageSEO's homepage
  *   `dateModified`, and the /now.md Markdown twin.
  * - `formatUpdated`: SiteFooter, HomePage and UpdatedMeta.
  * - `siteMeta.siteUpdatedAt`: SiteFooter's "Site info updated" line.
@@ -29,14 +29,16 @@ export const siteMeta = {
    */
   pages: {
     home: "2026-10-16",
-    domains: "2026-10-16",
+    domains: "2026-10-18",
+    "gtm-revops": "2026-10-18",
     now: "2026-08-08",
     about: "2026-10-16",
     work: "2026-10-16",
-    products: "2026-10-11",
+    products: "2026-10-18",
     contact: "2026-10-14",
     privacy: "2026-10-14",
     developers: "2026-10-16",
+    gtm: "2026-10-18",
     resume: "2026-08-08",
   } as Record<string, string>,
 };

@@ -51,6 +51,7 @@ const DesignSystemPage = lazy(() => import("./pages/DesignSystemPage"));
 const DevelopersPage = lazy(() => import("./pages/DevelopersPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const DomainPage = lazy(() => import("./pages/DomainPage"));
+const GtmPage = lazy(() => import("./pages/GtmPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 /** Suspense placeholder shown while a lazy page chunk loads. */
@@ -100,10 +101,12 @@ export function AppRoutes() {
             <Route path="design-system" element={<DesignSystemPage />} />
             <Route path="developers" element={<DevelopersPage />} />
             <Route path="privacy" element={<PrivacyPage />} />
+            <Route path="gtm" element={<GtmPage />} />
             <Route path="ai-engineering/*" element={<DomainPage />} />
             <Route path="ai-engineering" element={<DomainPage />} />
             <Route path="software-engineering" element={<DomainPage />} />
             <Route path="software-services" element={<DomainPage />} />
+            <Route path="gtm-revops" element={<DomainPage />} />
             <Route path="experience" element={<DomainPage />} />
             <Route path="open-source" element={<DomainPage />} />
 

@@ -22,6 +22,7 @@ import {
   elsewhereProfiles,
   experience,
   featuredProducts,
+  gtmPortfolio,
   ideas,
   leadership,
   contactSections,
@@ -37,6 +38,7 @@ import {
   projects,
   recognition,
   renderDomainBody,
+  renderGtmBody,
   research,
   selectedWork,
   timeline,
@@ -753,6 +755,8 @@ function buildPages(): AgentPage[] {
     ),
   );
 
+  pages.push(doc("/gtm", "GTM engineering", gtmPortfolio.description, renderGtmBody()));
+
   for (const page of domains) {
     pages.push(doc(page.path, page.h1, page.description, renderDomainBody(page)));
   }
@@ -891,6 +895,7 @@ export function renderLlmsTxt(): string {
     "",
     `- [About](${abs("/about.md")})`,
     `- [Experience](${abs("/experience.md")})`,
+    `- [GTM engineering](${abs("/gtm.md")}): revenue data pipelines, scoring, and what is built versus still being learned.`,
     `- [Contact](${abs("/contact.md")}): ${person.email}, ${person.phoneDisplay}`,
     `- [Privacy](${abs("/privacy.md")}): what the site collects and who processes it.`,
     `- GitHub: ${person.primaryProfiles.github}`,

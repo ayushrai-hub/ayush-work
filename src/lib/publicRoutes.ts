@@ -42,6 +42,7 @@ const STATIC_PAGES = [
   "/resume",
   "/developers",
   "/privacy",
+  "/gtm",
 ] as const;
 
 /** HTML routes that belong in the sitemap. Product logs are included only when they have entries. */
