@@ -1,8 +1,9 @@
 /**
  * The set of generated agent files, and the rule for when a page request gets Markdown.
  *
- * `agentFiles()` maps output file names to contents: `llms.txt`, `llms-full.txt`, `openapi.json`,
- * `404.md`, the `.well-known` discovery documents, and one `.md` twin per page. `negotiateMarkdown`
+ * `agentFiles()` maps output file names to contents: `llms.txt` and section indexes, `llms-full.txt`,
+ * `openapi.json`, `404.md`, `auth.md`, `pricing.md`, the Schema Map and feed, the `.well-known`
+ * discovery documents, and one `.md` twin per page. `negotiateMarkdown`
  * decides, for an extensionless page path, whether to answer with the twin, a Markdown 404, or
  * the normal HTML.
  *
@@ -26,6 +27,8 @@ import {
   serverCardJson,
 } from "./mcpCard";
 import { buildOpenApiDocument } from "./openapi";
+import { renderPricingMarkdown } from "./pricingDocs";
+import { renderSchemaFeed, renderSchemaMap, SCHEMA_FEED_PATH, SCHEMA_MAP_PATH } from "./schemaFeed";
 import {
   listAgentPages,
   markdownPublicPath,
@@ -34,6 +37,8 @@ import {
   renderLlmsTxt,
   renderNotFoundMarkdown,
   renderPageMarkdown,
+  renderProductsLlmsTxt,
+  renderWorkLlmsTxt,
   sitePathFromRequest,
 } from "./markdown";
 
@@ -102,10 +107,15 @@ export function agentFiles(): Record<string, string> {
     "llms.txt": renderLlmsTxt(),
     "llms-full.txt": renderLlmsFull(),
     "developers/llms.txt": renderDevelopersLlmsTxt(),
+    "work/llms.txt": renderWorkLlmsTxt(),
+    "products/llms.txt": renderProductsLlmsTxt(),
     "openapi.json": `${JSON.stringify(buildOpenApiDocument(), null, 2)}\n`,
     "404.md": renderNotFoundMarkdown(),
     "auth.md": renderAuthMarkdown(),
+    "pricing.md": renderPricingMarkdown(),
     "agent-mode.json": agentModeJson(),
+    [SCHEMA_MAP_PATH.slice(1)]: renderSchemaMap(),
+    [SCHEMA_FEED_PATH.slice(1)]: renderSchemaFeed(),
     [API_CATALOG_PATH.slice(1)]: `${JSON.stringify(buildApiCatalog(), null, 2)}\n`,
     [AI_CATALOG_PATH.slice(1)]: `${JSON.stringify(buildAiCatalog(), null, 2)}\n`,
     [ARD_PATH.slice(1)]: `${JSON.stringify(buildArdManifest(), null, 2)}\n`,

@@ -396,7 +396,11 @@ describe("agent surfaces", () => {
         .body,
     );
     expect((await tool(6, "search_portfolio", { query: "", cursor: "nope" })).isError).toBe(true);
-    expect((await tool(7, "search_portfolio", { query: "", limit: 21 })).isError).toBe(true);
+    const overLimit = await (
+      await call({ jsonrpc: "2.0", id: 7, method: "tools/call", params: { name: "search_portfolio", arguments: { query: "", limit: 21 } } })
+    ).json();
+    expect(overLimit.error.code).toBe(-32602);
+    expect(overLimit.error.data.code).toBe("invalid_arguments");
 
     const slugs = ["overlay-text-box", "super-site-archive"];
     const withoutArchive = JSON.parse((await tool(8, "compare_projects", { slugs })).content[0].text);
@@ -444,6 +448,35 @@ describe("agent surfaces", () => {
     }
     const archived = await tool("get_project", { slug: "super-site-archive", includeArchive: true });
     expect(JSON.parse(archived.content[0].text).project.slug).toBe("super-site-archive");
+  });
+
+  it("answers unknown tools and schema-invalid arguments with JSON-RPC -32602 errors", async () => {
+    /** Sends one tools/call and returns the parsed JSON-RPC envelope. */
+    const rpc = async (name: string, args: unknown) =>
+      (
+        await handleMcpRequest(
+          new Request("https://www.ayushrai.site/api/mcp", {
+            method: "POST",
+            headers: { "content-type": "application/json", accept: "application/json, text/event-stream" },
+            body: JSON.stringify({ jsonrpc: "2.0", id: 9, method: "tools/call", params: { name, arguments: args } }),
+          }),
+        )
+      ).json();
+
+    const unknown = await rpc("no_such_tool", {});
+    expect(unknown.result).toBeUndefined();
+    expect(unknown.error.code).toBe(-32602);
+    expect(unknown.error.message).toContain("no_such_tool");
+    expect(unknown.error.data.code).toBe("unknown_tool");
+    expect(unknown.error.data.tools).toContain("search_portfolio");
+
+    const wrongType = await rpc("get_project", { slug: 5 });
+    expect(wrongType.error.code).toBe(-32602);
+    expect(wrongType.error.data.code).toBe("invalid_arguments");
+    expect(wrongType.error.data.issues[0].path).toBe("slug");
+
+    const missing = await rpc("compare_projects", {});
+    expect(missing.error.data.code).toBe("invalid_arguments");
   });
 
   it("validates REST limit, type, and compare inputs the same way on every path", () => {

@@ -109,6 +109,19 @@
     X-Content-Type-Options = "nosniff"
 
 [[headers]]
+  for = "/feeds/*"
+  [headers.values]
+    Content-Type = "application/jsonl; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/pricing.md"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
   for = "/agent-mode.json"
   [headers.values]
     Content-Type = "application/json; charset=utf-8"

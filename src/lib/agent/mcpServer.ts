@@ -3,8 +3,10 @@
  *
  * Tools: `list_projects`, `get_project`, `compare_projects`, and `search_portfolio`. Each calls
  * the same query and validation functions as the REST API, so results match `/api/v1/*`.
- * Arguments are checked first by each tool's zod `inputSchema` (in the SDK), then by the shared
- * validators; validator failures and missing records return a tool result with `isError: true`.
+ * Protocol errors follow the MCP spec split: an unknown tool name or arguments that fail the tool's
+ * zod `inputSchema` are JSON-RPC errors (`-32602` with a `data.code`), raised by the `tools/call`
+ * handler installed below. The SDK's own handler would wrap those as `isError` results. Execution
+ * errors (shared validator failures, missing records) stay tool results with `isError: true`.
  *
  * Connects to:
  * - `mcp/server.ts` (local stdio server) and `mcpHttp.ts` (remote Streamable HTTP via `api/mcp.ts`).
@@ -12,6 +14,12 @@
  *   `searchTool.ts`, `pagination.ts`, and `validate.ts`.
  */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import {
+  CallToolRequestSchema,
+  ErrorCode,
+  McpError,
+  type CallToolResult,
+} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { MCP_SERVER_INFO, MCP_SERVER_INSTRUCTIONS } from "./mcpCard";
 import { decodeCursor } from "./pagination";
@@ -37,14 +45,33 @@ function toolError(message: string, code = "tool_error") {
   };
 }
 
+type ToolShape = z.ZodRawShape;
+type ToolRunner = (args: Record<string, unknown>) => CallToolResult | Promise<CallToolResult>;
+
+/** Human-readable summary of zod issues, such as `slug: expected string, received number`. */
+function describeIssues(issues: z.core.$ZodIssue[]): string {
+  return issues.map((issue) => `${issue.path.join(".") || "arguments"}: ${issue.message}`).join("; ");
+}
+
 /**
  * Read-only tools over the public project records. Shared by stdio and Streamable HTTP.
  * Returns a new, unconnected server; the caller attaches a transport.
  */
 export function createPortfolioMcpServer() {
   const server = new McpServer({ ...MCP_SERVER_INFO }, { instructions: MCP_SERVER_INSTRUCTIONS });
+  const tools = new Map<string, { schema: z.ZodObject<ToolShape>; run: ToolRunner }>();
 
-  server.registerTool(
+  /** Registers a tool with the SDK (for tools/list) and keeps its schema and handler for tools/call. */
+  const registerTool = <S extends ToolShape>(
+    name: string,
+    config: { description: string; inputSchema: S; annotations: { readOnlyHint: boolean } },
+    run: (args: z.infer<z.ZodObject<S>>) => CallToolResult | Promise<CallToolResult>,
+  ) => {
+    server.registerTool(name, config, run as never);
+    tools.set(name, { schema: z.object(config.inputSchema), run: run as ToolRunner });
+  };
+
+  registerTool(
     "list_projects",
     {
       description:
@@ -75,7 +102,7 @@ export function createPortfolioMcpServer() {
     },
   );
 
-  server.registerTool(
+  registerTool(
     "get_project",
     {
       description:
@@ -95,7 +122,7 @@ export function createPortfolioMcpServer() {
     },
   );
 
-  server.registerTool(
+  registerTool(
     "compare_projects",
     {
       description:
@@ -113,7 +140,7 @@ export function createPortfolioMcpServer() {
     },
   );
 
-  server.registerTool(
+  registerTool(
     "search_portfolio",
     {
       description:
@@ -128,6 +155,25 @@ export function createPortfolioMcpServer() {
     },
     async (args) => executePortfolioSearch(args),
   );
+
+  server.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    const { name, arguments: rawArgs } = request.params;
+    const tool = tools.get(name);
+    if (!tool) {
+      throw new McpError(ErrorCode.InvalidParams, `Unknown tool "${name}". Call tools/list for the available tools.`, {
+        code: "unknown_tool",
+        tools: [...tools.keys()],
+      });
+    }
+    const parsed = tool.schema.safeParse(rawArgs ?? {});
+    if (!parsed.success) {
+      throw new McpError(ErrorCode.InvalidParams, `Invalid arguments for ${name}: ${describeIssues(parsed.error.issues)}`, {
+        code: "invalid_arguments",
+        issues: parsed.error.issues.map((issue) => ({ path: issue.path.join("."), message: issue.message })),
+      });
+    }
+    return tool.run(parsed.data);
+  });
 
   return server;
 }

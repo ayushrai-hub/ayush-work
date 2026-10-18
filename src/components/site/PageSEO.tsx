@@ -3,22 +3,24 @@
  *
  * Title is `<title> · Ayush Rai`, or `Ayush Rai · <person.roleTitle>` when no title is passed
  * (the homepage). Description and image fall back to `defaultSEO`; relative images are made
- * absolute against `person.siteUrl`. The Person node's image is `person.portrait` and its telephone is `person.phone`. The canonical comes from `canonicalUrl(path)`, which adds a
+ * absolute against `person.siteUrl`. The canonical comes from `canonicalUrl(path)`, which adds a
  * trailing slash to non-root paths. Indexable pages advertise a Markdown alternate
  * (`rel="alternate" type="text/markdown"`). With `personSchema`, emits one `@graph` holding
- * WebSite, Person, and ProfilePage nodes linked by `@id`; `jsonLd` adds a second script.
+ * WebSite, Person, ProfilePage, and the selected-work ItemList, linked by `@id`; `jsonLd` adds a
+ * second script.
  * Tags are written through react-helmet-async, so the prerender (entry-server) captures them too.
  *
  * Connects to:
  * - Rendered at the top of every page component in src/pages (HomePage passes `personSchema`;
  *   NotFoundPage and DesignSystemPage pass `noIndex`; HomePage sets `noIndex` when `?audience=` is present)
  * - content: person, pageUpdatedAt; constants/seo: defaultSEO; lib/canonical: canonicalUrl, personId, websiteId
- * - Does not use src/lib/seo.ts
+ * - lib/structuredData: the Person, WebSite, and selected-work nodes (shared with the Schema Feed)
  */
 import { Helmet } from "react-helmet-async";
 import { pageUpdatedAt, person } from "../../content";
 import { defaultSEO } from "../../constants/seo";
 import { canonicalUrl, personId, websiteId } from "../../lib/canonical";
+import { absoluteUrl, personNode, selectedWorkListNode, websiteNode } from "../../lib/structuredData";
 
 /** Props for PageSEO. `path` is the route path (e.g. `/work`), not an absolute URL. */
 interface PageSEOProps {
@@ -31,13 +33,6 @@ interface PageSEOProps {
   personSchema?: boolean;
   /** Extra JSON-LD object for this page (ProductDetailPage, DomainPage). Ratings and offers are not inferred. */
   jsonLd?: Record<string, unknown>;
-}
-
-/** Makes a site-relative path absolute against `person.siteUrl`; absolute URLs pass through, and no path gives undefined. */
-function absoluteUrl(src?: string): string | undefined {
-  if (!src) return undefined;
-  if (src.startsWith("http")) return src;
-  return `${person.siteUrl}${src.startsWith("/") ? src : `/${src}`}`;
 }
 
 /** Writes the head tags for one page; renders nothing in the body. */
@@ -65,38 +60,8 @@ export default function PageSEO({
     ? {
         "@context": "https://schema.org",
         "@graph": [
-          {
-            "@type": "WebSite",
-            "@id": websiteId(),
-            name: person.name,
-            url: canonicalUrl("/"),
-            description: person.tagline,
-            publisher: { "@id": personId() },
-          },
-          {
-            "@type": "Person",
-            "@id": personId(),
-            name: person.name,
-            url: canonicalUrl("/"),
-            email: person.email,
-            telephone: person.phone,
-            jobTitle: person.roleTitle,
-            description: person.tagline,
-            image: absoluteUrl(person.portrait),
-            // Topics grounded in published domain dossiers and experience — not aspirational skills.
-            knowsAbout: [
-              "LLM evaluation",
-              "Preference feedback",
-              "RLHF-oriented evaluation",
-              "AI product development",
-              "Software engineering",
-            ],
-            workLocation: {
-              "@type": "Place",
-              name: person.location,
-            },
-            sameAs: person.sameAs,
-          },
+          websiteNode(),
+          personNode(),
           {
             "@type": "ProfilePage",
             "@id": `${canonicalUrl("/")}#profile`,
@@ -105,7 +70,9 @@ export default function PageSEO({
             dateModified: pageUpdatedAt("home"),
             mainEntity: { "@id": personId() },
             isPartOf: { "@id": websiteId() },
+            hasPart: { "@id": `${canonicalUrl("/")}#selected-work` },
           },
+          selectedWorkListNode(),
         ],
       }
     : null;

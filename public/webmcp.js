@@ -2,16 +2,14 @@
  * Progressive WebMCP registration for browser agents.
  *
  * Registers read-only tools when document.modelContext or navigator.modelContext exposes
- * registerTool. Tools call the public REST API (same records as MCP). Literal property names
- * stay unminified so scanners that inspect classic scripts can detect support.
+ * registerTool. Tools call the public REST API (same records as MCP). Property names are written
+ * as literal member access so scanners that inspect classic scripts can detect support.
  *
  * Loaded from index.html as a classic script (not a module chunk).
  */
 (function () {
   "use strict";
 
-  var MODEL_CONTEXT = "modelContext";
-  var REGISTER_TOOL = "registerTool";
   var ORIGIN = "";
 
   try {
@@ -21,10 +19,11 @@
   }
 
   function getModelContext() {
-    var docCtx = document[MODEL_CONTEXT];
-    var navCtx = typeof navigator !== "undefined" ? navigator[MODEL_CONTEXT] : undefined;
+    // Keep these as literal member expressions for WebMCP scanners.
+    var docCtx = document.modelContext;
+    var navCtx = typeof navigator !== "undefined" ? navigator.modelContext : undefined;
     var ctx = docCtx || navCtx;
-    if (!ctx || typeof ctx[REGISTER_TOOL] !== "function") return null;
+    if (!ctx || typeof ctx.registerTool !== "function") return null;
     return ctx;
   }
 
@@ -154,6 +153,7 @@
             developers: doc.pages && doc.pages.developers,
             openapi: doc.api && doc.api.openapi,
             auth: doc.markdown && doc.markdown.auth,
+            pricing: doc.markdown && doc.markdown.pricing,
             mcp: doc.mcp,
             discovery: doc.discovery,
           };
@@ -169,7 +169,7 @@
     var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
     tools.forEach(function (tool) {
       try {
-        var result = ctx[REGISTER_TOOL](
+        var result = ctx.registerTool(
           {
             name: tool.name,
             description: tool.description,

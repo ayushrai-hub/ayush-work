@@ -160,6 +160,36 @@
       ]
     },
     {
+      "source": "/feeds/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/jsonl; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/pricing.md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
       "source": "/agent-mode.json",
       "headers": [
         {

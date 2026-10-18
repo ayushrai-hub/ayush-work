@@ -56,7 +56,11 @@ function ok(description: string, schema: string) {
   return { "200": { description, headers: rateLimitHeaders, content: json(schema) } };
 }
 
+/** Shared 4xx/429 refs so every operation points at the same ErrorResponse envelope. */
 const commonErrors = {
+  "400": { $ref: "#/components/responses/BadRequest" },
+  "404": { $ref: "#/components/responses/NotFound" },
+  "405": { $ref: "#/components/responses/MethodNotAllowed" },
   "429": { $ref: "#/components/responses/TooManyRequests" },
 };
 
@@ -108,7 +112,6 @@ function searchOperation(operationId: string, summary: string) {
       ],
       responses: {
         ...ok("Matching public records", "SearchResponse"),
-        "400": { $ref: "#/components/responses/BadRequest" },
         ...commonErrors,
       },
     },
@@ -177,8 +180,6 @@ export function buildOpenApiDocument() {
           ],
           responses: {
             ...ok("A page of projects, one project, or a comparison", "ProjectsAliasResponse"),
-            "400": { $ref: "#/components/responses/BadRequest" },
-            "404": { $ref: "#/components/responses/NotFound" },
             ...commonErrors,
           },
         },
@@ -192,7 +193,6 @@ export function buildOpenApiDocument() {
           parameters: listParameters,
           responses: {
             ...ok("One page of projects", "ProjectListResponse"),
-            "400": { $ref: "#/components/responses/BadRequest" },
             ...commonErrors,
           },
         },
@@ -212,8 +212,6 @@ export function buildOpenApiDocument() {
           ],
           responses: {
             ...ok("One project", "ProjectResponse"),
-            "400": { $ref: "#/components/responses/BadRequest" },
-            "404": { $ref: "#/components/responses/NotFound" },
             ...commonErrors,
           },
         },
@@ -234,7 +232,6 @@ export function buildOpenApiDocument() {
           ],
           responses: {
             ...ok("Projects found, plus slugs that were not", "CompareResponse"),
-            "400": { $ref: "#/components/responses/BadRequest" },
             ...commonErrors,
           },
         },
@@ -299,7 +296,6 @@ export function buildOpenApiDocument() {
           },
           responses: {
             ...ok("NLWeb conversational_search answer or failure", "AskResponse"),
-            "400": { $ref: "#/components/responses/BadRequest" },
             ...commonErrors,
           },
         },
@@ -322,17 +318,31 @@ export function buildOpenApiDocument() {
       },
       responses: {
         BadRequest: {
-          description: "Invalid query, filter, slug, or cursor",
+          description:
+            "Invalid query, filter, slug, cursor, or compare list. error.code is one of invalid_query, invalid_slug, invalid_filter, invalid_compare, invalid_cursor.",
           headers: rateLimitHeaders,
           content: json("ErrorResponse"),
         },
         NotFound: {
-          description: "Unknown or archived slug",
+          description:
+            "Unknown or archived slug, or an unknown /api/ path. error.code is not_found or route_not_found.",
           headers: rateLimitHeaders,
           content: json("ErrorResponse"),
         },
+        MethodNotAllowed: {
+          description:
+            "Unsupported HTTP method. error.code is method_not_allowed. REST accepts GET, HEAD, and OPTIONS; MCP accepts POST.",
+          headers: {
+            ...rateLimitHeaders,
+            Allow: {
+              description: "Methods the resource accepts",
+              schema: { type: "string" },
+            },
+          },
+          content: json("ErrorResponse"),
+        },
         TooManyRequests: {
-          description: "Rate limit exceeded",
+          description: "Rate limit exceeded. error.code is rate_limited.",
           headers: {
             ...rateLimitHeaders,
             "Retry-After": { $ref: "#/components/headers/RetryAfter" },

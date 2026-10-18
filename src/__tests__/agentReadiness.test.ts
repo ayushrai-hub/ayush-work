@@ -47,7 +47,9 @@ import {
   MCP_SERVER_INSTRUCTIONS,
   SERVER_CARD_SCHEMA,
 } from "../lib/agent/mcpCard";
-import { buildAskResponse, extractAskQuery } from "../lib/agent/nlwebAsk";
+import askHandler from "../../api/ask";
+import { askEventStream, buildAskResponse, extractAskQuery, wantsAskStream } from "../lib/agent/nlwebAsk";
+import { renderSchemaFeed, renderSchemaMap } from "../lib/agent/schemaFeed";
 import { createPortfolioMcpServer } from "../lib/agent/mcpServer";
 import { handleMcpRequest } from "../lib/agent/mcpHttp";
 import { buildOpenApiDocument } from "../lib/agent/openapi";
@@ -310,10 +312,22 @@ describe("OpenAPI", () => {
   it("declares RateLimit headers on 400 and 404, matching what the API sends", () => {
     const spec = buildOpenApiDocument();
     const responses = spec.components.responses as Record<string, { headers?: Record<string, unknown> }>;
-    for (const name of ["BadRequest", "NotFound", "TooManyRequests"]) {
+    for (const name of ["BadRequest", "NotFound", "MethodNotAllowed", "TooManyRequests"]) {
       expect(Object.keys(responses[name].headers ?? {}), name).toEqual(
         expect.arrayContaining(["RateLimit", "RateLimit-Policy"]),
       );
+    }
+    for (const [path, item] of Object.entries(spec.paths)) {
+      for (const [method, operation] of Object.entries(
+        item as Record<string, { responses?: Record<string, { $ref?: string }> }>,
+      )) {
+        if (method.startsWith("x-") || !operation.responses) continue;
+        for (const status of ["400", "404", "405", "429"]) {
+          expect(operation.responses[status]?.$ref, `${method.toUpperCase()} ${path} ${status}`).toMatch(
+            /#\/components\/responses\//,
+          );
+        }
+      }
     }
     const badRequest = apiCall("/api/v1/projects", "203.0.113.20", "limit=99");
     expect(badRequest.status).toBe(400);
@@ -427,13 +441,100 @@ describe("auth, agent mode, and ask", () => {
     expect(Array.isArray(hit.body.results)).toBe(true);
   });
 
-  it("emits YAML frontmatter on Markdown twins and a developers section llms.txt", () => {
+  it("emits YAML frontmatter on Markdown twins and section llms.txt indexes", () => {
     const about = renderPageMarkdown("/about") ?? "";
     expect(about.startsWith("---\n")).toBe(true);
     expect(about).toContain("title:");
     expect(about).toContain("last-updated:");
     expect(agentFiles()["developers/llms.txt"]).toContain("/auth.md");
+    expect(agentFiles()["work/llms.txt"]).toContain("/work/");
+    expect(agentFiles()["products/llms.txt"]).toContain("/products/");
     expect(agentFiles()["llms.txt"]).toContain("/developers/llms.txt");
+    expect(agentFiles()["llms.txt"]).toContain("/work/llms.txt");
+    expect(agentFiles()["llms.txt"]).toContain("/products/llms.txt");
+  });
+
+  it("streams /ask as NLWeb SSE only when streaming is requested", async () => {
+    expect(wantsAskStream({ body: { prefer: { streaming: true } } })).toBe(true);
+    expect(wantsAskStream({ params: new URLSearchParams("streaming=true") })).toBe(true);
+    expect(wantsAskStream({ accept: "text/event-stream" })).toBe(true);
+    expect(wantsAskStream({ accept: "text/event-stream;q=0" })).toBe(false);
+    expect(wantsAskStream({ accept: "*/*" })).toBe(false);
+    expect(wantsAskStream({ body: { prefer: { streaming: false } } })).toBe(false);
+
+    /** Parses an SSE body into `[event, data]` pairs. */
+    const parse = (text: string) =>
+      text
+        .trim()
+        .split("\n\n")
+        .map((frame) => {
+          const [eventLine, dataLine] = frame.split("\n");
+          return [eventLine.replace("event: ", ""), JSON.parse(dataLine.replace("data: ", ""))] as const;
+        });
+
+    const hit = buildAskResponse("overlay");
+    const frames = parse(askEventStream(hit.body));
+    expect(frames[0][0]).toBe("start");
+    expect(frames[0][1]._meta).toMatchObject({ streaming: true, version: "0.55", response_type: "answer" });
+    expect(frames[frames.length - 1][0]).toBe("complete");
+    const results = frames.filter(([event]) => event === "result");
+    expect(results.length).toBe((hit.body.results as unknown[]).length);
+    expect(results[0][1]).toMatchObject({ index: 0, item: { name: expect.any(String) } });
+
+    const failure = parse(askEventStream(buildAskResponse("").body));
+    expect(failure.map(([event]) => event)).toEqual(["start", "error", "complete"]);
+
+    const streamed = (await askHandler(
+      new Request(`${ORIGIN}/ask`, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "198.51.100.40" },
+        body: JSON.stringify({ query: { text: "overlay" }, prefer: { streaming: true } }),
+      }),
+    )) as Response;
+    expect(streamed.headers.get("content-type")).toBe("text/event-stream; charset=utf-8");
+    expect(parse(await streamed.text())[0][0]).toBe("start");
+
+    const plain = (await askHandler(new Request(`${ORIGIN}/ask?q=overlay`, { headers: { "x-forwarded-for": "198.51.100.41" } }))) as Response;
+    expect(plain.headers.get("content-type")).toContain("application/json");
+  });
+
+  it("publishes a Schema Map and JSON Lines feed of the page JSON-LD, advertised in robots.txt", () => {
+    const map = renderSchemaMap();
+    expect(map).toContain("<loc>https://www.ayushrai.site/feeds/portfolio.jsonl</loc>");
+    expect(map).toContain("<sf:contentType>structuredData/schema.org</sf:contentType>");
+    const lines = renderSchemaFeed().trim().split("\n").map((line) => JSON.parse(line));
+    for (const node of lines) {
+      expect(node["@context"]).toBe("https://schema.org");
+      expect(node["@type"]).toBeTruthy();
+      expect(node.url).toMatch(/^https:\/\/www\.ayushrai\.site\//);
+    }
+    expect(lines.map((node) => node["@type"])).toEqual(expect.arrayContaining(["WebSite", "Person", "CreativeWork"]));
+    expect(agentFiles()["schemamap.xml"]).toBe(map);
+    const robots = readFileSync(resolve(__dirname, "../../public/robots.txt"), "utf8");
+    expect(robots).toMatch(/^schemamap: https:\/\/www\.ayushrai\.site\/schemamap\.xml$/m);
+  });
+
+  it("ships a conformant Agent Plugins manifest whose skill names match their directories", () => {
+    const root = resolve(__dirname, "../..");
+    const plugin = JSON.parse(readFileSync(resolve(root, "plugin.json"), "utf8"));
+    expect(plugin.$schema).toBe("https://agent-plugins.org/schemas/1.0.0/plugin.schema.json");
+    expect(plugin.name).toMatch(/^[a-z0-9](?:[a-z0-9]|-(?!-)|\.(?!\.))*[a-z0-9]$/);
+    const allowed = ["$schema", "name", "version", "description", "author", "homepage", "repository", "license", "keywords", "extensions"];
+    for (const key of Object.keys(plugin)) expect(allowed, key).toContain(key);
+    const mcp = JSON.parse(readFileSync(resolve(root, "mcp.json"), "utf8"));
+    expect(Object.keys(mcp).sort()).toEqual(["$schema", "mcpServers"]);
+    expect(Object.values(mcp.mcpServers)).toEqual([{ type: "streamable-http", url: `${ORIGIN}/api/mcp` }]);
+    const skill = readFileSync(resolve(root, "skills/portfolio-discovery/SKILL.md"), "utf8");
+    expect(skill).toMatch(/^---\nname: portfolio-discovery\n/);
+  });
+
+  it("publishes an honest free-access pricing.md without invented tiers", () => {
+    const pricing = agentFiles()["pricing.md"] ?? "";
+    expect(pricing.startsWith("---\n")).toBe(true);
+    expect(pricing).toContain("# Pricing");
+    expect(pricing.toLowerCase()).toContain("free");
+    expect(pricing).not.toMatch(/\$\d/);
+    expect(pricing).not.toContain("schema.org/Offer");
   });
 });
 

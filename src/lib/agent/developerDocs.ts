@@ -115,14 +115,14 @@ export function developerSections(): PolicySection[] {
     {
       heading: "Discovery",
       paragraphs: [
-        `API catalog (RFC 9727): \`${API_CATALOG_PATH}\`. ARD: \`${ARD_PATH}\`. MCP discovery: \`${AI_CATALOG_PATH}\`. Auth notes: \`/auth.md\`. Agent view: \`/?mode=agent\`. Index of pages: \`/llms.txt\`. Agent notes: \`/AGENTS.md\` and \`/SKILL.md\`.`,
+        `API catalog (RFC 9727): \`${API_CATALOG_PATH}\`. ARD: \`${ARD_PATH}\`. MCP discovery: \`${AI_CATALOG_PATH}\`. Auth notes: \`/auth.md\`. Pricing: \`/pricing.md\` (free public API). Agent view: \`/?mode=agent\`. Index of pages: \`/llms.txt\`. Section indexes: \`/developers/llms.txt\`, \`/work/llms.txt\`, \`/products/llms.txt\`. Agent notes: \`/AGENTS.md\` and \`/SKILL.md\`.`,
         "Every page has a Markdown version at the same path plus `.md`, and `Accept: text/markdown` on a page URL returns it.",
       ],
     },
     {
       heading: "Not provided",
       paragraphs: [
-        "There is no published SDK or CLI package, API key, OAuth, separate test environment, or paid tier, and the MCP server is not listed in a registry. There is no A2A agent-card because no A2A JSON-RPC endpoint is implemented. The API is small enough to call directly from the OpenAPI spec.",
+        "There is no published SDK or CLI package on npm, API key, OAuth, separate test environment, or paid tier, and the MCP server is not listed in a registry. There is no A2A agent-card because no A2A JSON-RPC endpoint is implemented. The API is small enough to call directly from the OpenAPI spec. See `/pricing.md` for the free-access statement.",
       ],
     },
   ];

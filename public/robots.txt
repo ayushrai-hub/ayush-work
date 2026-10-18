@@ -9,3 +9,4 @@ Disallow: /design-system
 Disallow: /*?audience=
 
 Sitemap: https://www.ayushrai.site/sitemap.xml
+schemamap: https://www.ayushrai.site/schemamap.xml
