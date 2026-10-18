@@ -1,7 +1,7 @@
 /**
  * Domain dossier pages: `/ai-engineering` and its children `/ai-engineering/{llm-evaluation,
  * rlhf,llm-systems,agents,rag}`, `/software-engineering`, `/software-services`,
- * `/experience`, and `/open-source`. Each shows evidence-backed prose, evidence links, and named gaps.
+ * `/experience`, and `/open-source`. Each shows evidence-backed prose, evidence links, and named gaps (the Gaps block is omitted when a record lists none).
  *
  * One component serves every domain: it looks up the record for the current pathname with
  * `getDomainByPath` and falls back to NotFoundPage when no record matches (so unknown
@@ -12,7 +12,7 @@
  *
  * Connects to:
  * - Routed in src/App.tsx as `ai-engineering`, `ai-engineering/*`, `software-engineering`,
- *   `software-services`, `experience`, and `open-source`. Every `domains[].path` is prerendered
+ *   `software-services`, `experience`, `open-source`, and `gtm-revops`. Every `domains[].path` is prerendered
  *   and listed in the sitemap via src/lib/publicRoutes.ts.
  * - Content from src/content (`getDomainByPath`, `childDomains`, `evidenceLevelLabels` from
  *   domains.ts; `experience`, `products`, `projects`, `person`, `pageUpdatedAt("domains")`) and
@@ -263,14 +263,16 @@ export default function DomainPage() {
           </section>
         )}
 
-        <section className="mt-14">
-          <SectionHeading title="Gaps" />
-          <ul className="max-w-measure list-disc space-y-2 pl-5 text-ink-muted">
-            {page.gaps.map((gap) => (
-              <li key={gap}>{gap}</li>
-            ))}
-          </ul>
-        </section>
+        {page.gaps.length > 0 && (
+          <section className="mt-14">
+            <SectionHeading title="Gaps" />
+            <ul className="max-w-measure list-disc space-y-2 pl-5 text-ink-muted">
+              {page.gaps.map((gap) => (
+                <li key={gap}>{gap}</li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <ContactCta prompt={`For collaboration on ${page.title.toLowerCase()}, use contact, resume, or Calendly. Email ${person.email}.`} />
       </article>
