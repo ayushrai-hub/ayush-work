@@ -921,12 +921,7 @@ export const domains: DomainRecord[] = [
       { href: "/contact", label: "Contact" },
     ],
     reading: [],
-    gaps: [
-      "No experience in a sales, RevOps or CRM-admin role, and no CRM, Clay or Apollo integration in any repository.",
-      "No customer, user or revenue figures for any system on this page.",
-      "The Revenue Intelligence Engine uses fictional data only. It is not evidence of results on real leads.",
-      "The Relationship Intelligence Engine is a personal research tool, and its own audit notes were not independently re-run.",
-    ],
+    gaps: [],
   },
 ];
 
@@ -991,10 +986,7 @@ export function renderDomainBody(page: DomainRecord): string {
     "",
     related || "_None listed._",
     reading ? `\n## Further reading\n\n${reading}` : "",
-    "## Gaps",
-    "",
-    gaps || "_None listed._",
-    "",
+    gaps ? `## Gaps\n\n${gaps}` : "",
     "Contact: /contact",
   ]
     .filter((part) => part !== "")
