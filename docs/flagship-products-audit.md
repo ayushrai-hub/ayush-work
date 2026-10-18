@@ -10,7 +10,7 @@ Date: 11 Oct 2026. Scope: portfolio integration of The Open Framework, AGENYRA, 
 - Its architecture text named Next.js, NestJS or Spring Boot, PostgreSQL, OAuth, Kubernetes-style infra, and audit logs as if they were the stack.
 - Build-log dates on that entry (2024-06-01, 2024-09-01, 2025-01-15, 2026-08-08) do not appear in the product repository.
 - Search, Markdown twins, and `llms.txt` already iterate `products` and `work`. No second agent-content system was added.
-- There is no prerender script. `public/sitemap.xml` is hand-maintained and previously listed index routes only.
+- There was no prerender script yet, and `public/sitemap.xml` was hand-maintained. Since then `scripts/prerender.mjs` writes every route and `dist/sitemap.xml`, and the static copy was removed.
 
 ## What the repositories support
 

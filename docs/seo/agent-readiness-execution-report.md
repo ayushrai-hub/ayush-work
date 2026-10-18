@@ -156,6 +156,8 @@ Essentials is already maxed. Remaining canonical-score gaps are mostly external 
 
 ## Deployment status
 
+As of 16 Oct 2026. This work shipped in PR #9 and PR #10; see the 18 Oct follow-up at the top.
+
 | Step | Status |
 | --- | --- |
 | Commit | Not created (await authorization) |

@@ -71,7 +71,7 @@ Orank layers (cached): Discovery 5/12, Accessibility/Access 56/58, Usability 63/
 4. NLWeb-shaped `/ask` (documented in OpenAPI)
 5. Markdown YAML frontmatter (`title`, `description`, `canonical`, `last-updated`) + HTML `rel="alternate" type="text/markdown"`
 6. Modular `/developers/llms.txt` linked from root `/llms.txt`
-7. Root cleanup: historical docs under `docs/archive/`
+7. Root cleanup: historical docs under `docs/archive/` (that folder was later removed on 18 Oct 2026; see `docs/preserving-old-site.md`)
 8. Playwright coverage for discovery endpoints (dev server)
 9. MCP initialize `instructions` + structured tool error codes
 10. Agent-bot User-Agent Markdown when Accept does not prefer HTML
@@ -99,14 +99,13 @@ Orank layers (cached): Discovery 5/12, Accessibility/Access 56/58, Usability 63/
 - [x] `/ask` returns `_meta.version` / `response_type`
 - [x] Lint, typecheck, vitest, build pass locally
 - [ ] Production HTTP smoke after deploy
-- [ ] Orank `POST /api/scan` after deploy
+- [x] Orank rescan after deploy: 90/100, grade A on 18 Oct 2026 after PR #9 (`docs/seo/agent-readiness-execution-report.md`)
 - [ ] Search Console / registry submissions (human)
 
 ---
 
 ## Related docs
 
-- `docs/seo/orank-execution-checklist.md`
-- `docs/seo/orank-implementation-report.md`
-- `docs/seo/live-audit.md`
+- `docs/seo/agent-readiness-execution-report.md` (what shipped, and the rescan results)
+- `docs/API_ENDPOINTS.md`
 - `AGENTS.md`

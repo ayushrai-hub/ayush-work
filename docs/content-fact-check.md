@@ -5,7 +5,9 @@
 
 **Statuses:** `UNVERIFIED` · `VERIFYING` · `VERIFIED` · `SOFTEN` · `REMOVE` · `PRIVATE`
 
-Do not put secrets (full phone, tokens) in public site copy. Phone appears here only as a **privacy action item**.
+Do not put secrets (tokens, keys, private links) in public site copy.
+
+**Where the claims live now.** Sections 2–10 were written against the old single-page components (`Experience.tsx`, `CommunityLeadership.tsx`, `profilesData.ts`, and so on), which have been deleted. The same claims now live in `src/content/` (`experience.ts`, `projects.ts`, `work.ts`, `research.ts`, `leadership.ts`, `education.ts`, `elsewhere.ts`). Withheld awards, funding, and leadership claims sit in `researchAwardsNeedsConfirmation`, `researchFundingNeedsConfirmation`, and `leadershipNeedsConfirmation`, which no public output reads. The statuses below still apply.
 
 ---
 
@@ -13,11 +15,9 @@ Do not put secrets (full phone, tokens) in public site copy. Phone appears here 
 
 | Claim / asset | Location(s) | Status | Action |
 | --- | --- | --- | --- |
-| Phone number in `tel:` links | `Hero.tsx`, `Contact.tsx`, tests | **PRIVATE** | Remove from UI, tests, and public docs |
-| Phone in JSON-LD | `src/lib/seo.ts` (`telephone`) | **PRIVATE** | Delete property from structured data |
-| WhatsApp deep link with phone | `profilesData.ts`, Contact socials | **PRIVATE** | Remove WhatsApp entry or replace with email CTA |
-| Email ayushrai0211@gmail.com | Contact, Hero | OK to keep public | Confirm preferred public address |
-| Location Bhopal / India | About / Contact | OK | Confirm city-level OK |
+| Phone +91 7440567944, call link, WhatsApp | `person.phone`, `person.whatsappUrl` in `src/content/person.ts`; contact, home, footer, JSON-LD `telephone`, Markdown, `llms.txt` | VERIFIED, public by decision (14 Oct 2026) | `publicOutput.test.ts` fails on any other number. |
+| Email ayushrai0211@gmail.com | `person.email` | VERIFIED, public | — |
+| Location | `person.location` = "Remote" | VERIFIED | Do not publish a current city. Historical places (LNCTS Bhopal, past role cities) stay. |
 
 ---
 
@@ -110,8 +110,8 @@ Generally more grounded. Still verify:
 
 | Claim | Status | Action |
 | --- | --- | --- |
-| Service packages starting $800–$2000 / $150/hr | **REMOVE** from primary IA | Optional private rate discussion only |
-| “100% success” / “24/7 support” CountUps | **REMOVE** | Delete from Projects, Certifications, ExtraCurriculars, etc. |
+| Service packages starting $800–$2000 / $150/hr | **REMOVE** — done | The services page was removed; `/services` redirects to `/contact`. `/software-services` has no prices. |
+| “100% success” / “24/7 support” CountUps | **REMOVE** — done | Went with the deleted legacy components. |
 | Hero stats (years, companies, projects…) | **SOFTEN** | Prefer none on hero; if kept, must be accurate and non-vanity |
 
 ---
@@ -130,8 +130,8 @@ Generally more grounded. Still verify:
 
 | Item | Status | Action |
 | --- | --- | --- |
-| 40+ links in `profilesData.ts` | **SOFTEN** | Curate to ≤12; verify each URL live |
-| WhatsApp | **PRIVATE** | Remove |
+| About 40 links in `src/content/elsewhere.ts` | **SOFTEN** | Curate to ≤12; verify each URL live |
+| WhatsApp | Public by decision (14 Oct 2026) | Kept, from `person.whatsappUrl` |
 | Dead or unused platforms | **REMOVE** | Audit quarterly |
 
 ---
@@ -153,7 +153,7 @@ See `questions-for-ayush.md` for the decision list. Highest blockers:
 2. Research metrics & awards  
 3. Leadership dollar/reach claims  
 4. Iha-By-Himani 300%  
-5. Phone publication preference (default: private)
+5. ~~Phone publication preference~~ Answered 14 Oct 2026: public.
 
 ---
 
@@ -199,7 +199,7 @@ Positioning line **AI Engineer & AI Product Builder** is a self-description, not
 
 ## 15. Inconsistencies found in the code review (14 October 2026)
 
-Found while documenting every source file. The data was not changed; each needs a decision from Ayush.
+Found while documenting every source file. Status as of 18 October 2026, from the remediation table in `known-issues.md`: the funding notes, `/uses` and `/principles` wording, IIT Madras empty range in Markdown, `EmptyNote` copy, `/resume` description, and legacy components are fixed in code (issues 1, 2, 4, 7, 8, 9). Still open: timeline and `/now` dates (issue 6). `/uses` and `/privacy` now both name Netlify and Vercel; picking one host is issue 24. The wording decisions marked "Ayush:" in that table still need him.
 
 | Issue | Where | Suggested resolution |
 | --- | --- | --- |

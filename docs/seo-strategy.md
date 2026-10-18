@@ -1,144 +1,111 @@
 # SEO Strategy
 
-**Site type:** Personal digital home (Vite + React Router SPA with multiple routes).  
-**Current canonical (historical):** `https://ayush-me.netlify.app` — confirm final domain before launch.  
-**Positioning in metadata:** Systems builder across AI, software, products, research — not “generic full-stack portfolio.”
+**Site type:** Personal digital home. Vite + React Router, every public route prerendered at build time.
+**Canonical:** `https://www.ayushrai.site` (`person.siteUrl`). The apex 301s to www. `ayush-me.netlify.app` is not the live host.
+**Positioning in metadata:** `person.roleTitle` ("AI Engineer & AI Product Builder"), not a generic full-stack portfolio.
+
+Companion docs in `docs/seo/`: `domain-evidence-map.md`, `keyword-and-content-strategy.md`, `measurement-plan.md`, and `agent-readiness-execution-report.md`.
 
 ---
 
 ## 1. Goals
 
-1. Rank / appear for **name queries** (“Ayush Rai”, “Ayush Rai Bhopal”, “Ayush Rai IIT Madras”).  
-2. Be correctly understood by link unfurlers (LinkedIn, X, Slack).  
-3. Make **Work** and **About** indexable enough for discovery beyond vanity keywords.  
-4. Avoid spammy keyword stuffing and false claim signals in structured data.
+1. Appear for **name queries** ("Ayush Rai", "Ayush Rai IIT Madras", "Ayush Rai AI engineer").
+2. Be understood correctly by link unfurlers (LinkedIn, X, Slack).
+3. Make work, products, domains, and About indexable on their substance.
+4. No keyword stuffing and no false claims in structured data.
 
 ---
 
-## 2. Technical constraints (SPA)
+## 2. How crawlers get content
 
-Vite + React Router is client-rendered by default:
-
-| Risk | Mitigation |
+| Concern | How it is handled |
 | --- | --- |
-| Crawlers seeing empty shell | Ensure critical meta in `index.html`; per-route meta via existing `SEO` component on navigation; consider prerender (`vite-plugin-ssr` alternatives, `vite-plugin-prerender`, or host prerender) for `/`, `/work`, `/about`, `/connect` |
-| Soft 404s on refresh | Host rewrites: all routes → `index.html` |
-| Duplicate thin URLs | Merge pages (see IA); 301 legacy routes |
-| Phone in schema | `telephone` is set from `person.phone` (published at Ayush's request, 14 October 2026) |
+| Empty SPA shell | `scripts/prerender.mjs` writes static HTML for every route in `src/lib/publicRoutes.ts`, with per-page Helmet title, description, canonical, and Open Graph tags. |
+| Unknown URLs | `dist/404.html` with HTTP 404, not the homepage. Host rewrites keep `force` off so static files win. |
+| Sitemap | Generated as `dist/sitemap.xml` from `sitemapRoutes()`. There is no second, hand-kept sitemap. |
+| Thin or legacy URLs | Client redirects: `/services` → `/contact`, `/certifications` → `/recognition`, `/extracurriculars` → `/leadership`. |
+| Phone in schema | `telephone` comes from `person.phone` (published at Ayush's request, 14 October 2026). |
+| Agents | Markdown twins, `llms.txt`, and the API; see `AGENTS.md`. Googlebot and browsers keep HTML. |
 
-**Not migrating to Next.js** for SEO alone; prerender or SSR-lite later if needed.
-
----
-
-## 3. Information architecture ↔ SEO
-
-| URL | Index? | Primary intent |
-| --- | --- | --- |
-| `/` | Yes | Identity + positioning |
-| `/work` | Yes | Proof / projects |
-| `/work/:slug` | Yes if substantive | Case study |
-| `/about` | Yes | Bio / path |
-| `/connect` | Yes (or noindex if pure form) | Contact — usually index with thin content OK |
-| `/notes` | Yes when content exists | Writing |
-| `/elsewhere` | Optional noindex | Link hub |
-| Legacy thin routes | Redirect | Equity → new URLs |
+**Not migrating to Next.js** for SEO.
 
 ---
 
-## 4. Metadata templates
+## 3. Indexing rules
 
-### Defaults (replace `constants/seo.ts`)
+| URL | Index? |
+| --- | --- |
+| Pages in `sitemapRoutes()` | Yes |
+| `/design-system` | No (`noindex`, not in the sitemap) |
+| Product logs with no entries, unknown detail slugs, Agent view (`?agent=1`) | No (`noindex`) |
+| `?audience=` variants | Do not request indexing; canonical points to the base page |
 
-**Title pattern:** `Ayush Rai` or `Ayush Rai — {Page}`
+---
 
-| Page | Title | Description (draft) |
-| --- | --- | --- |
-| Home | Ayush Rai | Ayush Rai builds working systems across AI, software, products, and research — a digital home for selected work and notes. |
-| Work | Work — Ayush Rai | Selected products, projects, and research from Ayush Rai. |
-| Case | {Title} — Ayush Rai | {1 sentence from case summary} |
-| About | About — Ayush Rai | Path, education, and experience — Bhopal / India. |
-| Connect | Connect — Ayush Rai | Contact Ayush Rai for collaborations on applied AI and product systems. |
+## 4. Metadata
 
-**Keywords:** Prefer natural language in description over keyword lists. If kept, use sparse: `Ayush Rai`, `AI engineer`, `Bhopal`, `IIT Madras`, product names — **not** “100% success portfolio.”
+**Title pattern:** `{Page} · Ayush Rai`. Default (home and fallback): `Ayush Rai · AI Engineer & AI Product Builder` (`src/constants/seo.ts`).
 
-**OG image:** Dedicated 1200×630 editorial card (name + short line) — not a random selfie crop unless designed. Update from `/IMG_0029.jpeg` as sole OG if unstyled.
+Descriptions are natural sentences from the page's content. If keywords are listed at all, keep them sparse: name, role, product names. Never "100% success" style claims.
+
+**OG image:** `/IMG_0029.jpeg` (portrait). A designed 1200×630 card with name and role would unfurl better; not made yet.
 
 ---
 
 ## 5. Structured data (JSON-LD)
 
-**Person** (home / about):
+Built in `src/lib/structuredData.ts` and shared by `PageSEO`, the product pages, and the Schema Feed (`/feeds/portfolio.jsonl`).
 
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Ayush Rai",
-  "url": "https://{CANONICAL}/",
-  "email": "mailto:ayushrai0211@gmail.com",
-  "sameAs": [
-    "https://github.com/ayushrai-hub",
-    "https://www.linkedin.com/in/ayushrai02"
-  ],
-  "jobTitle": "AI Engineer",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Bhopal",
-    "addressCountry": "IN"
-  }
-}
-```
+- **Person:** name, URL, email, `telephone`, `jobTitle` from `person.roleTitle`, `sameAs` profiles, `knowsAbout` for published specialties. No street or city address; the public location is "Remote".
+- **WebSite** on the homepage, plus an `ItemList` of the case studies shown there.
 
-**Do not include:** fake AggregateRating, Service catalog with prices, unverified awards as `Award` entities until verified.
-
-**CreativeWork** optional per case study when pages are rich enough.
+**Do not include:** AggregateRating, Review, Offer or price, a Service catalog, or unverified awards.
 
 ---
 
-## 6. On-page SEO hygiene
+## 6. On-page hygiene
 
-- One `<h1>` per route.  
-- Descriptive titles for work entries (not “Project 1”).  
-- Internal links: Home → Work → Case; About ↔ Connect.  
-- `rel="noopener noreferrer"` on external links (already patterned).  
-- Image `alt` with human descriptions.  
-- Canonical link per route once domain fixed.  
-- `robots.txt` + `sitemap.xml` listing real routes only.
+- One `<h1>` per route.
+- Descriptive titles for work entries.
+- External links use `target="_blank"` and `rel="noopener noreferrer"`.
+- Images have human `alt` text.
+- A canonical link on every route; non-root canonicals end in a slash.
 
 ---
 
-## 7. Content SEO (substance over tricks)
+## 7. Content SEO
 
-- Case studies with real problem/approach text outperform skill clouds.  
-- Notes (when they exist) can attract long-tail queries.  
-- Avoid publishing unverified metrics — they create reputational SEO risk if challenged.  
-- Name consistency: **Ayush Rai** everywhere (not fluctuating brand spellings).
-
----
-
-## 8. Analytics & Search Console
-
-- Keep GA/GTM only if useful; document IDs in env, not in strategy prose.  
-- Verify property in Google Search Console on final domain.  
-- Track: outbound GitHub/LinkedIn, contact submit, work case opens — not vanity scroll depth alone.  
-- Web vitals: removing Three.js/particles should improve LCP/INP — re-baseline after redesign (`docs/archive/markdown-docs/performance-baseline.md` can be updated later).
+- Case studies with real problem and approach text beat skill clouds.
+- Unverified metrics stay out; they are a reputational risk if challenged (`content-fact-check.md`).
+- Name consistency: **Ayush Rai** everywhere.
+- Domains that have no evidence (inference, distributed systems) get no URL; see `seo/domain-evidence-map.md`.
 
 ---
 
-## 9. Migration SEO checklist
+## 8. Analytics and Search Console
 
-- [ ] Final domain decided; HTTPS  
-- [ ] Update `defaultSEO.url` and OG URLs  
-- [x] ~~Remove phone from schema + pages~~ (reversed: the phone is now public)  
-- [ ] Host redirects for `/research`, `/leadership`, `/certifications`, `/services`, `/extracurriculars`  
-- [ ] Sitemap submitted  
-- [ ] Prerender or confirm crawler rendering for key routes  
-- [ ] Social share test (LinkedIn Post Inspector, etc.)
+- GA4 and GTM load from `index.html`; Vercel Web Analytics from `src/main.tsx`. Whether each collects correctly is open as issue 19 in `known-issues.md`.
+- Search Console: the verification file is `public/google87b9f7dc435c0793.html`. Monthly checks are in `seo/measurement-plan.md`.
+- Performance: no current baseline is recorded. Measure LCP, INP, and CLS on the prerendered site before claiming improvements.
+
+---
+
+## 9. Checklist
+
+- [x] Final domain `www.ayushrai.site`, HTTPS, apex 301
+- [x] `defaultSEO.url` and OG URLs on the canonical host
+- [x] Prerendered HTML for every public route
+- [x] Generated sitemap; real 404s
+- [x] Legacy routes redirect (client side)
+- [ ] Sitemap submitted and coverage checked in Search Console (needs a human sign-in)
+- [ ] Social share test (LinkedIn Post Inspector and similar)
+- [ ] Designed OG card
 
 ---
 
 ## 10. Out of scope
 
-- Buying backlinks / directory spam  
-- Keyword-stuffed “Top AI Developer in India” titles  
-- Indexing empty Notes or placeholder case slugs
+- Buying backlinks or directory spam
+- Keyword-stuffed titles such as "Top AI Developer in India"
+- Indexing empty pages or placeholder slugs

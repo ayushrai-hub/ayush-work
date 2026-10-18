@@ -108,7 +108,23 @@ Endpoint details: [`docs/API_ENDPOINTS.md`](docs/API_ENDPOINTS.md). Agent instru
 
 ## Content and strategy docs
 
-In `docs/`: `known-issues.md` (open issues and suggested fixes), `site-audit.md`, `personal-positioning.md`, `information-architecture.md`, `content-fact-check.md` (claims still needing confirmation), `questions-for-ayush.md`, `design-system.md`, `content-style.md`, `seo-strategy.md`, `seo/` (evidence map, keyword strategy, live audit, measurement plan), `agent-readiness-audit.md`, `agent-readiness-report.md`, `migration-plan.md`.
+In `docs/`:
+
+| Doc | What it is for |
+| --- | --- |
+| `known-issues.md` | Open issues with owner and suggested fix. Update the status table when one is fixed. |
+| `API_ENDPOINTS.md` | Maintainer view of every endpoint and generated machine file. |
+| `deployment/vercel.md` | Vercel layout, variables, preview checks, and safe rollout. |
+| `content-fact-check.md` | Claims still needing confirmation before they are published. |
+| `questions-for-ayush.md` | Open content and product decisions. |
+| `personal-positioning.md`, `content-style.md` | Positioning and voice for site copy. |
+| `design-system.md` | Visual direction behind the tokens in `src/index.css`. |
+| `flagship-products-audit.md` | What the product repositories support, for the three featured products. |
+| `seo-strategy.md`, `seo/` | SEO rules, domain evidence map, keyword hypotheses, measurement plan, and the agent-readiness execution log. |
+| `agent-readiness-audit.md` | Why each agent-readiness finding was built, deferred, or marked not applicable. |
+| `preserving-old-site.md` | Where the old site and removed docs live, and how to restore them. |
+
+Planning docs from the rebuild (site audit, migration plan, information architecture, content strategy), reports on the old single-page site, and superseded audit snapshots were removed on 18 October 2026. They are on tag `pre-docs-cleanup-2026-10-18`; see `preserving-old-site.md`.
 
 ## Privacy
 

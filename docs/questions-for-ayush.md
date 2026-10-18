@@ -1,6 +1,6 @@
 # Questions for Ayush
 
-Decisions and facts needed before the rebuild can publish confidently.  
+Decisions and facts still needed from Ayush. The rebuilt site is live; open items here stay withheld or worded cautiously until answered. Struck-through items are settled in `src/content/` (checked 18 October 2026).
 Answer in-line or in a shared doc; then update `content-fact-check.md`.
 
 **Default if unanswered:** omit the claim; prefer privacy and understatement.
@@ -10,9 +10,9 @@ Answer in-line or in a shared doc; then update `content-fact-check.md`.
 ## A. Privacy & contact
 
 1. ~~Confirm: phone must stay private?~~ Answered 14 October 2026: publish +91 7440567944 everywhere, with a call link and WhatsApp.  
-2. Preferred public contact: email only, or email + LinkedIn, or add a calendar link?  
-3. Is `ayushrai0211@gmail.com` the canonical public email?  
-4. City-level location OK (“Bhopal, India”), or country only?
+2. ~~Preferred public contact?~~ Settled: email, phone, WhatsApp, LinkedIn, and a Calendly link (`person.ts`).  
+3. ~~Is `ayushrai0211@gmail.com` the canonical public email?~~ Settled: it is `person.email`.  
+4. ~~City-level location?~~ Settled: neither; `person.location` is "Remote".
 
 ---
 
@@ -40,7 +40,7 @@ Answer in-line or in a shared doc; then update `content-fact-check.md`.
 14. **The Open Framework** — what can we claim today (vision vs built surface area)? OK to link the Vercel demo?  
 15. Any language to avoid (regulatory / political sensitivity)?  
 16. **AyushMushrooms** — your role, live URL, what “MVP” includes?  
-17. Target order of featured work on home (pick top 3–5)?
+17. ~~Target order of featured work on home?~~ Settled for products: The Open Framework, AGENYRA, MedVoice (`featured` in `products.ts`).
 
 ---
 
@@ -80,7 +80,7 @@ Answer in-line or in a shared doc; then update `content-fact-check.md`.
 
 ## H. Services & money
 
-37. Confirm: **no public pricing / services page**?  
+37. ~~Confirm: no public pricing / services page?~~ Settled: `/services` redirects to `/contact`; `/software-services` has no prices.  
 38. Soft “open to collaborations” on Connect — yes/no? Any scope limits (no unpaid, no crypto, etc.)?
 
 ---
@@ -89,7 +89,7 @@ Answer in-line or in a shared doc; then update `content-fact-check.md`.
 
 39. Top **6–12** links that must appear?  
 40. Explicit removals (WhatsApp, unused judges platforms, etc.)?  
-41. Personal domain plan: keep Netlify `ayush-me`, custom domain, or other?
+41. ~~Personal domain plan?~~ Settled: `www.ayushrai.site`. Still open: which single host serves it (issue 24 in `known-issues.md`).
 
 ---
 

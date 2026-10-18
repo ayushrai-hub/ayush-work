@@ -21,7 +21,7 @@ Voice for Ayush Rai’s digital home. Use with `personal-positioning.md` and `co
 ## 2. Person and tense
 
 - Site chrome / about: **third person** or **first person** — pick one site-wide.  
-  - **Recommendation:** First person on About/Connect (“I”), third-person short bio optional in footer/colophon.  
+  - **Recommendation:** First person on About/Contact (“I”), third-person short bio optional in footer/colophon.  
 - Case studies: first person (“I built…”) or neutral (“The project…”) — be consistent within a page.  
 - Prefer present tense for current roles; past for completed work.
 
@@ -116,7 +116,7 @@ Never invent precision (“~85%”) to look careful.
 - Orgs: use official capitalization (IIT Madras, FoCDoT, UiPath).  
 - Degrees: “B.Tech in Computer Science,” “BS in Data Science and Applications.”  
 - Dates: `Apr 2024–Present`, en dash, consistent month abbreviations.  
-- Places: `Bhopal, India`.  
+- Places: current location is "Remote" (`person.location`); do not publish a current city. Historical places keep their names (LNCTS Bhopal, IIT Madras).  
 - Product names: **The Open Framework**, **AyushMushrooms** — bold sparingly on first mention only if needed for scan.
 
 ---
