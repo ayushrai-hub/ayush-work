@@ -80,6 +80,27 @@ export {
   homeDomains,
   renderDomainBody,
 } from "./domains";
+export {
+  gtmPortfolio,
+  gtmEvidenceLabels,
+  gtmSkillLevelLabels,
+  gtmProofs,
+  gtmReadingProgress,
+  loomEmbedUrl,
+  renderGtmBody,
+} from "./gtm";
+export type {
+  GtmEvidence,
+  GtmLayer,
+  GtmPortfolio,
+  GtmProof,
+  GtmResource,
+  GtmResourceGroup,
+  GtmSkill,
+  GtmSkillGroup,
+  GtmSkillLevel,
+  GtmStudyTopic,
+} from "./gtm";
 export { privacySections, contactSections } from "./policies";
 export type { PolicySection } from "./policies";
 export { searchIndex, buildSearchIndex } from "./searchIndex";

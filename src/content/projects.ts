@@ -29,10 +29,12 @@ export const projectCategoryLabels: Record<ProjectCategory, string> = {
   studio: "Studio / collective",
   web: "Web & portfolio",
   personal: "Personal systems",
+  data: "Data & revenue systems",
 };
 
 /** Group order for `projectsByCategory`. Not re-exported from index.ts. */
 export const projectCategoryOrder: ProjectCategory[] = [
+  "data",
   "tooling",
   "education",
   "studio",
@@ -60,6 +62,67 @@ export const projectTypeLabels: Record<string, string> = {
  * Slugs are public API identifiers; renaming one breaks /api/v1/projects/{slug}.
  */
 export const projects: Project[] = [
+  {
+    slug: "revenue-intelligence-engine",
+    title: "Revenue Intelligence Engine",
+    summary:
+      "Synthetic-data GTM pipeline that scores 42 fictional companies against an ICP on a deterministic 100-point rubric, researches the top accounts, and holds export behind human approval. No real leads, CRM writes, or outbound.",
+    type: "experiment",
+    category: "data",
+    status: "active",
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: ["Python", "FastAPI", "SQLAlchemy", "Next.js", "pytest"],
+    links: {
+      demo: "https://cashmaker-two.vercel.app",
+      github: "https://github.com/ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE",
+    },
+  },
+  {
+    slug: "relationship-intelligence-engine",
+    title: "Relationship Intelligence Engine",
+    summary:
+      "TypeScript CLI and local dashboard that finds technical founders and companies hiring AI/ML engineers from public sources, keeping source, URL, time, and a verification status on every important field.",
+    type: "project",
+    category: "data",
+    status: "in-progress",
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: ["TypeScript", "Node.js", "PGlite", "PostgreSQL", "Playwright"],
+    links: {
+      github: "https://github.com/ayushrai-hub/SYSTEM-job",
+    },
+  },
+  {
+    slug: "spiderweb",
+    title: "SpiderWeb",
+    summary:
+      "Turns your own LinkedIn data export into a searchable map of your network: people, companies, roles, and conversations, deduplicated, with a graph view. Runs locally; no production deployment.",
+    type: "project",
+    category: "data",
+    status: "in-progress",
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: ["TypeScript", "Next.js", "PostgreSQL", "Redis", "Docker"],
+    links: {
+      github: "https://github.com/ayushrai-hub/SpiderWeb",
+    },
+  },
+  {
+    slug: "mailu",
+    title: "MailU",
+    summary:
+      "Local email intelligence tool: Gmail API sync, zero-shot categorization, semantic search, and RAG chat over your own mail on a local model.",
+    type: "project",
+    category: "data",
+    status: "in-progress",
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: ["Python", "FastAPI", "ChromaDB", "Ollama", "Gmail API"],
+    links: {
+      github: "https://github.com/ayushrai-hub/MailU",
+    },
+  },
   {
     slug: "overlay-text-box",
     title: "Overlay Text Box Extension",

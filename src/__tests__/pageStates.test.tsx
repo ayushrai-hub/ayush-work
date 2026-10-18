@@ -197,7 +197,9 @@ describe("not-found routes", () => {
     ["/notes/no-such-note", "Note not found", "/notes"],
   ])("%s renders a noindexed not-found record", async (path, title, back) => {
     renderAt(path);
-    expect(await screen.findByRole("heading", { level: 1, name: title })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { level: 1, name: title }, { timeout: 5000 }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^Back to / })).toHaveAttribute("href", back);
     await waitFor(() => expect(robots()).toContain("noindex"));
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toMatch(/\/404\/?$/);

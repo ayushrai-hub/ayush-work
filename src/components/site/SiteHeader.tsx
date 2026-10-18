@@ -34,6 +34,7 @@ const SECONDARY_NAV = [
   { to: "/software-engineering", label: "Software" },
   { to: "/experience", label: "Experience" },
   { to: "/open-source", label: "Open source" },
+  { to: "/gtm", label: "GTM engineering" },
   { to: "/now", label: "Now" },
   { to: "/ideas", label: "Ideas" },
   { to: "/timeline", label: "Timeline" },
@@ -47,34 +48,36 @@ interface SiteHeaderProps {
   onOpenSearch: () => void;
 }
 
-/** Site header; `mobileOpen` and `moreOpen` track the two menus, `moreRef` lets route changes, Escape, and outside presses close the <details>. */
+/**
+ * Site header; `mobileOpen` tracks the mobile panel. The "More" <details> keeps its own open state,
+ * and `moreRef` lets route changes, Escape, and outside presses close it. Those listeners are
+ * registered once and read `details.open` when the event fires, so an Escape pressed right after
+ * opening is not lost waiting for a re-render.
+ */
 export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDetailsElement>(null);
   const menuId = useId();
 
   useEffect(() => {
     setMobileOpen(false);
-    setMoreOpen(false);
     if (moreRef.current) moreRef.current.open = false;
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!moreOpen) return;
     const details = moreRef.current;
+    if (!details) return;
     const close = (returnFocus: boolean) => {
-      if (details) details.open = false;
-      setMoreOpen(false);
-      if (returnFocus) details?.querySelector("summary")?.focus();
+      details.open = false;
+      if (returnFocus) details.querySelector("summary")?.focus();
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close(true);
+      if (e.key === "Escape" && details.open) close(true);
     };
     const onPointer = (e: PointerEvent) => {
-      if (details && !details.contains(e.target as Node)) close(false);
+      if (details.open && !details.contains(e.target as Node)) close(false);
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onPointer);
@@ -82,7 +85,7 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onPointer);
     };
-  }, [moreOpen]);
+  }, []);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -140,11 +143,7 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
             </NavLink>
           ))}
 
-          <details
-            ref={moreRef}
-            className="relative"
-            onToggle={(e) => setMoreOpen((e.target as HTMLDetailsElement).open)}
-          >
+          <details ref={moreRef} className="relative">
             <summary className="list-none cursor-pointer text-sm text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden">
               More
             </summary>

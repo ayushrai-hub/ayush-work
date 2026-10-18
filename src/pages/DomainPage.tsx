@@ -1,6 +1,6 @@
 /**
  * Domain dossier pages: `/ai-engineering` and its children `/ai-engineering/{llm-evaluation,
- * rlhf,llm-systems,agents,rag}`, `/software-engineering`, `/software-services`,
+ * rlhf,llm-systems,agents,rag}`, `/software-engineering`, `/gtm-revops`, `/software-services`,
  * `/experience`, and `/open-source`. Each shows evidence-backed prose, evidence links, and named gaps.
  *
  * One component serves every domain: it looks up the record for the current pathname with
@@ -12,7 +12,7 @@
  *
  * Connects to:
  * - Routed in src/App.tsx as `ai-engineering`, `ai-engineering/*`, `software-engineering`,
- *   `software-services`, `experience`, and `open-source`. Every `domains[].path` is prerendered
+ *   `gtm-revops`, `software-services`, `experience`, and `open-source`. Every `domains[].path` is prerendered
  *   and listed in the sitemap via src/lib/publicRoutes.ts.
  * - Content from src/content (`getDomainByPath`, `childDomains`, `evidenceLevelLabels` from
  *   domains.ts; `experience`, `products`, `projects`, `person`, `pageUpdatedAt("domains")`) and
@@ -272,10 +272,18 @@ export default function DomainPage() {
           </ul>
         </section>
 
-        <ContactCta prompt={`For collaboration on ${page.title.toLowerCase()}, use contact, resume, or Calendly. Email ${person.email}.`} />
+        <ContactCta prompt={`For collaboration on ${inSentence(page.title)}, use contact, resume, or Calendly. Email ${person.email}.`} />
       </article>
     </>
   );
+}
+
+/**
+ * A title as it reads mid-sentence: only a leading capital followed by a lowercase letter is
+ * lowered, so acronyms such as "AI", "LLM", and "GTM" keep their case.
+ */
+function inSentence(title: string): string {
+  return /^[A-Z][a-z]/.test(title) ? title[0].toLowerCase() + title.slice(1) : title;
 }
 
 /** Repository links for `/open-source`: product GitHub URLs, then project GitHub links, then the profile, first occurrence wins. */

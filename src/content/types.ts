@@ -16,8 +16,9 @@
  * - src/lib/agent/projectsQuery.ts maps `Project` to the public API shape;
  *   src/lib/agent/search.ts ranks `SearchItem` and filters by `SEARCH_ITEM_TYPES`, the one
  *   runtime value in this file.
- * - Domain dossier types live in src/content/domains.ts and policy section
- *   types in src/content/policies.ts, not here.
+ * - Domain dossier types live in src/content/domains.ts, GTM portfolio types
+ *   in src/content/gtm.ts, and policy section types in
+ *   src/content/policies.ts, not here.
  */
 
 /**
@@ -108,7 +109,8 @@ export type ProjectCategory =
   | "client"
   | "studio"
   | "web"
-  | "personal";
+  | "personal"
+  | "data";
 
 
 /**

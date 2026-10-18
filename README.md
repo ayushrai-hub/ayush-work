@@ -72,7 +72,7 @@ The previous single-page portfolio's components, their tests, and the packages o
 | `/products`, `/products/:slug`, `/products/:slug/log` | Products and build logs |
 | `/projects`, `/research`, `/research/:slug` | Projects and investigations |
 | `/writing`, `/writing/:slug`, `/notes`, `/notes/:slug` | Publication surface |
-| `/ai-engineering`, `/software-engineering`, `/software-services`, `/experience`, `/open-source` (and sub-pages) | Evidence dossiers from `src/content/domains.ts` |
+| `/ai-engineering`, `/software-engineering`, `/gtm-revops`, `/software-services`, `/experience`, `/open-source` (and sub-pages) | Evidence dossiers from `src/content/domains.ts` |
 | `/now`, `/ideas`, `/principles`, `/uses`, `/archive`, `/resume` | Status, thinking, tools |
 | `/elsewhere`, `/contact`, `/privacy` | Profiles, contact form with email, phone, and WhatsApp, privacy |
 | `/developers` | Public guide to Markdown, the API, and MCP |

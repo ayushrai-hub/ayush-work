@@ -190,6 +190,10 @@ Positioning line **AI Engineer & AI Product Builder** is a self-description, not
 | Inference, quantization, and distributed systems as shipped specialties | NOT CLAIMED | No URLs were created. |
 | Software services rates, SLAs, or team size | NOT CLAIMED | `/software-services` has no prices. |
 | Open-source star counts or third-party maintainer roles | NOT CLAIMED | Only repositories already linked from this site. |
+| RevenueRoles: 71 verified roles (last updated 23 Sep 2026) and 58% compensation coverage (41 jobs with compensation fields) | VERIFIED against the live revenueroles.in homepage on 18 Oct 2026 | `/gtm-revops`, dated as the site's own counts. Not user or revenue numbers. Re-check before reusing. |
+| Revenue Intelligence Engine: 42 fictional companies, deterministic 100-point score, approval gate | VERIFIED against the repository README | `/gtm-revops`, `/gtm`, `/projects`. All data synthetic. |
+| Relationship Intelligence Engine provenance fields and five statuses | VERIFIED against the SYSTEM-job README | `/gtm-revops`, `/gtm`. Repository audit figures not re-run and not quoted. |
+| Sales, RevOps, CRM-admin experience; CRM, Clay, or Apollo integration | NOT CLAIMED | Listed as gaps on `/gtm-revops`. |
 
 ---
 

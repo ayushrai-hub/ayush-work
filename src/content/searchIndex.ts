@@ -4,7 +4,7 @@
  * `buildSearchIndex` walks the content modules in a fixed order (person,
  * domains, work, products, projects, research, experience, education,
  * leadership, recognition, ideas, principles, notes, writing, profiles,
- * capabilities) and emits one `SearchItem` per record. Ranking ties keep this
+ * capabilities, then the /gtm portfolio) and emits one `SearchItem` per record. Ranking ties keep this
  * order. `searchIndex` is that result, computed once at module load.
  *
  * Connects to:
@@ -34,6 +34,7 @@ import { writing } from "./writing";
 import { elsewhereProfiles } from "./elsewhere";
 import { capabilities } from "./capabilities";
 import { domains } from "./domains";
+import { gtmPortfolio } from "./gtm";
 
 /**
  * Flatten all searchable content into `SearchItem`s. href values match routes
@@ -231,6 +232,15 @@ export function buildSearchIndex(): SearchItem[] {
       tags: ["capability", ...cap.skills.map((s) => s.name)],
     });
   }
+
+  items.push({
+    id: "capability:gtm",
+    title: "GTM engineering",
+    type: "capability",
+    summary: gtmPortfolio.description,
+    href: "/gtm",
+    tags: ["capability", "gtm", "revops", "revenue", "clay", "apollo", "hubspot", "enrichment"],
+  });
 
   return items;
 }

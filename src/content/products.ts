@@ -289,6 +289,95 @@ export const products: Product[] = [
     ],
   },
   {
+    slug: "revenueroles",
+    title: "RevenueRoles",
+    summary:
+      "Job discovery for technical revenue roles such as GTM engineer, RevOps engineer, and forward deployed engineer, classified by the work a posting describes rather than by its title.",
+    stage: "building",
+    stageExplanation:
+      "The homepage at revenueroles.in is live, and commit history records production deploys of job discovery and the jobs API in July 2026. Sign-in, profiles, resume parsing, and admin screens are implemented but not all verified in production. Saved jobs, applications, and notifications are not built. There are no user or revenue numbers.",
+    featured: false,
+    descriptors: ["Revenue-role job data", "Discover, extract, classify, verify"],
+    category: "platform",
+    thesis:
+      "The same title means different work at different companies, so technical revenue roles are easier to compare when each posting is classified by what the job actually does.",
+    why:
+      "GTM engineering, RevOps engineering, and forward deployed roles are spread across employer applicant tracking systems under inconsistent titles. Finding them means reading every description.",
+    audience: [
+      "Engineers moving into technical revenue work",
+      "People comparing GTM engineer, RevOps engineer, and forward deployed engineer openings",
+    ],
+    workflow: [
+      "Discover postings from employer applicant tracking systems (Greenhouse, Lever, Ashby) and RemoteOK.",
+      "Extract and normalize each posting into one schema.",
+      "Classify it into a revenue-role family from the work described, not the title.",
+      "Verify and deduplicate, keeping a working link back to the original application page.",
+      "Publish the listing to the site.",
+    ],
+    architecture: {
+      frontend: "Next.js web app, live at revenueroles.in.",
+      backend:
+        "Next.js API with Inngest functions for scheduled discovery and a resume queue. A Python FastAPI worker runs the classification pipeline.",
+      data: "Supabase Postgres with the pgvector extension, migrations, and row-level security.",
+      infra: "Deployed on Vercel.",
+      other: [
+        "Source connectors for Greenhouse, Lever, Ashby, and RemoteOK, each with recorded fixtures and tests.",
+      ],
+    },
+    maturity: {
+      implemented: [
+        "Public homepage in production.",
+        "Applicant-tracking-system connectors with fixture tests, job filters, and application-link resolution.",
+        "Python classification pipeline with passing local tests.",
+      ],
+      experimental: [
+        "Scheduled discovery through Inngest and the production classification worker.",
+        "Sign-in, Google OAuth, profiles, resume upload and parsing, dashboard, and admin console: implemented, not all verified in production.",
+        "Transactional email through Resend is partly wired.",
+      ],
+      planned: [
+        "Saved jobs, applications, notifications, and error monitoring.",
+      ],
+    },
+    tradeoffs: [
+      "Classifying from the description is slower and costlier per posting than matching titles, and it is the point of the product.",
+      "Merging duplicate postings across sources must never drop the working apply link, so deduplication is conservative.",
+    ],
+    openQuestions: [
+      "How fresh does a listing have to be to stay useful, and how often should each source be re-checked?",
+      "How should salary units and ranges be checked before they are displayed?",
+      "When two sources disagree about the same posting, which one wins?",
+    ],
+    problem:
+      "Technical revenue roles are scattered across many employer job boards under inconsistent titles, so people looking for them have to read every description to know what the job is.",
+    approach:
+      "Pull postings straight from employer applicant tracking systems, classify them by the work described, deduplicate them, and link every listing back to the original application page.",
+    demoUrl: "https://revenueroles.in",
+    githubUrl: "https://github.com/ayushrai-hub/RevenueRoles",
+    log: [
+      {
+        date: "2026-06-30",
+        title: "Repository created",
+        body: "GitHub created RevenueRoles as a monorepo: Next.js web and API apps, a Python pipeline service, and Supabase migrations.",
+      },
+      {
+        date: "2026-07-12",
+        title: "App shell and deploy pipeline",
+        body: "Commits add the authenticated app shell, admin console, and the Vercel production deploy commands.",
+      },
+      {
+        date: "2026-07-15",
+        title: "Real postings ingested",
+        body: "A commit restores the production discovery pipeline and records ingestion of real postings from applicant tracking systems.",
+      },
+      {
+        date: "2026-07-24",
+        title: "Taxonomy hardened, jobs API deployed",
+        body: "Commits harden the discover-extract-classify-verify taxonomy, lock concurrent discovery runs, secure pipeline auth, and record a production deploy of the jobs API.",
+      },
+    ],
+  },
+  {
     slug: "ayushmushrooms",
     title: "AyushMushrooms",
     summary:
