@@ -388,6 +388,19 @@ export const gtmPortfolio: GtmPortfolio = {
           {
             label: "Clay: how we built a GTM engineering function",
             href: "https://www.clay.com/blog/how-we-built-gtm-engineering-function",
+            completedOn: "2026-10-18",
+          },
+          {
+            label: "Clay: inside Clay's GTM engineering lab",
+            href: "https://www.clay.com/blog/inside-clays-gtm-engineering-lab",
+            note: "Skimmed.",
+            completedOn: "2026-10-18",
+          },
+          {
+            label: "Clay: GTM engineering guide",
+            href: "https://www.clay.com/blog/gtm-engineering",
+            note: "Skimmed.",
+            completedOn: "2026-10-18",
           },
         ],
       },
