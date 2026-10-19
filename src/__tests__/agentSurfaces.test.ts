@@ -330,7 +330,9 @@ describe("agent surfaces", () => {
     expect(items).toEqual([
       "https://www.ayushrai.site/api/v1/projects",
       "https://www.ayushrai.site/api/v1/search",
+      "https://www.ayushrai.site/api/v1/batch",
       "https://www.ayushrai.site/api/mcp",
+      "https://www.ayushrai.site/api/mcp/docs",
     ]);
     expect(catalog.linkset[1]["service-desc"][0].href).toBe(
       "https://www.ayushrai.site/openapi.json",

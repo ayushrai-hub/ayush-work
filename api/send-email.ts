@@ -26,6 +26,16 @@ import { isSiteOrigin } from "../src/lib/siteOrigins";
 /** Request headers as a Web `Headers` object or a Node-style record. */
 type HeaderBag = Headers | Record<string, string | string[] | undefined> | undefined;
 
+/** Reads one named header from either header shape. */
+function headerOf(headers: HeaderBag, name: string): string | null {
+  if (!headers) return null;
+  if (typeof (headers as Headers).get === "function") return (headers as Headers).get(name);
+  const record = headers as Record<string, string | string[] | undefined>;
+  const value = record[name] ?? record[name.toLowerCase()];
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}
+
 /** Reads the Origin header from either header shape. */
 function originOf(headers: HeaderBag): string | undefined {
   if (!headers) return undefined;
@@ -40,9 +50,9 @@ export function responseHeaders(
   extra: Record<string, string> = {},
 ): Record<string, string> {
   const headers: Record<string, string> = {
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Idempotency-Key",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Expose-Headers": "RateLimit, RateLimit-Policy, Retry-After",
+    "Access-Control-Expose-Headers": "RateLimit, RateLimit-Policy, Retry-After, Idempotent-Replayed",
     "Content-Type": "application/json",
     "Cache-Control": "no-store",
     Vary: "Origin",
@@ -104,7 +114,12 @@ export default async function handler(
     let result: ContactEmailResult;
     try {
       const raw = request.method === "POST" ? await request.text() : null;
-      result = await handleContactEmail(request.method, raw, clientKeyFrom(request.headers));
+      result = await handleContactEmail(
+        request.method,
+        raw,
+        clientKeyFrom(request.headers),
+        request.headers.get("idempotency-key"),
+      );
     } catch (error) {
       console.error("Contact handler error:", error instanceof Error ? error.name : "unknown");
       result = FAILURE;
@@ -122,6 +137,7 @@ export default async function handler(
         (request.method || "GET").toUpperCase(),
         request.body,
         clientKeyFrom(request.headers),
+        headerOf(request.headers, "idempotency-key"),
       );
     } catch (error) {
       console.error("Contact handler error:", error instanceof Error ? error.name : "unknown");
@@ -143,6 +159,7 @@ export default async function handler(
       (event.httpMethod || "GET").toUpperCase(),
       event.body ?? null,
       clientKeyFrom(event.headers),
+      headerOf(event.headers, "idempotency-key"),
     );
   } catch (error) {
     console.error("Contact handler error:", error instanceof Error ? error.name : "unknown");

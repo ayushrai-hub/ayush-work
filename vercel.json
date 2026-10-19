@@ -31,6 +31,34 @@
       "destination": "/api/mcp?resource=server-card"
     },
     {
+      "source": "/api/mcp/docs/server-card",
+      "destination": "/api/mcp-docs?resource=server-card"
+    },
+    {
+      "source": "/api/mcp/docs",
+      "destination": "/api/mcp-docs"
+    },
+    {
+      "source": "/api/v1/batch",
+      "destination": "/api/batch"
+    },
+    {
+      "source": "/api/sandbox/v1/projects/:slug",
+      "destination": "/api/projects?slug=:slug&environment=sandbox"
+    },
+    {
+      "source": "/api/sandbox/v1/projects",
+      "destination": "/api/projects?environment=sandbox"
+    },
+    {
+      "source": "/api/sandbox/v1/compare",
+      "destination": "/api/projects?environment=sandbox"
+    },
+    {
+      "source": "/api/sandbox/v1/search",
+      "destination": "/api/search?environment=sandbox"
+    },
+    {
       "source": "/ask",
       "destination": "/api/ask"
     },

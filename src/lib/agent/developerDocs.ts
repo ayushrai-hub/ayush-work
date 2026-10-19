@@ -71,7 +71,7 @@ export function developerSections(): PolicySection[] {
       heading: "Errors",
       paragraphs: [
         "Every error is JSON: `{ \"error\": { \"code\", \"message\", \"hint\", \"docs\" } }`. `code` is stable and safe to branch on; `hint` says how to fix the request.",
-        "Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400); `not_found` and `route_not_found` (404); `method_not_allowed` (405); `rate_limited` (429); `internal_error` (500, a server fault, not a bad request). Unknown paths under `/api/` return `route_not_found` as JSON, not an HTML page.",
+        "Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400); `not_found` and `route_not_found` (404); `method_not_allowed` (405); `idempotency_conflict` (409, when Idempotency-Key is reused with a different body); `rate_limited` (429); `internal_error` (500, a server fault, not a bad request). Unknown paths under `/api/` return `route_not_found` as JSON, not an HTML page.",
       ],
     },
     {
@@ -93,7 +93,8 @@ export function developerSections(): PolicySection[] {
         `Endpoint: \`POST ${origin}/api/mcp\` over Streamable HTTP. It is stateless: each request gets a JSON response, with no session and no GET event stream. No authentication.`,
         "Tools: `list_projects` (with `cursor`), `get_project`, `compare_projects`, and `search_portfolio`. All are read-only and return the same records as the REST API.",
         `Server Card (SEP-2127): \`GET ${origin}${SERVER_CARD_PATH}\`, media type \`application/mcp-server-card+json\`. Domain discovery: ARD at \`${ARD_PATH}\` (canonical) and the AI Catalog at \`${AI_CATALOG_PATH}\` (legacy path).`,
-        `Client config: \`{ "mcpServers": { "ayush-portfolio": { "url": "${origin}/api/mcp" } } }\`. The repository also runs the same server over stdio with \`npx tsx mcp/server.ts\`.`,
+        `Client config: \`{ "mcpServers": { "ayush-portfolio": { "url": "${origin}/api/mcp" }, "ayush-portfolio-docs": { "url": "${origin}/api/mcp/docs" } } }\`. The repository also runs the portfolio server over stdio with \`npx tsx mcp/server.ts\`.`,
+        `Documentation MCP: \`POST ${origin}/api/mcp/docs\` reads published pages (\`list_pages\`, \`get_page\`, \`search_docs\`). Its Server Card is \`GET ${origin}/api/mcp/docs/server-card\`. It does not change projects. The portfolio server is the one that lists and compares projects.`,
       ],
     },
     {
@@ -122,7 +123,7 @@ export function developerSections(): PolicySection[] {
     {
       heading: "Not provided",
       paragraphs: [
-        "There is no published SDK or CLI package on npm, API key, OAuth, separate test environment, or paid tier, and the MCP server is not listed in a registry. There is no A2A agent-card because no A2A JSON-RPC endpoint is implemented. The API is small enough to call directly from the OpenAPI spec. See `/pricing.md` for the free-access statement.",
+        "There is no published SDK or CLI package on npm, no API key, no OAuth, and no paid tier. The MCP servers are not listed in a registry. There is no A2A agent-card because no A2A JSON-RPC endpoint is implemented. `/api/sandbox/v1/*` is an alias of the public reads, not a second dataset. `POST /api/v1/batch` runs up to 8 of those reads. `POST /api/send-email` and the batch accept an optional `Idempotency-Key` header. See `/pricing.md` for the free-access statement.",
       ],
     },
   ];

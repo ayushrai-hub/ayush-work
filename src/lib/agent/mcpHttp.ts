@@ -13,8 +13,16 @@
  */
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { apiErrorBody } from "./apiError";
+import { docsServerCardJson, DOCS_SERVER_CARD_PATH, createDocsMcpServer } from "./docsMcp";
 import { SERVER_CARD_HEADERS, SERVER_CARD_PATH, serverCardEtag, serverCardJson } from "./mcpCard";
 import { createPortfolioMcpServer } from "./mcpServer";
+
+/** Which MCP server and card a request should use. */
+export interface McpHttpSurface {
+  createServer: () => ReturnType<typeof createPortfolioMcpServer>;
+  cardJson: () => string;
+  isCard: (url: URL) => boolean;
+}
 import {
   clientKeyFrom,
   RATE_LIMIT_EXPOSED_HEADERS,
@@ -61,11 +69,34 @@ function isServerCardRequest(url: URL): boolean {
   );
 }
 
+/** True for the docs card path, or for the docs function rewritten with `?resource=server-card`. */
+function isDocsCardRequest(url: URL): boolean {
+  const path = url.pathname.replace(/\/$/, "");
+  return path === DOCS_SERVER_CARD_PATH || (path.endsWith("/mcp-docs") && url.searchParams.get("resource") === "server-card");
+}
+
+/** Portfolio server, the default surface. */
+const PORTFOLIO_SURFACE: McpHttpSurface = {
+  createServer: createPortfolioMcpServer,
+  cardJson: serverCardJson,
+  isCard: isServerCardRequest,
+};
+
+/**
+ * Docs server. `resource=server-card` is recognized only when the path is the docs card or the
+ * docs function, so a portfolio request with that query still serves the portfolio card.
+ */
+export const DOCS_HTTP_SURFACE: McpHttpSurface = {
+  createServer: createDocsMcpServer,
+  cardJson: docsServerCardJson,
+  isCard: (url) => isDocsCardRequest(url) || url.pathname.replace(/\/$/, "") === DOCS_SERVER_CARD_PATH,
+};
+
 /**
  * Serves the Server Card: 200 with an ETag, 304 when If-None-Match matches (or is `*`),
  * and 405 JSON for methods other than GET, HEAD, and OPTIONS.
  */
-function serveServerCard(request: Request, rateHeaders: Record<string, string>): Response {
+function serveServerCard(request: Request, rateHeaders: Record<string, string>, cardJson: () => string): Response {
   if (request.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: SERVER_CARD_HEADERS });
   }
@@ -80,7 +111,7 @@ function serveServerCard(request: Request, rateHeaders: Record<string, string>):
       },
     });
   }
-  const body = serverCardJson();
+  const body = cardJson();
   const etag = serverCardEtag(body);
   const headers = { ...SERVER_CARD_HEADERS, ...rateHeaders, ETag: etag };
   const match = request.headers.get("if-none-match");
@@ -96,9 +127,9 @@ function serveServerCard(request: Request, rateHeaders: Record<string, string>):
  * OPTIONS is answered before the rate limit; everything else, the Server Card included, counts
  * against it. Non-POST methods on `/api/mcp` get a 405 JSON-RPC error.
  */
-export async function handleMcpRequest(request: Request): Promise<Response> {
+export async function handleMcpRequest(request: Request, surface: McpHttpSurface = PORTFOLIO_SURFACE): Promise<Response> {
   const url = new URL(request.url);
-  const card = isServerCardRequest(url);
+  const card = surface.isCard(url);
   if (request.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: card ? SERVER_CARD_HEADERS : CORS_HEADERS });
   }
@@ -111,7 +142,7 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
     ).error;
     return jsonRpcError(429, error.message, { ...CORS_HEADERS, ...limit.headers }, error);
   }
-  if (card) return serveServerCard(request, limit.headers);
+  if (card) return serveServerCard(request, limit.headers, surface.cardJson);
 
   if (request.method !== "POST") {
     return jsonRpcError(405, "Method not allowed. Send JSON-RPC with POST.", {
@@ -121,7 +152,7 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
     });
   }
 
-  const server = createPortfolioMcpServer();
+  const server = surface.createServer();
   const transport = new WebStandardStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
     enableJsonResponse: true,

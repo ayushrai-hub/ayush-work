@@ -3,16 +3,17 @@
  *
  * Stateless. The opening line is `person.footerLine`, a dedicated field rather than a cut of
  * `person.positioning`, so abbreviations or version numbers in the positioning cannot truncate it.
- * Navigation is FOOTER_LINKS followed by Developers, llms.txt, and Privacy; llms.txt is a
- * plain anchor because it is a static file, not a router route. The dates show
+ * Navigation is FOOTER_LINKS followed by Developers, llms.txt, and Privacy. POW points at the
+ * role index; llms.txt is a plain anchor because it is a static file, not a router route. The dates show
  * `siteMeta.siteUpdatedAt` and `now.lastUpdated`, formatted with formatUpdated.
  *
  * Connects to:
  * - Rendered once by SiteLayout below <main>
- * - content: person, siteMeta, now, formatUpdated
+ * - content: person, siteMeta, now, formatUpdated, and POW_PATH from src/content/powPages.ts
  */
 import { Link } from "react-router-dom";
 import { formatUpdated, now, person, siteMeta } from "../../content";
+import { POW_PATH } from "../../content/powPages";
 
 /** Router links shown first in the footer nav; Developers, llms.txt, and Privacy are appended in JSX. */
 const FOOTER_LINKS = [
@@ -24,17 +25,7 @@ const FOOTER_LINKS = [
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
   { to: "/resume", label: "Resume" },
-  { to: "/pow/fde", label: "FDE / POW" },
-  { to: "/pow/agentic-ai", label: "Agentic AI" },
-  { to: "/pow/revops-engineering", label: "RevOps engineering" },
-  { to: "/pow/product-management", label: "Product management" },
-  { to: "/pow/ml-engineer", label: "ML engineering" },
-  { to: "/pow/ai-research-engineering", label: "AI research" },
-  { to: "/pow/founding-engineer", label: "Founding engineer" },
-  { to: "/pow/ai-benchmark", label: "Benchmark engineering" },
-  { to: "/pow/devops-engineer", label: "DevOps engineer" },
-  { to: "/pow/cloud-engineer", label: "Cloud engineering" },
-  { to: "/pow/ai-data-scientist", label: "AI data science" },
+  { to: POW_PATH, label: "POW" },
 ] as const;
 
 /** Footer rendered on every route. */

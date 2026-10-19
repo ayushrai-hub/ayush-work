@@ -89,8 +89,15 @@ export {
   loomEmbedUrl,
   renderGtmBody,
 } from "./gtm";
-export { powPages } from "./powPages";
-export type { PowPageLink } from "./powPages";
+export {
+  powPages,
+  powMenu,
+  POW_PATH,
+  powIndexTitle,
+  powIndexDescription,
+  renderPowIndexBody,
+} from "./powPages";
+export type { PowPageLink, PowMenuLink } from "./powPages";
 export {
   foundingEngineer,
   foundingCases,

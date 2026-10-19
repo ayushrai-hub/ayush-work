@@ -43,6 +43,7 @@ const STATIC_PAGES = [
   "/developers",
   "/privacy",
   "/gtm",
+  "/pow",
   "/pow/fde",
   "/pow/agentic-ai",
   "/pow/revops-engineering",

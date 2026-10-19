@@ -14,6 +14,7 @@
  * - Tested in `src/__tests__/agentReadiness.test.ts`. Depends on `src/content` (`person`).
  */
 import { person } from "../../content";
+import { buildDocsCatalogEntry } from "./docsMcp";
 
 /** Mirrors the SDK's SUPPORTED_PROTOCOL_VERSIONS; a test fails when the SDK changes them. */
 export const MCP_PROTOCOL_VERSIONS = ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05", "2024-10-07"];
@@ -119,7 +120,7 @@ export function buildAiCatalog() {
       displayName: person.name,
       documentationUrl: `${origin()}/developers/`,
     },
-    entries: [buildMcpCatalogEntry()],
+    entries: [buildMcpCatalogEntry(), buildDocsCatalogEntry()],
   };
 }
 
@@ -131,7 +132,7 @@ export function buildArdManifest() {
       displayName: person.name,
       documentationUrl: `${origin()}/developers/`,
     },
-    entries: [buildMcpCatalogEntry()],
+    entries: [buildMcpCatalogEntry(), buildDocsCatalogEntry()],
   };
 }
 

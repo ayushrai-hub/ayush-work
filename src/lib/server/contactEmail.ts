@@ -22,6 +22,7 @@
  */
 import sgMail from "@sendgrid/mail";
 import { person } from "../../content/person";
+import { fingerprintBody, lookupIdempotent, readIdempotencyKey, storeIdempotent } from "../agent/idempotency";
 import { createRateLimiter, type RateLimitPolicy } from "../agent/rateLimit";
 import { CONTACT_FIELD_LIMITS, CONTACT_HONEYPOT_FIELD } from "../contactFields";
 
@@ -115,6 +116,7 @@ export async function handleContactEmail(
   method: string,
   rawBody: unknown,
   clientKey = "anonymous",
+  idempotencyKey?: string | null,
 ): Promise<ContactEmailResult> {
   if (method === "OPTIONS") {
     return { status: 200, body: null };
@@ -123,6 +125,32 @@ export async function handleContactEmail(
   if (method !== "POST") {
     return { status: 405, body: { message: "Method not allowed" }, headers: { Allow: "POST, OPTIONS" } };
   }
+
+  const key = readIdempotencyKey(idempotencyKey);
+  if (key.error) return badRequest(key.error);
+  const rawText = typeof rawBody === "string" ? rawBody : JSON.stringify(rawBody ?? {});
+  const fingerprint = fingerprintBody(rawText);
+  if (key.key) {
+    const prior = lookupIdempotent("contact", key.key, fingerprint);
+    if (prior.kind === "conflict") {
+      return { status: 409, body: { success: false, message: "Idempotency-Key was already used with a different body." } };
+    }
+    if (prior.kind === "replay") {
+      return {
+        status: prior.status,
+        body: prior.body as ContactEmailResult["body"],
+        headers: { ...(prior.extraHeaders ?? {}), "Idempotent-Replayed": "true" },
+      };
+    }
+  }
+
+  /** Stores a successful send so a retry with the same key does not send again. */
+  const remember = (result: ContactEmailResult): ContactEmailResult => {
+    if (key.key && result.status === 200 && result.body) {
+      storeIdempotent("contact", key.key, fingerprint, result.status, result.body, result.headers);
+    }
+    return result;
+  };
 
   const limit = contactLimiter.take(clientKey);
   if (!limit.allowed) {
@@ -144,7 +172,7 @@ export async function handleContactEmail(
   const honeypot = fields[CONTACT_HONEYPOT_FIELD];
   if (typeof honeypot === "string" && honeypot.trim().length > 0) {
     console.warn("Contact form honeypot filled; message dropped");
-    return { status: 200, body: { ...SENT }, headers: limit.headers };
+    return remember({ status: 200, body: { ...SENT }, headers: limit.headers });
   }
 
   const { name, email, subject, message, service } = fields;
@@ -234,5 +262,5 @@ export async function handleContactEmail(
     };
   }
 
-  return { status: 200, body: { ...SENT }, headers: limit.headers };
+  return remember({ status: 200, body: { ...SENT }, headers: limit.headers });
 }

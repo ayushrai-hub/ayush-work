@@ -24,6 +24,7 @@ export type ApiErrorCode =
   | "route_not_found"
   | "method_not_allowed"
   | "rate_limited"
+  | "idempotency_conflict"
   | "internal_error";
 
 /** One fix-it sentence per code, copied into every error body as `hint`. */
@@ -37,8 +38,9 @@ const HINTS: Record<ApiErrorCode, string> = {
   invalid_cursor: "Pass the nextCursor value from the previous response unchanged, or omit cursor to start again.",
   not_found: "List valid slugs with GET /api/v1/projects. Archived projects also need archive=1.",
   route_not_found: "This path is not an API endpoint. See /openapi.json or /.well-known/api-catalog for the endpoints.",
-  method_not_allowed: "The read API accepts GET, HEAD, and OPTIONS. The MCP endpoint accepts POST.",
+  method_not_allowed: "Read routes accept GET, HEAD, and OPTIONS. POST /api/v1/batch runs a read batch. POST /api/mcp is MCP.",
   rate_limited: "Wait the number of seconds in Retry-After, then retry. The RateLimit header shows the remaining quota.",
+  idempotency_conflict: "Reuse Idempotency-Key only with the same body, or send a new key for a different body.",
   internal_error: "The request was valid but the server failed. Retry once; if it keeps failing, report it to the contact on /developers/.",
 };
 

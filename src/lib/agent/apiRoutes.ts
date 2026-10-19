@@ -21,12 +21,18 @@ export const API_ROUTES = [
   "/api/v1/compare",
   "/api/mcp",
   "/api/mcp/server-card",
+  "/api/mcp/docs",
+  "/api/mcp/docs/server-card",
+  "/api/v1/batch",
+  "/api/sandbox/v1/search",
+  "/api/sandbox/v1/projects",
+  "/api/sandbox/v1/compare",
   "/api/ask",
   "/api/send-email",
 ] as const;
 
-/** `/api/v1/projects/{slug}`, the one parameterized API path. */
-const PROJECT_DETAIL = /^\/api\/v1\/projects\/[^/]+$/;
+/** `/api/v1/projects/{slug}` and the sandbox alias of that path. */
+const PROJECT_DETAIL = /^\/api\/(?:sandbox\/)?v1\/projects\/[^/]+$/;
 
 /** True when `pathname`, ignoring one trailing slash, is a deployed API route. */
 export function isKnownApiPath(pathname: string): boolean {

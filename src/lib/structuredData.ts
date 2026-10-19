@@ -12,6 +12,7 @@
  */
 import { person, selectedWork } from "../content";
 import type { Product, WorkItem } from "../content";
+import { getDomainByPath } from "../content/domains";
 import { canonicalUrl, personId, websiteId } from "./canonical";
 
 /** Makes a site-relative path absolute against `person.siteUrl`; absolute URLs pass through. */
@@ -85,6 +86,53 @@ export function productNode(product: Product) {
     url: canonicalUrl(`/products/${product.slug}`),
     author: { "@type": "Person", "@id": personId(), name: person.name, url: canonicalUrl("/") },
     ...(sameAs.length > 0 ? { sameAs } : {}),
+  };
+}
+
+/** Published software-services offering. Copy is the domain page, not a rate card. */
+export function softwareServicesNode() {
+  const page = getDomainByPath("/software-services");
+  if (!page) throw new Error("Missing /software-services domain record");
+  return {
+    "@type": "Service",
+    "@id": `${canonicalUrl("/software-services")}#service`,
+    name: `${person.name} software services`,
+    serviceType: "Software development",
+    description: page.description,
+    url: canonicalUrl("/software-services"),
+    provider: { "@id": personId() },
+  };
+}
+
+/**
+ * Two questions whose answers are the published "Who this is for" and "What I can deliver" sections.
+ * No ratings and no offers.
+ */
+export function softwareServicesFaqNode() {
+  const page = getDomainByPath("/software-services");
+  if (!page) throw new Error("Missing /software-services domain record");
+  const who = page.sections.find((section) => section.heading === "Who this is for");
+  const what = page.sections.find((section) => section.heading === "What I can deliver");
+  if (!who || !what) throw new Error("Software services page is missing the sections the FAQ quotes");
+  return {
+    "@type": "FAQPage",
+    "@id": `${canonicalUrl("/software-services")}#faq`,
+    url: canonicalUrl("/software-services"),
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Who are these software services for?",
+        acceptedAnswer: { "@type": "Answer", text: who.paragraphs.join(" ") },
+      },
+      {
+        "@type": "Question",
+        name: "What software services can be delivered?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: [...what.paragraphs, ...(what.bullets ?? [])].join(" "),
+        },
+      },
+    ],
   };
 }
 

@@ -18,6 +18,7 @@ import { resolve } from "node:path";
 import type { Connect, Plugin } from "vite";
 import { agentModeJson, wantsAgentMode } from "./agentMode";
 import { API_CATALOG_CONTENT_TYPE, API_CATALOG_PATH } from "./apiCatalog";
+import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH } from "./docsMcp";
 import { agentApiResponse } from "./http";
 import { renderNotFoundMarkdown } from "./markdown";
 import {
@@ -30,7 +31,7 @@ import {
   SERVER_CARD_HEADERS,
   SERVER_CARD_PATH,
 } from "./mcpCard";
-import { handleMcpRequest } from "./mcpHttp";
+import { DOCS_HTTP_SURFACE, handleMcpRequest, type McpHttpSurface } from "./mcpHttp";
 import {
   ASK_STREAM_CONTENT_TYPE,
   askEventStream,
@@ -82,7 +83,7 @@ function send(
  * Converts the Node request to a Web `Request`, passes it to `handleMcpRequest`, and copies the
  * response back. Only POST bodies are forwarded, and the original `content-length` header is dropped.
  */
-async function serveMcp(req: IncomingMessage, res: ServerResponse, url: URL) {
+async function serveMcp(req: IncomingMessage, res: ServerResponse, url: URL, surface?: McpHttpSurface) {
   const chunks: Buffer[] = [];
   for await (const chunk of req) chunks.push(chunk as Buffer);
   const headers = new Headers();
@@ -90,12 +91,13 @@ async function serveMcp(req: IncomingMessage, res: ServerResponse, url: URL) {
     if (typeof value === "string" && key !== "content-length") headers.set(key, value);
   }
   const method = (req.method ?? "GET").toUpperCase();
-  const response = await handleMcpRequest(
+    const response = await handleMcpRequest(
     new Request(url, {
       method,
       headers,
       body: method === "POST" ? Buffer.concat(chunks).toString("utf8") : undefined,
     }),
+    surface,
   );
   res.statusCode = response.status;
   response.headers.forEach((value, key) => res.setHeader(key, value));
@@ -210,6 +212,31 @@ function attach(middlewares: Connect.Server) {
       return;
     }
 
+    if (pathname === DOCS_MCP_PATH || pathname === DOCS_SERVER_CARD_PATH) {
+      void serveMcp(req, res, url, DOCS_HTTP_SURFACE).catch(next);
+      return;
+    }
+
+    if (pathname === "/api/v1/batch") {
+      void (async () => {
+        const chunks: Buffer[] = [];
+        for await (const chunk of req) chunks.push(chunk as Buffer);
+        const text = Buffer.concat(chunks).toString("utf8");
+        const response = agentApiResponse({
+          pathname,
+          method,
+          params: url.searchParams,
+          origin: typeof req.headers.origin === "string" ? req.headers.origin : undefined,
+          clientKey: req.socket.remoteAddress ?? clientKeyFrom(req.headers),
+          body: text,
+          idempotencyKey: typeof req.headers["idempotency-key"] === "string" ? req.headers["idempotency-key"] : undefined,
+        });
+        const { "Content-Type": type, ...headers } = response.headers;
+        send(res, response.status, type, response.body ?? "", headers);
+      })().catch(next);
+      return;
+    }
+
     const wellKnownType = WELL_KNOWN_TYPES[pathname];
     if (wellKnownType) {
       const { "Content-Type": type, ...headers } = wellKnownType;
@@ -230,10 +257,17 @@ function attach(middlewares: Connect.Server) {
       return;
     }
 
-    if (pathname === "/AGENTS.md" || pathname === "/agents.md" || pathname === "/SKILL.md") {
+    if (
+      pathname === "/AGENTS.md" ||
+      pathname === "/agents.md" ||
+      pathname === "/SKILL.md" ||
+      pathname === "/plugin.json" ||
+      pathname === "/mcp.json"
+    ) {
       const docs = documentationFiles();
       const key = pathname === "/agents.md" ? "AGENTS.md" : pathname.slice(1);
-      send(res, 200, "text/markdown; charset=utf-8", docs[key] ?? "");
+      const type = pathname.endsWith(".json") ? "application/json; charset=utf-8" : "text/markdown; charset=utf-8";
+      send(res, 200, type, docs[key] ?? "");
       return;
     }
 
@@ -283,6 +317,8 @@ function documentationFiles(): Record<string, string> {
       resolve(process.cwd(), "skills/portfolio-discovery/SKILL.md"),
       "utf8",
     ),
+    "plugin.json": readFileSync(resolve(process.cwd(), "plugin.json"), "utf8"),
+    "mcp.json": readFileSync(resolve(process.cwd(), "mcp.json"), "utf8"),
   };
 }
 

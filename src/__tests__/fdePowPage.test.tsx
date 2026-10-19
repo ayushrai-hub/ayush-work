@@ -82,7 +82,7 @@ describe("FDE proof of work", () => {
       "href",
       "https://github.com/ayushrai-hub",
     );
-    expect(screen.getAllByRole("link", { name: "FDE / POW" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "POW" }).length).toBeGreaterThan(0);
     expect(screen.getByText(/Select a synthetic account/)).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "This page does not exist yet." })).not.toBeInTheDocument();
   });

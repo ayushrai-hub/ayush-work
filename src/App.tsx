@@ -9,7 +9,7 @@
  * Connects to:
  * - src/main.tsx renders App; src/entry-server.tsx renders AppRoutes. src/__tests__/App.test.tsx.
  * - src/pages/* and src/components/site/SiteLayout.tsx; src/lib/analytics.ts (initGA).
- * - Proof-of-work routes: `pow/fde` (FdePowPage), `pow/product-management`, and `pow/ml-engineer`.
+ * - Proof-of-work routes: `pow` (PowIndexPage), `pow/fde` (FdePowPage), `pow/product-management`, and `pow/ml-engineer`.
  * - The product-management proof of work is `pow/product-management` (ProductManagementPowPage).
  * - The AI research proof of work is `pow/ai-research-engineering` (AiResearchEngineeringPowPage).
  * - The benchmark proof of work is `pow/ai-benchmark` (BenchmarkEngineeringPage).
@@ -57,6 +57,7 @@ const DevelopersPage = lazy(() => import("./pages/DevelopersPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const DomainPage = lazy(() => import("./pages/DomainPage"));
 const GtmPage = lazy(() => import("./pages/GtmPage"));
+const PowIndexPage = lazy(() => import("./pages/PowIndexPage"));
 const FdePowPage = lazy(() => import("./pages/FdePowPage"));
 const ProductManagementPowPage = lazy(() => import("./pages/ProductManagementPowPage"));
 const MlEngineerPowPage = lazy(() => import("./pages/MlEngineerPowPage"));
@@ -118,6 +119,7 @@ export function AppRoutes() {
             <Route path="developers" element={<DevelopersPage />} />
             <Route path="privacy" element={<PrivacyPage />} />
             <Route path="gtm" element={<GtmPage />} />
+            <Route path="pow" element={<PowIndexPage />} />
             <Route path="pow/founding-engineer" element={<FoundingEngineerPowPage />} />
             <Route path="pow/ai-benchmark" element={<BenchmarkEngineeringPage />} />
             <Route

@@ -16,6 +16,7 @@
  */
 import { prerenderRoutes } from "../publicRoutes";
 import { agentModeJson } from "./agentMode";
+import { docsServerCardJson, DOCS_SERVER_CARD_PATH } from "./docsMcp";
 import { API_CATALOG_PATH, buildApiCatalog } from "./apiCatalog";
 import { renderAuthMarkdown } from "./authDocs";
 import {
@@ -117,6 +118,7 @@ export function agentFiles(): Record<string, string> {
     [AI_CATALOG_PATH.slice(1)]: `${JSON.stringify(buildAiCatalog(), null, 2)}\n`,
     [ARD_PATH.slice(1)]: `${JSON.stringify(buildArdManifest(), null, 2)}\n`,
     [LEGACY_SERVER_CARD_PATH.slice(1)]: serverCardJson(),
+    [DOCS_SERVER_CARD_PATH.slice(1)]: docsServerCardJson(),
   };
   for (const page of listAgentPages()) {
     const name = markdownPublicPath(page.path).replace(/^\//, "");

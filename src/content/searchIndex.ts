@@ -4,7 +4,7 @@
  * `buildSearchIndex` walks the content modules in a fixed order (person,
  * domains, work, products, projects, research, experience, education,
  * leadership, recognition, ideas, principles, notes, writing, profiles,
- * capabilities, then the /gtm portfolio) and emits one `SearchItem` per record. Ranking ties keep this
+ * capabilities, then the /gtm portfolio and the /pow index) and emits one `SearchItem` per record. Ranking ties keep this
  * order. `searchIndex` is that result, computed once at module load.
  *
  * Connects to:
@@ -35,6 +35,7 @@ import { elsewhereProfiles } from "./elsewhere";
 import { capabilities } from "./capabilities";
 import { domains } from "./domains";
 import { gtmPortfolio } from "./gtm";
+import { POW_PATH, powIndexDescription, powIndexTitle } from "./powPages";
 import { fdePow } from "./fde";
 import { productManagementDescription } from "./productManagementPow";
 import { AI_RESEARCH_PATH, aiResearchDescription } from "./aiResearchPow";
@@ -350,6 +351,15 @@ export function buildSearchIndex(): SearchItem[] {
     summary: aiDataScientistDescription,
     href: AI_DATA_SCIENTIST_PATH,
     tags: ["capability", "data science", "statistics", "insight lab", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:pow",
+    title: powIndexTitle,
+    type: "capability",
+    summary: powIndexDescription,
+    href: POW_PATH,
+    tags: ["capability", "pow", "proof of work", "gtm", "fde", "roles"],
   });
 
   return items;

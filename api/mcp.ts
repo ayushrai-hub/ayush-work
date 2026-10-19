@@ -11,7 +11,7 @@
  * - Vercel: vercel.json rewrites `/api/mcp/server-card` to `/api/mcp?resource=server-card`.
  * - src/lib/agent/mcpHttp.ts (handleMcpRequest), which builds the server from src/lib/agent/mcpServer.ts.
  */
-import { handleMcpRequest } from "../src/lib/agent/mcpHttp";
+import { handleMcpRequest, type McpHttpSurface } from "../src/lib/agent/mcpHttp";
 
 /** The subset of Vercel's Node request this adapter reads. Vercel parses JSON bodies into `body`. */
 type NodeRequest = {
@@ -56,14 +56,20 @@ function toWebRequest(req: NodeRequest): Request {
 
 /**
  * Remote MCP endpoint (Streamable HTTP, stateless JSON responses).
- * Netlify passes a Web Request and receives the Web Response back. Vercel passes a Node request
- * and response; the result is written to `res` and nothing is returned.
+ * `surface` selects the portfolio server or the docs server. Netlify passes a Web Request and
+ * receives the Web Response back. Vercel passes a Node request and response; the result is written
+ * to `res` and nothing is returned.
  */
-export default async function handler(request: unknown, response?: unknown) {
-  if (request instanceof Request) return handleMcpRequest(request);
+export function createMcpHandler(surface?: McpHttpSurface) {
+  return async function handler(request: unknown, response?: unknown) {
+    if (request instanceof Request) return handleMcpRequest(request, surface);
 
-  const res = response as NodeResponse;
-  const result = await handleMcpRequest(toWebRequest(request as NodeRequest));
-  result.headers.forEach((value, key) => res.setHeader(key, value));
-  res.status(result.status).end(await result.text());
+    const res = response as NodeResponse;
+    const result = await handleMcpRequest(toWebRequest(request as NodeRequest), surface);
+    result.headers.forEach((value, key) => res.setHeader(key, value));
+    res.status(result.status).end(await result.text());
+  };
 }
+
+/** Portfolio MCP at `/api/mcp`, including its Server Card. */
+export default createMcpHandler();

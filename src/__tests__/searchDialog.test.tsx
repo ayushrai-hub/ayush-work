@@ -4,14 +4,15 @@
  * Search: the input is a combobox whose ArrowDown/ArrowUp moves `aria-activedescendant` and
  * `aria-selected`, Enter navigates to the active result, Tab stays inside the dialog, Escape closes it
  * and returns focus to the button that opened it, and the shortcut hint matches the platform.
- * More menu: no ARIA menu roles; Escape and an outside press close it. Agent view: title and canonical
+ * More menu: no ARIA menu roles; Escape and an outside press close it. POW menu: hover lists the
+ * role pages; Escape closes it and returns focus to POW. Agent view: title and canonical
  * point at the human page, including on a trailing-slash URL. Each surface also passes jest-axe.
  *
  * Connects to:
  * - src/components/site/SearchDialog.tsx, SiteHeader.tsx, SiteLayout.tsx, AgentView.tsx
  * - src/lib/platform.ts
  */
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -150,6 +151,50 @@ describe("SiteHeader More menu", () => {
     });
 
     expect(await axe(container.querySelector("header") as HTMLElement)).toHaveNoViolations();
+  });
+});
+
+/** Header POW hover menu. */
+describe("SiteHeader POW menu", () => {
+  it("lists the role pages on hover and closes with Escape", async () => {
+    const { container } = renderSite();
+    const header = container.querySelector("header") as HTMLElement;
+    const group = within(header).getByRole("group", { name: "Proof of work" });
+    const trigger = within(group).getByRole("link", { name: "POW" });
+    expect(trigger).toHaveAttribute("href", "/pow");
+    expect(within(header).queryByRole("link", { name: "GTM engineering" })).not.toBeInTheDocument();
+
+    fireEvent.mouseEnter(group);
+    expect(within(header).getByRole("link", { name: "GTM engineering" })).toHaveAttribute("href", "/gtm");
+    expect(within(header).getByRole("link", { name: "Forward deployed engineering" })).toHaveAttribute(
+      "href",
+      "/pow/fde",
+    );
+    expect(container.querySelector('[role="menu"], [role="menuitem"]')).toBeNull();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(within(header).queryByRole("link", { name: "GTM engineering" })).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+
+    fireEvent.mouseEnter(group);
+    expect(within(header).getByRole("link", { name: "Revenue operations engineering" })).toHaveAttribute(
+      "href",
+      "/pow/revops-engineering",
+    );
+    fireEvent.mouseLeave(group);
+    expect(within(header).queryByRole("link", { name: "Revenue operations engineering" })).not.toBeInTheDocument();
+
+    act(() => {
+      trigger.blur();
+      trigger.focus();
+    });
+    expect(trigger).toHaveFocus();
+    expect(within(header).getByRole("link", { name: "Forward deployed engineering" })).toHaveAttribute(
+      "href",
+      "/pow/fde",
+    );
+
+    expect(await axe(header)).toHaveNoViolations();
   });
 });
 

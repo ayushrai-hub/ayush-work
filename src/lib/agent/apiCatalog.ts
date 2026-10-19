@@ -13,6 +13,7 @@
  */
 import { person } from "../../content";
 import { canonicalUrl } from "../canonical";
+import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH } from "./docsMcp";
 import { MCP_ENDPOINT_PATH, SERVER_CARD_CONTENT_TYPE, SERVER_CARD_PATH } from "./mcpCard";
 
 export const API_CATALOG_PATH = "/.well-known/api-catalog";
@@ -28,7 +29,13 @@ export function buildApiCatalog() {
   const origin = person.siteUrl.replace(/\/$/, "");
   const openapi = [{ href: `${origin}/openapi.json`, type: "application/vnd.oai.openapi+json" }];
   const docs = [{ href: canonicalUrl("/developers"), type: "text/html" }];
-  const apis = [`${origin}/api/v1/projects`, `${origin}/api/v1/search`, `${origin}/api/mcp`];
+  const apis = [
+    `${origin}/api/v1/projects`,
+    `${origin}/api/v1/search`,
+    `${origin}/api/v1/batch`,
+    `${origin}${MCP_ENDPOINT_PATH}`,
+    `${origin}${DOCS_MCP_PATH}`,
+  ];
   return {
     linkset: [
       {
@@ -48,6 +55,12 @@ export function buildApiCatalog() {
       {
         anchor: `${origin}${MCP_ENDPOINT_PATH}`,
         "service-desc": [{ href: `${origin}${SERVER_CARD_PATH}`, type: SERVER_CARD_CONTENT_TYPE }],
+        "service-doc": docs,
+        "service-meta": [{ href: `${origin}/llms.txt`, type: "text/plain" }],
+      },
+      {
+        anchor: `${origin}${DOCS_MCP_PATH}`,
+        "service-desc": [{ href: `${origin}${DOCS_SERVER_CARD_PATH}`, type: SERVER_CARD_CONTENT_TYPE }],
         "service-doc": docs,
         "service-meta": [{ href: `${origin}/llms.txt`, type: "text/plain" }],
       },

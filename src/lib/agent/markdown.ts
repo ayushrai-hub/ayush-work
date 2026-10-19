@@ -39,6 +39,10 @@ import {
   recognition,
   renderDomainBody,
   renderGtmBody,
+  POW_PATH,
+  powIndexTitle,
+  powIndexDescription,
+  renderPowIndexBody,
   fdePow,
   renderFdeBody,
   renderProductManagementBody,
@@ -789,6 +793,8 @@ function buildPages(): AgentPage[] {
 
   pages.push(doc("/gtm", "GTM engineering", gtmPortfolio.description, renderGtmBody()));
 
+  pages.push(doc(POW_PATH, powIndexTitle, powIndexDescription, renderPowIndexBody()));
+
   pages.push(
     doc(fdePow.path, fdePow.title, fdePow.description, renderFdeBody()),
   );
@@ -891,6 +897,10 @@ export function renderDevelopersLlmsTxt(): string {
     `- [ARD catalog](${abs("/.well-known/ard.json")})`,
     `- [AI Catalog (legacy)](${abs("/.well-known/ai-catalog.json")})`,
     `- [MCP Server Card](${abs("/api/mcp/server-card")})`,
+    `- [Docs MCP](${abs("/api/mcp/docs")}) — list_pages, get_page, search_docs`,
+    `- [Docs MCP Server Card](${abs("/api/mcp/docs/server-card")})`,
+    `- [Agent plugin manifest](${abs("/plugin.json")})`,
+    `- [MCP client manifest](${abs("/mcp.json")})`,
     `- [Agent mode JSON](${abs("/?mode=agent")})`,
     `- [Ask (NLWeb-shaped, lexical)](${abs("/ask")})`,
     `- [Root llms.txt](${abs("/llms.txt")})`,
@@ -983,6 +993,7 @@ export function renderLlmsTxt(): string {
     `- [About](${abs("/about.md")})`,
     `- [Experience](${abs("/experience.md")})`,
     `- [GTM engineering](${abs("/gtm.md")}): revenue data pipelines, scoring, and what is built versus still being learned.`,
+    `- [POW](${abs("/pow.md")}): the proof-of-work pages for the roles this site addresses.`,
     `- [Forward deployed engineering](${abs("/pow/fde.md")}): a personal proof of work for the proposed RELAY workflow. Not a customer deployment.`,
     `- [Product management proof of work](${abs("/pow/product-management.md")}): a RevenueRoles case study that separates the live product from hypotheses and unmeasured outcomes.`,
     `- [AI research engineering](${abs("/pow/ai-research-engineering.md")}): a prepared retrieval experiment. Not a model run and not a publication.`,
@@ -1009,6 +1020,11 @@ export function renderLlmsTxt(): string {
     `- [${person.name} OpenAPI spec](${abs("/openapi.json")}): OpenAPI 3.1 description of those GET endpoints.`,
     `- [${person.name} MCP server](${abs("/api/mcp")}): Streamable HTTP, \`POST /api/mcp\`. Tools: list_projects, get_project, compare_projects, search_portfolio.`,
     `- [${person.name} MCP Server Card](${abs("/api/mcp/server-card")}): SEP-2127 card for that endpoint, listed in ARD at /.well-known/ard.json and the AI Catalog at /.well-known/ai-catalog.json.`,
+    `- [${person.name} docs MCP](${abs("/api/mcp/docs")}): Streamable HTTP for published pages. Tools: list_pages, get_page, search_docs. Card: ${abs("/api/mcp/docs/server-card")}.`,
+    `- [${person.name} read batch](${abs("/api/v1/batch")}): \`POST /api/v1/batch\` with up to 8 read operations. Optional Idempotency-Key.`,
+    `- [${person.name} sandbox alias](${abs("/api/sandbox/v1/search")}): same public reads as /api/v1, marked X-Api-Environment: sandbox. No separate dataset.`,
+    `- [${person.name} agent plugin](${abs("/plugin.json")}): Agent Plugins manifest for this site.`,
+    `- [${person.name} MCP manifest](${abs("/mcp.json")}): client config for the portfolio server and the docs server.`,
     `- [Authentication](${abs("/auth.md")}): public API and MCP need no tokens; OAuth metadata is not published.`,
     `- [Pricing](${abs("/pricing.md")}): free public read-only API and MCP; no paid tiers or checkout.`,
     `- [Agent mode](${abs("/?mode=agent")}): JSON capability view for agents.`,

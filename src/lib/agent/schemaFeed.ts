@@ -11,7 +11,7 @@
  * - Node builders in src/lib/structuredData.ts. Tested in `agentReadiness.test.ts`.
  */
 import { pageUpdatedAt, person, products, work } from "../../content";
-import { personNode, productNode, websiteNode, workNode } from "../structuredData";
+import { personNode, productNode, softwareServicesFaqNode, softwareServicesNode, websiteNode, workNode } from "../structuredData";
 
 export const SCHEMA_MAP_PATH = "/schemamap.xml";
 export const SCHEMA_FEED_PATH = "/feeds/portfolio.jsonl";
@@ -23,7 +23,14 @@ function origin() {
 
 /** JSON Lines body: one schema.org object per line, trailing newline. */
 export function renderSchemaFeed(): string {
-  const nodes = [websiteNode(), personNode(), ...work.map(workNode), ...products.map(productNode)];
+  const nodes = [
+    websiteNode(),
+    personNode(),
+    softwareServicesNode(),
+    softwareServicesFaqNode(),
+    ...work.map(workNode),
+    ...products.map(productNode),
+  ];
   return `${nodes.map((node) => JSON.stringify({ "@context": "https://schema.org", ...node })).join("\n")}\n`;
 }
 

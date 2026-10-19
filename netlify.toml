@@ -41,6 +41,44 @@
   to = "/.netlify/functions/mcp?resource=server-card"
   status = 200
 
+# Documentation MCP, separate from the portfolio tools.
+[[redirects]]
+  from = "/api/mcp/docs/server-card"
+  to = "/.netlify/functions/mcp-docs?resource=server-card"
+  status = 200
+
+[[redirects]]
+  from = "/api/mcp/docs"
+  to = "/.netlify/functions/mcp-docs"
+  status = 200
+
+# Read batch. Ahead of the /api/* splat so it hits the batch function.
+[[redirects]]
+  from = "/api/v1/batch"
+  to = "/.netlify/functions/batch"
+  status = 200
+
+# Sandbox alias of the public reads. Same records, marked with X-Api-Environment.
+[[redirects]]
+  from = "/api/sandbox/v1/projects/:slug"
+  to = "/.netlify/functions/projects?slug=:slug&environment=sandbox"
+  status = 200
+
+[[redirects]]
+  from = "/api/sandbox/v1/projects"
+  to = "/.netlify/functions/projects?environment=sandbox"
+  status = 200
+
+[[redirects]]
+  from = "/api/sandbox/v1/compare"
+  to = "/.netlify/functions/projects?environment=sandbox"
+  status = 200
+
+[[redirects]]
+  from = "/api/sandbox/v1/search"
+  to = "/.netlify/functions/search?environment=sandbox"
+  status = 200
+
 # NLWeb-shaped lexical ask (not under /api so scanners find POST /ask).
 [[redirects]]
   from = "/ask"

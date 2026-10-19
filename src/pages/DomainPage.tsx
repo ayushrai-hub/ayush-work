@@ -37,6 +37,7 @@ import {
   projects,
 } from "../content";
 import { canonicalUrl, personId, websiteId } from "../lib/canonical";
+import { softwareServicesFaqNode, softwareServicesNode } from "../lib/structuredData";
 
 /**
  * Link for evidence, related, and further-reading entries (not the breadcrumb, despite the name).
@@ -86,6 +87,9 @@ export default function DomainPage() {
         isPartOf: { "@id": websiteId() },
         about: { "@id": personId() },
       },
+      ...(page.path === "/software-services"
+        ? [softwareServicesNode(), softwareServicesFaqNode()]
+        : []),
       {
         "@type": "BreadcrumbList",
         itemListElement: crumbs.map((crumb, index) => ({

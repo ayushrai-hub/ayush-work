@@ -38,6 +38,9 @@ const RESOURCES = [
   { href: "/.well-known/api-catalog", label: "API catalog" },
   { href: "/.well-known/ard.json", label: "ARD catalog" },
   { href: "/api/mcp/server-card", label: "MCP Server Card" },
+  { href: "/api/mcp/docs/server-card", label: "Docs MCP Server Card" },
+  { href: "/plugin.json", label: "plugin.json" },
+  { href: "/mcp.json", label: "mcp.json" },
   { href: "/.well-known/ai-catalog.json", label: "AI Catalog" },
   { href: "/auth.md", label: "auth.md" },
   { href: "/ask", label: "POST /ask (NLWeb-shaped)" },
@@ -53,7 +56,7 @@ export default function DevelopersPage() {
   return (
     <>
       <PageSEO
-        title="Developer docs: API and MCP server"
+        title="Ayush Rai API and MCP server"
         description={DEVELOPER_DESCRIPTION}
         path="/developers"
       />

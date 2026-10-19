@@ -32,11 +32,17 @@ export const API_ROUTES = [
   "/api/v1/compare",
   "/api/mcp",
   "/api/mcp/server-card",
+  "/api/mcp/docs",
+  "/api/mcp/docs/server-card",
+  "/api/v1/batch",
+  "/api/sandbox/v1/search",
+  "/api/sandbox/v1/projects",
+  "/api/sandbox/v1/compare",
   "/api/ask",
   "/api/send-email",
 ];
 
-const PROJECT_DETAIL = /^\/api\/v1\/projects\/[^/]+$/;
+const PROJECT_DETAIL = /^\/api\/(?:sandbox\/)?v1\/projects\/[^/]+$/;
 
 const FALLBACK_NOT_FOUND =
   "# Page not found\n\nThere is no page at this address. See https://www.ayushrai.site/llms.txt for every page.\n";

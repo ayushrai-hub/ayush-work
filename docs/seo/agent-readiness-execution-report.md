@@ -1,5 +1,22 @@
 # Agent-readiness execution report
 
+## Follow-up, 19 Oct 2026 (local, not deployed)
+
+Ora score on the live site was 91/100. This pass implements the gaps that can be true in this repo:
+
+| Gap | Change |
+| --- | --- |
+| Product + docs MCP | `POST /api/mcp/docs` with `list_pages`, `get_page`, `search_docs`, and a Server Card. The portfolio server is unchanged. |
+| REST batch | `POST /api/v1/batch`, up to 8 public reads. |
+| Idempotency-Key | Optional header on the batch and on `POST /api/send-email`. Same key and body replays; a different body is 409. |
+| Sandbox | `/api/sandbox/v1/*` aliases the public reads and sets `X-Api-Environment: sandbox`. Same records. No second dataset. |
+| Schema breadth | `Service` and `FAQPage` from the published `/software-services` copy. No rating, review, or offer. |
+| Developer discovery | `/plugin.json` and `/mcp.json` are served and linked from `/llms.txt` and `/developers`. The developers title starts with Ayush Rai. |
+
+Still not built, on purpose: A2A agent card (no A2A endpoint), OAuth protected-resource metadata (the API is public; the cross-link Ora saw is `life.ayushrai.site`), Web Bot Auth signing keys, a fake HTTP 202 job, an npm or PyPI publish. Still external: Wikipedia/Wikidata, Smithery or mcp.so, the ChatGPT app directory, skills.sh install counts.
+
+A rescan of `ayushrai.site` reads production. These changes are not on production until they are deployed.
+
 ## Follow-up, 18 Oct 2026 (deployed)
 
 The orank list from 18 Oct still read 75/100 from the cached 15 Oct scan, so most "fail" rows (ARD `displayName`, `trustManifest`, MCP icon, agent mode, `/auth.md`, alternates, frontmatter, bot-UA Markdown, MCP `instructions`, `/ask`) describe the old production build, not the current one. This pass shipped the 16 Oct working tree plus:

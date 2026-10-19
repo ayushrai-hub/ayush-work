@@ -56,7 +56,7 @@ describe("product management proof of work", () => {
     expect(screen.queryByText(/statistically significant/i)).toBeNull();
 
     expect(screen.getByRole("link", { name: "View my products" })).toHaveAttribute("href", "/products");
-    expect(screen.getAllByRole("link", { name: "FDE / POW" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "POW" }).length).toBeGreaterThan(0);
     const fdeLinks = screen.getAllByRole("link", { name: "FDE proof of work" });
     expect(fdeLinks.length).toBeGreaterThan(0);
     for (const link of fdeLinks) expect(link).toHaveAttribute("href", "/pow/fde");

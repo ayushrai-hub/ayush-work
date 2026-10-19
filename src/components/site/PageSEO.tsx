@@ -6,8 +6,8 @@
  * absolute against `person.siteUrl`. The canonical comes from `canonicalUrl(path)`, which adds a
  * trailing slash to non-root paths. Indexable pages advertise a Markdown alternate
  * (`rel="alternate" type="text/markdown"`). With `personSchema`, emits one `@graph` holding
- * WebSite, Person, ProfilePage, and the selected-work ItemList, linked by `@id`; `jsonLd` adds a
- * second script.
+ * WebSite, Person, ProfilePage, the selected-work ItemList, and the published software-services
+ * Service and FAQPage nodes, linked by `@id`; `jsonLd` adds a second script.
  * Tags are written through react-helmet-async, so the prerender (entry-server) captures them too.
  *
  * Connects to:
@@ -20,7 +20,14 @@ import { Helmet } from "react-helmet-async";
 import { pageUpdatedAt, person } from "../../content";
 import { defaultSEO } from "../../constants/seo";
 import { canonicalUrl, personId, websiteId } from "../../lib/canonical";
-import { absoluteUrl, personNode, selectedWorkListNode, websiteNode } from "../../lib/structuredData";
+import {
+  absoluteUrl,
+  personNode,
+  selectedWorkListNode,
+  softwareServicesFaqNode,
+  softwareServicesNode,
+  websiteNode,
+} from "../../lib/structuredData";
 
 /** Props for PageSEO. `path` is the route path (e.g. `/work`), not an absolute URL. */
 interface PageSEOProps {
@@ -73,6 +80,8 @@ export default function PageSEO({
             hasPart: { "@id": `${canonicalUrl("/")}#selected-work` },
           },
           selectedWorkListNode(),
+          softwareServicesNode(),
+          softwareServicesFaqNode(),
         ],
       }
     : null;

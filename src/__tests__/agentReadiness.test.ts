@@ -285,14 +285,16 @@ describe("OpenAPI", () => {
           const ref = resolve(json?.[1].schema.$ref ?? "");
           expect(schemas[ref], `${path} ${status}`).toBeTruthy();
           if (Number(status) >= 400) {
-            expect(path === "/ask" ? "AskResponse" : "ErrorResponse", `${path} ${status}`).toBe(ref);
+            const expected =
+              path === "/ask" ? "AskResponse" : path === "/api/send-email" ? "ContactResponse" : "ErrorResponse";
+            expect(expected, `${path} ${status}`).toBe(ref);
           }
         }
         expect(Object.keys(operation.responses)).toContain("429");
         expect(Object.keys(operation.responses)).toContain("405");
       }
     }
-    expect(operations).toBe(9);
+    expect(operations).toBe(14);
     expect((spec.components as Record<string, unknown>).responses).toBeUndefined();
     const errorSchema = schemas.ErrorResponse as { properties: { error: { required: string[] } } };
     expect(errorSchema.properties.error.required).toEqual(["code", "message", "hint", "docs"]);
@@ -320,12 +322,11 @@ describe("OpenAPI", () => {
     const source = readFileSync(resolve(__dirname, "../lib/agent/http.ts"), "utf8");
     const read = new Set([...source.matchAll(/params\.get\("(\w+)"\)/g)].map((match) => match[1]));
     const spec = buildOpenApiDocument();
-    const names = (path: string) =>
-      new Set(
-        ((spec.paths as Record<string, { get: { parameters?: Array<{ name: string }> } }>)[path].get.parameters ?? []).map(
-          (parameter) => parameter.name,
-        ),
-      );
+    const names = (path: string) => {
+      const operation = (spec.paths as Record<string, { get?: { parameters?: Array<{ name: string }> } }>)[path].get;
+      if (!operation) return new Set<string>();
+      return new Set((operation.parameters ?? []).map((parameter) => parameter.name));
+    };
     const documented = new Set(Object.keys(spec.paths).flatMap((path) => [...names(path)]));
     for (const name of read) expect(documented.has(name), name).toBe(true);
     const alias = names("/api/projects");
@@ -402,10 +403,15 @@ describe("MCP discovery", () => {
 
     const catalog = buildAiCatalog();
     expect(catalog.specVersion).toBe("1.0");
-    expect(catalog.entries).toEqual([entry]);
+    expect(catalog.entries[0]).toEqual(entry);
+    expect(catalog.entries.map((item) => item.identifier)).toEqual([
+      entry.identifier,
+      "urn:air:ayushrai.site:mcp:docs",
+    ]);
     const ard = buildArdManifest();
     expect(ard.specVersion).toBe("0.91");
-    expect(ard.entries).toEqual([entry]);
+    expect(ard.entries[0]).toEqual(entry);
+    expect(ard.entries).toHaveLength(2);
 
     const files = agentFiles();
     expect(JSON.parse(files[".well-known/ai-catalog.json"])).toEqual(catalog);
@@ -524,7 +530,9 @@ describe("auth, agent mode, and ask", () => {
       expect(node["@type"]).toBeTruthy();
       expect(node.url).toMatch(/^https:\/\/www\.ayushrai\.site\//);
     }
-    expect(lines.map((node) => node["@type"])).toEqual(expect.arrayContaining(["WebSite", "Person", "CreativeWork"]));
+    expect(lines.map((node) => node["@type"])).toEqual(
+      expect.arrayContaining(["WebSite", "Person", "CreativeWork", "Service", "FAQPage"]),
+    );
     expect(agentFiles()["schemamap.xml"]).toBe(map);
     const robots = readFileSync(resolve(__dirname, "../../public/robots.txt"), "utf8");
     expect(robots).toMatch(/^schemamap: https:\/\/www\.ayushrai\.site\/schemamap\.xml$/m);
@@ -539,7 +547,11 @@ describe("auth, agent mode, and ask", () => {
     for (const key of Object.keys(plugin)) expect(allowed, key).toContain(key);
     const mcp = JSON.parse(readFileSync(resolve(root, "mcp.json"), "utf8"));
     expect(Object.keys(mcp).sort()).toEqual(["$schema", "mcpServers"]);
-    expect(Object.values(mcp.mcpServers)).toEqual([{ type: "streamable-http", url: `${ORIGIN}/api/mcp` }]);
+    expect(mcp.mcpServers["ayush-portfolio"]).toEqual({ type: "streamable-http", url: `${ORIGIN}/api/mcp` });
+    expect(mcp.mcpServers["ayush-portfolio-docs"]).toEqual({
+      type: "streamable-http",
+      url: `${ORIGIN}/api/mcp/docs`,
+    });
     const skill = readFileSync(resolve(root, "skills/portfolio-discovery/SKILL.md"), "utf8");
     expect(skill).toMatch(/^---\nname: portfolio-discovery\n/);
   });

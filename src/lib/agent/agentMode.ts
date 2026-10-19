@@ -11,6 +11,7 @@
  */
 import { person } from "../../content";
 import { API_CATALOG_PATH } from "./apiCatalog";
+import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH, docsMcpUrl } from "./docsMcp";
 import {
   AI_CATALOG_PATH,
   ARD_PATH,
@@ -72,6 +73,24 @@ export function buildAgentModeDocument() {
         { method: "GET", path: "/api/v1/projects/{slug}", href: `${base}/api/v1/projects/{slug}` },
         { method: "GET", path: "/api/v1/compare", href: `${base}/api/v1/compare` },
         { method: "POST", path: "/ask", href: `${base}/ask`, note: "NLWeb-shaped lexical ask" },
+        {
+          method: "POST",
+          path: "/api/v1/batch",
+          href: `${base}/api/v1/batch`,
+          note: "Up to 8 public reads. Optional Idempotency-Key header.",
+        },
+        {
+          method: "GET",
+          path: "/api/sandbox/v1/search",
+          href: `${base}/api/sandbox/v1/search`,
+          note: "Sandbox alias of the public read API. Same published records, no writes.",
+        },
+        {
+          method: "POST",
+          path: "/api/send-email",
+          href: `${base}/api/send-email`,
+          note: "Contact form. Optional Idempotency-Key header.",
+        },
       ],
       rateLimit: "60 requests per 60 seconds per client address",
     },
@@ -82,9 +101,15 @@ export function buildAgentModeDocument() {
       legacyServerCard: `${base}${LEGACY_SERVER_CARD_PATH}`,
       authentication: "none",
       tools: ["list_projects", "get_project", "compare_projects", "search_portfolio"],
+      docs: {
+        url: docsMcpUrl(),
+        serverCard: `${base}${DOCS_SERVER_CARD_PATH}`,
+        tools: ["list_pages", "get_page", "search_docs"],
+      },
       clientConfig: {
         mcpServers: {
           "ayush-portfolio": { url: `${base}${MCP_ENDPOINT_PATH}` },
+          "ayush-portfolio-docs": { url: `${base}${DOCS_MCP_PATH}` },
         },
       },
     },
@@ -102,12 +127,17 @@ export function buildAgentModeDocument() {
       webmcp: true,
       markdownTwins: true,
       contentNegotiation: "Accept: text/markdown",
+      batch: true,
+      idempotencyKey: true,
+      sandbox: "alias of the public read API at /api/sandbox/v1/*",
     },
     limitations: [
       "Search is lexical, not semantic.",
       "Content updates only when the site is redeployed.",
-      "No OAuth, API keys, separate test environment, or published SDK package yet.",
+      "The sandbox alias returns the same published records as /api/v1. There is no separate dataset.",
+      "No OAuth, API keys, or published SDK package yet.",
       "A2A agent-card is not published because no A2A JSON-RPC endpoint is implemented.",
+      "The MCP server is not listed on Smithery, mcp.so, or another registry.",
     ],
   };
 }

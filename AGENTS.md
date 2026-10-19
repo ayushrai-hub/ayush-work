@@ -42,11 +42,11 @@ OpenAPI: `https://www.ayushrai.site/openapi.json`
 API catalog (RFC 9727): `https://www.ayushrai.site/.well-known/api-catalog`
 Developer docs: `https://www.ayushrai.site/developers`
 
-The API is free, public, and needs no key. There is no separate test environment or paid tier.
+The API is free, public, and needs no key. `/api/sandbox/v1/*` is an alias of the same public reads (same records, no writes, no separate dataset). There is no paid tier. `POST /api/v1/batch` runs up to 8 of those reads in one call. `POST /api/send-email` and the batch accept an optional `Idempotency-Key` header.
 
 ## Errors and rate limits
 
-Every error is JSON: `{ "error": { "code", "message", "hint", "docs" } }`. Branch on `code`; `hint` says how to fix the request. Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400), `not_found` and `route_not_found` (404), `method_not_allowed` (405), `rate_limited` (429), `internal_error` (500). Unknown `/api/` paths return `route_not_found` as JSON.
+Every error is JSON: `{ "error": { "code", "message", "hint", "docs" } }`. Branch on `code`; `hint` says how to fix the request. Codes: `invalid_query`, `invalid_slug`, `invalid_filter`, `invalid_compare`, `invalid_cursor` (400), `not_found` and `route_not_found` (404), `method_not_allowed` (405), `idempotency_conflict` (409), `rate_limited` (429), `internal_error` (500). Unknown `/api/` paths return `route_not_found` as JSON.
 
 The limit is 60 requests per 60 seconds per client address, counted per server instance. Responses carry `RateLimit-Policy: "default";q=60;w=60` and `RateLimit: "default";r=<remaining>;t=<seconds>` (draft-ietf-httpapi-ratelimit-headers-11). A 429 also carries `Retry-After` in seconds.
 
@@ -92,6 +92,8 @@ Local, from this repository after `npm install`:
 
 Tools: `list_projects`, `get_project`, `compare_projects`, `search_portfolio`. They return the same public records as the API. Both transports build the server from `src/lib/agent/mcpServer.ts`. The server identifies itself as `site.ayushrai/portfolio`.
 
+A second server reads the published pages: `POST https://www.ayushrai.site/api/mcp/docs`. Tools: `list_pages`, `get_page`, `search_docs`. Its Server Card is `GET https://www.ayushrai.site/api/mcp/docs/server-card`. It does not change projects.
+
 An unknown tool name, or arguments that fail a tool's input schema, is a JSON-RPC error `-32602` with `data.code` set to `unknown_tool` or `invalid_arguments`. A well-formed call that fails at run time (bad cursor, unknown slug, duplicate compare) is a tool result with `isError: true` and the API error code in `structuredContent`.
 
 Discovery follows SEP-2127. The Server Card is `GET https://www.ayushrai.site/api/mcp/server-card` (`application/mcp-server-card+json`, with `ETag`). The AI Catalog at `/.well-known/ai-catalog.json` lists it. The older `/.well-known/mcp/server-card.json` serves the same card for clients that still look there.
@@ -110,7 +112,7 @@ The REST API, `/ask`, and MCP server are public and unauthenticated. See `/auth.
 - ARD v0.91: `/.well-known/ard.json` (canonical). Legacy AI Catalog: `/.well-known/ai-catalog.json`.
 - `POST /ask` is NLWeb-shaped lexical search over the same index as `/api/v1/search` (not generative). Send `prefer.streaming: true` (or `?streaming=true`, or `Accept: text/event-stream`) for SSE `start` / `result` / `complete` events.
 - Schema Feeds: `robots.txt` has `schemamap: /schemamap.xml`, which lists `/feeds/portfolio.jsonl` (the same schema.org nodes the pages publish).
-- Agent Plugins: `plugin.json` and `mcp.json` at the repository root bundle `skills/portfolio-discovery` with the remote MCP server.
+- Agent Plugins: `plugin.json` and `mcp.json` at the repository root, also served at `/plugin.json` and `/mcp.json`. They point at the portfolio MCP server and the docs MCP server. The skill in the repo is `skills/portfolio-discovery`.
 - WebMCP tools register from `/webmcp.js` when `document.modelContext` exists.
 - An A2A `/.well-known/agent-card.json` is not published: there is no A2A JSON-RPC endpoint.
 

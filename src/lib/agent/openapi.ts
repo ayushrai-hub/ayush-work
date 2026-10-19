@@ -24,7 +24,7 @@ export const API_VERSIONING_POLICY =
 
 /** Access and caching note, shared with the developer docs. */
 export const API_ACCESS_NOTE =
-  "Free and public. No account or API key is needed because every endpoint is read-only over published content. There is no separate test environment or paid tier. Clients may cache responses for five minutes. REST responses grant CORS only to the site's own origins, so call the REST API from a server, an agent, or the CLI rather than from a browser page on another site. The MCP endpoint and its Server Card allow any origin.";
+  "Free and public. No account or API key is needed because the read endpoints serve published content. /api/sandbox/v1/* is an alias of those reads: the same records, no separate dataset, and no write, so a call there cannot change live data. There is no paid tier. Clients may cache responses for five minutes. REST responses grant CORS only to the site's own origins, so call the REST API from a server, an agent, or the CLI rather than from a browser page on another site. The MCP endpoints and their Server Cards allow any origin.";
 
 /** Rate-limit note built from the constants in `rateLimit.ts`, shared with the developer docs. */
 export const API_RATE_LIMIT_NOTE = `${RATE_LIMIT_QUOTA} requests per ${RATE_LIMIT_WINDOW_SECONDS} seconds per client address, counted per server instance. Every response carries RateLimit-Policy and RateLimit headers (draft-ietf-httpapi-ratelimit-headers-11). Over the limit, the API returns 429 with a Retry-After header in seconds and error code rate_limited.`;
@@ -40,6 +40,7 @@ const ERROR_CODES: ApiErrorCode[] = [
   "route_not_found",
   "method_not_allowed",
   "rate_limited",
+  "idempotency_conflict",
   "internal_error",
 ];
 
@@ -72,7 +73,7 @@ function askOk() {
   };
 }
 
-type ErrorStatus = "400" | "404" | "405" | "429" | "500";
+type ErrorStatus = "400" | "404" | "405" | "409" | "429" | "500";
 
 /** Description and headers for each REST error status. Bodies are always `ErrorResponse`. */
 const REST_ERRORS: Record<ErrorStatus, { description: string; headers: Record<string, unknown> }> = {
@@ -86,7 +87,12 @@ const REST_ERRORS: Record<ErrorStatus, { description: string; headers: Record<st
     headers: rateLimitHeaders,
   },
   "405": {
-    description: "Unsupported HTTP method. error.code is method_not_allowed. REST accepts GET, HEAD, and OPTIONS.",
+    description:
+      "Unsupported HTTP method. error.code is method_not_allowed. Read routes accept GET, HEAD, and OPTIONS. POST is accepted on /api/v1/batch and /ask.",
+    headers: rateLimitHeaders,
+  },
+  "409": {
+    description: "Idempotency-Key was reused with a different body. error.code is idempotency_conflict.",
     headers: rateLimitHeaders,
   },
   "429": {
@@ -126,6 +132,25 @@ const cursorParameter = {
   required: false,
   description: "Opaque nextCursor from the previous page. Omit for the first page.",
   schema: { type: "string" },
+};
+
+/** Marks a response as the sandbox alias. The records stay the published ones. */
+const environmentParameter = {
+  name: "environment",
+  in: "query",
+  required: false,
+  description: "Pass sandbox to receive X-Api-Environment: sandbox. The body is the same public record.",
+  schema: { type: "string", enum: ["sandbox"] },
+};
+
+/** Optional replay key for POST /api/v1/batch and POST /api/send-email. */
+const idempotencyParameter = {
+  name: "Idempotency-Key",
+  in: "header",
+  required: false,
+  description:
+    "Optional client key, at most 128 characters. The same key and body replay the stored success. The same key with a different body returns 409.",
+  schema: { type: "string", maxLength: 128 },
 };
 
 const archiveParameter = {
@@ -201,7 +226,7 @@ export function buildOpenApiDocument() {
     info: {
       title: "Ayush Rai public API",
       version: "1.0.0",
-      description: `Read-only API over the same public content as Ayush Rai's website. Unverified award metrics are omitted. There is no separate dataset for this API.\n\nAccess: ${API_ACCESS_NOTE}\n\nRate limits: ${API_RATE_LIMIT_NOTE}\n\nErrors: every error body is { "error": { "code", "message", "hint", "docs" } }. code is stable; hint says how to fix the request.\n\nVersioning: ${API_VERSIONING_POLICY}\n\nMCP: the same project and search tools are available over Streamable HTTP at POST /api/mcp. Its Server Card is at GET ${SERVER_CARD_PATH}.`,
+      description: `Read API over the same public content as Ayush Rai's website, plus POST /api/v1/batch for several reads in one call and POST /api/send-email for the contact form. Unverified award metrics are omitted. There is no separate dataset for this API.\n\nAccess: ${API_ACCESS_NOTE}\n\nRate limits: ${API_RATE_LIMIT_NOTE}\n\nErrors: read and batch errors are { "error": { "code", "message", "hint", "docs" } }. code is stable; hint says how to fix the request. POST /api/v1/batch and POST /api/send-email accept an optional Idempotency-Key header.\n\nVersioning: ${API_VERSIONING_POLICY}\n\nMCP: project tools are POST /api/mcp (Server Card GET ${SERVER_CARD_PATH}). Documentation tools are POST /api/mcp/docs (Server Card GET /api/mcp/docs/server-card).`,
       contact: { name: person.name, email: person.email, url: `${origin}/developers/` },
     },
     externalDocs: { description: "Developer notes", url: `${origin}/developers/` },
@@ -289,6 +314,150 @@ export function buildOpenApiDocument() {
           responses: {
             ...ok("Projects found, plus slugs that were not", "CompareResponse"),
             ...errors(["400", "405", "429", "500"]),
+          },
+        },
+      },
+      "/api/sandbox/v1/search": (() => {
+        const operation = searchOperation(
+          "searchPortfolioSandbox",
+          "Search the public index through the sandbox alias",
+        );
+        return {
+          get: {
+            ...operation.get,
+            description: `Sandbox alias of GET /api/v1/search. ${operation.get.description} The records are the published ones. Responses include X-Api-Environment: sandbox.`,
+            parameters: [...operation.get.parameters, environmentParameter],
+          },
+        };
+      })(),
+      "/api/sandbox/v1/projects": {
+        get: {
+          operationId: "listProjectsSandbox",
+          summary: "List public projects through the sandbox alias",
+          description:
+            "Sandbox alias of GET /api/v1/projects. Same published records. Responses include X-Api-Environment: sandbox.",
+          parameters: [environmentParameter],
+          responses: {
+            ...ok("One page of projects", "ProjectListResponse"),
+            ...errors(["400", "405", "429", "500"]),
+          },
+        },
+      },
+      "/api/sandbox/v1/compare": {
+        get: {
+          operationId: "compareProjectsSandbox",
+          summary: "Compare public projects through the sandbox alias",
+          description:
+            "Sandbox alias of GET /api/v1/compare. Same published records. Responses include X-Api-Environment: sandbox.",
+          parameters: [
+            {
+              name: "slugs",
+              in: "query",
+              required: true,
+              schema: { type: "string" },
+            },
+            environmentParameter,
+          ],
+          responses: {
+            ...ok("Projects found, plus slugs that were not", "CompareResponse"),
+            ...errors(["400", "405", "429", "500"]),
+          },
+        },
+      },
+      "/api/v1/batch": {
+        post: {
+          operationId: "batchReadsV1",
+          summary: "Run up to 8 public read calls in one request",
+          description:
+            "Body is { operations: [{ method: GET, path, query }] }. path is /api/v1/search, /api/v1/projects, /api/v1/projects/{slug}, or /api/v1/compare (the unversioned search and projects aliases are also accepted). Each result is { status, body }. An optional Idempotency-Key replays the same body.",
+          parameters: [idempotencyParameter],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["operations"],
+                  properties: {
+                    operations: {
+                      type: "array",
+                      minItems: 1,
+                      maxItems: 8,
+                      items: {
+                        type: "object",
+                        required: ["path"],
+                        properties: {
+                          method: { type: "string", enum: ["GET"] },
+                          path: { type: "string" },
+                          query: { type: "object", additionalProperties: { type: "string" } },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            ...ok("One result per operation, in request order", "BatchResponse"),
+            ...errors(["400", "405", "409", "429", "500"]),
+          },
+        },
+      },
+      "/api/send-email": {
+        post: {
+          operationId: "sendContactEmail",
+          summary: "Send the site contact form",
+          description:
+            "The contact-form write. Optional Idempotency-Key: the same key and body replay the stored success and do not send a second email. This route's JSON is { success, message }, not the read-API error envelope.",
+          parameters: [idempotencyParameter],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["name", "email", "subject", "message"],
+                  properties: {
+                    name: { type: "string" },
+                    email: { type: "string" },
+                    subject: { type: "string" },
+                    message: { type: "string" },
+                    service: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Sent, or replayed from Idempotency-Key",
+              content: json("ContactResponse"),
+            },
+            "400": {
+              description: "Missing fields, bad email, or an Idempotency-Key longer than 128 characters",
+              content: json("ContactResponse"),
+            },
+            "405": {
+              description: "Only POST and OPTIONS are accepted",
+              content: json("ContactResponse"),
+            },
+            "409": {
+              description: "Idempotency-Key reused with a different body",
+              content: json("ContactResponse"),
+            },
+            "429": {
+              description: "Contact form rate limit",
+              content: json("ContactResponse"),
+            },
+            "500": {
+              description: "Email service is not configured",
+              content: json("ContactResponse"),
+            },
+            "502": {
+              description: "The mail provider rejected the message",
+              content: json("ContactResponse"),
+            },
           },
         },
       },
@@ -486,6 +655,31 @@ export function buildOpenApiDocument() {
                 mode: { type: "string" },
                 site: { type: "string" },
                 note: { type: "string" },
+              },
+            },
+          },
+        },
+        ContactResponse: {
+          type: "object",
+          required: ["message"],
+          properties: {
+            success: { type: "boolean" },
+            message: { type: "string" },
+          },
+        },
+        BatchResponse: {
+          type: "object",
+          required: ["results"],
+          properties: {
+            results: {
+              type: "array",
+              items: {
+                type: "object",
+                required: ["status", "body"],
+                properties: {
+                  status: { type: "integer" },
+                  body: {},
+                },
               },
             },
           },

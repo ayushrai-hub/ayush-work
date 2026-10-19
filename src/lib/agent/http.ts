@@ -14,6 +14,7 @@
  *   `apiError.ts`, and `../siteOrigins.ts` (the CORS allow-list).
  */
 import { apiErrorBody, type ApiErrorCode } from "./apiError";
+import { runReadBatch } from "./batch";
 import { decodeCursor } from "./pagination";
 import { comparePublicProjects, getPublicProject, pagePublicProjects } from "./projectsQuery";
 import {
@@ -39,6 +40,8 @@ import {
 export interface AgentHttpResult {
   status: number;
   body: unknown;
+  /** Extra headers, such as Idempotent-Replayed on a stored batch response. */
+  headers?: Record<string, string>;
 }
 
 /**
@@ -47,8 +50,8 @@ export interface AgentHttpResult {
  */
 export function corsHeaders(origin?: string | null): Record<string, string> {
   const headers: Record<string, string> = {
-    "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Accept",
+    "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, Idempotency-Key",
     "Access-Control-Expose-Headers": RATE_LIMIT_EXPOSED_HEADERS,
     Vary: "Origin",
   };
@@ -115,18 +118,24 @@ export function projectsHttp(params: URLSearchParams, pathSlug?: string): AgentH
 }
 
 /**
- * Routes one API call by path and method. OPTIONS returns 204, methods other than GET/HEAD
- * return 405, and unknown paths return 404 `route_not_found`. No rate limiting or headers here;
- * `agentApiResponse` adds those.
+ * Routes one API call by path and method. OPTIONS returns 204. POST is accepted only for
+ * `/api/v1/batch`. Other methods return 405, and unknown paths return 404 `route_not_found`.
+ * No rate limiting or headers here; `agentApiResponse` adds those. `body` and `idempotencyKey`
+ * apply to the batch route.
  */
 export function dispatchAgentApi(
   pathname: string,
   method: string,
   params: URLSearchParams,
+  body?: unknown,
+  idempotencyKey?: string | null,
 ): AgentHttpResult {
   if (method === "OPTIONS") return { status: 204, body: null };
+  if (method === "POST" && pathname === "/api/v1/batch") {
+    return runReadBatch(body, idempotencyKey, (path, query) => dispatchAgentApi(path, "GET", query));
+  }
   if (method !== "GET" && method !== "HEAD") {
-    return apiError(405, { code: "method_not_allowed", message: "Only GET, HEAD, and OPTIONS are allowed." });
+    return apiError(405, { code: "method_not_allowed", message: "Only GET, HEAD, OPTIONS, and POST /api/v1/batch are allowed." });
   }
   if (pathname === "/api/search" || pathname === "/api/v1/search") {
     const queryError = validateQuery(params.get("q"));
@@ -237,9 +246,15 @@ function routeFromRequest(req: NodeLikeRequest, fallback: "/api/search" | "/api/
  * `dispatchAgentApi`, with any thrown error turned into a 500 `internal_error` envelope. The
  * message is generic so stack traces and file paths never reach the client.
  */
-export function safeDispatch(pathname: string, method: string, params: URLSearchParams): AgentHttpResult {
+export function safeDispatch(
+  pathname: string,
+  method: string,
+  params: URLSearchParams,
+  body?: unknown,
+  idempotencyKey?: string | null,
+): AgentHttpResult {
   try {
-    return dispatchAgentApi(pathname, method, params);
+    return dispatchAgentApi(pathname, method, params, body, idempotencyKey);
   } catch (error) {
     console.error("agent API failure", pathname, error instanceof Error ? error.name : typeof error);
     return apiError(500, { code: "internal_error", message: "Unexpected server error." });
@@ -259,12 +274,31 @@ export interface AgentApiResponse {
  * `rate_limited` with `Retry-After` and `no-store`. `clientKey` is usually from `clientKeyFrom`.
  * Responses are `private` so a shared cache never replays another client's RateLimit values.
  */
+/** True when this call is the sandbox alias of the public read API. */
+function isSandboxRequest(pathname: string, params: URLSearchParams): boolean {
+  return pathname.startsWith("/api/sandbox/") || params.get("environment") === "sandbox";
+}
+
+/**
+ * Maps `/api/sandbox/v1/...` onto `/api/v1/...`. The records are the same public records.
+ * A non-sandbox path is returned unchanged.
+ */
+export function logicalApiPath(pathname: string): string {
+  const prefix = "/api/sandbox";
+  if (pathname === prefix || pathname.startsWith(`${prefix}/`)) {
+    return `/api${pathname.slice(prefix.length)}`;
+  }
+  return pathname;
+}
+
 export function agentApiResponse(input: {
   pathname: string;
   method: string;
   params: URLSearchParams;
   origin?: string | null;
   clientKey: string;
+  body?: unknown;
+  idempotencyKey?: string | null;
 }): AgentApiResponse {
   const method = input.method.toUpperCase();
   const headers: Record<string, string> = {
@@ -272,6 +306,8 @@ export function agentApiResponse(input: {
     "Cache-Control": "private, max-age=300",
     ...corsHeaders(input.origin),
   };
+  if (isSandboxRequest(input.pathname, input.params)) headers["X-Api-Environment"] = "sandbox";
+  const pathname = logicalApiPath(input.pathname);
   let result: AgentHttpResult;
   if (method === "OPTIONS") {
     result = { status: 204, body: null };
@@ -279,7 +315,7 @@ export function agentApiResponse(input: {
     const limit = takeRateLimit(input.clientKey);
     Object.assign(headers, limit.headers);
     if (limit.allowed) {
-      result = safeDispatch(input.pathname, method, input.params);
+      result = safeDispatch(pathname, method, input.params, input.body, input.idempotencyKey);
     } else {
       result = apiError(429, {
         code: "rate_limited",
@@ -287,6 +323,7 @@ export function agentApiResponse(input: {
       });
     }
     if (!limit.allowed || result.status >= 500) headers["Cache-Control"] = "no-store";
+    if (result.headers) Object.assign(headers, result.headers);
   }
   const body =
     method === "HEAD" || result.status === 204 || result.body == null

@@ -30,6 +30,7 @@ vi.mock("@sendgrid/mail", () => ({
   default: sendGrid,
 }));
 
+import { resetIdempotency } from "../lib/agent/idempotency";
 import {
   CONTACT_RATE_LIMIT,
   handleContactEmail,
@@ -48,6 +49,7 @@ const VALID = {
 beforeEach(() => {
   vi.clearAllMocks();
   resetContactRateLimit();
+  resetIdempotency();
   vi.stubEnv("SENDGRID_API_KEY", "test-sendgrid-key");
   vi.stubEnv("CONTACT_EMAIL", "inbox@example.com");
   vi.stubEnv("FROM_EMAIL", "sender@example.com");
@@ -73,6 +75,28 @@ describe("contact email handler", () => {
     expect(result.status).toBe(400);
     expect(result.body).toEqual({ success: false, message: "Invalid email format" });
     expect(sendGrid.send).not.toHaveBeenCalled();
+  });
+
+  it("replays a contact send for the same Idempotency-Key and rejects a different body", async () => {
+    sendGrid.send.mockResolvedValue(undefined);
+    const first = await handleContactEmail("POST", VALID, "idem-client", "contact-key-1");
+    expect(first.status).toBe(200);
+    const replay = await handleContactEmail("POST", VALID, "idem-client", "contact-key-1");
+    expect(replay.status).toBe(200);
+    expect(replay.headers?.["Idempotent-Replayed"]).toBe("true");
+    expect(sendGrid.send).toHaveBeenCalledTimes(1);
+
+    const conflict = await handleContactEmail(
+      "POST",
+      { ...VALID, message: "A different message" },
+      "idem-client",
+      "contact-key-1",
+    );
+    expect(conflict.status).toBe(409);
+    expect(sendGrid.send).toHaveBeenCalledTimes(1);
+
+    const tooLong = await handleContactEmail("POST", VALID, "idem-client", "k".repeat(129));
+    expect(tooLong.status).toBe(400);
   });
 
   it("sends a validated message using the configured addresses", async () => {
