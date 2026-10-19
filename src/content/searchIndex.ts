@@ -35,6 +35,17 @@ import { elsewhereProfiles } from "./elsewhere";
 import { capabilities } from "./capabilities";
 import { domains } from "./domains";
 import { gtmPortfolio } from "./gtm";
+import { fdePow } from "./fde";
+import { productManagementDescription } from "./productManagementPow";
+import { AI_RESEARCH_PATH, aiResearchDescription } from "./aiResearchPow";
+import { benchmarkPage } from "./benchmarkEngineering";
+import { foundingEngineer } from "./foundingEngineer";
+import { devopsDescription, DEVOPS_PATH } from "./devopsPow";
+import { CLOUD_ENGINEER_PATH, cloudEngineerDescription } from "./cloudEngineerPow";
+import { ML_ENGINEER_PATH, mlEngineerDescription } from "./mlEngineerPow";
+import { AGENTIC_PATH, agenticPowDescription } from "./agenticPow";
+import { REVOPS_DESCRIPTION, REVOPS_PATH } from "./revopsPow";
+import { AI_DATA_SCIENTIST_PATH, aiDataScientistDescription } from "./aiDataScientist";
 
 /**
  * Flatten all searchable content into `SearchItem`s. href values match routes
@@ -240,6 +251,105 @@ export function buildSearchIndex(): SearchItem[] {
     summary: gtmPortfolio.description,
     href: "/gtm",
     tags: ["capability", "gtm", "revops", "revenue", "clay", "apollo", "hubspot", "enrichment"],
+  });
+
+  items.push({
+    id: "capability:fde",
+    title: "Forward deployed engineering",
+    type: "capability",
+    summary: fdePow.description,
+    href: fdePow.path,
+    tags: ["capability", "fde", "forward deployed", "relay", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:product-management",
+    title: "Product management proof of work",
+    type: "capability",
+    summary: productManagementDescription,
+    href: "/pow/product-management",
+    tags: ["capability", "product management", "revenueroles", "prioritization", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:ai-benchmark",
+    title: benchmarkPage.title,
+    type: "capability",
+    summary: benchmarkPage.description,
+    href: benchmarkPage.path,
+    tags: ["capability", "evaluation", "benchmark", "evalforge", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:founding-engineer",
+    title: "Founding engineer proof of work",
+    type: "capability",
+    summary: foundingEngineer.description,
+    href: "/pow/founding-engineer",
+    tags: ["capability", "founding engineer", "architecture", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:devops-engineer",
+    title: "DevOps engineer proof of work",
+    type: "capability",
+    summary: devopsDescription,
+    href: DEVOPS_PATH,
+    tags: ["capability", "devops", "ci", "deployment", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:cloud-engineer",
+    title: "Cloud engineering proof of work",
+    type: "capability",
+    summary: cloudEngineerDescription,
+    href: CLOUD_ENGINEER_PATH,
+    tags: ["capability", "cloud", "infrastructure", "deployment", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:ml-engineer",
+    title: "Machine learning engineering",
+    type: "capability",
+    summary: mlEngineerDescription,
+    href: ML_ENGINEER_PATH,
+    tags: ["capability", "machine learning", "mlops", "evaluation", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:agentic-ai",
+    title: "Agentic AI engineering",
+    type: "capability",
+    summary: agenticPowDescription,
+    href: AGENTIC_PATH,
+    tags: ["capability", "agents", "orbit", "tools", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:ai-research-engineering",
+    title: "AI research engineering",
+    type: "capability",
+    summary: aiResearchDescription,
+    href: AI_RESEARCH_PATH,
+    tags: ["capability", "research", "evaluation", "retrieval", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:revops-engineering",
+    title: "RevOps engineering",
+    type: "capability",
+    summary: REVOPS_DESCRIPTION,
+    href: REVOPS_PATH,
+    tags: ["capability", "revops", "revenue operations", "crm", "proof of work"],
+  });
+
+  items.push({
+    id: "capability:ai-data-scientist",
+    title: "AI data science proof of work",
+    type: "capability",
+    summary: aiDataScientistDescription,
+    href: AI_DATA_SCIENTIST_PATH,
+    tags: ["capability", "data science", "statistics", "insight lab", "proof of work"],
   });
 
   return items;

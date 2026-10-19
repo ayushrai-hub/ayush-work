@@ -9,6 +9,11 @@
  * Connects to:
  * - src/main.tsx renders App; src/entry-server.tsx renders AppRoutes. src/__tests__/App.test.tsx.
  * - src/pages/* and src/components/site/SiteLayout.tsx; src/lib/analytics.ts (initGA).
+ * - Proof-of-work routes: `pow/fde` (FdePowPage), `pow/product-management`, and `pow/ml-engineer`.
+ * - The product-management proof of work is `pow/product-management` (ProductManagementPowPage).
+ * - The AI research proof of work is `pow/ai-research-engineering` (AiResearchEngineeringPowPage).
+ * - The benchmark proof of work is `pow/ai-benchmark` (BenchmarkEngineeringPage).
+ *   `pow/benchmark-engineering` redirects there.
  * - Prerendered paths come from src/lib/publicRoutes.ts, which must cover these routes.
  */
 import { Suspense, lazy, useEffect } from "react";
@@ -52,6 +57,17 @@ const DevelopersPage = lazy(() => import("./pages/DevelopersPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const DomainPage = lazy(() => import("./pages/DomainPage"));
 const GtmPage = lazy(() => import("./pages/GtmPage"));
+const FdePowPage = lazy(() => import("./pages/FdePowPage"));
+const ProductManagementPowPage = lazy(() => import("./pages/ProductManagementPowPage"));
+const MlEngineerPowPage = lazy(() => import("./pages/MlEngineerPowPage"));
+const AiResearchEngineeringPowPage = lazy(() => import("./pages/AiResearchEngineeringPowPage"));
+const BenchmarkEngineeringPage = lazy(() => import("./pages/BenchmarkEngineeringPage"));
+const FoundingEngineerPowPage = lazy(() => import("./pages/FoundingEngineerPowPage"));
+const DevopsPowPage = lazy(() => import("./pages/DevopsPowPage"));
+const CloudEngineerPowPage = lazy(() => import("./pages/CloudEngineerPowPage"));
+const AgenticPowPage = lazy(() => import("./pages/AgenticPowPage"));
+const RevopsPowPage = lazy(() => import("./pages/RevopsPowPage"));
+const AiDataScientistPowPage = lazy(() => import("./pages/AiDataScientistPowPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 /** Suspense placeholder shown while a lazy page chunk loads. */
@@ -102,6 +118,23 @@ export function AppRoutes() {
             <Route path="developers" element={<DevelopersPage />} />
             <Route path="privacy" element={<PrivacyPage />} />
             <Route path="gtm" element={<GtmPage />} />
+            <Route path="pow/founding-engineer" element={<FoundingEngineerPowPage />} />
+            <Route path="pow/ai-benchmark" element={<BenchmarkEngineeringPage />} />
+            <Route
+              path="pow/benchmark-engineering"
+              element={<Navigate to="/pow/ai-benchmark" replace />}
+            />
+            <Route path="pow/fde" element={<FdePowPage />} />
+            <Route path="pow/agentic-ai" element={<AgenticPowPage />} />
+            <Route path="pow/revops-engineering" element={<RevopsPowPage />} />
+            <Route path="pow/revenue-operations" element={<Navigate to="/pow/revops-engineering" replace />} />
+            <Route path="pow/product-management" element={<ProductManagementPowPage />} />
+            <Route path="pow/ml-engineer" element={<MlEngineerPowPage />} />
+            <Route path="pow/devops-engineer" element={<DevopsPowPage />} />
+            <Route path="pow/cloud-engineer" element={<CloudEngineerPowPage />} />
+            <Route path="pow/ai-research-engineering" element={<AiResearchEngineeringPowPage />} />
+            <Route path="pow/ai-research" element={<Navigate to="/pow/ai-research-engineering" replace />} />
+            <Route path="pow/ai-data-scientist" element={<AiDataScientistPowPage />} />
             <Route path="ai-engineering/*" element={<DomainPage />} />
             <Route path="ai-engineering" element={<DomainPage />} />
             <Route path="software-engineering" element={<DomainPage />} />

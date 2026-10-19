@@ -240,6 +240,11 @@ export const domains: DomainRecord[] = [
       { href: "/ai-engineering/rlhf", label: "RLHF and preference feedback" },
       { href: "/ai-engineering", label: "AI engineering hub" },
       { href: "/work/medvoice", label: "MedVoice, where the model does not decide" },
+      {
+        href: "/pow/ai-benchmark",
+        label: "EVALFORGE demonstration",
+        note: "Synthetic tasks and stored responses. Not a published benchmark.",
+      },
     ],
     reading: [
       {
@@ -449,7 +454,7 @@ export const domains: DomainRecord[] = [
         heading: "Scope",
         paragraphs: [
           "An agent, here, means software that can choose tools and take a sequence of actions toward a goal. That is a higher bar than a chatbot, and a higher bar than a page that happens to mention agents.",
-          "This page is narrow on purpose. I do not have a production multi-agent system, a tool-calling eval suite, or an orchestration runtime to publish as a case study.",
+          "This page is narrow on purpose. I do not have a production multi-agent system, a tool-calling eval suite, or an orchestration runtime to publish as a case study. The agentic proof-of-work page is a deterministic simulation of those controls. It does not add a production orchestrator.",
         ],
       },
       {
@@ -494,6 +499,7 @@ export const domains: DomainRecord[] = [
       { href: "/ai-engineering/llm-systems", label: "LLM systems" },
       { href: "/ai-engineering/llm-evaluation", label: "LLM evaluation" },
       { href: "/ai-engineering", label: "AI engineering hub" },
+      { href: "/pow/agentic-ai", label: "Agentic AI proof of work" },
     ],
     reading: [
       {
@@ -503,7 +509,7 @@ export const domains: DomainRecord[] = [
       },
     ],
     gaps: [
-      "No agent eval harness, trace viewer, or production tool-use metrics.",
+      "No agent eval harness, trace viewer, or production tool-use metrics. The /pow/agentic-ai metrics are computed from scripted scenarios, not from model runs.",
       "No SDK or registry listing. The MCP endpoint is read-only and has no write tools.",
       "WebMCP search on this site registers only when the browser exposes the API. No experimental Chrome run was completed in this repository.",
     ],

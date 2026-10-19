@@ -43,6 +43,17 @@ const STATIC_PAGES = [
   "/developers",
   "/privacy",
   "/gtm",
+  "/pow/fde",
+  "/pow/agentic-ai",
+  "/pow/revops-engineering",
+  "/pow/product-management",
+  "/pow/ai-benchmark",
+  "/pow/ai-research-engineering",
+  "/pow/founding-engineer",
+  "/pow/devops-engineer",
+  "/pow/cloud-engineer",
+  "/pow/ml-engineer",
+  "/pow/ai-data-scientist",
 ] as const;
 
 /** HTML routes that belong in the sitemap. Product logs are included only when they have entries. */

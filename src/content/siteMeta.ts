@@ -39,6 +39,13 @@ export const siteMeta = {
     privacy: "2026-10-14",
     developers: "2026-10-16",
     gtm: "2026-10-18",
+    "ml-engineer": "2026-10-19",
+    devops: "2026-10-19",
+    "cloud-engineer": "2026-10-19",
+    "ai-research-engineering": "2026-10-19",
+    "founding-engineer": "2026-10-19",
+    "ai-data-scientist": "2026-10-19",
+    pow: "2026-10-19",
     resume: "2026-08-08",
   } as Record<string, string>,
 };

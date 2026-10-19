@@ -24,6 +24,17 @@ const FOOTER_LINKS = [
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
   { to: "/resume", label: "Resume" },
+  { to: "/pow/fde", label: "FDE / POW" },
+  { to: "/pow/agentic-ai", label: "Agentic AI" },
+  { to: "/pow/revops-engineering", label: "RevOps engineering" },
+  { to: "/pow/product-management", label: "Product management" },
+  { to: "/pow/ml-engineer", label: "ML engineering" },
+  { to: "/pow/ai-research-engineering", label: "AI research" },
+  { to: "/pow/founding-engineer", label: "Founding engineer" },
+  { to: "/pow/ai-benchmark", label: "Benchmark engineering" },
+  { to: "/pow/devops-engineer", label: "DevOps engineer" },
+  { to: "/pow/cloud-engineer", label: "Cloud engineering" },
+  { to: "/pow/ai-data-scientist", label: "AI data science" },
 ] as const;
 
 /** Footer rendered on every route. */

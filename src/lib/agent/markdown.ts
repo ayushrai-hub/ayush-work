@@ -39,6 +39,37 @@ import {
   recognition,
   renderDomainBody,
   renderGtmBody,
+  fdePow,
+  renderFdeBody,
+  renderProductManagementBody,
+  productManagementDescription,
+  aiResearchDescription,
+  aiResearchTitle,
+  renderAiResearchBody,
+  AI_RESEARCH_PATH,
+  benchmarkPage,
+  renderBenchmarkBody,
+  foundingEngineer,
+  renderFoundingEngineerBody,
+  devopsPow,
+  renderDevopsBody,
+  CLOUD_ENGINEER_PATH,
+  cloudEngineerDescription,
+  renderCloudEngineerBody,
+  ML_ENGINEER_PATH,
+  mlEngineerDescription,
+  renderMlEngineerBody,
+  AGENTIC_PATH,
+  agenticPow,
+  agenticPowDescription,
+  renderAgenticPowBody,
+  REVOPS_DESCRIPTION,
+  REVOPS_PATH,
+  REVOPS_TITLE,
+  renderRevopsBody,
+  AI_DATA_SCIENTIST_PATH,
+  aiDataScientistDescription,
+  renderAiDataScientistBody,
   research,
   selectedWork,
   timeline,
@@ -93,6 +124,7 @@ export function escapeMarkdownText(value: string): string {
  */
 function freshnessKey(path: string): string {
   if (path === "/") return "home";
+  if (path === "/pow/ml-engineer") return "ml-engineer";
   const segment = path.replace(/^\//, "").split("/")[0] ?? "home";
   return segment || "home";
 }
@@ -757,6 +789,61 @@ function buildPages(): AgentPage[] {
 
   pages.push(doc("/gtm", "GTM engineering", gtmPortfolio.description, renderGtmBody()));
 
+  pages.push(
+    doc(fdePow.path, fdePow.title, fdePow.description, renderFdeBody()),
+  );
+
+  pages.push(
+    doc(
+      "/pow/product-management",
+      "Product management proof of work",
+      productManagementDescription,
+      renderProductManagementBody(),
+    ),
+  );
+
+  pages.push(
+    doc(AI_RESEARCH_PATH, aiResearchTitle, aiResearchDescription, renderAiResearchBody()),
+  );
+
+  pages.push(
+    doc(benchmarkPage.path, benchmarkPage.title, benchmarkPage.description, renderBenchmarkBody()),
+  );
+
+  pages.push(
+    doc(
+      "/pow/founding-engineer",
+      "Founding engineer proof of work",
+      foundingEngineer.description,
+      renderFoundingEngineerBody(),
+    ),
+  );
+
+  pages.push(
+    doc(devopsPow.path, devopsPow.title, devopsPow.description, renderDevopsBody()),
+  );
+
+  pages.push(
+    doc(CLOUD_ENGINEER_PATH, "Cloud engineering proof of work", cloudEngineerDescription, renderCloudEngineerBody()),
+  );
+
+  pages.push(
+    doc(ML_ENGINEER_PATH, "Machine learning engineering", mlEngineerDescription, renderMlEngineerBody()),
+  );
+
+  pages.push(doc(AGENTIC_PATH, agenticPow.title, agenticPowDescription, renderAgenticPowBody()));
+
+  pages.push(doc(REVOPS_PATH, REVOPS_TITLE, REVOPS_DESCRIPTION, renderRevopsBody()));
+
+  pages.push(
+    doc(
+      AI_DATA_SCIENTIST_PATH,
+      "AI data science proof of work",
+      aiDataScientistDescription,
+      renderAiDataScientistBody(),
+    ),
+  );
+
   for (const page of domains) {
     pages.push(doc(page.path, page.h1, page.description, renderDomainBody(page)));
   }
@@ -896,6 +983,17 @@ export function renderLlmsTxt(): string {
     `- [About](${abs("/about.md")})`,
     `- [Experience](${abs("/experience.md")})`,
     `- [GTM engineering](${abs("/gtm.md")}): revenue data pipelines, scoring, and what is built versus still being learned.`,
+    `- [Forward deployed engineering](${abs("/pow/fde.md")}): a personal proof of work for the proposed RELAY workflow. Not a customer deployment.`,
+    `- [Product management proof of work](${abs("/pow/product-management.md")}): a RevenueRoles case study that separates the live product from hypotheses and unmeasured outcomes.`,
+    `- [AI research engineering](${abs("/pow/ai-research-engineering.md")}): a prepared retrieval experiment. Not a model run and not a publication.`,
+    `- [AI benchmark engineering](${abs("/pow/ai-benchmark.md")}): EVALFORGE, a synthetic evaluation demonstration. Not a published benchmark.`,
+    `- [Founding engineer proof of work](${abs("/pow/founding-engineer.md")}): zero-to-one engineering, with synthetic BUILDLOG kept separate from the shipped projects.`,
+    `- [DevOps engineer proof of work](${abs("/pow/devops-engineer.md")}): a local delivery simulation, with repository workflows labeled separately from illustrative logs.`,
+    `- [Cloud engineering proof of work](${abs("/pow/cloud-engineer.md")}): deployment, networking, and operations, with repository evidence separated from a local lab.`,
+    `- [Machine learning engineering](${abs("/pow/ml-engineer.md")}): a browser simulation of a synthetic demand lifecycle. Not a trained or deployed model.`,
+    `- [Agentic AI engineering](${abs("/pow/agentic-ai.md")}): ORBIT, a deterministic agent-control simulation. Not a model call and not a deployed agent platform.`,
+    `- [RevOps engineering](${abs("/pow/revops-engineering.md")}): REVFLOW, a synthetic revenue-operations workbench. Not a live CRM.`,
+    `- [AI data science](${abs("/pow/ai-data-scientist.md")}): Insight Lab, a synthetic retail analysis. Not a retailer dataset and not a trained production model.`,
     `- [Contact](${abs("/contact.md")}): ${person.email}, ${person.phoneDisplay}`,
     `- [Privacy](${abs("/privacy.md")}): what the site collects and who processes it.`,
     `- GitHub: ${person.primaryProfiles.github}`,

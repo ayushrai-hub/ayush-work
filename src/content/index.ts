@@ -89,6 +89,81 @@ export {
   loomEmbedUrl,
   renderGtmBody,
 } from "./gtm";
+export { powPages } from "./powPages";
+export type { PowPageLink } from "./powPages";
+export {
+  foundingEngineer,
+  foundingCases,
+  renderFoundingEngineerBody,
+} from "./foundingEngineer";
+export {
+  CLOUD_ENGINEER_PATH,
+  cloudEngineerDescription,
+  cloudPrinciples,
+  cloudSections,
+  cloudCaseStudies,
+  cloudRoadmap,
+  renderCloudEngineerBody,
+} from "./cloudEngineerPow";
+export type { CloudEvidence } from "./cloudEngineerPow";
+export {
+  DEVOPS_PATH,
+  devopsDescription,
+  devopsPow,
+  devopsPrinciples,
+  devopsSections,
+  devopsLimits,
+  deliveryFindings,
+  renderDevopsBody,
+} from "./devopsPow";
+export {
+  PRODUCT_MANAGEMENT_PATH,
+  productManagementDescription,
+  renderProductManagementBody,
+} from "./productManagementPow";
+export {
+  AGENTIC_PATH,
+  agenticPow,
+  agenticPowDescription,
+  agenticThesis,
+  agenticLoop,
+  agenticNodes,
+  agenticDecisions,
+  agenticSafeguards,
+  agenticRoadmap,
+  agenticRelatedWork,
+  renderAgenticPowBody,
+} from "./agenticPow";
+export {
+  ML_ENGINEER_PATH,
+  ML_HEADLINE,
+  mlEngineerDescription,
+  renderMlEngineerBody,
+} from "./mlEngineerPow";
+export {
+  AI_RESEARCH_PATH,
+  aiResearchDescription,
+  aiResearchTitle,
+  renderAiResearchBody,
+} from "./aiResearchPow";
+export {
+  AI_DATA_SCIENTIST_PATH,
+  aiDataScientistCases,
+  aiDataScientistDescription,
+  aiDataScientistProfiles,
+  renderAiDataScientistBody,
+} from "./aiDataScientist";
+export {
+  benchmarkPage,
+  benchmarkPrinciples,
+  benchmarkPriorWork,
+  benchmarkSpec,
+  benchmarkStages,
+  benchmarkTasks,
+  auditFixtureTasks,
+  demonstrationRun,
+  renderBenchmarkBody,
+} from "./benchmarkEngineering";
 export type {
   GtmEvidence,
   GtmLayer,
@@ -101,6 +176,51 @@ export type {
   GtmSkillLevel,
   GtmStudyTopic,
 } from "./gtm";
+export {
+  FDE_PATH,
+  accountScore,
+  fdeAccounts,
+  fdeDecisions,
+  fdeFailures,
+  fdeLayers,
+  fdePhaseStatusLabels,
+  fdePow,
+  fdePrinciples,
+  fdeProblemSteps,
+  fdeProcess,
+  fdeRelatedWork,
+  fdeRoadmap,
+  fdeSections,
+  fdeShellViews,
+  fdeSources,
+  fdeStageKindLabels,
+  fdeStages,
+  renderFdeBody,
+} from "./fde";
+export type {
+  FdeAccount,
+  FdeDecision,
+  FdeEvidence,
+  FdeFailure,
+  FdeLayer,
+  FdePhaseStatus,
+  FdePrinciple,
+  FdeProblemStep,
+  FdeProcessStep,
+  FdeRelatedWork,
+  FdeRoadmapPhase,
+  FdeSection,
+  FdeShellViewId,
+  FdeSignal,
+  FdeStage,
+  FdeStageKind,
+} from "./fde";
+export {
+  REVOPS_PATH,
+  REVOPS_TITLE,
+  REVOPS_DESCRIPTION,
+  renderRevopsBody,
+} from "./revopsPow";
 export { privacySections, contactSections } from "./policies";
 export type { PolicySection } from "./policies";
 export { searchIndex, buildSearchIndex } from "./searchIndex";
