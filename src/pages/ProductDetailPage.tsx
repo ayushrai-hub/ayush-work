@@ -23,8 +23,10 @@ import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import MetaList from "../components/editorial/MetaList";
+import MediaGallery from "../components/editorial/MediaGallery";
 import {
   getProductBySlug,
+  getRecordVisuals,
   productCategoryLabels,
   productStageLabels,
   type Product,
@@ -60,6 +62,7 @@ export default function ProductDetailPage() {
     ([, value]) => value && (Array.isArray(value) ? value.length : true),
   );
   const stageLabel = productStageLabels[product.stage];
+  const visuals = getRecordVisuals(product.slug);
 
   return (
     <>
@@ -125,9 +128,29 @@ export default function ProductDetailPage() {
           )}
         </p>
 
+        {visuals && (visuals.gallery.length > 0 || visuals.diagram) && (
+          <section className="mb-10 grid gap-6 lg:grid-cols-2">
+            {visuals.gallery.length > 0 && (
+              <MediaGallery
+                items={visuals.gallery}
+                heading="Product screens & artifacts"
+                ariaLabel={`${product.title} visual gallery`}
+              />
+            )}
+            {visuals.diagram && (
+              <div>
+                <h2 className="label mb-3">System flow</h2>
+                <pre className="overflow-x-auto border border-rule bg-paper-elevated p-4 font-mono text-xs leading-relaxed text-ink">
+                  {visuals.diagram}
+                </pre>
+              </div>
+            )}
+          </section>
+        )}
+
         {product.thesis && (
           <section className="mb-10">
-            <h2 className="label mb-3">Thesis</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">Thesis</h2>
             <Prose>
               <p>{product.thesis}</p>
             </Prose>
@@ -135,19 +158,19 @@ export default function ProductDetailPage() {
         )}
 
         <section className="mb-10">
-          <h2 className="label mb-3">Problem</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">Problem</h2>
           <Prose>
             <p>{product.problem}</p>
           </Prose>
         </section>
 
         <section className="mb-10">
-          <h2 className="label mb-3">Intended users</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">Intended users</h2>
           <BulletList items={product.audience} />
         </section>
 
         <section className="mb-10">
-          <h2 className="label mb-3">Approach</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">Approach</h2>
           <Prose>
             <p>{product.approach}</p>
             {product.why && <p>{product.why}</p>}
@@ -163,11 +186,11 @@ export default function ProductDetailPage() {
 
         {archEntries.length > 0 && (
           <section className="mb-10">
-            <h2 className="label mb-3">Architecture</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">Architecture</h2>
             <dl className="max-w-measure space-y-3">
               {archEntries.map(([key, value]) => (
                 <div key={key}>
-                  <dt className="font-mono text-xs uppercase tracking-label text-ink-faint capitalize">
+                  <dt className="text-xs font-medium text-ink-faint capitalize">
                     {key}
                   </dt>
                   <dd className="text-ink-muted">
@@ -181,7 +204,7 @@ export default function ProductDetailPage() {
 
         {product.maturity && (
           <section className="mb-10">
-            <h2 className="label mb-3">What exists</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">What exists</h2>
             <div className="max-w-measure space-y-6">
               <div>
                 <h3 className="font-display text-lg text-ink">Implemented</h3>
@@ -201,7 +224,7 @@ export default function ProductDetailPage() {
 
         {(product.tradeoffs?.length || product.openQuestions.length > 0) && (
           <section className="mb-10">
-            <h2 className="label mb-3">Trade-offs and open questions</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">Trade-offs and open questions</h2>
             {product.tradeoffs && product.tradeoffs.length > 0 && (
               <BulletList items={product.tradeoffs} />
             )}
@@ -217,7 +240,7 @@ export default function ProductDetailPage() {
 
         {product.log.length === 0 && (
           <section className="mb-10">
-            <h2 className="label mb-3">Build log</h2>
+            <h2 className="font-display text-xl text-ink font-semibold mb-4">Build log</h2>
             <Prose>
               <p>
                 No verified build-log entries yet.{" "}

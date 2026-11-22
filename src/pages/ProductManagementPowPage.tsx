@@ -62,10 +62,10 @@ export default function ProductManagementPowPage() {
       <article>
         <header className="site-shell pb-10 pt-16 md:pt-24">
           <PowLinks />
-          <p className="label mb-3 mt-8">Product management / Proof of work</p>
-          <h1 className="max-w-[18ch] font-display text-4xl leading-tight text-ink sm:text-5xl">
+          <h1 className="mt-8 max-w-[18ch] font-display text-4xl leading-tight text-ink sm:text-5xl">
             I turn ambiguous problems into products people can use.
           </h1>
+          <p className="mt-3 text-sm text-ink-muted">Product management / Proof of work</p>
           <p className="mt-5 max-w-measure text-lg leading-relaxed text-ink-muted">
             I work across problem discovery, product strategy, prioritization, engineering, and measurement
             to build products that solve practical problems.

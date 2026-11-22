@@ -1,53 +1,25 @@
-/**
- * Global stylesheet: Tailwind layers, light/dark design tokens, base element styles, and shared component classes.
- *
- * Tokens are CSS custom properties on :root (light) and .dark (dark). ThemeContext toggles the
- * `light`/`dark` class on <html>, and tailwind.config.js maps its paper/ink/rule/accent/signal/focus
- * colors to these variables, so utilities like `bg-paper` follow the theme. The components layer
- * defines the site-wide classes (site-shell, prose-site, label, btn-*, link-*, skip-link, ...).
- *
- * Connects to:
- * - Imported by src/main.tsx; processed by the PostCSS plugins in vite.config.ts (Tailwind, Autoprefixer).
- * - tailwind.config.js (token names), src/contexts/ThemeContext.tsx (theme class).
- */
+/* Hallmark · shape: Editorial Ledger · genre: editorial · theme: brand · redesign: full
+ * paper: oklch(96.5% 0.005 75) · accent: oklch(43% 0.06 155) · display: Source Serif 4 · body: Source Sans 3 · hero: Settled · nav: edge-aligned · footer: mast · signature: proof-of-work lab suite
+ * axes: light/roman-serif/warm · posture: restrained · contrast: pass · fold: pass · copy: verbatim · v2.0.0 */
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 · weakest: V, brand palette preserved across routes; strengthened typographic rhythm, eliminated eyebrow tags, and added instant-focus states */
+
+@import "./tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Light theme tokens (default). */
-:root {
-  --bg: #f3f2f0;
-  --bg-elevated: #faf9f7;
-  --ink: #1a1a1a;
-  --ink-muted: #5c5a57;
-  --ink-faint: #8a8782;
-  --rule: #d4d0c8;
-  --accent: #2c5f4e;
-  --accent-soft: #e4efe9;
-  --signal: #9a3412;
-  --focus: #1d4ed8;
-}
-
-/* Dark theme tokens; applied when ThemeContext sets the `dark` class on <html>. */
-.dark {
-  --bg: #161615;
-  --bg-elevated: #1e1e1c;
-  --ink: #f0eee8;
-  --ink-muted: #a8a59e;
-  --ink-faint: #7a776f;
-  --rule: #3a3834;
-  --accent: #7eb89a;
-  --accent-soft: #24352e;
-  --signal: #e07a4a;
-  --focus: #93c5fd;
-}
-
 @layer base {
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   html {
     scroll-behavior: smooth;
   }
 
-  /* Effectively disables smooth scrolling, animations, and transitions for reduced-motion users. */
+  /* Disables smooth scrolling, animations, and transitions for reduced-motion users. */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -59,23 +31,16 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 
   body {
     @apply bg-paper text-ink font-sans antialiased;
     background-image:
-      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(44, 95, 78, 0.06), transparent 50%),
-      radial-gradient(ellipse 80% 60% at -10% 100%, rgba(154, 52, 18, 0.04), transparent 45%);
+      radial-gradient(ellipse 120% 80% at 100% -20%, var(--grad-accent), transparent 50%),
+      radial-gradient(ellipse 80% 60% at -10% 100%, var(--grad-signal), transparent 45%);
     min-height: 100vh;
-  }
-
-  /* `.dark` alone matches <html>, so the dark gradients also paint the root element. */
-  .dark body,
-  .dark {
-    background-image:
-      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(126, 184, 154, 0.08), transparent 50%),
-      radial-gradient(ellipse 80% 60% at -10% 100%, rgba(224, 122, 74, 0.05), transparent 45%);
   }
 
   ::selection {
@@ -86,6 +51,20 @@
   :focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
+    transition: none !important;
+  }
+
+  a:active,
+  button:active {
+    transform: translateY(1px);
+  }
+
+  button:disabled,
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   h1,
@@ -94,6 +73,8 @@
   h4 {
     @apply font-display text-ink font-semibold tracking-tight;
     text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
   }
 
   a {
@@ -115,7 +96,7 @@
   }
 
   .label {
-    @apply font-mono text-xs uppercase tracking-label text-ink-faint;
+    @apply font-sans text-xs font-medium text-ink-muted;
   }
 
   .rule {
@@ -123,11 +104,11 @@
   }
 
   .link-underline {
-    @apply text-ink underline decoration-rule underline-offset-4 hover:decoration-accent hover:text-accent;
+    @apply text-ink underline decoration-rule underline-offset-4 hover:decoration-accent hover:text-accent focus-visible:outline-focus;
   }
 
   .link-accent {
-    @apply text-accent underline underline-offset-4;
+    @apply text-accent underline underline-offset-4 focus-visible:outline-focus;
     text-decoration-color: color-mix(in srgb, var(--accent) 30%, transparent);
   }
 
@@ -137,23 +118,27 @@
 
   /* Base button; the btn-* variants below @apply it. */
   .btn {
+    white-space: nowrap;
     @apply inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus;
   }
 
   .btn-primary {
+    white-space: nowrap;
     @apply btn bg-ink text-paper-elevated hover:bg-accent;
   }
 
   .btn-secondary {
+    white-space: nowrap;
     @apply btn border border-rule bg-transparent text-ink hover:border-ink;
   }
 
   .btn-ghost {
+    white-space: nowrap;
     @apply btn text-ink-muted hover:text-ink;
   }
 
   .meta-row {
-    @apply flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-ink-faint;
+    @apply flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-xs text-ink-faint;
   }
 
   .page-section {

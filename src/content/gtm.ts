@@ -1,12 +1,15 @@
 /**
  * GTM engineering: the record behind /gtm and its Markdown twin /gtm.md.
  *
- * Holds only what is specific to the GTM framing: positioning, the walkthrough video slot,
- * per-project evidence labels and limits, the infrastructure layer map, the toolkit with honest
- * levels, what is being studied, reading resources, and next builds. Product and project facts
- * (summaries, stacks, links, maturity) stay in products.ts and projects.ts and are looked up by
- * slug, so /products, /projects, search, the API, and MCP say the same thing as this page.
- * `renderGtmBody` builds the Markdown body from the same record.
+ * Holds what is specific to the GTM and revenue-systems showcase: positioning, vision for
+ * precision GTM and autonomous revenue systems, the walkthrough video slot, per-project evidence
+ * labels, problem/solution/architecture/scale/outcomes/limits for seven real GTM and revenue
+ * builds, autonomous agent workflows, the GTM infrastructure layer map, the structured toolkit
+ * tables with honest levels, active research and experiments, lessons learned, reading resources,
+ * and next builds. Product and project facts (summaries, stacks, links, maturity) stay in
+ * products.ts and projects.ts and are looked up by slug, so /products, /projects, search, the API,
+ * and MCP say the same thing as this page. `renderGtmBody` builds the Markdown body from the same
+ * record.
  *
  * Connects to:
  * - src/pages/GtmPage.tsx (HTML) and `buildPages()` in src/lib/agent/markdown.ts (/gtm.md).
@@ -35,13 +38,21 @@ export const gtmEvidenceLabels: Record<GtmEvidence, { label: string; meaning: st
   },
 };
 
-/** One proof on /gtm: a product or project record plus what it shows for GTM work and its limits. */
+/** One proof on /gtm: a product or project record plus problem, solution, architecture, verifiable metrics, and limits. */
 export interface GtmProof {
   slug: string;
   kind: "product" | "project";
   evidence: GtmEvidence;
   /** Short stack labels for products, which have prose architecture instead of a technology list. */
   stack?: string[];
+  /** Specific revenue or GTM problem addressed. */
+  problem?: string;
+  /** How the system solves it. */
+  solution?: string;
+  /** Concrete architecture and data flow in the repository. */
+  architectureNote?: string;
+  /** Verifiable repository metrics (tests, connectors, schema states, dataset counts — never invented adoption). */
+  verifiableMetrics?: string[];
   /** GTM concepts the work demonstrates. */
   shows: string[];
   /** Stated limits. Shown next to the proof, never hidden. */
@@ -100,12 +111,45 @@ export interface GtmResourceGroup {
   items: GtmResource[];
 }
 
+/** One capability row in the GTM engineering capability matrix table. */
+export interface GtmCapabilityRow {
+  domain: string;
+  engineeringFocus: string;
+  toolsAndStack: string;
+  proofInRepo: string;
+  evidenceStatus: GtmSkillLevel;
+}
+
+/** One autonomous agent or AI-driven revenue workflow pattern and its control boundary. */
+export interface GtmAgentWorkflow {
+  name: string;
+  roleOfModel: string;
+  deterministicGuardrail: string;
+  humanGate: string;
+  implementedIn: string;
+  href: string;
+}
+
+/** One engineering thesis or lesson learned from building GTM and revenue systems. */
+export interface GtmThesisPillar {
+  title: string;
+  statement: string;
+  implementationDetail: string;
+}
+
 /** The whole /gtm record. */
 export interface GtmPortfolio {
   title: string;
   description: string;
   positioning: string;
   background: string;
+  vision: {
+    headline: string;
+    paragraphs: string[];
+    pillars: GtmThesisPillar[];
+  };
+  capabilityMatrix: GtmCapabilityRow[];
+  agentWorkflows: GtmAgentWorkflow[];
   walkthrough: {
     /** Loom share or embed URL. Leave unset until the video is recorded. */
     loomUrl?: string;
@@ -115,6 +159,7 @@ export interface GtmPortfolio {
   layers: GtmLayer[];
   toolkit: GtmSkillGroup[];
   studying: { intro: string; topics: GtmStudyTopic[] };
+  lessonsLearned: Array<{ title: string; detail: string; sourceSlug: string }>;
   resources: { note: string; groups: GtmResourceGroup[] };
   nextBuilds: string[];
 }
@@ -127,15 +172,150 @@ export interface GtmPortfolio {
 export const gtmPortfolio: GtmPortfolio = {
   title: "GTM engineering",
   description:
-    "Ayush Rai on GTM engineering: a live revenue-role job product, public-source data pipelines with provenance, an explainable scoring demo with a human approval gate, and an honest map of what is built, what is being studied, and what comes next.",
+    "Ayush Rai on GTM engineering and revenue systems: 7 real GTM and revenue-data products/projects (RevenueRoles, GTM-Strato ICP Finder, Revenue Intelligence Engine, Relationship Intelligence Engine, AIworks Lead Qualification Pipeline, SpiderWeb, MailU), structured capability tables, human-gated autonomous agent workflows, and an honest map of what is shipped versus studied.",
   positioning:
-    "I build data and decision systems for revenue work: job-market data pipelines, entity resolution, explainable scoring, and human-approval workflows.",
+    "I build data, qualification, and agentic decision systems for revenue teams: public-source discovery pipelines, SSRF-hardened company research, field-level provenance, deterministic 100-point ICP and lead scoring, and human-approval gates before anything touches a CRM or outbound channel.",
   background:
-    "From April 2024 to August 2025 I worked as an AI engineer at FoCDoT Technologies, on AI engineering and technical evaluation. Since then I have built my own products and done contract evaluation work for frontier-lab programs. I am now studying GTM engineering on top of that background, and this page separates what I have built from what I am still learning.",
+    "From April 2024 to August 2025 I worked as an SDE — AI Engineer at FoCDoT Technologies on model evaluation and coding/STEM analysis, and since August 2025 I have contributed to frontier-lab evaluation programs through Outlier. I bring that evaluation discipline into GTM engineering: treating language models as untrusted proposers, keeping numerical scoring and rule checks in deterministic Python and TypeScript, and separating what runs in production from what runs locally or on synthetic fixtures.",
+  vision: {
+    headline: "Precision GTM and the future of autonomous revenue systems",
+    paragraphs: [
+      "Volume-first outbound is collapsing under its own noise. Cheap generative copy and bulk contact exports made it trivial to blast thousands of inboxes, which destroyed reply rates and forced mailbox providers to tighten sender thresholds. The next generation of revenue infrastructure is not a louder sequence sender — it is precision GTM: identifying the exact accounts with a verifiable technical or commercial trigger, proving where every field came from, and routing only high-conviction actions to humans.",
+      "In an autonomous revenue system, language models and deterministic software have strict, non-overlapping jobs. Models excel at reading unstructured inputs — parsing five pages of a prospect's website, extracting a job description's actual responsibilities, or summarizing why an account's recent hiring matters. They are terrible systems of record. Entity resolution, duplicate detection, 0–100 fit scoring, credit budgets, idempotency keys, and CRM schema validation must stay in deterministic code with unit tests.",
+      "Autonomy in revenue operations should be earned stage by stage. Routine discovery, normalization, waterfall enrichment, signal extraction, and draft preparation can run on schedules or webhooks without human intervention. Anything that mutates a system of record or contacts a customer belongs behind an explicit human approval gate, with every claim linked to its source URL and timestamp.",
+    ],
+    pillars: [
+      {
+        title: "Provenance over row count",
+        statement:
+          "A smaller lead table where every email, direct phone, and buying signal carries a source URL, retrieval timestamp, and verification state beats a 50,000-row CSV with silent guesses.",
+        implementationDetail:
+          "Implemented in Relationship Intelligence Engine (5-state field status: verified, inferred, unverified, conflicting, missing) and AIworks Lead Pipeline (mandatory *_source_url per field).",
+      },
+      {
+        title: "Deterministic scoring, generative synthesis",
+        statement:
+          "Never ask an LLM for a lead score. Compute fit, trigger weight, reachability, and confidence in tested code; use the model at temperature 0 to synthesize evidence-labeled research briefs.",
+        implementationDetail:
+          "Implemented in GTM-Strato (5-component local rubric) and Revenue Intelligence Engine (6-component 100-point rubric + deterministic fallback).",
+      },
+      {
+        title: "Human approval gates at the system boundary",
+        statement:
+          "Autonomous agents should prepare the research, filter definitions, and draft payload, then pause in an approval queue before any CRM write or outbound send.",
+        implementationDetail:
+          "Implemented in Revenue Intelligence Engine (approval queue gating CSV/JSON/XLSX export) and the ORBIT / REVFLOW proof-of-work workbenches.",
+      },
+      {
+        title: "Cost-aware model routing",
+        statement:
+          "Running a frontier model on every row of an unsegmented list wastes budget. Filter deterministically first, route structured extraction to fast models or local weights, and reserve deep synthesis for top-decile accounts.",
+        implementationDetail:
+          "Implemented across AIworks (zero-LLM rule pre-filter), GTM-Strato (NVIDIA Build NIM endpoints), and MailU (local Ollama + ChromaDB).",
+      },
+    ],
+  },
+  capabilityMatrix: [
+    {
+      domain: "Account discovery & signal ingestion",
+      engineeringFocus: "ATS connectors, public directory scraping, SSRF-safe web extraction, scheduled re-discovery",
+      toolsAndStack: "Python, TypeScript, Inngest, Playwright, Greenhouse/Lever/Ashby/RemoteOK APIs",
+      proofInRepo: "RevenueRoles (4 ATS sources), GTM-Strato (5-page SSRF-guarded extractor), Relationship Intelligence Engine (YC + GitHub signals)",
+      evidenceStatus: "shipped",
+    },
+    {
+      domain: "Entity resolution & deduplication",
+      engineeringFocus: "Cross-source record merging, domain/name normalization, collision detection without silent overwrites",
+      toolsAndStack: "PostgreSQL, PGlite, SQLite, TypeScript, Python",
+      proofInRepo: "AIworks Leads (lead_id collision & duplicate_previous_run checks), SpiderWeb (2-stage CSV detection & person/company dedup), RevenueRoles",
+      evidenceStatus: "shipped",
+    },
+    {
+      domain: "Field provenance & lead qualification",
+      engineeringFocus: "Per-field source URLs, 5-state verification envelopes, direct-phone vs switchboard validation",
+      toolsAndStack: "Python (zero-dep rules), TypeScript, Pydantic, Zod, SQLite",
+      proofInRepo: "Relationship Intelligence Engine (verified/inferred/unverified/conflicting/missing), AIworks Lead Pipeline (accepted vs research_only vs rejections)",
+      evidenceStatus: "shipped",
+    },
+    {
+      domain: "Explainable ICP & account scoring",
+      engineeringFocus: "Deterministic 0–100 rubrics with inspectable component weights and zero LLM score hallucination",
+      toolsAndStack: "Python, FastAPI, Streamlit, SQLAlchemy, pytest",
+      proofInRepo: "GTM-Strato (Evidence 30%, Problem Fit 25%, Triggers 15%, Reachability 15%, Clarity 15%), Revenue Intelligence Engine (100-pt rubric)",
+      evidenceStatus: "shipped",
+    },
+    {
+      domain: "Prospecting filter & enrichment orchestration",
+      engineeringFocus: "Generating platform-ready search filters, waterfall design, provider adapters, credit & rate-limit control",
+      toolsAndStack: "Clay, Apollo.io, LinkedIn Sales Navigator, HTTP API columns, MockEnrichmentProvider",
+      proofInRepo: "GTM-Strato (generates Apollo, Sales Nav, and Clay filter payloads); Apollo product used; live Clay/Apollo API wiring in active study",
+      evidenceStatus: "used",
+    },
+    {
+      domain: "Bounded AI agents & account research",
+      engineeringFocus: "Fact-vs-hypothesis separation, temperature-0 JSON synthesis, deterministic fallbacks, local RAG",
+      toolsAndStack: "NVIDIA Build API, OpenAI-compatible APIs, Ollama, ChromaDB, pgvector, MCP",
+      proofInRepo: "GTM-Strato ([Website fact] vs [Hypothesis]), Revenue Intelligence Engine, MailU (local Gmail RAG), this site's dual MCP servers",
+      evidenceStatus: "shipped",
+    },
+    {
+      domain: "CRM sync, governance & human approval gates",
+      engineeringFocus: "Approval queues before export, idempotent upserts, object associations, lifecycle conflict guards",
+      toolsAndStack: "HubSpot CRM API, FastAPI, Next.js, SQLite/Postgres audit logs, CSV/JSON/XLSX exporters",
+      proofInRepo: "Revenue Intelligence Engine (human approval queue + run_id logs), REVFLOW workbench (/pow/revops-engineering); HubSpot API in active study",
+      evidenceStatus: "studying",
+    },
+  ],
+  agentWorkflows: [
+    {
+      name: "Fact-grounded ICP & persona discovery agent",
+      roleOfModel:
+        "Reads up to 5 delimited public web pages via NVIDIA Build API and proposes company profile fields, 3 ICP segments, buyer personas, and Apollo / Sales Navigator / Clay search filters.",
+      deterministicGuardrail:
+        "SSRF/DNS validation blocks private/loopback IPs; pricing is forced to 'Not found' if no pricing text was extracted; 0–100 fit score is computed locally in Python, never by the model.",
+      humanGate:
+        "Every field is labeled [Website fact] (with cited URL), [Hypothesis], or [Not found] so an operator verifies hypotheses before launching a campaign.",
+      implementedIn: "GTM-Strato (ICP Finder) — 48 pytest tests",
+      href: "https://github.com/ayushrai-hub/GTM-Strato",
+    },
+    {
+      name: "Account research & qualification pipeline agent",
+      roleOfModel:
+        "Synthesizes structured GTM problem, why-now trigger, and outreach angle at temperature 0 for top-ranked accounts, with a deterministic template fallback when no API key is present.",
+      deterministicGuardrail:
+        "100-point account ranking runs before the model is called; required JSON schema fields are validated; idempotent upserts prevent duplicate run artifacts.",
+      humanGate:
+        "Researched accounts enter a human approval queue; only approved records can be exported to CRM-ready CSV, JSON, or XLSX.",
+      implementedIn: "Revenue Intelligence Engine — 40 pytest tests",
+      href: "https://github.com/ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE",
+    },
+    {
+      name: "Deterministic agent controller & tool-boundary lab (ORBIT)",
+      roleOfModel:
+        "Demonstrates how an agent plan is separated from state transitions: read tools execute against a typed registry while high-impact writes require explicit controller transition and read-back verification.",
+      deterministicGuardrail:
+        "Zod-validated tool inputs, retry budgets, 8 scripted failure modes (hallucinated tool, schema mismatch, rate limit, partial write), and post-write store verification.",
+      humanGate:
+        "Proposed -> Approved -> Executed -> Verified state machine; rejecting a proposal blocks the write, and approving still checks the store row.",
+      implementedIn: "Agentic AI POW (/pow/agentic-ai) — 13 Vitest tests",
+      href: "/pow/agentic-ai",
+    },
+    {
+      name: "Stateless MCP portfolio & documentation servers",
+      roleOfModel:
+        "Exposes structured read-only tools (list_projects, get_project, compare_projects, search_portfolio, list_pages, get_page, search_docs) over Streamable HTTP and stdio to external AI agents.",
+      deterministicGuardrail:
+        "JSON-RPC -32602 schema validation, 60 req/60s draft-11 RateLimit headers, lexical ranking without hallucinated summaries, and SEP-2127 Server Cards.",
+      humanGate:
+        "Strictly read-only public data from src/content/; zero write tools exposed to external agents.",
+      implementedIn: "ayushrai.site (/api/mcp & /api/mcp/docs)",
+      href: "/developers",
+    },
+  ],
   walkthrough: {
     plannedTopics: [
       "RevenueRoles: one posting from source to published listing.",
-      "Revenue Intelligence Engine: an ICP run, the score breakdown, and the approval queue.",
+      "GTM-Strato & Revenue Intelligence Engine: an ICP run, fact-vs-hypothesis grounding, the 100-point score breakdown, and the approval queue.",
       "Where each project sits in the data, orchestration, execution, and agent layers.",
     ],
   },
@@ -145,6 +325,17 @@ export const gtmPortfolio: GtmPortfolio = {
       kind: "product",
       evidence: "live",
       stack: ["Next.js", "FastAPI", "Supabase Postgres", "pgvector", "Inngest", "Vercel"],
+      problem:
+        "Technical revenue roles (GTM Engineer, RevOps Engineer, Forward Deployed Engineer) are buried across employer ATS boards under inconsistent titles, forcing candidates and analysts to read every description.",
+      solution:
+        "Ingests postings directly from Greenhouse, Lever, Ashby, and RemoteOK, normalizes them into one schema, classifies each role by the actual work and stack described, and deduplicates conservatively.",
+      architectureNote:
+        "Next.js web and API apps + Inngest scheduled discovery jobs + Python FastAPI classification worker + Supabase Postgres with pgvector and row-level security.",
+      verifiableMetrics: [
+        "4 ATS/job connectors (Greenhouse, Lever, Ashby, RemoteOK) with recorded fixture tests",
+        "71 verified roles and 58% compensation coverage on the live homepage snapshot (checked 2026-10-18)",
+        "45 Python pytest tests + 294 TypeScript test cases in the repository",
+      ],
       shows: [
         "Data layer: ingestion from four job sources into one schema.",
         "Entity resolution: deduplicating the same posting across sources.",
@@ -158,9 +349,46 @@ export const gtmPortfolio: GtmPortfolio = {
       ],
     },
     {
+      slug: "gtm-strato",
+      kind: "project",
+      evidence: "local",
+      problem:
+        "LLM-generated ICPs usually mix real website facts with model guesses and invent arbitrary fit scores that GTM teams cannot audit or translate into prospecting filters.",
+      solution:
+        "Extracts up to five public pages from a company URL with SSRF and DNS guards, labels every extracted field as a cited Website fact, Hypothesis, or Not found, computes a deterministic 0–100 fit score, and outputs ready-to-use filters for Apollo.io, LinkedIn Sales Navigator, and Clay.",
+      architectureNote:
+        "Python 3.11 + Streamlit UI + SSRF-hardened HTTP extractor (`website_extractor.py`) + NVIDIA Build API client (`nvidia_client.py`) + 5-component local scoring engine (`scoring_engine.py`) + SQLite persistence (`data/icp_finder.sqlite`).",
+      verifiableMetrics: [
+        "48 automated pytest tests across grounding, scoring, SSRF security, database, and UI",
+        "5-component deterministic fit rubric: Evidence (30%), Problem Fit (25%), Buying Triggers (15%), Reachability (15%), Commercial Clarity (15%)",
+        "3 platform filter generators (Apollo.io, LinkedIn Sales Navigator, Clay) per run",
+      ],
+      shows: [
+        "Fact-vs-hypothesis grounding: every company profile field is labeled Website fact (with cited URL), Hypothesis, or Not found; pricing is forced to Not found when no pricing text was extracted.",
+        "Deterministic local 0–100 fit scoring across five weighted components — never produced by an LLM prompt.",
+        "Actionable GTM output: generates platform-specific prospecting filters for Apollo.io, LinkedIn Sales Navigator, and Clay.",
+        "Security discipline: blocks private, loopback, link-local, and reserved IPs on every DNS hop, ignores system proxies, respects robots.txt, and never executes page JavaScript.",
+      ],
+      limits: [
+        "Runs locally with Streamlit and SQLite; requires a user-supplied NVIDIA_API_KEY for live inference.",
+        "Does not render client-side JavaScript SPAs and is a discovery starting point, not verified market research.",
+      ],
+    },
+    {
       slug: "revenue-intelligence-engine",
       kind: "project",
       evidence: "synthetic",
+      problem:
+        "Revenue teams either research and score accounts manually in spreadsheets or let an unconstrained LLM assign opaque scores and push unreviewed copy toward outreach.",
+      solution:
+        "Runs a staged GTM pipeline over a 42-company synthetic universe: normalizes and deduplicates records, detects five buying-signal types, scores fit on a transparent 100-point rubric, runs temperature-0 account research with a deterministic fallback, and holds export behind a human approval queue.",
+      architectureNote:
+        "Python FastAPI service (`app/workflows/revenue_intelligence.py`) + SQLAlchemy models + deterministic scorer + temperature-0 LLM research adapter + Next.js 6-stage operator console.",
+      verifiableMetrics: [
+        "42 synthetic companies scored across a 6-component 100-point deterministic rubric",
+        "40 automated pytest tests covering ingestion, scoring, research fallback, and approval gating",
+        "6 operator console stages with committed repository screenshots and run_id audit logs",
+      ],
       shows: [
         "ICP-driven account scoring on a transparent 100-point rubric. The score is never produced by an LLM.",
         "Buying-signal detection: hiring, funding, expansion, product launch, technology adoption.",
@@ -177,6 +405,17 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "relationship-intelligence-engine",
       kind: "project",
       evidence: "local",
+      problem:
+        "Public-source prospect scrapers overwrite fields without recording provenance, making it impossible to tell whether a founder's role or hiring signal was verified, inferred, or conflicting.",
+      solution:
+        "Ten-stage TypeScript pipeline that discovers technical founders and companies hiring AI/ML engineers from the YC directory, GitHub signals, and accelerator portfolios, wrapping every field in a provenance envelope with an explicit verification state.",
+      architectureNote:
+        "TypeScript CLI + Node.js pipeline + PGlite / PostgreSQL storage + Playwright collectors + XLSX/CSV/JSON exporters + local inspection dashboard.",
+      verifiableMetrics: [
+        "10 pipeline stages: discovery, normalization, entity resolution, enrichment, verification, signal detection, scoring, deduplication, export, refresh",
+        "5 explicit field verification states: verified, inferred, unverified, conflicting, missing",
+        "34 automated Vitest test cases in the repository",
+      ],
       shows: [
         "Account and people discovery from public sources: the YC directory, GitHub signals, accelerator portfolios.",
         "A staged pipeline: discovery, normalization, entity resolution, enrichment, verification, signal detection, scoring, deduplication, export, refresh.",
@@ -189,9 +428,44 @@ export const gtmPortfolio: GtmPortfolio = {
       ],
     },
     {
+      slug: "aiworks-leads",
+      kind: "project",
+      evidence: "local",
+      problem:
+        "Researched B2B lead sheets frequently mix company switchboards with direct phones, lack source URLs, violate geography or seniority rules, and re-import leads already delivered in prior batches.",
+      solution:
+        "Zero-dependency Python CLI and SQLite observation store that validates every row against strict qualification rules, requires a public source URL per mandatory field, separates incomplete high-fit prospects into `research_only.csv`, and blocks cross-run duplicates.",
+      architectureNote:
+        "Python 3.9+ standard-library package (`aiworks_leads`) + deterministic rule validator (`rules.py`) + SQLite store with automatic pre-run backups (`store.py`) + immutable timestamped run exporter (`export.py`).",
+      verifiableMetrics: [
+        "0 external runtime dependencies (pure Python standard library + SQLite3)",
+        "3 deterministic output buckets per run: accepted_leads.csv, research_only.csv, rejections.csv + JSON/text run reports",
+        "6 end-to-end unittest suites on synthetic example.* fixtures verifying dedup, identity collisions, and upgrade paths",
+      ],
+      shows: [
+        "Strict field-level provenance enforcement: name, senior role, tech industry, non-India geography, domain-matched corporate email, and direct business phone each require a public `*_source_url`.",
+        "Phone hygiene: distinguishes `direct_business` and `mobile_business` from `company_switchboard` and refuses any direct number identical to the switchboard.",
+        "Cross-run state & identity collision safety: tracks `lead_id` (normalized name + company domain) in SQLite, rejects prior deliveries, flags same-name/different-email collisions for manual review without merging, and backs up the database before every run.",
+      ],
+      limits: [
+        "Enforces provenance and formatting rules on researched CSVs; does not crawl source URLs or ping SMTP servers.",
+        "Local CLI workflow with synthetic test fixtures; no direct CRM push.",
+      ],
+    },
+    {
       slug: "spiderweb",
       kind: "project",
       evidence: "local",
+      problem:
+        "LinkedIn data exports are a pile of inconsistent CSVs that bury relationship history, shared companies, and warm-intro paths.",
+      solution:
+        "Ingests a personal LinkedIn archive through two-stage file detection, resolves person and company entities with per-file audit counts, and surfaces rule-based relationship signals in a local graph UI.",
+      architectureNote:
+        "TypeScript + Next.js local app + PostgreSQL + optional Redis-backed ingestion worker + Docker Compose.",
+      verifiableMetrics: [
+        "2-stage CSV detector (filename match followed by column-signature fallback)",
+        "4 per-file audit counters on every import: imported, updated, deduplicated, rejected",
+      ],
       shows: [
         "Two-stage file detection (filename, then column signature) for messy exports.",
         "Person and company resolution with per-file import, update, dedup, and reject counts.",
@@ -205,6 +479,15 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "mailu",
       kind: "project",
       evidence: "local",
+      problem:
+        "High-volume inbox history is hard to search by intent or relationship context without shipping private correspondence to a hosted third-party model.",
+      solution:
+        "Syncs a mailbox via the Gmail API, runs zero-shot categorization, indexes embeddings in ChromaDB, and serves local RAG Q&A through Ollama.",
+      architectureNote:
+        "Python + FastAPI + Gmail API OAuth sync + ChromaDB vector store + local Ollama inference.",
+      verifiableMetrics: [
+        "Local-first RAG pipeline: Gmail API sync -> zero-shot categorization -> ChromaDB -> Ollama chat",
+      ],
       shows: [
         "Email data handling: Gmail API sync, parsing, and storage.",
         "Zero-shot categorization, semantic search, and RAG chat on a local model.",
@@ -220,112 +503,120 @@ export const gtmPortfolio: GtmPortfolio = {
       description: "Discover, collect, enrich, validate, and organize company, contact, and signal records.",
       built: [
         "RevenueRoles ingestion, normalization, and deduplication across Greenhouse, Lever, Ashby, and RemoteOK.",
-        "Field-level provenance and verification status in the Relationship Intelligence Engine.",
+        "SSRF-hardened website extraction and fact-vs-hypothesis separation in GTM-Strato (ICP Finder).",
+        "Field-level provenance and 5-state verification status in the Relationship Intelligence Engine.",
+        "Mandatory source-URL and direct-phone verification in the AIworks Lead Qualification Pipeline.",
         "Person and company resolution in SpiderWeb.",
       ],
-      gap: "No paid enrichment provider (Apollo, Clay) is wired into any project.",
+      gap: "No paid enrichment provider (Apollo, Clay) is wired into a live backend yet.",
     },
     {
       name: "Orchestration",
       description: "Coordinate workflows, apply business rules, manage dependencies, and decide what happens next.",
       built: [
-        "Inngest scheduled discovery in RevenueRoles.",
+        "Inngest scheduled discovery with concurrency locks in RevenueRoles.",
         "A staged pipeline with run IDs and idempotent upserts in the Revenue Intelligence Engine.",
+        "Immutable timestamped run folders and automatic pre-run SQLite backups in the AIworks Lead Pipeline.",
         "An optional Redis-backed ingestion worker in SpiderWeb.",
       ],
-      gap: "No CRM-triggered or webhook-driven workflows yet.",
+      gap: "No CRM-triggered or webhook-driven production workflows yet.",
     },
     {
       name: "Execution",
       description: "Update CRM records, create tasks, trigger approved outreach, notify reps.",
       built: [
+        "Platform prospecting filter generation for Apollo.io, LinkedIn Sales Navigator, and Clay in GTM-Strato.",
         "CSV, JSON, and XLSX exports, gated by an approval queue in the Revenue Intelligence Engine.",
+        "Tri-bucket qualification exports (accepted_leads.csv, research_only.csv, rejections.csv) in AIworks Leads.",
       ],
-      gap: "No CRM writes, no outbound sending, and no deliverability work.",
+      gap: "No live CRM writes, no outbound sending, and no deliverability infrastructure.",
     },
     {
       name: "Agents",
       description: "Use LLMs and tools for contextual research, unstructured data, and bounded decisions.",
       built: [
-        "LLM account research with labeled claims and a deterministic fallback.",
-        "RAG over a mailbox in MailU.",
-        "Evaluation discipline from contract evaluation work: judging model output against criteria.",
+        "NVIDIA Build API company & ICP analyzer in GTM-Strato with [Website fact] vs [Hypothesis] grounding.",
+        "LLM account research at temperature 0 with labeled claims and a deterministic fallback in the Revenue Intelligence Engine.",
+        "RAG over a mailbox in MailU, plus deterministic agent control simulation in ORBIT (/pow/agentic-ai).",
+        "Evaluation discipline from contract evaluation work: judging model output against explicit rubrics.",
       ],
-      gap: "No production agent with measured outcomes.",
+      gap: "No autonomous outbound agent operating on live customer pipeline.",
     },
     {
       name: "Revenue operations",
       description: "ICP definition, qualification, pipeline metrics, and the people who use the system.",
       built: [
-        "ICP definition, explainable scoring, and an approval gate, all in a synthetic demo.",
+        "Deterministic 100-point ICP and account scoring rubrics in GTM-Strato and the Revenue Intelligence Engine.",
+        "Strict B2B lead acceptance and identity-collision rules in AIworks Leads.",
+        "Interactive funnel, routing, and CRM sync simulation in REVFLOW (/pow/revops-engineering).",
       ],
-      gap: "No HubSpot or Salesforce work shown, and no pipeline metrics from real use.",
+      gap: "No live HubSpot or Salesforce production administration, and no pipeline metrics from commercial use.",
     },
   ],
   toolkit: [
     {
       heading: "Languages and frameworks",
       items: [
-        { name: "Python", level: "shipped", note: "FastAPI services, pipelines, and pytest suites (Revenue Intelligence Engine, MailU, the RevenueRoles worker)." },
-        { name: "TypeScript", level: "shipped", note: "Next.js apps, CLIs, and pipelines (RevenueRoles, Relationship Intelligence Engine, SpiderWeb, this site)." },
-        { name: "Next.js and React", level: "shipped", note: "The RevenueRoles web app and the Revenue Intelligence Engine console." },
-        { name: "FastAPI", level: "shipped", note: "The Revenue Intelligence Engine API and the RevenueRoles classification worker." },
+        { name: "Python", level: "shipped", note: "FastAPI services, Streamlit workbenches, zero-dep CLIs, and pytest/unittest suites (GTM-Strato, Revenue Intelligence Engine, AIworks Leads, MailU, RevenueRoles worker)." },
+        { name: "TypeScript", level: "shipped", note: "Next.js apps, CLIs, MCP servers, and pipelines (RevenueRoles, Relationship Intelligence Engine, SpiderWeb, this site)." },
+        { name: "Next.js and React", level: "shipped", note: "The RevenueRoles web app, the Revenue Intelligence Engine console, and the ORBIT / REVFLOW workbenches." },
+        { name: "FastAPI and Streamlit", level: "shipped", note: "The Revenue Intelligence Engine API, the RevenueRoles classification worker, and the GTM-Strato ICP Finder UI." },
       ],
     },
     {
-      heading: "Data",
+      heading: "Data and storage",
       items: [
         { name: "PostgreSQL and SQL", level: "shipped", note: "Supabase with pgvector and row-level security in RevenueRoles. PGlite or Postgres in the Relationship Intelligence Engine." },
-        { name: "SQLAlchemy", level: "shipped", note: "Persistence for the Revenue Intelligence Engine, SQLite locally with Postgres-compatible models." },
+        { name: "SQLite and SQLAlchemy", level: "shipped", note: "Run persistence in GTM-Strato, backed-up lead observation store in AIworks Leads, and SQLAlchemy models in Revenue Intelligence Engine." },
         { name: "Vector stores", level: "shipped", note: "pgvector in RevenueRoles, ChromaDB in MailU." },
-        { name: "Entity resolution and deduplication", level: "shipped", note: "Across job sources, public company data, and LinkedIn exports." },
+        { name: "Entity resolution and deduplication", level: "shipped", note: "Across ATS job sources, public company data, researched lead batches, and LinkedIn exports." },
       ],
     },
     {
       heading: "Orchestration and automation",
       items: [
-        { name: "Inngest", level: "shipped", note: "Scheduled discovery jobs in RevenueRoles." },
-        { name: "Queues and workers", level: "shipped", note: "Redis-backed ingestion worker in SpiderWeb; a resume queue in RevenueRoles." },
-        { name: "n8n, Make, Zapier", level: "used", note: "Familiar with the platforms. No public project uses them yet." },
+        { name: "Inngest", level: "shipped", note: "Scheduled discovery jobs and concurrency control in RevenueRoles." },
+        { name: "Queues and workers", level: "shipped", note: "Redis-backed ingestion worker in SpiderWeb; resume and classification queues in RevenueRoles." },
+        { name: "n8n, Make, Zapier", level: "used", note: "Familiar with the platforms and webhook patterns. No public repository uses them yet." },
       ],
     },
     {
-      heading: "AI",
+      heading: "AI and autonomous agents",
       items: [
-        { name: "Structured LLM output", level: "shipped", note: "JSON account research with required-field checks and a deterministic fallback in the Revenue Intelligence Engine." },
-        { name: "Tool calling and agent loops", level: "used", note: "Understood and used in experiments. No public project of mine shows it yet." },
-        { name: "RAG and embeddings", level: "shipped", note: "MailU on a local model through Ollama." },
-        { name: "LLM evaluation", level: "used", note: "Contract evaluation work for frontier-lab programs: reviewing model output against criteria. Task materials are not public." },
+        { name: "Structured LLM output & grounding", level: "shipped", note: "Fact-vs-hypothesis separation via NVIDIA Build in GTM-Strato; temperature-0 JSON account research with deterministic fallback in Revenue Intelligence Engine." },
+        { name: "Model Context Protocol (MCP) & tool schemas", level: "shipped", note: "Two stateless Streamable HTTP MCP servers (/api/mcp and /api/mcp/docs) plus the ORBIT deterministic tool-registry controller." },
+        { name: "RAG and embeddings", level: "shipped", note: "MailU on a local model through Ollama and ChromaDB." },
+        { name: "LLM evaluation & RLHF rubrics", level: "used", note: "SDE — AI Engineer at FoCDoT (Apr 2024 – Aug 2025) and contract evaluation contributor via Outlier (Aug 2025 – present). Task materials are confidential." },
       ],
     },
     {
       heading: "GTM platforms",
       items: [
-        { name: "Apollo.io", level: "used", note: "Used as a product. Its API is not integrated in any project yet." },
-        { name: "Clay", level: "studying", note: "Waterfalls, HTTP API columns, and where Clay ends and a backend begins." },
-        { name: "HubSpot", level: "studying", note: "CRM object model, associations, and safe create-or-update through the API." },
+        { name: "Apollo.io", level: "used", note: "Used as a product; GTM-Strato generates Apollo prospecting filter definitions. Direct REST enrichment API is not wired into a repo yet." },
+        { name: "Clay", level: "studying", note: "GTM-Strato generates Clay filter definitions; actively studying waterfalls, HTTP API columns, and where Clay hands off to a custom backend." },
+        { name: "HubSpot", level: "studying", note: "CRM object model, associations, and idempotent create-or-update through the v3 API." },
       ],
     },
     {
       heading: "Testing and delivery",
       items: [
-        { name: "pytest, Vitest, Playwright", level: "shipped", note: "Test suites across the projects on this page." },
-        { name: "Vercel, Netlify, Docker", level: "shipped", note: "RevenueRoles and the Revenue Intelligence Engine on Vercel; this site on Netlify; Docker Compose for local Postgres and Redis." },
+        { name: "pytest, unittest, Vitest, Playwright", level: "shipped", note: "48 pytest tests in GTM-Strato, 40 in Revenue Intelligence Engine, 45 pytest + 294 TS tests in RevenueRoles, 34 in Relationship Intelligence Engine, 242+ Vitest tests on this site." },
+        { name: "Vercel, Netlify, Docker", level: "shipped", note: "RevenueRoles and Revenue Intelligence Engine on Vercel; this site on Vercel and Netlify; Docker Compose for local Postgres and Redis." },
       ],
     },
     {
-      heading: "Practices",
+      heading: "GTM engineering practices",
       items: [
-        { name: "Provenance and verification status per field", level: "shipped", note: "Relationship Intelligence Engine." },
-        { name: "Explainable, deterministic scoring", level: "shipped", note: "Revenue Intelligence Engine." },
-        { name: "Human approval gates before export", level: "shipped", note: "Revenue Intelligence Engine." },
-        { name: "Rate-limited collection from public sources", level: "shipped", note: "Relationship Intelligence Engine." },
+        { name: "Provenance and verification status per field", level: "shipped", note: "Relationship Intelligence Engine (5 states), GTM-Strato (Website fact vs Hypothesis), and AIworks Leads (mandatory source URLs)." },
+        { name: "Explainable, deterministic 100-point scoring", level: "shipped", note: "GTM-Strato (5 weighted components) and Revenue Intelligence Engine (6 weighted components)." },
+        { name: "Human approval gates before export", level: "shipped", note: "Revenue Intelligence Engine approval queue and ORBIT / REVFLOW control gates." },
+        { name: "SSRF-safe & rate-limited public collection", level: "shipped", note: "DNS/IP validation in GTM-Strato and rate-limited public collectors in Relationship Intelligence Engine." },
       ],
     },
   ],
   studying: {
     intro:
-      "I am studying how B2B companies build and run revenue systems: how they find accounts, enrich and verify records, read buying signals, qualify leads, orchestrate workflows, sync with a CRM, and use agents with a human in the loop. I read documentation, trace real API requests and responses, and build against them, rather than watching tool tours.",
+      "I study how B2B companies build and operate production revenue systems: how they discover accounts, design cost-controlled enrichment waterfalls, verify contact data, read buying signals, qualify leads, sync with a CRM without creating duplicates, and keep a human in the loop. I read primary API documentation, inspect request/response contracts, and build against them.",
     topics: [
       {
         topic: "Clay",
@@ -373,6 +664,32 @@ export const gtmPortfolio: GtmPortfolio = {
       },
     ],
   },
+  lessonsLearned: [
+    {
+      title: "Force missing commercial facts to 'Not found' before scoring",
+      detail:
+        "In GTM-Strato, language models routinely guessed pricing tiers when a company's public pages had no pricing table. Adding a deterministic check in `website_extractor.py` and `ai_analyzer.py` that forces pricing to 'Not found' whenever no pricing tokens were extracted removed those fabricated claims and made the Commercial Clarity score component honest.",
+      sourceSlug: "gtm-strato",
+    },
+    {
+      title: "Separate `research_only` from `rejections` in lead pipelines",
+      detail:
+        "In the AIworks Lead Qualification Pipeline, early rules treated a senior VP missing a direct phone the same as an out-of-scope industry row. Splitting the output into `accepted_leads.csv`, `research_only.csv`, and `rejections.csv` meant high-fit accounts with one missing source URL were queued for targeted enrichment rather than discarded.",
+      sourceSlug: "aiworks-leads",
+    },
+    {
+      title: "Never let deduplication drop the working action link",
+      detail:
+        "In RevenueRoles, the same job appears on an employer's Greenhouse board and on aggregators like RemoteOK. Merging records by normalized company + title only works if the canonical employer apply URL is treated as a protected field that an aggregator row cannot overwrite.",
+      sourceSlug: "revenueroles",
+    },
+    {
+      title: "Keep the 100-point rubric out of the prompt",
+      detail:
+        "In both the Revenue Intelligence Engine and GTM-Strato, moving the 0–100 score calculation into pure Python functions made every ranking diffable in pytest and let operators see the exact point contribution of each signal.",
+      sourceSlug: "revenue-intelligence-engine",
+    },
+  ],
   resources: {
     note: "Mostly vendor documentation. Customer results in vendor blogs are vendor-reported, not audited.",
     groups: [
@@ -435,10 +752,10 @@ export const gtmPortfolio: GtmPortfolio = {
   },
   nextBuilds: [
     "Add a real Apollo enrichment provider to the Revenue Intelligence Engine behind its existing provider interface, with rate-limit handling and credit accounting. Synthetic mode stays the default.",
-    "Push approved accounts to a HubSpot developer sandbox as companies and contacts with associations, keyed on domain so re-runs update instead of duplicating.",
-    "Call the scoring API from a Clay table through an HTTP API column, and compare enrichment coverage and cost per provider in a small waterfall.",
+    "Push approved accounts from the Revenue Intelligence Engine and AIworks Lead Pipeline to a HubSpot developer sandbox as companies and contacts with associations, keyed on domain so re-runs update instead of duplicating.",
+    "Call the GTM-Strato and Revenue Intelligence scoring endpoints from a Clay table through an HTTP API column, and compare enrichment coverage and cost per provider in a small waterfall.",
     "Write an architecture note for each flagship: why it is designed this way, what failed, what it costs to run, and how I know it works.",
-    "Build an autonomous personal agentic system for GTM operations. Agents run routine research, enrichment, scoring, and follow-up preparation on their own, and a person approves anything that leaves the system. It improves over time from logged outcomes, new data, and evaluation evidence. Design goal: run at a fraction of the cost of sending every step to a hosted frontier model, by routing routine steps to smaller or local models and measuring cost per task. Not started.",
+    "Build an autonomous personal agentic system for GTM operations. Agents run routine research, enrichment, scoring, and follow-up preparation on their own, and a person approves anything that leaves the system. It improves over time from logged outcomes, new data, and evaluation evidence. Design goal: run at a fraction of the cost of sending every step to a hosted frontier model, by routing routine steps to smaller or local models and measuring cost per task.",
     "Record the Loom walkthrough and embed it on this page.",
   ],
 };
@@ -478,7 +795,7 @@ export function gtmProofs(): Array<
         title: project.title,
         summary: project.summary,
         stack: project.technologies,
-        href: `/projects#${project.slug}`,
+        href: project.relatedWorkSlug ? `/work/${project.relatedWorkSlug}` : `/projects#${project.slug}`,
         demoUrl: project.links?.demo,
         githubUrl: project.links?.github,
       },
@@ -497,15 +814,56 @@ export function loomEmbedUrl(url: string): string {
   return url.replace("loom.com/share/", "loom.com/embed/");
 }
 
+/** Converts a Loom or YouTube share/watch URL into an iframe-safe embed URL. */
+export function videoEmbedUrl(url: string): string {
+  const trimmed = url.trim();
+  if (trimmed.includes("loom.com/share/")) {
+    return loomEmbedUrl(trimmed);
+  }
+  const ytWatch = trimmed.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,})/,
+  );
+  if (ytWatch?.[1]) {
+    return `https://www.youtube-nocookie.com/embed/${ytWatch[1]}`;
+  }
+  return loomEmbedUrl(trimmed);
+}
+
 /** Markdown body for /gtm.md, built from `gtmPortfolio` and the resolved proofs. */
 export function renderGtmBody(): string {
-  const { walkthrough, layers, toolkit, studying, resources, nextBuilds } = gtmPortfolio;
+  const {
+    vision,
+    capabilityMatrix,
+    agentWorkflows,
+    walkthrough,
+    layers,
+    toolkit,
+    studying,
+    lessonsLearned,
+    resources,
+    nextBuilds,
+  } = gtmPortfolio;
   const video = walkthrough.loomUrl
     ? `Loom walkthrough: ${walkthrough.loomUrl}`
     : `Not recorded yet. It will cover:\n\n${walkthrough.plannedTopics.map((t) => `- ${t}`).join("\n")}`;
   const evidenceKey = (Object.keys(gtmEvidenceLabels) as GtmEvidence[])
     .map((key) => `- ${gtmEvidenceLabels[key].label}: ${gtmEvidenceLabels[key].meaning}`)
     .join("\n");
+  const visionText = [
+    ...vision.paragraphs,
+    "",
+    ...vision.pillars.map(
+      (p) => `### ${p.title}\n\n${p.statement}\n\nProof: ${p.implementationDetail}`,
+    ),
+  ].join("\n\n");
+  const capabilityTable = [
+    "| Capability domain | Engineering focus | Tools & stack | Repository proof | Status |",
+    "| --- | --- | --- | --- | --- |",
+    ...capabilityMatrix.map(
+      (row) =>
+        `| ${row.domain} | ${row.engineeringFocus} | ${row.toolsAndStack} | ${row.proofInRepo} | ${gtmSkillLevelLabels[row.evidenceStatus]} |`,
+    ),
+  ].join("\n");
   const proofs = gtmProofs()
     .map((proof) => {
       const links = [
@@ -519,9 +877,15 @@ export function renderGtmBody(): string {
         `### ${proof.title} (${proof.kind}, ${gtmEvidenceLabels[proof.evidence].label})`,
         "",
         proof.summary,
+        proof.problem ? `\nProblem: ${proof.problem}` : "",
+        proof.solution ? `\nSolution: ${proof.solution}` : "",
+        proof.architectureNote ? `\nArchitecture: ${proof.architectureNote}` : "",
         "",
         proof.stack.length ? `Stack: ${proof.stack.join(", ")}` : "",
         links,
+        proof.verifiableMetrics?.length
+          ? `\nVerifiable repository metrics:\n\n${proof.verifiableMetrics.map((m) => `- ${m}`).join("\n")}`
+          : "",
         "",
         "What it shows:",
         "",
@@ -530,8 +894,16 @@ export function renderGtmBody(): string {
         "Limits:",
         "",
         proof.limits.map((l) => `- ${l}`).join("\n"),
-      ].join("\n");
+      ]
+        .filter(Boolean)
+        .join("\n");
     })
+    .join("\n\n");
+  const agentsText = agentWorkflows
+    .map(
+      (wf) =>
+        `### ${wf.name}\n\n- Model role: ${wf.roleOfModel}\n- Deterministic guardrail: ${wf.deterministicGuardrail}\n- Human approval gate: ${wf.humanGate}\n- Implemented in: ${wf.implementedIn} (${wf.href})`,
+    )
     .join("\n\n");
   const layerRows = layers
     .map(
@@ -550,6 +922,9 @@ export function renderGtmBody(): string {
   const topics = studying.topics
     .map((topic) => `### ${topic.topic}\n\n${topic.questions.map((q) => `- ${q}`).join("\n")}`)
     .join("\n\n");
+  const lessonsText = lessonsLearned
+    .map((l) => `### ${l.title}\n\n${l.detail}`)
+    .join("\n\n");
   const reading = resources.groups
     .map(
       (group) =>
@@ -566,6 +941,14 @@ export function renderGtmBody(): string {
     "",
     gtmPortfolio.background,
     "",
+    `## ${vision.headline}`,
+    "",
+    visionText,
+    "",
+    "## GTM engineering capabilities",
+    "",
+    capabilityTable,
+    "",
     "## Walkthrough video",
     "",
     video,
@@ -578,6 +961,10 @@ export function renderGtmBody(): string {
     "",
     proofs,
     "",
+    "## Autonomous agents and AI-driven revenue workflows",
+    "",
+    agentsText,
+    "",
     "## GTM infrastructure layers: built and missing",
     "",
     layerRows,
@@ -585,6 +972,10 @@ export function renderGtmBody(): string {
     "## What I already know",
     "",
     skills,
+    "",
+    "## Experiments and lessons learned",
+    "",
+    lessonsText,
     "",
     "## What I am studying now",
     "",

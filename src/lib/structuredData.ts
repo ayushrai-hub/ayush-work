@@ -48,9 +48,11 @@ export function personNode() {
     image: absoluteUrl(person.portrait),
     // Topics grounded in published domain dossiers and experience — not aspirational skills.
     knowsAbout: [
-      "LLM evaluation",
-      "Preference feedback",
-      "RLHF-oriented evaluation",
+      "GTM engineering",
+      "Revenue systems and RevOps engineering",
+      "Autonomous agents and human-in-the-loop workflows",
+      "LLM evaluation and preference feedback",
+      "Entity resolution and data provenance",
       "AI product development",
       "Software engineering",
     ],

@@ -659,64 +659,83 @@ export const domains: DomainRecord[] = [
     title: "GTM and RevOps",
     h1: "GTM and RevOps systems",
     label: "Revenue systems",
+    showOnHome: true,
     description:
-      "Ayush Rai on GTM engineering and revenue operations: a live revenue-role job platform, a public-source relationship pipeline, and a synthetic scoring demo with a human approval gate.",
-    dek: "Three systems I built around revenue data, with GitHub links. One is live. One is a personal research tool. One runs only on fictional data.",
+      "Ayush Rai on GTM engineering and revenue operations: seven public GTM and revenue-data systems (RevenueRoles, GTM-Strato ICP Finder, Revenue Intelligence Engine, Relationship Intelligence Engine, AIworks Lead Qualification Pipeline, SpiderWeb, MailU) with deterministic scoring, field provenance, and human approval gates.",
+    dek: "Seven revenue-data and GTM engineering systems I built, with public GitHub repositories, automated test suites, and explicit evidence levels.",
     evidenceLevel: "mixed",
     sections: [
       {
         heading: "Scope",
         paragraphs: [
-          "GTM engineering, as I use the term here, is the data and decision layer behind revenue work: finding accounts, resolving duplicates, keeping track of where each fact came from, scoring fit in a way a person can inspect, and keeping a human between a model's output and anything that leaves the building.",
-          "I have not worked in a RevOps or sales team, and I have no CRM admin, customer, or pipeline-revenue numbers to show. What follows is software I built and the limits its own repositories state.",
+          "GTM engineering, as I build it, is the data, qualification, and control layer behind revenue operations: discovering accounts and decision-makers from public or ATS sources, resolving duplicate entities, keeping provenance (source URL, timestamp, verification state) on every field, scoring ICP fit on a deterministic 100-point rubric a human can audit, and gating any CRM export or outbound draft behind human approval.",
+          "I have not worked inside a quota-carrying sales or CRM-admin seat, so I publish no commercial pipeline-dollar claims. What follows is software I built and the exact test and dataset counts its repositories verify.",
         ],
       },
       {
         heading: "RevenueRoles: a live job platform for revenue-technical roles",
         paragraphs: [
-          "RevenueRoles finds roles from supported employer career sources, extracts the full description, checks whether a posting is eligible to publish, and classifies it by the work rather than the title. A GTM Engineer is not a Sales Ops role, and the taxonomy reflects that. Each listing links back to the original posting.",
-          "The stack is Next.js, a Python FastAPI worker, Supabase Postgres and Inngest. The live homepage showed 71 verified roles, last updated 23 September 2026, and a compensation coverage figure of 58% when I checked it on 18 October 2026. Those are the site's own counts on that day. They are not user numbers, and I have no revenue or user figures to publish.",
+          "RevenueRoles finds roles from supported employer career sources (Greenhouse, Lever, Ashby, RemoteOK), extracts the full description, checks whether a posting is eligible to publish, and classifies it by the work rather than the title. A GTM Engineer is not a generic Sales Ops role, and the taxonomy reflects that. Each listing links back to the original employer application page.",
+          "The stack is Next.js, a Python FastAPI classification worker, Supabase Postgres with pgvector and row-level security, and Inngest scheduled discovery. The repository includes 45 Python pytest tests and 294 TypeScript test cases. The live homepage showed 71 verified roles, last updated 23 September 2026, and a compensation coverage figure of 58% when checked on 18 October 2026.",
         ],
         bullets: [
           "Pipeline: discover, extract, verify eligibility, classify, deduplicate.",
-          "Concepts it shows: a clean data layer, duplicate resolution, enrichment quality, and how fresh a signal is.",
-          "Known limits: listing freshness, salary extraction that needs unit checks, and merging duplicate postings without losing the apply link.",
+          "Concepts it shows: a clean data layer, conservative duplicate resolution that never drops the apply URL, and scheduled signal refresh.",
+          "Known limits: listing freshness, salary unit/range edge checks, and unverified signed-in flows.",
+        ],
+      },
+      {
+        heading: "GTM-Strato (ICP Finder): fact-grounded ICPs, 100-point scoring, and platform filters",
+        paragraphs: [
+          "A Python 3.11 and Streamlit workbench (`ayushrai-hub/GTM-Strato`) that reads up to five public pages from a company URL with strict SSRF and DNS-rebinding guards, calls the NVIDIA Build API to extract a company profile, three ICP segments, and buyer personas, and keeps scraped facts strictly separate from model hypotheses. Pricing is deterministically forced to 'Not found' when no pricing text was extracted.",
+          "Candidate segments are scored locally on a deterministic 0–100 rubric — Evidence (30%), Problem Fit (25%), Buying Triggers (15%), Reachability (15%), and Commercial Clarity (15%) — and the generator outputs ready-to-use prospecting filters for Apollo.io, LinkedIn Sales Navigator, and Clay. Backed by SQLite persistence and 48 automated pytest tests.",
+        ],
+        bullets: [
+          "Concepts it shows: SSRF-safe web extraction, [Website fact] vs [Hypothesis] grounding, deterministic 100-point fit scoring, and Apollo/Sales Nav/Clay filter generation.",
+          "Limits: runs locally, requires a user-supplied NVIDIA_API_KEY for live inference, and does not execute client-side JavaScript.",
+        ],
+      },
+      {
+        heading: "AIworks Lead Qualification Pipeline: zero-dependency provenance & phone rules",
+        paragraphs: [
+          "A zero-dependency Python 3.9+ CLI and SQLite observation store (`ayushrai-hub/leads`) that audits researched B2B lead spreadsheets against strict acceptance rules. Every mandatory field (name, senior decision-maker role, tech industry, non-India geography, domain-matched corporate email, and a 7–15 digit `direct_business` phone distinct from `company_switchboard_phone`) must carry a public `*_source_url`.",
+          "Each run backs up the SQLite database to `data/backups/`, computes a deterministic `lead_id` from normalized name and company domain, blocks previously accepted leads (`duplicate_previous_run`), flags same-name/different-email collisions (`possible_duplicate_identity`) without auto-merging, and writes an immutable `output/runs/<UTC timestamp>/` folder containing `accepted_leads.csv`, `research_only.csv`, `rejections.csv`, and JSON/text run reports.",
         ],
       },
       {
         heading: "Relationship Intelligence Engine: provenance on every field",
         paragraphs: [
-          "A TypeScript pipeline that discovers technical founders and companies hiring AI and ML engineers from public sources: the Y Combinator public directory, GitHub signals and accelerator portfolio pages. It normalizes records, resolves entities, verifies fields, detects signals, scores and exports.",
-          "Every important field keeps its value, source, source URL, retrieval time and confidence, and carries one of five statuses: verified, inferred, unverified, conflicting or missing. Unknown values stay empty. The repository says the engine is a research tool and not a lead factory.",
+          "A TypeScript pipeline (`ayushrai-hub/SYSTEM-job`, 34 Vitest tests) that discovers technical founders and companies hiring AI and ML engineers from public sources: the Y Combinator public directory, GitHub signals, and accelerator portfolio pages. It normalizes records, resolves entities, verifies fields, detects signals, scores, and exports.",
+          "Every important field keeps its value, source, source URL, retrieval time, and confidence, and carries one of five statuses: verified, inferred, unverified, conflicting, or missing. Unknown values stay empty.",
         ],
         bullets: [
           "Concepts it shows: account discovery, buying signals, enrichment in principle, and data provenance.",
-          "Limits: no paid enrichment vendor is wired in, and the audit figures inside the repository are its own notes, not independent checks.",
+          "Limits: no paid enrichment vendor is wired in, and the audit figures inside the repository are its own notes.",
         ],
       },
       {
         heading: "Revenue Intelligence Engine: a demo on fictional data",
         paragraphs: [
-          "A demo GTM pipeline. Given an ICP, it loads 42 labeled fictional companies, drops duplicates, scores the rest on a deterministic 100-point rubric, writes structured account research for the top accounts, and holds everything in an approval queue before any export.",
-          "All companies, contacts and signals in it are synthetic. Enrichment is a mock. It does not send outbound messages, does not write to a live CRM, and has no users or revenue. The number comes from rules, not from a language model; the model is used only for the account research text, with a deterministic fallback when no key is set.",
+          "A full-stack GTM pipeline (`ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE`, 40 pytest tests). Given an ICP, it loads 42 labeled fictional companies, drops duplicates, scores the rest on a deterministic 100-point rubric, writes structured account research at temperature 0 for the top accounts (with a deterministic fallback when no key is set), and holds everything in a human approval queue before any export.",
+          "All companies, contacts, and signals in it are synthetic. Enrichment is a mock provider. It does not send outbound messages and does not write to a live CRM.",
         ],
         bullets: [
-          "Score components: ICP fit, growth signal, hiring signal, technology fit, GTM need and contactability.",
-          "Stack: Python, FastAPI, Next.js, pytest.",
+          "Score components: ICP fit (30), growth signal (20), hiring signal (15), technology fit (15), GTM need (10), and contactability (10).",
+          "Stack: Python, FastAPI, SQLAlchemy, Next.js, pytest.",
           "Concepts it shows: orchestration, explainable lead scoring, and a human approval gate.",
         ],
       },
       {
         heading: "Supporting work",
         paragraphs: [
-          "SpiderWeb turns the data export LinkedIn gives you into a searchable map of your own network, with duplicate resolution and clearly labeled rules. It is in development and is not deployed in production.",
-          "MailU is a local tool that syncs Gmail, categorizes mail, and answers questions over it with search and a local model. It shows email-data and retrieval skills. I have not re-run its tests for this page.",
+          "SpiderWeb turns a personal LinkedIn data export into a searchable map of your network with two-stage file detection, entity resolution, and per-file import/update/dedup/reject counters. It runs locally.",
+          "MailU is a local tool that syncs Gmail, categorizes mail zero-shot, and answers questions over it with ChromaDB semantic search and a local Ollama model.",
         ],
       },
       {
         heading: "What I would build next",
         paragraphs: [
-          "Connect one real enrichment provider behind the Revenue Intelligence Engine's existing interface with rate-limit handling, keeping the synthetic mode. Add a step that pushes approved accounts into a CRM sandbox. Write a short note for each system on why it is built that way, what failed, and what it costs to run. None of this is built yet.",
+          "Connect a live Apollo enrichment provider behind the Revenue Intelligence Engine's existing provider interface with rate-limit handling and credit accounting, keeping synthetic mode as the default. Push approved accounts from the Revenue Intelligence Engine and AIworks Lead Pipeline into a HubSpot developer sandbox keyed on domain. Call the scoring API from a Clay table via an HTTP API column.",
         ],
       },
     ],
@@ -729,27 +748,37 @@ export const domains: DomainRecord[] = [
       {
         href: "https://github.com/ayushrai-hub/RevenueRoles",
         label: "RevenueRoles repository",
-        note: "Web app, API, Python pipeline worker and database migrations.",
+        note: "Web app, API, Python pipeline worker, 45 pytest + 294 TS tests.",
+      },
+      {
+        href: "https://github.com/ayushrai-hub/GTM-Strato",
+        label: "GTM-Strato (ICP Finder) repository",
+        note: "SSRF-guarded website extraction, fact-vs-hypothesis separation, 100-pt fit score, Apollo/Sales Nav/Clay filters, 48 pytest tests.",
+      },
+      {
+        href: "https://github.com/ayushrai-hub/leads",
+        label: "AIworks Lead Qualification Pipeline repository",
+        note: "Zero-dependency Python CLI and SQLite verification store with mandatory per-field source URLs.",
       },
       {
         href: "https://github.com/ayushrai-hub/SYSTEM-job",
         label: "Relationship Intelligence Engine repository",
-        note: "Public-source pipeline with field-level provenance.",
+        note: "Public-source pipeline with 5-state field-level provenance and 34 tests.",
       },
       {
         href: "https://github.com/ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE",
         label: "Revenue Intelligence Engine repository",
-        note: "Synthetic-data demo. All data in it is fictional.",
+        note: "Synthetic-data demo with 40 pytest tests and a human approval queue.",
       },
       {
         href: "https://github.com/ayushrai-hub/SpiderWeb",
         label: "SpiderWeb repository",
-        note: "In development.",
+        note: "LinkedIn export entity resolution and relationship graph.",
       },
       {
         href: "https://github.com/ayushrai-hub/MailU",
         label: "MailU repository",
-        note: "Local Gmail tool.",
+        note: "Local Gmail sync and Ollama RAG tool.",
       },
     ],
     related: [

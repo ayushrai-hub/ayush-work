@@ -16,7 +16,7 @@
  */
 import { prerenderRoutes } from "../publicRoutes";
 import { agentModeJson } from "./agentMode";
-import { docsServerCardJson, DOCS_SERVER_CARD_PATH } from "./docsMcp";
+import { docsServerCardJson, DOCS_SERVER_CARD_PATH } from "./docsMcpCard";
 import { API_CATALOG_PATH, buildApiCatalog } from "./apiCatalog";
 import { renderAuthMarkdown } from "./authDocs";
 import {
@@ -140,7 +140,7 @@ export function markdownForRequestPath(urlPath: string): string | null {
 }
 
 /** Paths that are never pages, so negotiation leaves them to the host. */
-const NON_PAGE_PREFIXES = ["/api/", "/_vercel/", "/.netlify/", "/.well-known/", "/assets/"];
+const NON_PAGE_PREFIXES = ["/api/", "/_vercel/", "/.netlify/", "/.well-known/", "/assets/", "/images/"];
 
 let htmlRoutes: Set<string> | null = null;
 

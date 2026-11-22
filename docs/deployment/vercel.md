@@ -94,19 +94,15 @@ Configure these in the Vercel project:
 Vercel supplies its own platform variables. Do not copy project IDs, team IDs,
 tokens, or `VERCEL_ENV` into application configuration.
 
-## Web Analytics
+## Web Analytics & Speed Insights
 
-`@vercel/analytics/react` is mounted once in `src/main.tsx`. Web Analytics is
-enabled on the `ayush-rais-work22/ayush-work` project.
+`@vercel/analytics/react` and `@vercel/speed-insights/react` are mounted once in
+`src/main.tsx`. Web Analytics and Speed Insights are enabled on the
+`ayush-rais-work22/ayush-work` project.
 
-`www.ayushrai.site` resolves to Netlify, which cannot serve `/_vercel/insights`
-itself. `netlify.toml` proxies `/_vercel/insights/*` (the script plus its
-`view`, `event`, and `session` endpoints) to `https://ayush-rai-work.vercel.app`,
-the project's own alias, so live visits are counted in the same project. This
-proxy is not an officially documented Vercel setup. If counts stop, first check
-that `https://www.ayushrai.site/_vercel/insights/script.js` returns JavaScript.
-Visitor location comes from the request Vercel receives, so it may reflect the
-Netlify edge rather than the visitor.
+When `www.ayushrai.site` is served directly by Vercel, `/_vercel/insights/*` and
+`/_vercel/speed-insights/*` are handled natively by Vercel. If served through
+Netlify, `netlify.toml` proxies both paths to `https://ayush-rai-work.vercel.app`.
 
 ## Safe rollout
 

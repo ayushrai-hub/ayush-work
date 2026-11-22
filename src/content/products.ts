@@ -354,6 +354,7 @@ export const products: Product[] = [
       "Pull postings straight from employer applicant tracking systems, classify them by the work described, deduplicate them, and link every listing back to the original application page.",
     demoUrl: "https://revenueroles.in",
     githubUrl: "https://github.com/ayushrai-hub/RevenueRoles",
+    relatedWorkSlug: "revenueroles",
     log: [
       {
         date: "2026-06-30",

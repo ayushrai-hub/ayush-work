@@ -174,4 +174,24 @@ export const timeline: TimelineEntry[] = [
     summary:
       "Portfolio content moved into typed modules as a single source of truth.",
   },
+  {
+    id: "2026-revenueroles",
+    date: "2026-07",
+    endDate: "present",
+    kind: "product",
+    title: "RevenueRoles — technical revenue job discovery",
+    summary:
+      "Multi-source ATS ingestion and work-based classification for GTM, RevOps, and FDE roles.",
+    relatedSlug: "revenueroles",
+  },
+  {
+    id: "2026-gtm-systems",
+    date: "2026-11",
+    endDate: "present",
+    kind: "project",
+    title: "GTM-Strato, AIworks Lead Pipeline & Revenue Intelligence systems",
+    summary:
+      "Fact-grounded ICP discovery, zero-dependency lead verification, and human-gated GTM scoring engines.",
+    relatedSlug: "gtm-strato",
+  },
 ];

@@ -26,6 +26,193 @@ import type { WorkItem } from "./types";
  */
 export const work: WorkItem[] = [
   {
+    slug: "revenueroles",
+    title: "RevenueRoles",
+    type: "product",
+    summary:
+      "How I built a multi-source job discovery and classification pipeline for technical revenue roles (GTM Engineer, RevOps Engineer, Forward Deployed Engineer) that classifies postings by the work described rather than the job title.",
+    problem:
+      "Technical revenue roles are scattered across employer applicant tracking systems under inconsistent titles. A role titled 'Growth Operations' at one company is a Python-and-Clay GTM Engineering role at another, while 'GTM Engineer' elsewhere is a quota-carrying SDR role. Candidates and hiring teams have to read every posting to tell what the job actually does.",
+    context:
+      "RevenueRoles (revenueroles.in) is a monorepo created on 30 June 2026 with Next.js web and API applications, a Python FastAPI classification service, Inngest scheduled discovery functions, and Supabase Postgres with pgvector and row-level security. On 18 October 2026 the live homepage listed 71 verified roles (last updated 23 September 2026) with 58% compensation coverage.",
+    role:
+      "Sole builder across the ingestion connectors, normalization schema, Python classification worker, deduplication rules, Supabase migrations, and Next.js application.",
+    thinking:
+      "Classification has to read the responsibilities and required stack, not match a title regex. Deduplicating the same posting across Greenhouse, Lever, Ashby, and aggregators like RemoteOK must be conservative: merging two records is only valid if the canonical employer application link is preserved.",
+    execution:
+      "Built source connectors for Greenhouse, Lever, Ashby, and RemoteOK with recorded fixtures. Scheduled discovery runs through Inngest with concurrency locks. The Python FastAPI pipeline normalizes postings into a single schema, classifies role family and required stack, verifies publication eligibility, and writes to Supabase Postgres. The repository contains 45 Python pytest tests and 294 TypeScript test cases across unit and integration suites.",
+    outcome:
+      "The public site and discovery pipeline were deployed to production in July 2026, ingesting real ATS postings. What works today: multi-source ATS connectors with fixture tests, work-based role taxonomy, conservative deduplication, and the public listing surface. What remains incomplete: salary unit/range validation edge cases, production verification of all signed-in candidate/admin flows, and saved-job alerts. No user or revenue figures are claimed.",
+    lessons: [
+      "Work-based classification costs more per record than title matching, and that specificity is the entire value of the dataset.",
+      "Entity resolution on job postings must treat the original employer apply URL as an invariant that deduplication can never drop.",
+    ],
+    status: "in-progress",
+    selected: true,
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: [
+      "Next.js",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "Supabase Postgres",
+      "pgvector",
+      "Inngest",
+      "Vercel",
+    ],
+    links: {
+      demo: "https://revenueroles.in",
+      github: "https://github.com/ayushrai-hub/RevenueRoles",
+    },
+    relatedSlugs: ["revenueroles"],
+  },
+  {
+    slug: "gtm-strato",
+    title: "GTM-Strato (ICP Finder)",
+    type: "project",
+    summary:
+      "An ICP discovery and prospecting-filter engine that extracts public company pages with SSRF guards, separates cited website facts from LLM hypotheses, scores fit on a deterministic 100-point rubric, and generates Apollo, Sales Navigator, and Clay filters.",
+    problem:
+      "When GTM teams ask a language model to define an Ideal Customer Profile from a company website, the model blends stated product facts with plausible-sounding guesses and invents opaque fit scores. Reps cannot tell which claims came from a real page and which need verification.",
+    context:
+      "Built in November 2026 in the public GTM-Strato repository (`icp-finder/`). Runs locally as a Python 3.11+ and Streamlit workbench backed by SQLite (`data/icp_finder.sqlite`) and the NVIDIA Build API (`https://integrate.api.nvidia.com/v1`).",
+    role:
+      "Designed and implemented the SSRF-hardened website extractor, Pydantic schemas, NVIDIA Build client, evidence-vs-hypothesis separator, deterministic 5-component scoring engine, platform filter generator, SQLite run store, and 48 pytest tests.",
+    thinking:
+      "Three constraints keep an AI GTM research tool honest: first, untrusted website text must be fetched safely (ports 80/443 only, DNS resolution checked against private/loopback/reserved IP ranges before every hop, `robots.txt` respected, no JS execution); second, every profile field must carry an explicit evidence state (`Website fact` with cited URL, `Hypothesis`, or `Not found` — pricing is forced to `Not found` when no pricing text was extracted); third, the fit score must be computed by deterministic local code, never by another model prompt.",
+    execution:
+      "The extractor fetches up to five public pages per domain and passes delimited untrusted text to the analyzer. The generator produces a company profile, three distinct ICP segments, buyer personas, and platform-specific search filters for Apollo.io, LinkedIn Sales Navigator, and Clay. `scoring_engine.py` computes a 0–100 score across five weighted components: Evidence (30%), Problem Fit (25%), Buying Triggers (15%), Reachability (15%), and Commercial Clarity (15%). Automated tests (`tests/test_grounding.py`, `test_scoring.py`, `test_security.py`, `test_nvidia_client.py`, `test_database.py`, `test_features.py`, `test_streamlit_ui.py`) cover 48 test cases.",
+    outcome:
+      "Complete local GTM research workbench in a public repository with 48 passing tests and SQLite run persistence. What works today: SSRF-safe extraction, fact/hypothesis grounding, deterministic 100-point fit scoring, and Apollo/Sales Nav/Clay filter output. Limits: requires a user-supplied `NVIDIA_API_KEY` for live inference, does not execute client-side JavaScript on target sites, and is a starting point for discovery rather than verified market research.",
+    lessons: [
+      "Forcing pricing and commercial fields to 'Not found' when the scraped text has no evidence eliminates the most common GTM hallucination.",
+      "Generating concrete Apollo, Sales Navigator, and Clay filter definitions turns an abstract ICP document into something an operator can run immediately.",
+    ],
+    status: "active",
+    selected: true,
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: [
+      "Python",
+      "Streamlit",
+      "SQLite",
+      "NVIDIA Build API",
+      "Pydantic",
+      "pytest",
+    ],
+    links: {
+      github: "https://github.com/ayushrai-hub/GTM-Strato",
+    },
+  },
+  {
+    slug: "revenue-intelligence-engine",
+    title: "Revenue Intelligence Engine",
+    type: "experiment",
+    summary:
+      "A synthetic-data GTM pipeline that scores 42 fictional companies on a transparent 100-point rubric, runs temperature-0 account research with a deterministic fallback, and gates CRM-ready export behind human approval.",
+    problem:
+      "GTM teams routinely stitch together account research, signal hunting, qualification scoring, and outbound drafting by hand — or hand the entire loop to an LLM that assigns unexplainable scores and pushes unreviewed copy toward a CRM.",
+    context:
+      "Built in 2026 as an end-to-end systems demonstration (`REVENUE-INTELLIGENCE-ENGINE`) with a Python FastAPI backend, SQLAlchemy persistence, a Next.js GTM console, and 40 pytest tests. All 42 bundled companies, contacts, and buying signals are explicitly synthetic.",
+    role:
+      "Architected and built the staged Python workflow (`app/workflows/revenue_intelligence.py`), deterministic 100-point scorer, signal detector, temperature-0 research service with deterministic fallback, human approval queue, and Next.js operator console.",
+    thinking:
+      "Prioritization scores should never come from an LLM guess. A deterministic 100-point rubric (ICP fit 30, growth signal 20, hiring signal 15, technology fit 15, GTM need 10, contactability 10) lets an operator audit exactly why an account ranked first. Language models belong in bounded synthesis — drafting the account problem, why-now trigger, and personalization — and every output must pause in a human approval queue before export.",
+    execution:
+      "Each workflow run assigns a `run_id`, normalizes and deduplicates records by domain, runs a mock enrichment provider, detects five signal types (hiring, funding, expansion, product launch, technology adoption), scores accounts deterministically, generates labeled research briefs, and holds exports (CSV, JSON, XLSX) until a human approves the queue row. Re-runs perform idempotent upserts.",
+    outcome:
+      "Runnable full-stack GTM reference architecture with 40 pytest tests and a six-stage operator console. Limits: all data is synthetic, enrichment uses `MockEnrichmentProvider`, and no live Clay, Apollo, HubSpot, or outbound sending is wired in.",
+    lessons: [
+      "Separating deterministic qualification from generative account research makes pipeline rankings reproducible across runs.",
+      "An approval queue between research and export is the simplest architectural control against automated outbound mistakes.",
+    ],
+    status: "active",
+    selected: true,
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: [
+      "Python",
+      "FastAPI",
+      "SQLAlchemy",
+      "Next.js",
+      "TypeScript",
+      "pytest",
+    ],
+    links: {
+      demo: "https://cashmaker-two.vercel.app",
+      github: "https://github.com/ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE",
+    },
+  },
+  {
+    slug: "relationship-intelligence-engine",
+    title: "Relationship Intelligence Engine",
+    type: "project",
+    summary:
+      "A public-source entity-resolution and relationship-intelligence pipeline that tracks value, source URL, retrieval time, confidence, and a 5-state verification status on every field.",
+    problem:
+      "Most prospect and founder discovery scripts optimize for row count and overwrite fields silently, leaving no record of where a title, email domain, or hiring signal came from or whether two sources disagreed.",
+    context:
+      "Built in 2026 (`SYSTEM-job`) as a TypeScript CLI and local dashboard backed by PGlite / PostgreSQL and Playwright, with 34 automated tests. Targets public sources: the Y Combinator public directory, GitHub technical signals, and Techstars, Antler, and 500 Global portfolios.",
+    role:
+      "Built the ten-stage pipeline: discovery, normalization, entity resolution, enrichment, verification, signal detection, explainable scoring, deduplication, export, and refresh.",
+    thinking:
+      "Every important field on a company or person record should be a provenance envelope (`value`, `source`, `sourceUrl`, `retrievedAt`, `confidence`) carrying one of five explicit states: `verified`, `inferred`, `unverified`, `conflicting`, or `missing`. Unknown values stay empty rather than being guessed.",
+    execution:
+      "Implemented public-source collectors with rate limiting, company/person/job entity resolution, GitHub technical signal extraction, quality gates, explainable scoring, XLSX/CSV/JSON export, and a local inspection dashboard.",
+    outcome:
+      "Working local vertical slice with 34 tests across discovery, provenance, and scoring. Limits: personal research tool rather than a bulk lead factory; no paid enrichment vendors (Apollo, Clay, Hunter) are wired in; audit notes in the repository are self-recorded.",
+    lessons: [
+      "Treating 'conflicting' and 'missing' as first-class field states prevents bad merges from corrupting downstream outreach.",
+      "Public directories plus GitHub signals provide strong technical-hiring intent before any paid enrichment credit is spent.",
+    ],
+    status: "in-progress",
+    selected: true,
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: [
+      "TypeScript",
+      "Node.js",
+      "PGlite",
+      "PostgreSQL",
+      "Playwright",
+    ],
+    links: {
+      github: "https://github.com/ayushrai-hub/SYSTEM-job",
+    },
+  },
+  {
+    slug: "aiworks-leads",
+    title: "AIworks Lead Qualification Pipeline",
+    type: "project",
+    summary:
+      "A zero-dependency Python lead-verification CLI and SQLite audit store that enforces per-field source URLs, direct-phone rules, and cross-run deduplication.",
+    problem:
+      "Human-researched lead spreadsheets drift fast: researchers paste company switchboards in place of direct phones, omit source URLs, include out-of-scope geographies or junior titles, and re-deliver prospects who were already accepted in an earlier batch.",
+    context:
+      "Built in October 2026 (`ayushrai-hub/leads`) as a zero-dependency Python 3.9+ package (`aiworks_leads`) with SQLite persistence (`data/aiworks_leads.sqlite3`), automatic pre-run database backups, and unittest coverage on synthetic `example.*` fixtures.",
+    role:
+      "Author of the rule engine (`rules.py`), CSV parser (`source_csv.py`), SQLite observation store (`store.py`), pipeline runner (`pipeline.py`), immutable run exporter (`export.py`), and CLI (`cli.py`).",
+    thinking:
+      "Qualification rules belong in deterministic code with an immutable audit trail. A lead is only accepted when every mandatory field (first/last name, senior decision-maker role, in-scope tech industry, non-India geography, corporate email matching the company website domain, and a 7–15 digit `direct_business` phone distinct from `company_switchboard_phone`) carries a public `*_source_url`. Anything relevant but incomplete belongs in `research_only.csv`, never silently promoted.",
+    execution:
+      "Each `python3 -m aiworks_leads import` run copies the SQLite database to `data/backups/`, computes a deterministic `lead_id` from normalized name and company domain, rejects previously accepted leads as `duplicate_previous_run`, flags same-name/same-company/different-email rows as `possible_duplicate_identity` without merging, upgrades previously incomplete leads when full evidence arrives, and writes an immutable `output/runs/<UTC timestamp>/` directory with `accepted_leads.csv`, `research_only.csv`, `rejections.csv`, `run_report.txt`, and `run_report.json`.",
+    outcome:
+      "Self-contained Python qualification CLI with zero third-party runtime dependencies and passing unit tests. Limits: validates provenance metadata and field rules locally; it does not crawl the source URLs or run SMTP/telephony ping checks.",
+    lessons: [
+      "Separating `research_only.csv` from `rejections.csv` preserves high-fit accounts that only need one missing direct phone or source URL.",
+      "Refusing to auto-merge same-name/different-email records at the same company catches identity collisions before CRM import.",
+    ],
+    status: "active",
+    selected: true,
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: ["Python", "SQLite", "CLI", "CSV", "Data Verification"],
+    links: {
+      github: "https://github.com/ayushrai-hub/leads",
+    },
+  },
+  {
     slug: "the-open-framework",
     title: "The Open Framework",
     type: "product",

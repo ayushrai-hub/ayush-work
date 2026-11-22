@@ -15,6 +15,7 @@
  * - Markdown twin `/projects.md` built in `buildPages()` in src/lib/agent/markdown.ts.
  */
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import {
@@ -35,6 +36,7 @@ type KindFilter = WorkType | "all";
 /** Category filter buttons. Values must match `ProjectCategory`; this list is maintained by hand. */
 const DOMAIN_FILTERS: Array<{ label: string; value: DomainFilter }> = [
   { label: "All domains", value: "all" },
+  { label: "Data & revenue systems", value: "data" },
   { label: "Tooling", value: "tooling" },
   { label: "Education", value: "education" },
   { label: "Studio", value: "studio" },
@@ -146,9 +148,14 @@ export default function ProjectsPage() {
                       {projectCategoryLabels[p.category]}
                     </p>
                     <p className="mt-2 max-w-measure text-ink-muted">{p.summary}</p>
-                    {p.links && (
+                    {(p.links || p.relatedWorkSlug) && (
                       <p className="mt-2 flex flex-wrap gap-3 text-sm">
-                        {p.links.demo && (
+                        {p.relatedWorkSlug && (
+                          <Link to={`/work/${p.relatedWorkSlug}`} className="link-accent">
+                            Case study
+                          </Link>
+                        )}
+                        {p.links?.demo && (
                           <a
                             href={p.links.demo}
                             target="_blank"
@@ -158,7 +165,7 @@ export default function ProjectsPage() {
                             Demo
                           </a>
                         )}
-                        {p.links.github && (
+                        {p.links?.github && (
                           <a
                             href={p.links.github}
                             target="_blank"

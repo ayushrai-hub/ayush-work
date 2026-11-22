@@ -17,7 +17,7 @@ import { markdownMiddleware } from "./src/lib/agent/markdownMiddleware";
  * and do not end in a file extension (so `.md`, `.json`, and asset files skip the middleware).
  */
 export const config = {
-  matcher: ["/api/:path*", "/((?!api/|_vercel/|assets/|.*\\.[A-Za-z0-9]+$).*)"],
+  matcher: ["/api/:path*", "/((?!api/|_vercel/|assets/|images/|.*\\.[A-Za-z0-9]+$).*)"],
 };
 
 /** Middleware entry; returning undefined passes the request through unchanged. */

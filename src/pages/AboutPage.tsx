@@ -117,7 +117,7 @@ export default function AboutPage() {
             ))}
           </ul>
           <Link to="/education" className="link-accent text-sm mt-4 inline-block">
-            Full education list →
+            Full education list
           </Link>
         </section>
 
@@ -139,7 +139,7 @@ export default function AboutPage() {
             ))}
           </ul>
           <Link to="/leadership" className="link-accent text-sm mt-4 inline-block">
-            More leadership →
+            More leadership
           </Link>
         </section>
 
@@ -168,7 +168,7 @@ export default function AboutPage() {
 
         <p className="mt-12">
           <Link to="/timeline" className="link-accent">
-            See the timeline →
+            Explore timeline
           </Link>
         </p>
       </article>

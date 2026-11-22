@@ -101,8 +101,8 @@ Endpoint details: [`docs/API_ENDPOINTS.md`](docs/API_ENDPOINTS.md). Agent instru
 ## Deployment
 
 - **Production** is `main`. Merging a pull request into `main` triggers both hosts.
-- **Netlify** serves `www.ayushrai.site` today: `netlify.toml` (Node 22, `dist`, functions in `api/`, edge function for Markdown negotiation).
-- **Vercel** builds the same repository through its Git integration: `vercel.json` plus `middleware.ts`. See [`docs/deployment/vercel.md`](docs/deployment/vercel.md).
+- **Vercel** serves `www.ayushrai.site` and `ayushrai.site` (redirects to `www`): `vercel.json` plus `middleware.ts` (Routing Middleware for Markdown negotiation and `/api/*` JSON 404s). See [`docs/deployment/vercel.md`](docs/deployment/vercel.md).
+- **Netlify** keeps a parallel configuration in `netlify.toml` and `netlify/edge-functions/markdown-negotiation.js`.
 - Static HTML exists for every known route; unknown routes get `dist/404.html` with HTTP 404. Host rewrites keep `force` off so prerendered files win.
 - Environment variables are listed in `.env.example` (names and placeholders only). Only `/api/send-email` needs any.
 

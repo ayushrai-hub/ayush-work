@@ -91,10 +91,10 @@ export default function DevopsPowPage() {
       />
       <article className="site-shell page-section">
         <header className="max-w-measure">
-          <p className="label">DevOps engineer · {devopsPow.name}</p>
-          <h1 className="mt-3 font-display text-3xl leading-tight text-ink sm:text-4xl md:text-[2.75rem]">
+          <h1 className="font-display text-3xl leading-tight text-ink sm:text-4xl md:text-[2.75rem]">
             {devopsPow.headline}
           </h1>
+          <p className="mt-2 text-sm text-ink-muted">DevOps engineer · {devopsPow.name}</p>
           <p className="mt-5 text-lg leading-relaxed text-ink-muted">{devopsPow.dek}</p>
           <p className="mt-6 border-l-2 border-accent pl-4 text-sm leading-relaxed text-ink">{devopsPow.status}</p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -219,7 +219,7 @@ export default function DevopsPowPage() {
             {deliveryFindings.map((finding) => (
               <li key={finding.id} className="py-6">
                 <h3 className="font-display text-xl text-ink">{finding.name}</h3>
-                <p className="mt-2 font-mono text-xs uppercase tracking-label text-ink-faint">{finding.verdict}</p>
+                <p className="mt-2 text-xs font-medium text-ink-muted">{finding.verdict}</p>
                 <ul className="mt-3 max-w-measure list-disc space-y-2 pl-5 text-sm leading-relaxed text-ink">
                   {finding.found.map((line) => (
                     <li key={line}>{line}</li>

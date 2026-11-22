@@ -96,7 +96,7 @@ export default function FoundingEngineerPowPage() {
             Inspect my shipped projects
           </a>
         </div>
-        <p className="meta-row mt-4">
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-faint mt-4">
           <Outbound href={person.primaryProfiles.github}>GitHub</Outbound>
           <Outbound href={person.primaryProfiles.linkedin}>LinkedIn</Outbound>
           <Outbound href={person.siteUrl}>ayushrai.site</Outbound>
@@ -145,7 +145,7 @@ export default function FoundingEngineerPowPage() {
               <details key={item.id} id={`case-${item.id}`} className="border border-rule p-4">
                 <summary className="cursor-pointer font-display text-xl text-ink">
                   {item.title}
-                  <span className="ml-3 font-mono text-xs uppercase tracking-label text-ink-faint">
+                  <span className="ml-3 text-xs text-ink-faint">
                     {item.evidenceLabel}
                   </span>
                 </summary>

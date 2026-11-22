@@ -107,10 +107,10 @@ export default function CloudEngineerPowPage() {
       <article className="site-shell page-section">
         <PowNav />
         <header className="mt-8 max-w-[46rem]">
-          <p className="label">Ayush Rai · Cloud engineering</p>
-          <h1 className="mt-4 font-display text-3xl leading-tight text-ink sm:text-4xl md:text-5xl">
+          <h1 className="font-display text-3xl leading-tight text-ink sm:text-4xl md:text-5xl">
             I build, deploy, and operate the infrastructure behind software.
           </h1>
+          <p className="mt-3 text-sm text-ink-muted">Ayush Rai · Cloud engineering</p>
           <p className="mt-5 max-w-measure text-lg leading-relaxed text-ink-muted">
             I approach cloud engineering as a systems problem: deployment, networking, security,
             reliability, observability, and cost must work together to make applications dependable.
@@ -263,7 +263,7 @@ export default function CloudEngineerPowPage() {
                 <ul className="mt-4 space-y-3">
                   {study.lines.map((line) => (
                     <li key={line.text} className="text-sm leading-relaxed text-ink-muted">
-                      <span className="mr-2 inline-block border border-rule px-2 py-0.5 font-mono text-[11px] uppercase tracking-label text-ink">
+                      <span className="mr-2 inline-block border border-rule px-2 py-0.5 text-xs text-ink">
                         {EVIDENCE_LABEL[line.kind]}
                       </span>
                       {line.text}
@@ -305,7 +305,7 @@ export default function CloudEngineerPowPage() {
                 <h3 className="text-ink">
                   <span className="mr-2 font-mono text-sm text-ink-faint">{phase.stage}</span>
                   {phase.title}
-                  <span className="ml-2 font-mono text-xs uppercase tracking-label text-ink-faint">{phase.status}</span>
+                  <span className="ml-2 text-xs text-ink-faint">{phase.status}</span>
                 </h3>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-muted">
                   {phase.items.map((item) => (

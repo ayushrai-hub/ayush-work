@@ -1,0 +1,61 @@
+:root {
+  /* Hallmark space scale */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 144px;
+
+  /* Hallmark motion tokens */
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Layout and layering */
+  --container: 70rem;
+  --z-sticky: 40;
+  --z-dropdown: 50;
+  --z-modal: 100;
+
+  /* Light theme color tokens (brand: warm editorial paper, deep umber ink, pine accent) */
+  --bg: #f3f2f0;
+  --bg-elevated: #faf9f7;
+  --ink: #1a1a1a;
+  --ink-muted: #5c5a57;
+  --ink-faint: #8a8782;
+  --rule: #d4d0c8;
+  --accent: #2c5f4e;
+  --accent-soft: #e4efe9;
+  --signal: #9a3412;
+  --focus: #1d4ed8;
+
+  /* Ambient radial gradient tokens */
+  --grad-accent: rgba(44, 95, 78, 0.06);
+  --grad-signal: rgba(154, 52, 18, 0.04);
+}
+
+/* Dark theme tokens (brand: charcoal canvas, pale warm ink, seafoam accent) */
+.dark,
+[data-mode="dark"] {
+  --bg: #161615;
+  --bg-elevated: #1e1e1c;
+  --ink: #f0eee8;
+  --ink-muted: #a8a59e;
+  --ink-faint: #7a776f;
+  --rule: #3a3834;
+  --accent: #7eb89a;
+  --accent-soft: #24352e;
+  --signal: #e07a4a;
+  --focus: #93c5fd;
+
+  --grad-accent: rgba(126, 184, 154, 0.08);
+  --grad-signal: rgba(224, 122, 74, 0.05);
+}

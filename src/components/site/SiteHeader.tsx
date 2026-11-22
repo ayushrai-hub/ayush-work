@@ -27,6 +27,7 @@ import { POW_PATH, powMenu } from "../../content/powPages";
 /** Links shown inline in the desktop header; also listed first in the mobile menu. */
 const PRIMARY_NAV = [
   { to: "/work", label: "Work" },
+  { to: "/gtm", label: "GTM" },
   { to: "/products", label: "Products" },
   { to: "/research", label: "Research" },
   { to: "/writing", label: "Writing" },
@@ -35,6 +36,7 @@ const PRIMARY_NAV = [
 
 /** Links in the desktop "More" dropdown; listed after the POW roles in the mobile menu. */
 const SECONDARY_NAV = [
+  { to: "/gtm-revops", label: "GTM & RevOps" },
   { to: "/ai-engineering", label: "AI engineering" },
   { to: "/software-engineering", label: "Software" },
   { to: "/experience", label: "Experience" },
@@ -227,7 +229,7 @@ export default function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rule/80 bg-paper/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-rule bg-paper">
       <div className="site-shell flex h-14 items-center justify-between gap-4 md:h-16">
         <Link
           to="/"

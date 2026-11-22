@@ -18,7 +18,7 @@ import { resolve } from "node:path";
 import type { Connect, Plugin } from "vite";
 import { agentModeJson, wantsAgentMode } from "./agentMode";
 import { API_CATALOG_CONTENT_TYPE, API_CATALOG_PATH } from "./apiCatalog";
-import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH } from "./docsMcp";
+import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH } from "./docsMcpCard";
 import { agentApiResponse } from "./http";
 import { renderNotFoundMarkdown } from "./markdown";
 import {

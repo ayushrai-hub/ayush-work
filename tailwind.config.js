@@ -54,7 +54,7 @@ export default {
         site: '70rem',
       },
       letterSpacing: {
-        label: '0.08em',
+        label: 'normal',
       },
     },
   },

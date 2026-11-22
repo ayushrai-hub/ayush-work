@@ -31,12 +31,13 @@ export const person: Person = {
   phoneDisplay: "+91 7440567944",
   whatsappUrl: "https://wa.me/917440567944",
   responseTime: "<24 hrs",
-  roleTitle: "AI Engineer & AI Product Builder",
+  roleTitle: "AI Engineer × Revenue × GTM",
   tagline:
-    "Remote AI engineer and AI product builder at ayushrai.site. LLM evaluation, preference feedback, and software products with the limits written down.",
+    "AI engineer building revenue systems, GTM data pipelines, deterministic qualification workflows, and bounded autonomous agents — with LLM evaluation discipline and every system's limits written down.",
   positioning:
-    "I'm Ayush Rai, an AI engineer and AI product builder working remotely (www.ayushrai.site). My paid work includes contract evaluation for frontier-lab programs through FoCDoT and Outlier. Alongside that I build AI products and client software, from an early civil-society coordination prototype to education and agrotech MVPs. I would rather describe what shipped, and what did not, than sound futuristic.",
-  footerLine: "I'm an AI engineer and AI product builder working remotely.",
+    "I'm Ayush Rai, an AI engineer working remotely (www.ayushrai.site) at the intersection of AI engineering, technical GTM, revenue operations, and autonomous agents. From April 2024 to August 2025 I worked as an SDE — AI Engineer at FoCDoT Technologies on model evaluation and coding/STEM analysis, and since August 2025 I have done contract LLM evaluation for frontier-lab programs through Outlier. Alongside that evaluation work, I build revenue-data pipelines, explainable ICP and lead-scoring engines, human-gated agent workflows, and product systems (RevenueRoles, GTM-Strato, Revenue Intelligence Engine, Relationship Intelligence Engine, AIworks lead pipeline, MedVoice, AGENYRA, and The Open Framework). I state what is live, what runs locally, and what is synthetic rather than inventing traction.",
+  footerLine:
+    "AI Engineer × Revenue × GTM — building revenue data systems, deterministic qualification pipelines, and human-gated autonomous agents remotely.",
   siteUrl: "https://www.ayushrai.site",
   resumeUrl:
     "https://drive.google.com/file/d/1JdAckW6i057eYNpdRVLYDMFp2Xo5vyJs/view?usp=sharing",

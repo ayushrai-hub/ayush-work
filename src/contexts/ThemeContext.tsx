@@ -65,6 +65,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.classList.remove('light', 'dark');
 
       root.classList.add(theme);
+      root.setAttribute('data-mode', theme);
 
       localStorage.setItem('theme', theme);
     } catch (error) {

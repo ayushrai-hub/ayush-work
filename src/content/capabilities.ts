@@ -20,7 +20,7 @@ export const capabilities: Capability[] = [
   {
     domain: "Intelligence",
     summary:
-      "Judgment-heavy AI work: evaluation, prompting, and reliability for generative systems, not demo theater.",
+      "Judgment-heavy AI engineering: LLM evaluation rubrics, fact-vs-hypothesis grounding, deterministic scoring, and bounded agent workflows.",
     skills: [
       {
         name: "RLHF / human feedback loops",
@@ -31,24 +31,31 @@ export const capabilities: Capability[] = [
         evidenceSlugs: ["focdot-sde-ai", "outlier-genai", "code-eval-rubrics"],
       },
       {
-        name: "Prompting for code tasks",
-        evidenceSlugs: ["outlier-genai"],
+        name: "Structured LLM grounding & agents",
+        evidenceSlugs: ["gtm-strato", "revenue-intelligence-engine", "medvoice"],
       },
       {
-        name: "Python for ML workflows",
-        evidenceSlugs: ["focdot-sde-ai", "agri-advisory-ai", "legal-nlp-contracts"],
+        name: "Python for AI & GTM pipelines",
+        evidenceSlugs: [
+          "gtm-strato",
+          "aiworks-leads",
+          "revenue-intelligence-engine",
+          "revenueroles",
+          "focdot-sde-ai",
+        ],
       },
     ],
   },
   {
     domain: "Software",
     summary:
-      "Full-stack web engineering across Vite/React portfolios, Next.js products, and small open-source tools.",
+      "Full-stack and data engineering across Python/FastAPI workers, TypeScript/Node pipelines, Next.js and React apps, and stateless MCP servers.",
     skills: [
       {
         name: "React + TypeScript",
         evidenceSlugs: [
           "personal-portfolio",
+          "relationship-intelligence-engine",
           "the-open-framework",
           "iha-by-himani",
           "praful-h",
@@ -56,49 +63,56 @@ export const capabilities: Capability[] = [
         ],
       },
       {
-        name: "Next.js apps",
+        name: "Next.js & FastAPI services",
         evidenceSlugs: [
+          "revenueroles",
+          "revenue-intelligence-engine",
           "agenyra",
           "medvoice",
           "ayushmushrooms",
-          "shiksha-mitra",
-          "expert-o",
         ],
       },
       {
-        name: "Browser extensions",
-        evidenceSlugs: ["overlay-text-box"],
+        name: "Entity resolution, SQL & provenance",
+        evidenceSlugs: [
+          "relationship-intelligence-engine",
+          "aiworks-leads",
+          "spiderweb",
+          "revenueroles",
+        ],
       },
       {
-        name: "Tailwind + motion UI",
-        evidenceSlugs: ["personal-portfolio", "expert-o", "iha-by-himani"],
+        name: "Browser extensions & MCP servers",
+        evidenceSlugs: ["overlay-text-box", "personal-portfolio"],
       },
     ],
   },
   {
     domain: "Product",
     summary:
-      "Framing problems, shipping MVPs, and designing durable loops (leads, acknowledgement, trust) before feature sprawl.",
+      "Revenue systems, GTM engineering tools, and stage-honest product builds where deterministic rules and human approval gates bound model output.",
     skills: [
       {
-        name: "MVP scoping",
-        evidenceSlugs: ["ayushmushrooms", "shiksha-mitra"],
+        name: "GTM & revenue intelligence systems",
+        evidenceSlugs: [
+          "revenueroles",
+          "gtm-strato",
+          "revenue-intelligence-engine",
+          "relationship-intelligence-engine",
+          "aiworks-leads",
+        ],
       },
       {
         name: "Stage-honest product framing",
-        evidenceSlugs: ["the-open-framework", "agenyra", "medvoice"],
+        evidenceSlugs: ["the-open-framework", "agenyra", "medvoice", "revenueroles"],
       },
       {
-        name: "DPI / institutional product thinking",
-        evidenceSlugs: ["the-open-framework", "consent-first-ngo-discovery"],
+        name: "Human-gated automation & billing loops",
+        evidenceSlugs: ["medvoice", "revenue-intelligence-engine"],
       },
       {
-        name: "Client delivery",
-        evidenceSlugs: ["iha-by-himani", "praful-h"],
-      },
-      {
-        name: "Lead-generation systems",
-        evidenceSlugs: ["ayushmushrooms", "agrotech-lead-to-datasheet"],
+        name: "Client delivery & lead-capture MVPs",
+        evidenceSlugs: ["ayushmushrooms", "iha-by-himani", "praful-h"],
       },
     ],
   },

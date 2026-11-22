@@ -11,7 +11,7 @@
  */
 import { person } from "../../content";
 import { API_CATALOG_PATH } from "./apiCatalog";
-import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH, docsMcpUrl } from "./docsMcp";
+import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH, docsMcpUrl } from "./docsMcpCard";
 import {
   AI_CATALOG_PATH,
   ARD_PATH,

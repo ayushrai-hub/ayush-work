@@ -39,7 +39,7 @@ export default function ResearchPage() {
                 >
                   {r.title}
                 </Link>
-                <span className="font-mono text-xs uppercase tracking-label text-ink-faint">
+                <span className="text-xs text-ink-faint">
                   {r.status}
                 </span>
               </div>

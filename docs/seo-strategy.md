@@ -2,7 +2,7 @@
 
 **Site type:** Personal digital home. Vite + React Router, every public route prerendered at build time.
 **Canonical:** `https://www.ayushrai.site` (`person.siteUrl`). The apex 301s to www. `ayush-me.netlify.app` is not the live host.
-**Positioning in metadata:** `person.roleTitle` ("AI Engineer & AI Product Builder"), not a generic full-stack portfolio.
+**Positioning in metadata:** `person.roleTitle` ("AI Engineer × Revenue × GTM"), not a generic full-stack portfolio.
 
 Companion docs in `docs/seo/`: `domain-evidence-map.md`, `keyword-and-content-strategy.md`, `measurement-plan.md`, and `agent-readiness-execution-report.md`.
 
@@ -45,7 +45,7 @@ Companion docs in `docs/seo/`: `domain-evidence-map.md`, `keyword-and-content-st
 
 ## 4. Metadata
 
-**Title pattern:** `{Page} · Ayush Rai`. Default (home and fallback): `Ayush Rai · AI Engineer & AI Product Builder` (`src/constants/seo.ts`).
+**Title pattern:** `{Page} · Ayush Rai`. Default (home and fallback): `Ayush Rai · AI Engineer × Revenue × GTM` (`src/constants/seo.ts`).
 
 Descriptions are natural sentences from the page's content. If keywords are listed at all, keep them sparse: name, role, product names. Never "100% success" style claims.
 

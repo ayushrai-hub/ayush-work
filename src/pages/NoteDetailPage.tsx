@@ -24,7 +24,7 @@ export default function NoteDetailPage() {
   const note = notes.find((n) => n.slug === slug);
 
   if (!note) {
-    return <MissingRecord title="Note not found" backTo="/notes" backLabel="Back to notes →" />;
+    return <MissingRecord title="Note not found" backTo="/notes" backLabel="Back to notes" />;
   }
 
   return (

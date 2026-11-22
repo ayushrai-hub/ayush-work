@@ -33,7 +33,7 @@ export default function IdeasPage() {
             <li id={idea.slug} key={idea.slug} className="scroll-mt-24 border-t border-rule py-6">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h2 className="font-display text-xl text-ink">{idea.title}</h2>
-                <span className="font-mono text-xs uppercase tracking-label text-ink-faint">
+                <span className="text-xs text-ink-faint">
                   {idea.status}
                 </span>
               </div>

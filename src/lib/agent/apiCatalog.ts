@@ -13,7 +13,7 @@
  */
 import { person } from "../../content";
 import { canonicalUrl } from "../canonical";
-import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH } from "./docsMcp";
+import { DOCS_MCP_PATH, DOCS_SERVER_CARD_PATH } from "./docsMcpCard";
 import { MCP_ENDPOINT_PATH, SERVER_CARD_CONTENT_TYPE, SERVER_CARD_PATH } from "./mcpCard";
 
 export const API_CATALOG_PATH = "/.well-known/api-catalog";

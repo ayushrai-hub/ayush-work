@@ -40,4 +40,12 @@ export const notes: Note[] = [
     body: "For AyushMushrooms, a full shop would have been premature. Growers and buyers needed credible product detail and a clean path to talk to a human. A lead plus datasheet plus CRM webhook is a smaller system that still teaches demand. Commerce can arrive when the questions from those leads stop changing every week.",
     relatedSlugs: ["ayushmushrooms"],
   },
+  {
+    slug: "deterministic-scoring-in-gtm",
+    title: "Why lead scores must never come from an LLM prompt",
+    kind: "learning",
+    publishedAt: "2026-11-18",
+    body: "When a language model assigns a 0–100 ICP fit score directly, two runs on the same company drift, and an operator cannot tell whether a high score came from real pricing evidence or fluent marketing copy. In GTM-Strato and the Revenue Intelligence Engine, the model is restricted to extracting structured claims and labeling whether each field was found on the website or inferred. A pure Python scoring engine then computes the 0–100 score from explicit component weights. That keeps rankings diffable in pytest and auditable by sales and RevOps teams.",
+    relatedSlugs: ["gtm-strato", "revenue-intelligence-engine"],
+  },
 ];

@@ -30,7 +30,7 @@ export default function PowIndexPage() {
           {powMenu.map((item) => (
             <li key={item.to} className="border-t border-rule py-6">
               <Link to={item.to} className="group block max-w-measure">
-                <span className="font-mono text-xs uppercase tracking-label text-ink-faint" aria-hidden="true">
+                <span className="text-xs text-ink-faint" aria-hidden="true">
                   {item.short}
                 </span>
                 <h2 className="mt-1 font-display text-xl text-ink group-hover:underline">{item.label}</h2>

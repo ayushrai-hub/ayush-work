@@ -26,7 +26,7 @@ export default function ResearchDetailPage() {
   const item = slug ? getResearchBySlug(slug) : undefined;
 
   if (!item) {
-    return <MissingRecord title="Research not found" backTo="/research" backLabel="Back to research →" />;
+    return <MissingRecord title="Research not found" backTo="/research" backLabel="Back to research" />;
   }
 
   return (
@@ -90,7 +90,7 @@ export default function ResearchDetailPage() {
 
         {item.needsConfirmation && item.needsConfirmation.length > 0 && (
           <aside className="mt-10 max-w-measure text-sm text-ink-faint italic">
-            <p className="not-italic font-mono text-xs uppercase tracking-label mb-2">
+            <p className="not-italic text-xs font-semibold text-ink-muted mb-2">
               Needs confirmation
             </p>
             <ul className="list-disc pl-5 space-y-1">

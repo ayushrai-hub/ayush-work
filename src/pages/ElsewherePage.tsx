@@ -13,6 +13,7 @@
  */
 import { useMemo, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
+import PageHeader from "../components/editorial/PageHeader";
 import {
   archivedElsewhere,
   elsewhere,
@@ -32,7 +33,7 @@ function ProfileLinkRow({ profile }: { profile: ProfileLink }) {
     >
       <span className="text-ink group-hover:text-accent">{profile.name}</span>
       <span
-        className="shrink-0 font-mono text-[10px] uppercase tracking-label text-ink-faint"
+        className="shrink-0 text-xs text-ink-faint"
         aria-hidden="true"
       >
         ↗
@@ -70,19 +71,15 @@ export default function ElsewherePage() {
         description="Profiles across code, research, writing, and community."
         path="/elsewhere"
       />
-      <div className="site-shell py-10 md:py-14">
-        <header className="mb-8 max-w-measure">
-          <p className="label mb-2">Elsewhere</p>
-          <h1 className="font-display text-3xl sm:text-4xl leading-tight text-ink">
-            On the internet
-          </h1>
-          <p className="mt-2 text-sm text-ink-muted leading-relaxed">
-            Identity map: primary first, the rest by category.
-          </p>
-        </header>
+      <div className="site-shell page-section">
+        <PageHeader
+          label="Elsewhere"
+          title="Elsewhere on the internet"
+          dek="Identity map: primary first, the rest by category."
+        />
 
         <section className="mb-8">
-          <h2 className="label mb-2">Primary</h2>
+          <h2 className="font-display text-xl text-ink font-semibold mb-3">Primary</h2>
           <ul className="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
             {primaryElsewhere.map((p) => (
               <li key={p.id}>
@@ -95,7 +92,7 @@ export default function ElsewherePage() {
         <div className="grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {activeGroups.map((group) => (
             <section key={group.category}>
-              <h2 className="label mb-1.5 border-b border-rule pb-1">
+              <h2 className="text-sm font-semibold text-ink mb-1.5 border-b border-rule pb-1">
                 {group.label}
               </h2>
               <ul>

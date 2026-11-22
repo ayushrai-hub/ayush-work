@@ -28,7 +28,7 @@ export default function ProductLogPage() {
   const product = slug ? getProductBySlug(slug) : undefined;
 
   if (!product) {
-    return <MissingRecord title="Log not found" backTo="/products" backLabel="Back to products →" />;
+    return <MissingRecord title="Log not found" backTo="/products" backLabel="Back to products" />;
   }
 
   const entries = [...product.log].sort((a, b) =>

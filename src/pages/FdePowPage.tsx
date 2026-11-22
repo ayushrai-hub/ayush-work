@@ -242,7 +242,7 @@ export default function FdePowPage() {
           <ol className="divide-y divide-rule border-y border-rule">
             {fdeRoadmap.map((phase) => (
               <li key={phase.phase} className="grid gap-3 py-5 md:grid-cols-[8rem_minmax(0,1fr)]">
-                <p className="font-mono text-xs text-ink">
+                <p className="text-xs text-ink font-medium">
                   Phase {phase.phase}
                   <span className="mt-1 block text-ink-faint">{fdePhaseStatusLabels[phase.status]}</span>
                 </p>

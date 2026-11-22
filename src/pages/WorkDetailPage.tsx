@@ -22,7 +22,8 @@ import MissingRecord from "../components/site/MissingRecord";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import MetaList from "../components/editorial/MetaList";
-import { getWorkBySlug, products } from "../content";
+import MediaGallery from "../components/editorial/MediaGallery";
+import { getRecordVisuals, getWorkBySlug, products } from "../content";
 import { yearLabel } from "../lib/format";
 
 /** Work case study component. Lazy-loaded by the `work/:slug` route in src/App.tsx. */
@@ -36,7 +37,7 @@ export default function WorkDetailPage() {
         title="Work not found"
         dek="That case study isn’t here."
         backTo="/work"
-        backLabel="Back to work →"
+        backLabel="Back to work"
       />
     );
   }
@@ -49,6 +50,7 @@ export default function WorkDetailPage() {
     { label: "Execution", body: item.execution },
     { label: "Outcome", body: item.outcome },
   ];
+  const visuals = getRecordVisuals(item.slug);
 
   return (
     <>
@@ -108,6 +110,26 @@ export default function WorkDetailPage() {
           </p>
         )}
 
+        {visuals && (visuals.gallery.length > 0 || visuals.diagram) && (
+          <section className="mb-10 grid gap-6 lg:grid-cols-2">
+            {visuals.gallery.length > 0 && (
+              <MediaGallery
+                items={visuals.gallery}
+                heading="Artifacts & interface screens"
+                ariaLabel={`${item.title} visual gallery`}
+              />
+            )}
+            {visuals.diagram && (
+              <div>
+                <h2 className="label mb-3">Architecture &amp; pipeline flow</h2>
+                <pre className="overflow-x-auto border border-rule bg-paper-elevated p-4 font-mono text-xs leading-relaxed text-ink">
+                  {visuals.diagram}
+                </pre>
+              </div>
+            )}
+          </section>
+        )}
+
         {sections.map((s) => (
           <section key={s.label} className="mb-10">
             <h2 className="label mb-3">{s.label}</h2>
@@ -130,7 +152,7 @@ export default function WorkDetailPage() {
 
         {item.needsConfirmation && item.needsConfirmation.length > 0 && (
           <aside className="mt-12 max-w-measure rounded-sm border border-rule bg-paper-elevated px-4 py-3 text-sm text-ink-faint italic">
-            <p className="not-italic font-mono text-xs uppercase tracking-label mb-2">
+            <p className="not-italic text-xs font-semibold text-ink-muted mb-2">
               Needs confirmation
             </p>
             <ul className="list-disc pl-5 space-y-1">

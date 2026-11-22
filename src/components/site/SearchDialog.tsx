@@ -177,7 +177,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
                 className={`block px-4 py-3 ${index === active ? "bg-accent-soft/40" : "hover:bg-accent-soft/40"}`}
               >
                 <span className="font-medium text-ink">{item.title}</span>
-                <span className="mt-0.5 block font-mono text-xs uppercase tracking-label text-ink-faint">
+                <span className="mt-0.5 block text-xs text-ink-faint">
                   {item.type}
                 </span>
                 <span className="mt-1 block text-sm text-ink-muted line-clamp-2">
@@ -193,9 +193,12 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
             No matches.
           </p>
         )}
-        <p className="border-t border-rule px-4 py-2 font-mono text-xs text-ink-faint">
-          ↑↓ to choose · Enter to open · Esc to close · / or {shortcutLabel("K")} to open
-        </p>
+        <div className="border-t border-rule px-4 py-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-faint">
+          <span>↑↓ to choose</span>
+          <span>Enter to open</span>
+          <span>Esc to close</span>
+          <span>/ or {shortcutLabel("K")} to open</span>
+        </div>
       </div>
     </div>
   );

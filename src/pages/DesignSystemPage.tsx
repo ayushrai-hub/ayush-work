@@ -44,33 +44,33 @@ export default function DesignSystemPage() {
         />
 
         <section className="mb-16">
-          <h2 className="label mb-4">Color</h2>
+          <h2 className="font-display text-xl text-ink font-semibold mb-4">Color</h2>
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {SWATCHES.map((s) => (
               <li key={s.name}>
                 <div className={`h-16 rounded-sm ${s.className}`} />
-                <p className="mt-2 font-mono text-xs text-ink-faint">{s.name}</p>
+                <p className="mt-2 text-xs text-ink-faint">{s.name}</p>
               </li>
             ))}
           </ul>
         </section>
 
         <section className="mb-16">
-          <h2 className="label mb-4">Typography</h2>
+          <h2 className="font-display text-xl text-ink font-semibold mb-4">Typography</h2>
           <p className="font-display text-4xl text-ink mb-4">
-            Source Serif 4 · display
+            Source Serif 4 — Display
           </p>
           <p className="font-sans text-lg text-ink-muted mb-4">
-            Source Sans 3 · body and UI. The quick brown fox jumps over the lazy
+            Source Sans 3 — Body and UI. The quick brown fox jumps over the lazy
             dog.
           </p>
-          <p className="font-mono text-sm text-ink-faint">
-            IBM Plex Mono · labels · dates · 2026-08-08
+          <p className="text-sm text-ink-faint">
+            IBM Plex Mono for numerals, code, and timestamps: 2026-08-08
           </p>
         </section>
 
         <section>
-          <h2 className="label mb-4">Buttons</h2>
+          <h2 className="font-display text-xl text-ink font-semibold mb-4">Buttons</h2>
           <div className="flex flex-wrap gap-3">
             <button type="button" className="btn-primary">
               Primary

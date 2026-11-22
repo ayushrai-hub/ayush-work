@@ -87,6 +87,7 @@ export {
   gtmProofs,
   gtmReadingProgress,
   loomEmbedUrl,
+  videoEmbedUrl,
   renderGtmBody,
 } from "./gtm";
 export {
@@ -172,6 +173,8 @@ export {
   renderBenchmarkBody,
 } from "./benchmarkEngineering";
 export type {
+  GtmAgentWorkflow,
+  GtmCapabilityRow,
   GtmEvidence,
   GtmLayer,
   GtmPortfolio,
@@ -182,6 +185,7 @@ export type {
   GtmSkillGroup,
   GtmSkillLevel,
   GtmStudyTopic,
+  GtmThesisPillar,
 } from "./gtm";
 export {
   FDE_PATH,
@@ -230,4 +234,6 @@ export {
 } from "./revopsPow";
 export { privacySections, contactSections } from "./policies";
 export type { PolicySection } from "./policies";
+export { recordVisuals, getRecordVisuals } from "./visuals";
+export type { VisualArtifact, RecordVisuals } from "./visuals";
 export { searchIndex, buildSearchIndex } from "./searchIndex";

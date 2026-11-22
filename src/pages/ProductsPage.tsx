@@ -117,7 +117,7 @@ export default function ProductsPage() {
         />
 
         <section aria-labelledby="featured-products">
-          <h2 id="featured-products" className="label mb-4 border-b border-rule pb-2">
+          <h2 id="featured-products" className="font-display text-xl text-ink font-semibold mb-4 border-b border-rule pb-2">
             Flagship
           </h2>
           <ul>
@@ -129,7 +129,7 @@ export default function ProductsPage() {
 
         {groups.length > 0 && (
           <div className="mt-12 space-y-12">
-            <h2 className="label">Also in the catalog</h2>
+            <h2 className="font-display text-xl text-ink font-semibold">Also in the catalog</h2>
             {groups.map((group) => (
               <section
                 key={group.category}
@@ -137,7 +137,7 @@ export default function ProductsPage() {
               >
                 <h3
                   id={`product-cat-${group.category}`}
-                  className="label mb-4 border-b border-rule pb-2"
+                  className="text-base font-semibold text-ink mb-4 border-b border-rule pb-2"
                 >
                   {group.label}
                 </h3>

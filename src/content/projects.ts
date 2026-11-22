@@ -63,10 +63,42 @@ export const projectTypeLabels: Record<string, string> = {
  */
 export const projects: Project[] = [
   {
+    slug: "gtm-strato",
+    title: "GTM-Strato (ICP Finder)",
+    summary:
+      "Python + Streamlit ICP discovery engine that extracts up to five public pages from a company website with SSRF and DNS-rebinding guards, separates cited website facts from NVIDIA Build LLM hypotheses, scores candidate segments on a deterministic 100-point rubric (Evidence 30%, Problem Fit 25%, Buying Triggers 15%, Reachability 15%, Commercial Clarity 15%), and generates ready-to-use prospecting filters for Apollo.io, LinkedIn Sales Navigator, and Clay. Backed by SQLite persistence and 48 pytest tests.",
+    type: "project",
+    category: "data",
+    status: "active",
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: ["Python", "Streamlit", "SQLite", "NVIDIA Build API", "Pydantic", "pytest"],
+    links: {
+      github: "https://github.com/ayushrai-hub/GTM-Strato",
+    },
+    relatedWorkSlug: "gtm-strato",
+  },
+  {
+    slug: "aiworks-leads",
+    title: "AIworks Lead Qualification Pipeline",
+    summary:
+      "Zero-dependency Python CLI and SQLite verification store that audits researched B2B lead spreadsheets against strict qualification rules — requiring a public source URL on every mandatory field, verifying direct business phones against company switchboards, enforcing seniority and domain-match rules, deduplicating across prior runs with automatic pre-run SQLite backups, and writing immutable run folders (accepted_leads.csv, research_only.csv, rejections.csv, run_report.json). No paid contact vendor or API key.",
+    type: "project",
+    category: "data",
+    status: "active",
+    yearStart: 2026,
+    yearEnd: "present",
+    technologies: ["Python", "SQLite", "CLI", "CSV", "unittest"],
+    links: {
+      github: "https://github.com/ayushrai-hub/leads",
+    },
+    relatedWorkSlug: "aiworks-leads",
+  },
+  {
     slug: "revenue-intelligence-engine",
     title: "Revenue Intelligence Engine",
     summary:
-      "Synthetic-data GTM pipeline that scores 42 fictional companies against an ICP on a deterministic 100-point rubric, researches the top accounts, and holds export behind human approval. No real leads, CRM writes, or outbound.",
+      "Synthetic-data GTM pipeline that scores 42 fictional companies against an ICP on a deterministic 100-point rubric, researches the top accounts at temperature 0 with labeled claims and a deterministic fallback, and holds CRM-ready exports behind a human approval queue. Backed by 40 pytest tests. No real leads, CRM writes, or outbound.",
     type: "experiment",
     category: "data",
     status: "active",
@@ -77,12 +109,13 @@ export const projects: Project[] = [
       demo: "https://cashmaker-two.vercel.app",
       github: "https://github.com/ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE",
     },
+    relatedWorkSlug: "revenue-intelligence-engine",
   },
   {
     slug: "relationship-intelligence-engine",
     title: "Relationship Intelligence Engine",
     summary:
-      "TypeScript CLI and local dashboard that finds technical founders and companies hiring AI/ML engineers from public sources, keeping source, URL, time, and a verification status on every important field.",
+      "TypeScript CLI and local dashboard that discovers technical founders and companies hiring AI/ML engineers from public sources (YC OSS directory, GitHub signals, accelerator portfolios), keeping value, source, URL, timestamp, confidence, and a 5-state verification status on every important field. Backed by 34 Vitest tests.",
     type: "project",
     category: "data",
     status: "in-progress",
@@ -92,6 +125,7 @@ export const projects: Project[] = [
     links: {
       github: "https://github.com/ayushrai-hub/SYSTEM-job",
     },
+    relatedWorkSlug: "relationship-intelligence-engine",
   },
   {
     slug: "spiderweb",

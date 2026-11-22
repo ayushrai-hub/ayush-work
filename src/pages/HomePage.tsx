@@ -24,10 +24,15 @@ import PageSEO from "../components/site/PageSEO";
 import SectionHeading from "../components/editorial/SectionHeading";
 import WorkRow from "../components/editorial/WorkRow";
 import Prose from "../components/editorial/Prose";
+import MediaGallery from "../components/editorial/MediaGallery";
 import RoleSelector from "../components/site/RoleSelector";
 import {
   featuredProducts,
   formatUpdated,
+  getRecordVisuals,
+  gtmEvidenceLabels,
+  gtmPortfolio,
+  gtmProofs,
   homeDomains,
   ideas,
   now,
@@ -137,7 +142,10 @@ export default function HomePage() {
               </a>
             </nav>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/work" className="btn-primary">
+              <Link to="/gtm" className="btn-primary">
+                GTM Engineering
+              </Link>
+              <Link to="/work" className="btn-secondary">
                 Work
               </Link>
               <Link to="/contact" className="btn-secondary">
@@ -167,6 +175,74 @@ export default function HomePage() {
               </figcaption>
             </figure>
           )}
+        </div>
+      </section>
+
+      <section
+        id="revenue-gtm-systems"
+        className="site-shell page-section border-t border-rule scroll-mt-20"
+      >
+        <SectionHeading
+          title="Revenue, GTM & Autonomous Agent Systems"
+          link={{ to: "/gtm", label: "Open full GTM engineering showcase" }}
+        />
+        <Prose>
+          <p>{gtmPortfolio.positioning}</p>
+        </Prose>
+        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+          <ol className="divide-y divide-rule border-y border-rule">
+            {gtmProofs().slice(0, 5).map((proof) => (
+              <li key={proof.slug} className="py-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <Link
+                    to={proof.href}
+                    className="font-display text-lg text-ink hover:text-accent"
+                  >
+                    {proof.title}
+                  </Link>
+                  <span className="border border-rule px-2 py-0.5 font-mono text-xs text-ink-muted">
+                    {gtmEvidenceLabels[proof.evidence].label}
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-ink-muted">{proof.summary}</p>
+                <p className="mt-2 font-mono text-xs text-ink-faint">
+                  {proof.stack.join(" · ")}
+                </p>
+              </li>
+            ))}
+          </ol>
+          <div className="space-y-6">
+            {getRecordVisuals("revenue-intelligence-engine") && (
+              <MediaGallery
+                items={getRecordVisuals("revenue-intelligence-engine")!.gallery}
+                heading="Revenue Intelligence Engine · 6-stage GTM operator console"
+                ariaLabel="Revenue Intelligence Engine workflow screenshots"
+              />
+            )}
+            <div className="border border-rule bg-paper-elevated p-4 text-sm">
+              <p className="font-medium text-ink">
+                Precision GTM architecture &amp; interactive workbenches
+              </p>
+              <p className="mt-1.5 text-ink-muted">
+                Inspect deterministic 100-point scoring, field-level provenance, and human approval
+                gates across the GTM showcase and interactive proof-of-work labs.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+                <Link to="/gtm" className="link-accent">
+                  /gtm showcase
+                </Link>
+                <Link to="/pow/revops-engineering" className="link-accent">
+                  REVFLOW workbench
+                </Link>
+                <Link to="/pow/agentic-ai" className="link-accent">
+                  ORBIT agent controller
+                </Link>
+                <Link to="/pow/fde" className="link-accent">
+                  RELAY FDE workflow
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -295,7 +371,7 @@ export default function HomePage() {
         <SectionHeading
           number={sectionNumber("now")}
           title="Now"
-          link={{ to: "/now", label: "Full now →" }}
+          link={{ to: "/now", label: "Read now page" }}
         />
         <ul className="max-w-measure space-y-2 text-ink-muted">
           {now.workingOn.slice(0, 3).map((item) => (
@@ -304,7 +380,7 @@ export default function HomePage() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 font-mono text-xs text-ink-faint">
+        <p className="mt-4 text-xs text-ink-faint">
           <time dateTime={now.lastUpdated}>
             Now section updated {formatUpdated(now.lastUpdated)}
           </time>
@@ -316,7 +392,7 @@ export default function HomePage() {
         <SectionHeading
           number={sectionNumber("work")}
           title="Selected work"
-          link={{ to: "/work", label: "All work →" }}
+          link={{ to: "/work", label: "View all work" }}
         />
         <ul className="border-b border-rule">
           {rankedWork.map((item) => (
@@ -331,7 +407,7 @@ export default function HomePage() {
         <SectionHeading
           number={sectionNumber("products")}
           title="Things I build"
-          link={{ to: "/products", label: "Products →" }}
+          link={{ to: "/products", label: "Explore products" }}
         />
         <ul className="border-b border-rule">
           {featuredProducts().map((p) => (
@@ -409,7 +485,7 @@ export default function HomePage() {
         <SectionHeading
           number={sectionNumber("research")}
           title="Things I think about"
-          link={{ to: "/research", label: "Research →" }}
+          link={{ to: "/research", label: "View all research" }}
         />
         <div className="grid gap-8 md:grid-cols-2">
           <div>
@@ -455,13 +531,13 @@ export default function HomePage() {
         </Prose>
         <div className="mt-6 flex flex-wrap gap-4">
           <Link to="/timeline" className="link-accent">
-            Timeline →
+            Timeline
           </Link>
           <Link to="/experience" className="link-accent">
-            Experience →
+            Experience
           </Link>
           <Link to="/about" className="link-accent">
-            About →
+            About
           </Link>
         </div>
       </section>
@@ -471,7 +547,7 @@ export default function HomePage() {
         <SectionHeading
           number={sectionNumber("writing")}
           title="Writing"
-          link={{ to: "/writing", label: "Writing →" }}
+          link={{ to: "/writing", label: "Read all writing" }}
         />
         <ul className="space-y-4 max-w-measure">
           {writing.slice(0, 2).map((w) => (
@@ -501,7 +577,7 @@ export default function HomePage() {
           <SectionHeading
             number={sectionNumber("principles")}
             title="Principles"
-            link={{ to: "/principles", label: "All principles →" }}
+            link={{ to: "/principles", label: "Explore principles" }}
           />
           <blockquote className="max-w-measure border-l-2 border-accent pl-6">
             <p className="font-display text-2xl text-ink leading-snug">

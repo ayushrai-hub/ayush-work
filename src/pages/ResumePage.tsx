@@ -36,7 +36,7 @@ export default function ResumePage() {
         </Prose>
 
         <section className="mb-12">
-          <h2 className="label mb-4">Experience</h2>
+          <h2 className="font-display text-xl md:text-2xl text-ink font-semibold mb-6">Experience</h2>
           <ul className="max-w-measure space-y-6">
             {experience.map((role) => (
               <li key={role.slug}>
@@ -61,7 +61,7 @@ export default function ResumePage() {
         </section>
 
         <section>
-          <h2 className="label mb-4">Education</h2>
+          <h2 className="font-display text-xl md:text-2xl text-ink font-semibold mb-6">Education</h2>
           <ul className="max-w-measure space-y-4">
             {education.map((ed) => (
               <li key={ed.slug}>

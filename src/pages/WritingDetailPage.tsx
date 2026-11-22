@@ -27,7 +27,7 @@ export default function WritingDetailPage() {
   const item = writing.find((w) => w.slug === slug);
 
   if (!item) {
-    return <MissingRecord title="Writing not found" backTo="/writing" backLabel="Back to writing →" />;
+    return <MissingRecord title="Writing not found" backTo="/writing" backLabel="Back to writing" />;
   }
 
   if (item.url) {
@@ -49,7 +49,7 @@ export default function WritingDetailPage() {
                 rel="noopener noreferrer"
                 className="link-accent"
               >
-                Open on the original site →
+                Open on original publication
               </a>
             </p>
           </Prose>

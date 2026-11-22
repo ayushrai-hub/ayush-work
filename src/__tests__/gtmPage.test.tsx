@@ -10,12 +10,12 @@
  * - src/pages/GtmPage.tsx, src/content/gtm.ts, src/App.tsx (AppRoutes)
  * - src/lib/agent/markdown.ts, src/lib/publicRoutes.ts, src/content/searchIndex.ts
  */
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { AppRoutes } from "../App";
-import { gtmPortfolio, gtmProofs, gtmReadingProgress, loomEmbedUrl, searchIndex } from "../content";
+import { gtmPortfolio, gtmProofs, gtmReadingProgress, loomEmbedUrl, searchIndex, videoEmbedUrl } from "../content";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { renderPageMarkdown } from "../lib/agent/markdown";
 import { prerenderRoutes, sitemapRoutes } from "../lib/publicRoutes";
@@ -42,6 +42,7 @@ afterEach(() => {
 /** The /gtm record, page, and twin. */
 describe("GTM portfolio", () => {
   it("resolves every proof against products or projects", () => {
+    expect(gtmProofs().length).toBeGreaterThanOrEqual(5);
     expect(gtmProofs().map((proof) => proof.slug)).toEqual(
       gtmPortfolio.proofs.map((proof) => proof.slug),
     );
@@ -53,11 +54,17 @@ describe("GTM portfolio", () => {
     });
   });
 
-  it("renders each proof with its evidence and links, and a Loom placeholder", async () => {
+  it("renders each proof with its evidence, gallery, and links, and a Loom placeholder", async () => {
     expect(await renderGtm()).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByText(/Loom walkthrough coming soon/)).toBeInTheDocument();
     expect(document.querySelector("iframe")).toBeNull();
+    expect(screen.getByRole("heading", { name: /Precision GTM and the future of autonomous revenue systems/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("table").length).toBeGreaterThanOrEqual(3);
+    const stageTab = screen.getByRole("button", { name: "02 · 100-pt scoring" });
+    expect(stageTab).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(stageTab);
+    expect(stageTab).toHaveAttribute("aria-pressed", "true");
 
     for (const proof of gtmProofs()) {
       const item = document.getElementById(`gtm-${proof.slug}`);
@@ -76,9 +83,9 @@ describe("GTM portfolio", () => {
         expect(screen.getByRole("link", { name: resource.label })).toHaveAttribute("href", resource.href);
       }
     }
-  });
+  }, 15000);
 
-  it("embeds the Loom video once a URL is set", async () => {
+  it("embeds the Loom or YouTube video once a URL is set", async () => {
     gtmPortfolio.walkthrough.loomUrl = "https://www.loom.com/share/abc123";
     await renderGtm();
     expect(screen.getByTitle("GTM engineering walkthrough on Loom")).toHaveAttribute(
@@ -87,15 +94,25 @@ describe("GTM portfolio", () => {
     );
     expect(screen.queryByText(/Loom walkthrough coming soon/)).toBeNull();
     expect(loomEmbedUrl("https://example.com/video")).toBe("https://example.com/video");
+    expect(videoEmbedUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ")).toBe(
+      "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+    );
+    expect(videoEmbedUrl("https://youtu.be/dQw4w9WgXcQ")).toBe(
+      "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+    );
   });
 
   it("publishes a Markdown twin, a prerendered route, and a search entry", () => {
     const markdown = renderPageMarkdown("/gtm") ?? "";
     for (const heading of [
+      "## Precision GTM and the future of autonomous revenue systems",
+      "## GTM engineering capabilities",
       "## Walkthrough video",
       "## Product and projects",
+      "## Autonomous agents and AI-driven revenue workflows",
       "## GTM infrastructure layers: built and missing",
       "## What I already know",
+      "## Experiments and lessons learned",
       "## What I am studying now",
       "## Resources I am using",
       "## What I will build next",

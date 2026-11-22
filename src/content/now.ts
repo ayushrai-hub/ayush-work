@@ -20,38 +20,36 @@ import type { NowStatus } from "./types";
  * `pageUpdatedAt("now")` in siteMeta.ts, which is maintained separately.
  */
 export const now: NowStatus = {
-  lastUpdated: "2026-09-29",
+  lastUpdated: "2026-11-21",
   workingOn: [
-    "Independent AI evaluation and product building (FoCDoT role ended August 2025)",
-    "The Open Framework, a public front-end prototype for civil-society coordination",
-    "AyushMushrooms — agrotech brand MVP (content, leads, future shop readiness)",
-    "AGENYRA, a distribution layer for AI products, still early and stage-labeled",
-    "MedVoice, voice-assisted wholesale billing with deterministic tax and confirmation",
+    "GTM engineering and revenue data systems: GTM-Strato (ICP Finder with deterministic 100-point fit scoring and Apollo/Sales Nav/Clay filters), AIworks lead qualification CLI, RevenueRoles, and the Revenue Intelligence Engine",
+    "Contract LLM evaluation and code/STEM review workflows through Outlier (following SDE — AI Engineer role at FoCDoT, Apr 2024 – Aug 2025)",
+    "MedVoice — voice-assisted pharma wholesale billing where speech proposes candidate lines and deterministic rules decide medicine identity, integer-paise GST, and invoice posting",
+    "AGENYRA — structured product data and stage-honest representation before agent placement, and The Open Framework civil-society coordination prototype",
   ],
   researching: [
-    "Consent, verification, and trust patterns for NGO / donor discovery (Open Framework)",
-    // TODO: name specific papers or datasets once locked
-    "Practical eval criteria for code-oriented LLM outputs",
+    "Where deterministic rules must bound language models in revenue pipelines: separating scraped website facts from model hypotheses and keeping numerical scoring out of LLM prompts",
+    "Cost-controlled enrichment waterfalls across public sources, Clay HTTP API columns, Apollo enrichment endpoints, and idempotent HubSpot CRM upserts",
+    "Practical evaluation rubrics for code-oriented and tool-calling LLM outputs",
   ],
   learning: [
-    "Stricter product thinking around DPI-like systems (auditability, RBAC, longevity)",
-    // TODO: confirm current course / book
-    "Where a model must stop in a billing workflow, and where a product stage label has to stay narrow",
+    "Clay waterfall design, credit accounting, and the boundary between spreadsheet orchestration and a typed Python/TypeScript backend",
+    "HubSpot CRM object associations, domain-keyed deduplication, and conflict resolution between enrichment feeds and system-of-record fields",
+    "CAN-SPAM, Google sender authentication guidelines, suppression lists, and why autonomous outbound without a human approval gate fails",
   ],
   thinking: [
-    "How to talk about AI work without borrowing other orgs' brand names as status",
-    "What 'selected work' should mean on a personal site, fewer items, clearer roles",
-    "Keeping research notes honest: investigation ≠ publication",
+    "Precision GTM: replacing high-volume sequence spam with evidence-backed account selection, field-level provenance, and transparent scoring",
+    "Why an agent is an execution controller with state, tool schemas, and human approval checkpoints — not an unconstrained prompt loop",
+    "Keeping public engineering claims verifiable: every project states whether it is live, runs locally, or runs on synthetic demo data",
   ],
   reading: [
-    // TODO: replace with actual current reading list
-    "Notes and specs around DPDP-aligned consent and audit logs",
-    "Build logs and architecture notes for Open Framework and AyushMushrooms",
+    "Clay GTM engineering infrastructure docs, waterfall mechanics, and HTTP API integration guides",
+    "Apollo People Enrichment & Rate Limit specifications and HubSpot CRM v3 association docs",
+    "DPDP-aligned consent, audit-trail design, and evaluation methodology notes",
   ],
   priorities: [
-    "Ship and document real systems over polishing vanity copy",
-    "Keep public claims cautious and evidence-linked",
-    "Keep Open Framework, AGENYRA, and MedVoice stage boundaries visible as they move",
-    "Write short notes from product and AI eval learnings",
+    "Ship verifiable GTM and revenue-engineering systems with test suites, provenance, and explicit boundaries",
+    "Wire live enrichment (Apollo) and CRM sandbox sync (HubSpot) behind existing provider adapters while keeping synthetic mode runnable without keys",
+    "Keep every page, Markdown twin, API endpoint, and MCP tool synchronized from one typed content source",
   ],
 };

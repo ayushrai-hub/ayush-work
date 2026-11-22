@@ -135,7 +135,7 @@ export default function AiDataScientistPowPage() {
               <article key={item.id} className="border-b border-rule pb-6">
                 <div className="flex flex-wrap items-center gap-3">
                   <h3 className="font-display text-xl text-ink">{item.title}</h3>
-                  <span className="border border-rule px-2 py-0.5 font-mono text-[11px] uppercase tracking-label text-ink-muted">
+                  <span className="border border-rule px-2 py-0.5 text-xs text-ink-muted">
                     {item.status}
                   </span>
                 </div>

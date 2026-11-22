@@ -14,14 +14,14 @@ test.describe("human site", () => {
   test("homepage shows the name, the role title, and primary navigation", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1, name: "Ayush Rai" })).toBeVisible();
-    await expect(page).toHaveTitle("Ayush Rai · AI Engineer & AI Product Builder");
+    await expect(page).toHaveTitle("Ayush Rai · AI Engineer × Revenue × GTM");
     const description = await page
       .locator('meta[name="description"][data-rh="true"]')
       .getAttribute("content");
     expect(description?.length ?? 0).toBeGreaterThan(50);
 
     const primary = page.getByRole("navigation", { name: "Primary" });
-    for (const label of ["Work", "Products", "Research", "Writing", "About"]) {
+    for (const label of ["Work", "GTM", "Products", "Research", "Writing", "About"]) {
       await expect(primary.getByRole("link", { name: label })).toBeVisible();
     }
   });

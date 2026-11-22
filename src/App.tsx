@@ -75,7 +75,7 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 function PageFallback() {
   return (
     <div className="site-shell py-24" role="status" aria-live="polite">
-      <p className="font-mono text-sm text-ink-faint">Loading…</p>
+      <p className="text-sm text-ink-faint">Loading…</p>
     </div>
   );
 }

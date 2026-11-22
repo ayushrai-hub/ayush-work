@@ -233,7 +233,7 @@ export default function AgenticPowPage() {
               <li key={item.threat} className="border-t border-rule pt-4">
                 <div className="flex flex-wrap items-baseline gap-3">
                   <h3 className="font-display text-lg text-ink">{item.threat}</h3>
-                  <span className="font-mono text-[11px] uppercase tracking-label text-ink-faint">
+                  <span className="text-xs text-ink-faint">
                     {item.where === "demonstrated" ? "Shown on this page" : "Needs a backend"}
                   </span>
                 </div>
@@ -254,7 +254,7 @@ export default function AgenticPowPage() {
               <li key={phase.phase} className="border-t border-rule pt-4">
                 <div className="flex flex-wrap items-baseline gap-3">
                   <h3 className="font-display text-lg text-ink">Phase {phase.phase}. {phase.title}</h3>
-                  <span className="font-mono text-[11px] uppercase tracking-label text-ink-faint">{phase.status}</span>
+                  <span className="text-xs text-ink-faint">{phase.status}</span>
                 </div>
                 <p className="mt-2 max-w-measure text-sm text-ink-muted">{phase.detail}</p>
               </li>

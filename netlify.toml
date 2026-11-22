@@ -6,11 +6,16 @@
   node_bundler = "esbuild"
   directory = "api"
 
-# Vercel Web Analytics. www is served by Netlify, so the script and its view/event/session
-# endpoints are proxied to the Vercel project's own alias, which ingests them for ayush-work.
+# Vercel Web Analytics and Speed Insights. When served by Netlify, the scripts and their
+# ingestion endpoints are proxied to the Vercel project's own alias, which ingests them for ayush-work.
 [[redirects]]
   from = "/_vercel/insights/*"
   to = "https://ayush-rai-work.vercel.app/_vercel/insights/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/_vercel/speed-insights/*"
+  to = "https://ayush-rai-work.vercel.app/_vercel/speed-insights/:splat"
   status = 200
 
 # Versioned project routes land on the existing projects function.

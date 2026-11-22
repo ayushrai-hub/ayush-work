@@ -155,7 +155,7 @@ export default function RevopsPowPage() {
 
         <Section id="ingestion" number="D" title="Data ingestion and normalization">
           <p className="max-w-measure text-ink-muted">
-            The fixture mixes website demo requests, CSV imports, event registrations, product signups, referrals, and a stale enrichment file. Each row keeps its source and its raw field names. <span className="font-mono text-xs">company</span> and <span className="font-mono text-xs">organization_name</span> become account name. <span className="font-mono text-xs">email_address</span> and <span className="font-mono text-xs">work_email</span> become email. <span className="font-mono text-xs">job_role</span> and <span className="font-mono text-xs">title</span> become job title. Whitespace and domains are normalized. An email is checked for shape only. That is not a deliverability check, and a failed row stays in the table with its issues.
+            The fixture mixes website demo requests, CSV imports, event registrations, product signups, referrals, and a stale enrichment file. Each row keeps its source and its raw field names. <code>company</code> and <code>organization_name</code> become account name. <code>email_address</code> and <code>work_email</code> become email. <code>job_role</code> and <code>title</code> become job title. Whitespace and domains are normalized. An email is checked for shape only. That is not a deliverability check, and a failed row stays in the table with its issues.
           </p>
         </Section>
 

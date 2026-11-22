@@ -18,7 +18,9 @@ import { POW_PATH } from "../../content/powPages";
 /** Router links shown first in the footer nav; Developers, llms.txt, and Privacy are appended in JSX. */
 const FOOTER_LINKS = [
   { to: "/work", label: "Work" },
+  { to: "/gtm", label: "GTM" },
   { to: "/products", label: "Products" },
+  { to: "/gtm-revops", label: "GTM & RevOps" },
   { to: "/ai-engineering", label: "AI engineering" },
   { to: "/software-engineering", label: "Software" },
   { to: "/experience", label: "Experience" },
@@ -67,7 +69,7 @@ export default function SiteFooter() {
           <span>{person.location}</span>
         </div>
 
-        <p className="mt-4 font-mono text-xs text-ink-faint">
+        <p className="mt-4 text-xs text-ink-faint">
           <time dateTime={siteMeta.siteUpdatedAt}>
             Site info updated {formatUpdated(siteMeta.siteUpdatedAt)}
           </time>
