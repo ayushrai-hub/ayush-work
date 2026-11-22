@@ -16,8 +16,10 @@ import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
+import MediaGallery from "../components/editorial/MediaGallery";
 import {
   featuredProducts,
+  getRecordVisuals,
   otherProductsByCategory,
   pageUpdatedAt,
   productCategoryLabels,
@@ -25,8 +27,9 @@ import {
   type Product,
 } from "../content";
 
-/** One catalog row: title, stage and category, summary, stage explanation, and detail/live/source/log links. */
+/** One catalog row: title, stage and category, summary, stage explanation, visual preview, and detail/live/source/log links. */
 function ProductRow({ product }: { product: Product }) {
+  const visuals = getRecordVisuals(product.slug);
   return (
     <li className="border-b border-rule py-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
@@ -51,6 +54,14 @@ function ProductRow({ product }: { product: Product }) {
         <p className="mt-2 max-w-measure text-sm text-ink-faint leading-relaxed">
           {product.stageExplanation}
         </p>
+      )}
+      {visuals && visuals.gallery.length > 0 && (
+        <div className="mt-4 max-w-2xl">
+          <MediaGallery
+            items={visuals.gallery}
+            ariaLabel={`${product.title} visual preview`}
+          />
+        </div>
       )}
       <p className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
         <Link

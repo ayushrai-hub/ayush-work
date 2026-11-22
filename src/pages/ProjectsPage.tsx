@@ -17,10 +17,13 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
+import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
+import MediaGallery from "../components/editorial/MediaGallery";
 import {
   activeProjects,
   archivedProjects,
+  getRecordVisuals,
   projectCategoryLabels,
   projectTypeLabels,
   projectsByCategory,
@@ -148,6 +151,30 @@ export default function ProjectsPage() {
                       {projectCategoryLabels[p.category]}
                     </p>
                     <p className="mt-2 max-w-measure text-ink-muted">{p.summary}</p>
+                    {(() => {
+                      const visuals = getRecordVisuals(p.slug);
+                      if (!visuals) return null;
+                      return (
+                        <details className="mt-3 max-w-2xl border border-rule bg-paper-elevated px-3 py-2 text-xs">
+                          <summary className="cursor-pointer font-mono text-ink-muted">
+                            Inspect artifacts &amp; architecture ({p.title})
+                          </summary>
+                          <div className="mt-3 space-y-4">
+                            {visuals.gallery.length > 0 && (
+                              <MediaGallery
+                                items={visuals.gallery}
+                                ariaLabel={`${p.title} visual artifacts`}
+                              />
+                            )}
+                            {visuals.diagram && (
+                              <pre className="overflow-x-auto border border-rule bg-paper p-3 font-mono text-xs leading-relaxed text-ink">
+                                {visuals.diagram}
+                              </pre>
+                            )}
+                          </div>
+                        </details>
+                      );
+                    })()}
                     {(p.links || p.relatedWorkSlug) && (
                       <p className="mt-2 flex flex-wrap gap-3 text-sm">
                         {p.relatedWorkSlug && (
@@ -208,6 +235,8 @@ export default function ProjectsPage() {
             </ul>
           </details>
         )}
+
+        <ContactCta prompt="If a revenue-data pipeline, agentic workflow, or project matches what you are building, open the resume or schedule a call." />
       </div>
     </>
   );

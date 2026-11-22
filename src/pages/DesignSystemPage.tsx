@@ -11,6 +11,10 @@
  */
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
+import MediaFigure from "../components/editorial/MediaFigure";
+import MediaGallery from "../components/editorial/MediaGallery";
+import VideoEmbed from "../components/editorial/VideoEmbed";
+import { getRecordVisuals } from "../content";
 
 /** Color tokens to show. `className` is the Tailwind background (plus a border for pale tokens). */
 const SWATCHES = [
@@ -91,6 +95,32 @@ export default function DesignSystemPage() {
               Accent link
             </a>
           </p>
+        </section>
+
+        <section className="mt-16">
+          <h2 className="font-display text-xl text-ink font-semibold mb-4">Media &amp; video specimens</h2>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <MediaFigure
+              alt="Specimen placeholder slot showing replacement slot metadata"
+              slot="specimen-figure-slot"
+              badge="Specimen slot"
+              caption="MediaFigure renders either a real screenshot or an explicit replacement slot."
+            />
+            <VideoEmbed
+              title="Loom / YouTube embed specimen"
+              slot="specimen-video-slot"
+              caption="VideoEmbed converts Loom or YouTube share links to privacy-enhanced iframe embeds, or renders a replacement slot."
+            />
+          </div>
+          {getRecordVisuals("revenueroles") && (
+            <div className="mt-6 max-w-3xl">
+              <MediaGallery
+                items={getRecordVisuals("revenueroles")!.gallery}
+                heading="MediaGallery specimen"
+                ariaLabel="Design system gallery specimen"
+              />
+            </div>
+          )}
         </section>
       </div>
     </>

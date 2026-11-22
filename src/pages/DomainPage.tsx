@@ -25,12 +25,14 @@ import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import SectionHeading from "../components/editorial/SectionHeading";
+import MediaGallery from "../components/editorial/MediaGallery";
 import NotFoundPage from "./NotFoundPage";
 import {
   childDomains,
   evidenceLevelLabels,
   experience,
   getDomainByPath,
+  getRecordVisuals,
   pageUpdatedAt,
   person,
   products,
@@ -38,6 +40,20 @@ import {
 } from "../content";
 import { canonicalUrl, personId, websiteId } from "../lib/canonical";
 import { softwareServicesFaqNode, softwareServicesNode } from "../lib/structuredData";
+
+/** Maps a domain dossier path to a primary visual record slug in `src/content/visuals.ts`. */
+const DOMAIN_VISUAL_SLUG: Record<string, string> = {
+  "/gtm-revops": "revenueroles",
+  "/ai-engineering": "revenue-intelligence-engine",
+  "/ai-engineering/llm-evaluation": "gtm-strato",
+  "/ai-engineering/rlhf": "aiworks-leads",
+  "/ai-engineering/llm-systems": "medvoice",
+  "/ai-engineering/agents": "relationship-intelligence-engine",
+  "/ai-engineering/rag": "mailu",
+  "/software-engineering": "revenueroles",
+  "/software-services": "praful-h",
+  "/open-source": "gtm-strato",
+};
 
 /**
  * Link for evidence, related, and further-reading entries (not the breadcrumb, despite the name).
@@ -140,6 +156,21 @@ export default function DomainPage() {
           updated={pageUpdatedAt("domains")}
         />
         <p className="label -mt-6 mb-10">{evidenceLevelLabels[page.evidenceLevel]}</p>
+
+        {(() => {
+          const visualSlug = DOMAIN_VISUAL_SLUG[page.path];
+          const visuals = visualSlug ? getRecordVisuals(visualSlug) : undefined;
+          if (!visuals || visuals.gallery.length === 0) return null;
+          return (
+            <section className="mb-14 max-w-3xl" aria-label={`${page.title} visual evidence`}>
+              <MediaGallery
+                items={visuals.gallery}
+                heading="Primary system artifact"
+                ariaLabel={`${page.title} primary system artifact`}
+              />
+            </section>
+          );
+        })()}
 
         {children.length > 0 && (
           <section className="mb-14">

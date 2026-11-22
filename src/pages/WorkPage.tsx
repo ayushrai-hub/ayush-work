@@ -15,8 +15,9 @@ import { useMemo, useState } from "react";
 import PageSEO from "../components/site/PageSEO";
 import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
+import MediaGallery from "../components/editorial/MediaGallery";
 import WorkRow from "../components/editorial/WorkRow";
-import { work, pageUpdatedAt, type WorkType } from "../content";
+import { getRecordVisuals, work, pageUpdatedAt, type WorkType } from "../content";
 
 /** Type filter buttons, one per `WorkType` plus "all". */
 const FILTERS: Array<{ label: string; value: WorkType | "all" }> = [
@@ -31,6 +32,8 @@ const FILTERS: Array<{ label: string; value: WorkType | "all" }> = [
 /** Work index component. Lazy-loaded by the `work` route in src/App.tsx. */
 export default function WorkPage() {
   const [filter, setFilter] = useState<WorkType | "all">("all");
+  const rrVisuals = getRecordVisuals("revenueroles");
+  const rieVisuals = getRecordVisuals("revenue-intelligence-engine");
 
   const items = useMemo(() => {
     if (filter === "all") return work;
@@ -41,16 +44,35 @@ export default function WorkPage() {
     <>
       <PageSEO
         title="Work"
-        description="Ayush Rai work index: AI product and software case studies, including The Open Framework, MedVoice, AGENYRA, and client sites."
+        description="Ayush Rai work index: AI product, GTM system, and software case studies, including RevenueRoles, GTM-Strato, Revenue Intelligence Engine, The Open Framework, MedVoice, AGENYRA, and client sites."
         path="/work"
       />
       <div className="site-shell page-section">
         <PageHeader
           label="Work"
           title="Index"
-          dek="Case studies and shipped systems. Fewer items, clearer roles."
+          dek="Case studies and shipped systems across revenue infrastructure, AI products, and client deliveries."
           updated={pageUpdatedAt("work")}
         />
+
+        {(rrVisuals || rieVisuals) && (
+          <section className="mb-12 grid gap-6 lg:grid-cols-2" aria-label="Featured system screens">
+            {rrVisuals && (
+              <MediaGallery
+                items={rrVisuals.gallery}
+                heading="RevenueRoles · job discovery & work-based taxonomy"
+                ariaLabel="RevenueRoles visual gallery"
+              />
+            )}
+            {rieVisuals && (
+              <MediaGallery
+                items={rieVisuals.gallery}
+                heading="Revenue Intelligence Engine · 6-stage GTM pipeline"
+                ariaLabel="Revenue Intelligence Engine visual gallery"
+              />
+            )}
+          </section>
+        )}
 
         <div
           className="mb-8 flex flex-wrap gap-2"

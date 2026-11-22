@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import { PowNav } from "../components/pow/PowNav";
 import RevopsWorkbench from "../components/pow/revops/RevopsWorkbench";
+import MediaGallery from "../components/editorial/MediaGallery";
 import {
   REVOPS_DESCRIPTION,
   REVOPS_PATH,
@@ -28,7 +29,7 @@ import {
   revopsNode,
   revopsRoadmap,
 } from "../content/revopsPow";
-import { getProductBySlug, getProjectBySlug, pageUpdatedAt, person } from "../content";
+import { getProductBySlug, getProjectBySlug, getRecordVisuals, pageUpdatedAt, person } from "../content";
 import { runRevopsChecks } from "../lib/revops/checks";
 import { canonicalUrl, personId, websiteId } from "../lib/canonical";
 
@@ -74,8 +75,11 @@ export default function RevopsPowPage() {
   const checks = runRevopsChecks();
   const revenueRoles = getProductBySlug("revenueroles");
   const engine = getProjectBySlug("revenue-intelligence-engine");
+  const gtmStrato = getProjectBySlug("gtm-strato");
+  const aiworksLeads = getProjectBySlug("aiworks-leads");
   const spider = getProjectBySlug("spiderweb");
   const agenyra = getProductBySlug("agenyra");
+  const engineVisuals = getRecordVisuals("revenue-intelligence-engine");
   const engineGithub = engine?.links?.github;
   const spiderGithub = spider?.links?.github;
   const jsonLd = {
@@ -302,6 +306,15 @@ export default function RevopsPowPage() {
           <p className="mt-3 max-w-measure text-ink-muted">{revopsCaseStudy.missing}</p>
           <p className="mt-3 max-w-measure text-ink-muted">{revopsCaseStudy.next}</p>
           <p className="mt-3 max-w-measure text-ink-muted">{revopsCaseStudy.checked}</p>
+          {engineVisuals && engineVisuals.gallery.length > 0 && (
+            <div className="mt-6 max-w-3xl">
+              <MediaGallery
+                items={engineVisuals.gallery}
+                heading="Repository screens (6-stage GTM pipeline)"
+                ariaLabel="Revenue Intelligence Engine repository screens"
+              />
+            </div>
+          )}
           <p className="mt-4 text-sm">
             <ExternalLink href={revopsCaseStudy.demo}>Open revopy.vercel.app</ExternalLink>
             {" · "}
@@ -323,10 +336,24 @@ export default function RevopsPowPage() {
               {revenueRoles!.summary} It is relevant here as ingestion, normalization, and conservative deduplication of job postings. It is not a CRM.
             </li>
             <li>
-              <Link to="/projects" className="link-underline text-ink">Revenue Intelligence Engine</Link>
+              <Link to="/work/revenue-intelligence-engine" className="link-underline text-ink">Revenue Intelligence Engine</Link>
               {" "}
               {engine!.summary}
             </li>
+            {gtmStrato && (
+              <li>
+                <Link to="/work/gtm-strato" className="link-underline text-ink">GTM-Strato (ICP Finder)</Link>
+                {" "}
+                {gtmStrato.summary}
+              </li>
+            )}
+            {aiworksLeads && (
+              <li>
+                <Link to="/work/aiworks-leads" className="link-underline text-ink">AIworks Lead Research &amp; Qualification Pipeline</Link>
+                {" "}
+                {aiworksLeads.summary}
+              </li>
+            )}
             <li>
               <Link to="/products/agenyra" className="link-underline text-ink">AGENYRA</Link>
               {" "}
