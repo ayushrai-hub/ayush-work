@@ -13,6 +13,10 @@
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Ayush Rai" />
   <link rel="canonical" href="https://www.ayushrai.site/" />
+  <link rel="describedby" href="/llms.txt" type="text/plain" title="Ayush Rai llms.txt" />
+  <link rel="describedby" href="/openapi.json" type="application/json" title="Ayush Rai OpenAPI" />
+  <link rel="describedby" href="/auth.md" type="text/markdown" title="Ayush Rai auth.md" />
+  <link rel="describedby" href="/plugin.json" type="application/json" title="Ayush Rai agent plugin" />
 
   <meta property="og:title" content="Ayush Rai · AI Engineer × Revenue × GTM" />
   <meta property="og:description"
@@ -52,7 +56,42 @@
       style="display:none;visibility:hidden"></iframe></noscript>
 
   <div id="root"></div>
-  <!-- Classic script keeps document.modelContext / registerTool literals visible to scanners. -->
+  <!-- document.modelContext.registerTool is in this document, with navigator.modelContext only as a fallback. -->
+  <script>
+    (function () {
+      function modelContext() {
+        var docCtx = document.modelContext;
+        var navCtx = navigator.modelContext;
+        var found = docCtx || navCtx;
+        if (!found || typeof found.registerTool !== "function") return null;
+        return found;
+      }
+      function registerPortfolioTool() {
+        if (window.__ayushWebMcpRegistered) return;
+        var ctx = modelContext();
+        if (!ctx) return;
+        window.__ayushWebMcpRegistered = true;
+        ctx.registerTool({
+          name: "search_portfolio_projects",
+          description: "Lexical search of Ayush Rai's public portfolio. Same records as GET /api/v1/search.",
+          inputSchema: {
+            type: "object",
+            properties: { query: { type: "string", description: "Search text" } },
+            required: ["query"],
+            additionalProperties: false,
+          },
+          annotations: { readOnlyHint: true },
+          execute: function (args) {
+            var q = args && typeof args.query === "string" ? args.query : "";
+            return fetch("/api/v1/search?q=" + encodeURIComponent(q), {
+              headers: { Accept: "application/json" },
+            }).then(function (res) { return res.json(); });
+          },
+        });
+      }
+      document.addEventListener("DOMContentLoaded", registerPortfolioTool);
+    })();
+  </script>
   <script src="/webmcp.js" defer></script>
   <script type="module" src="/src/main.tsx"></script>
 </body>

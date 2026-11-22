@@ -13,8 +13,11 @@
  * - Depends on `search.ts`, `projectsQuery.ts`, `validate.ts`, `pagination.ts`, `rateLimit.ts`,
  *   `apiError.ts`, and `../siteOrigins.ts` (the CORS allow-list).
  */
+import { handleA2aRpc } from "./a2a";
+import { A2A_PATH } from "./agentCard";
 import { apiErrorBody, type ApiErrorCode } from "./apiError";
 import { runReadBatch } from "./batch";
+import { createSearchJob, readSearchJob } from "./jobs";
 import { decodeCursor } from "./pagination";
 import { comparePublicProjects, getPublicProject, pagePublicProjects } from "./projectsQuery";
 import {
@@ -118,11 +121,20 @@ export function projectsHttp(params: URLSearchParams, pathSlug?: string): AgentH
 }
 
 /**
- * Routes one API call by path and method. OPTIONS returns 204. POST is accepted only for
- * `/api/v1/batch`. Other methods return 405, and unknown paths return 404 `route_not_found`.
- * No rate limiting or headers here; `agentApiResponse` adds those. `body` and `idempotencyKey`
- * apply to the batch route.
+ * Routes one API call by path and method. OPTIONS returns 204. POST is accepted for
+ * `/api/v1/batch`, `/api/v1/jobs`, and `/api/a2a`. Other methods return 405, and unknown paths
+ * return 404 `route_not_found`. No rate limiting or headers here; `agentApiResponse` adds those.
+ * `body` and `idempotencyKey` apply to the batch and job routes.
  */
+const JOB_DETAIL = /^\/api\/v1\/jobs\/(job_[a-f0-9]{16})$/;
+
+/** Raw JSON text from a string body or an already-parsed object. */
+function rawJsonBody(body: unknown): string {
+  if (typeof body === "string") return body;
+  if (body == null) return "";
+  return JSON.stringify(body);
+}
+
 export function dispatchAgentApi(
   pathname: string,
   method: string,
@@ -134,8 +146,20 @@ export function dispatchAgentApi(
   if (method === "POST" && pathname === "/api/v1/batch") {
     return runReadBatch(body, idempotencyKey, (path, query) => dispatchAgentApi(path, "GET", query));
   }
+  if (pathname === "/api/v1/jobs") {
+    if (method === "POST") return createSearchJob(rawJsonBody(body), idempotencyKey);
+    return apiError(405, { code: "method_not_allowed", message: "POST /api/v1/jobs accepts { operation: \"search\", q }." });
+  }
+  if (method === "POST" && pathname === A2A_PATH) {
+    return handleA2aRpc(rawJsonBody(body));
+  }
+  const jobMatch = JOB_DETAIL.exec(pathname);
+  if (jobMatch) {
+    if (method === "GET" || method === "HEAD") return readSearchJob(jobMatch[1]);
+    return apiError(405, { code: "method_not_allowed", message: "GET /api/v1/jobs/{id} polls a job." });
+  }
   if (method !== "GET" && method !== "HEAD") {
-    return apiError(405, { code: "method_not_allowed", message: "Only GET, HEAD, OPTIONS, and POST /api/v1/batch are allowed." });
+    return apiError(405, { code: "method_not_allowed", message: "Only GET, HEAD, OPTIONS, POST /api/v1/batch, POST /api/v1/jobs, and POST /api/a2a are allowed." });
   }
   if (pathname === "/api/search" || pathname === "/api/v1/search") {
     const queryError = validateQuery(params.get("q"));

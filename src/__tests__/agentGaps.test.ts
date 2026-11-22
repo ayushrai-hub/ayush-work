@@ -10,8 +10,12 @@
  */
 import { describe, expect, it, beforeEach } from "vitest";
 import { DOCS_HTTP_SURFACE, handleMcpRequest } from "../lib/agent/mcpHttp";
+import { buildAgentCard } from "../lib/agent/agentCard";
+import { agentFiles } from "../lib/agent/surfaces";
+import { buildWebBotAuthDirectory } from "../lib/agent/webBotAuth";
 import { agentApiResponse, dispatchAgentApi } from "../lib/agent/http";
 import { resetIdempotency } from "../lib/agent/idempotency";
+import { resetJobs } from "../lib/agent/jobs";
 import { buildOpenApiDocument } from "../lib/agent/openapi";
 import { softwareServicesFaqNode, softwareServicesNode } from "../lib/structuredData";
 
@@ -19,6 +23,7 @@ const ORIGIN = "https://www.ayushrai.site";
 
 beforeEach(() => {
   resetIdempotency();
+  resetJobs();
 });
 
 /** POST /api/v1/batch over the public read routes. */
@@ -137,12 +142,60 @@ describe("declared agent surfaces", () => {
   it("documents Idempotency-Key on the batch and contact writes", () => {
     const spec = buildOpenApiDocument();
     const paths = spec.paths as Record<string, { post?: { parameters?: Array<{ name: string; in: string }> } }>;
-    for (const path of ["/api/v1/batch", "/api/send-email"]) {
+    for (const path of ["/api/v1/batch", "/api/send-email", "/api/v1/jobs"]) {
       const parameters = paths[path].post?.parameters ?? [];
       expect(parameters).toEqual(expect.arrayContaining([{ name: "Idempotency-Key", in: "header", required: false, description: expect.any(String), schema: { type: "string", maxLength: 128 } }]));
     }
     expect(softwareServicesNode()["@type"]).toBe("Service");
     expect(softwareServicesFaqNode()["@type"]).toBe("FAQPage");
     expect(softwareServicesFaqNode().mainEntity).toHaveLength(2);
+    const jobs = spec.paths["/api/v1/jobs"].post;
+    expect(jobs?.responses["202"]).toBeTruthy();
+    expect(JSON.stringify(spec.servers)).toContain("sandbox");
+  });
+
+  it("returns 202 for a search job and serves the A2A card and signature directory", () => {
+    const created = agentApiResponse({
+      pathname: "/api/v1/jobs",
+      method: "POST",
+      params: new URLSearchParams(),
+      clientKey: "job-a",
+      body: JSON.stringify({ operation: "search", q: "agents" }),
+      idempotencyKey: "job-key",
+    });
+    expect(created.status).toBe(202);
+    const job = JSON.parse(created.body ?? "{}") as { id: string; statusUrl: string; result: { query: string } };
+    expect(job.result.query).toBe("agents");
+    expect(created.headers.Location).toBe(job.statusUrl);
+    const replay = agentApiResponse({
+      pathname: "/api/v1/jobs",
+      method: "POST",
+      params: new URLSearchParams(),
+      clientKey: "job-b",
+      body: JSON.stringify({ operation: "search", q: "agents" }),
+      idempotencyKey: "job-key",
+    });
+    expect(JSON.parse(replay.body ?? "{}")).toMatchObject({ id: job.id });
+    const polled = dispatchAgentApi(`/api/v1/jobs/${job.id}`, "GET", new URLSearchParams());
+    expect(polled.status).toBe(200);
+
+    const sent = dispatchAgentApi("/api/a2a", "POST", new URLSearchParams(), JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "message/send",
+      params: { message: { role: "user", parts: [{ kind: "text", text: "agents" }] } },
+    }));
+    expect(sent.status).toBe(200);
+    expect(JSON.stringify(sent.body)).toContain("lexical");
+
+    const files = agentFiles();
+    expect(JSON.parse(files[".well-known/agent-card.json"])).toMatchObject({
+      url: buildAgentCard().url,
+      skills: [{ id: "search-portfolio" }],
+    });
+    const directory = JSON.parse(files[".well-known/http-message-signatures-directory"]);
+    expect(directory.keys[0]).toMatchObject(buildWebBotAuthDirectory().keys[0]);
+    expect(files["llms.txt"].startsWith("# ")).toBe(true);
+    expect(files["llms.txt"]).toContain("](https://www.ayushrai.site/");
   });
 });

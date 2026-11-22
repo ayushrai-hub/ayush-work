@@ -123,7 +123,7 @@ export function buildAgentModeDocument() {
       semanticSearch: false,
       authentication: false,
       payments: false,
-      a2a: false,
+      a2a: `${base}/.well-known/agent-card.json`,
       webmcp: true,
       markdownTwins: true,
       contentNegotiation: "Accept: text/markdown",
@@ -135,9 +135,10 @@ export function buildAgentModeDocument() {
       "Search is lexical, not semantic.",
       "Content updates only when the site is redeployed.",
       "The sandbox alias returns the same published records as /api/v1. There is no separate dataset.",
-      "No OAuth, API keys, or published SDK package yet.",
-      "A2A agent-card is not published because no A2A JSON-RPC endpoint is implemented.",
-      "The MCP server is not listed on Smithery, mcp.so, or another registry.",
+      "No OAuth, API keys, or published SDK or CLI package on npm yet.",
+      "A2A message/send only searches. It does not stream or write.",
+      "The signature directory publishes a public key. Unsigned requests are still accepted.",
+      "The MCP servers are not listed on Smithery, mcp.so, the ChatGPT app directory, or another registry.",
     ],
   };
 }

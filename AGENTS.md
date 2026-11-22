@@ -98,7 +98,7 @@ An unknown tool name, or arguments that fail a tool's input schema, is a JSON-RP
 
 Discovery follows SEP-2127. The Server Card is `GET https://www.ayushrai.site/api/mcp/server-card` (`application/mcp-server-card+json`, with `ETag`). The AI Catalog at `/.well-known/ai-catalog.json` lists it. The older `/.well-known/mcp/server-card.json` serves the same card for clients that still look there.
 
-A zero-dependency CLI lives in `packages/cli` (`node packages/cli/bin/ayushrai.mjs search agents`). It is not published to npm yet. An SDK is not published. An A2A agent card is not implemented (and not advertised). This server is not listed on Smithery, mcp.so, or any other registry.
+A zero-dependency CLI lives in `packages/cli` (`node packages/cli/bin/ayushrai.mjs search agents`). It is not published to npm yet. An SDK is not published. `/.well-known/agent-card.json` describes `POST /api/a2a`, which accepts A2A `message/send` and runs the same lexical search as `/api/v1/search`. This server is not listed on Smithery, mcp.so, or any other registry.
 
 WebMCP `search_portfolio_projects` registers on `document.modelContext` when that API exists, and does nothing otherwise. `navigator.modelContext` is only a fallback. No experimental Chrome WebMCP browser run was completed in this repository.
 
@@ -114,7 +114,7 @@ The REST API, `/ask`, and MCP server are public and unauthenticated. See `/auth.
 - Schema Feeds: `robots.txt` has `schemamap: /schemamap.xml`, which lists `/feeds/portfolio.jsonl` (the same schema.org nodes the pages publish).
 - Agent Plugins: `plugin.json` and `mcp.json` at the repository root, also served at `/plugin.json` and `/mcp.json`. They point at the portfolio MCP server and the docs MCP server. The skill in the repo is `skills/portfolio-discovery`.
 - WebMCP tools register from `/webmcp.js` when `document.modelContext` exists.
-- An A2A `/.well-known/agent-card.json` is not published: there is no A2A JSON-RPC endpoint.
+- A2A: `GET /.well-known/agent-card.json` and `POST /api/a2a` (`message/send` searches; it does not stream or write).
 
 ## Domains
 

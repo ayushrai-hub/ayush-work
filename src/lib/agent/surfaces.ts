@@ -15,6 +15,7 @@
  *   in `src/lib/publicRoutes.ts`.
  */
 import { prerenderRoutes } from "../publicRoutes";
+import { AGENT_CARD_PATH, agentCardJson } from "./agentCard";
 import { agentModeJson } from "./agentMode";
 import { docsServerCardJson, DOCS_SERVER_CARD_PATH } from "./docsMcpCard";
 import { API_CATALOG_PATH, buildApiCatalog } from "./apiCatalog";
@@ -28,6 +29,7 @@ import {
   serverCardJson,
 } from "./mcpCard";
 import { buildOpenApiDocument } from "./openapi";
+import { WEB_BOT_AUTH_DIRECTORY_PATH, webBotAuthDirectoryJson } from "./webBotAuth";
 import { renderPricingMarkdown } from "./pricingDocs";
 import { renderSchemaFeed, renderSchemaMap, SCHEMA_FEED_PATH, SCHEMA_MAP_PATH } from "./schemaFeed";
 import {
@@ -118,6 +120,8 @@ export function agentFiles(): Record<string, string> {
     [AI_CATALOG_PATH.slice(1)]: `${JSON.stringify(buildAiCatalog(), null, 2)}\n`,
     [ARD_PATH.slice(1)]: `${JSON.stringify(buildArdManifest(), null, 2)}\n`,
     [LEGACY_SERVER_CARD_PATH.slice(1)]: serverCardJson(),
+    [AGENT_CARD_PATH.slice(1)]: agentCardJson(),
+    [WEB_BOT_AUTH_DIRECTORY_PATH.slice(1)]: webBotAuthDirectoryJson(),
     [DOCS_SERVER_CARD_PATH.slice(1)]: docsServerCardJson(),
   };
   for (const page of listAgentPages()) {

@@ -35,6 +35,8 @@ export const API_ROUTES = [
   "/api/mcp/docs",
   "/api/mcp/docs/server-card",
   "/api/v1/batch",
+  "/api/v1/jobs",
+  "/api/a2a",
   "/api/sandbox/v1/search",
   "/api/sandbox/v1/projects",
   "/api/sandbox/v1/compare",
@@ -43,6 +45,7 @@ export const API_ROUTES = [
 ];
 
 const PROJECT_DETAIL = /^\/api\/(?:sandbox\/)?v1\/projects\/[^/]+$/;
+const JOB_DETAIL = /^\/api\/v1\/jobs\/[^/]+$/;
 
 const FALLBACK_NOT_FOUND =
   "# Page not found\n\nThere is no page at this address. See https://www.ayushrai.site/llms.txt for every page.\n";
@@ -50,7 +53,7 @@ const FALLBACK_NOT_FOUND =
 /** True for a listed API route or `/api/v1/projects/{slug}`; one trailing slash is ignored. */
 export function isKnownApiPath(pathname) {
   const path = pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
-  return API_ROUTES.includes(path) || PROJECT_DETAIL.test(path);
+  return API_ROUTES.includes(path) || PROJECT_DETAIL.test(path) || JOB_DETAIL.test(path);
 }
 
 /** JSON `route_not_found` 404 in the shared API error shape (`{ error: { code, message, hint, docs } }`). */

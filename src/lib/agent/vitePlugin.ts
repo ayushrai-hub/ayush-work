@@ -56,6 +56,11 @@ const WELL_KNOWN_TYPES: Record<string, Record<string, string>> = {
   [AI_CATALOG_PATH]: { "Content-Type": AI_CATALOG_CONTENT_TYPE, ...DISCOVERY_CORS },
   [ARD_PATH]: { "Content-Type": ARD_CONTENT_TYPE, ...DISCOVERY_CORS },
   [LEGACY_SERVER_CARD_PATH]: SERVER_CARD_HEADERS,
+  "/.well-known/agent-card.json": { "Content-Type": "application/json; charset=utf-8", ...DISCOVERY_CORS },
+  "/.well-known/http-message-signatures-directory": {
+    "Content-Type": "application/json; charset=utf-8",
+    ...DISCOVERY_CORS,
+  },
 };
 
 /** Writes status, Content-Type, `nosniff`, any extra headers, and the body to a Node response. */
@@ -217,7 +222,7 @@ function attach(middlewares: Connect.Server) {
       return;
     }
 
-    if (pathname === "/api/v1/batch") {
+    if (pathname === "/api/v1/batch" || pathname === "/api/v1/jobs" || pathname === "/api/a2a" || pathname.startsWith("/api/v1/jobs/")) {
       void (async () => {
         const chunks: Buffer[] = [];
         for await (const chunk of req) chunks.push(chunk as Buffer);

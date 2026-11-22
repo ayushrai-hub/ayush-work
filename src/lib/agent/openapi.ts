@@ -226,11 +226,17 @@ export function buildOpenApiDocument() {
     info: {
       title: "Ayush Rai public API",
       version: "1.0.0",
-      description: `Read API over the same public content as Ayush Rai's website, plus POST /api/v1/batch for several reads in one call and POST /api/send-email for the contact form. Unverified award metrics are omitted. There is no separate dataset for this API.\n\nAccess: ${API_ACCESS_NOTE}\n\nRate limits: ${API_RATE_LIMIT_NOTE}\n\nErrors: read and batch errors are { "error": { "code", "message", "hint", "docs" } }. code is stable; hint says how to fix the request. POST /api/v1/batch and POST /api/send-email accept an optional Idempotency-Key header.\n\nVersioning: ${API_VERSIONING_POLICY}\n\nMCP: project tools are POST /api/mcp (Server Card GET ${SERVER_CARD_PATH}). Documentation tools are POST /api/mcp/docs (Server Card GET /api/mcp/docs/server-card).`,
+      description: `Read API over the same public content as Ayush Rai's website, plus POST /api/v1/batch for several reads in one call, POST /api/v1/jobs for a pollable search, and POST /api/send-email for the contact form. Unverified award metrics are omitted. There is no separate dataset for this API.\n\nAccess: ${API_ACCESS_NOTE}\n\nRate limits: ${API_RATE_LIMIT_NOTE}\n\nErrors: read and batch errors are { "error": { "code", "message", "hint", "docs" } }. code is stable; hint says how to fix the request. POST /api/v1/batch, POST /api/v1/jobs, and POST /api/send-email accept an optional Idempotency-Key header. POST /api/v1/jobs returns 202 Accepted with Location and statusUrl.\n\nVersioning: ${API_VERSIONING_POLICY}\n\nMCP: project tools are POST /api/mcp (Server Card GET ${SERVER_CARD_PATH}). Documentation tools are POST /api/mcp/docs (Server Card GET /api/mcp/docs/server-card). A2A search is POST /api/a2a, described at /.well-known/agent-card.json.`,
       contact: { name: person.name, email: person.email, url: `${origin}/developers/` },
     },
     externalDocs: { description: "Developer notes", url: `${origin}/developers/` },
-    servers: [{ url: origin }],
+    servers: [
+      {
+        url: origin,
+        description:
+          "Public API. Sandbox alias: /api/sandbox/v1/* returns the same published records and sets X-Api-Environment: sandbox. It does not write.",
+      },
+    ],
     security: [],
     paths: {
       "/api/v1/search": searchOperation("searchPortfolioV1", "Search the public site index"),
@@ -364,6 +370,59 @@ export function buildOpenApiDocument() {
           },
         },
       },
+      "/api/v1/jobs": {
+        post: {
+          operationId: "createSearchJob",
+          summary: "Run a lexical search and return 202 with a poll URL",
+          description:
+            "Body is { operation: \"search\", q }. The search is the same lexical index as GET /api/v1/search. The response is 202 Accepted, with a job id, statusUrl, Location header, and the result. GET /api/v1/jobs/{id} returns that same record. An optional Idempotency-Key replays this 202.",
+          parameters: [idempotencyParameter],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["operation"],
+                  properties: {
+                    operation: { type: "string", enum: ["search"] },
+                    q: { type: "string", maxLength: 200 },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            "202": {
+              description: "Accepted. Poll statusUrl or the Location header. The search result is included.",
+              headers: {
+                Location: { schema: { type: "string" }, description: "Poll URL for this job." },
+              },
+              content: json("JobResponse"),
+            },
+            ...errors(["400", "405", "409", "429", "500"]),
+          },
+        },
+      },
+      "/api/v1/jobs/{id}": {
+        get: {
+          operationId: "getSearchJob",
+          summary: "Poll a search job",
+          description: "Returns the job record created by POST /api/v1/jobs. Unknown ids are 404.",
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string" },
+            },
+          ],
+          responses: {
+            ...ok("The job, including its search result", "JobResponse"),
+            ...errors(["404", "405", "429", "500"]),
+          },
+        },
+      },
       "/api/v1/batch": {
         post: {
           operationId: "batchReadsV1",
@@ -401,6 +460,25 @@ export function buildOpenApiDocument() {
           responses: {
             ...ok("One result per operation, in request order", "BatchResponse"),
             ...errors(["400", "405", "409", "429", "500"]),
+          },
+        },
+      },
+      "/api/a2a": {
+        post: {
+          operationId: "a2aMessageSend",
+          summary: "A2A message/send: lexical portfolio search",
+          description:
+            "JSON-RPC 2.0. method message/send. params.message.parts text is the search query. The result is an agent message whose text is the SearchResponse JSON. The card is /.well-known/agent-card.json. No streaming and no writes.",
+          requestBody: {
+            required: true,
+            content: { "application/json": { schema: { type: "object" } } },
+          },
+          responses: {
+            "200": {
+              description: "JSON-RPC result or JSON-RPC error object",
+              content: json("A2aResponse"),
+            },
+            ...errors(["405", "429", "500"]),
           },
         },
       },
@@ -665,6 +743,27 @@ export function buildOpenApiDocument() {
           properties: {
             success: { type: "boolean" },
             message: { type: "string" },
+          },
+        },
+        A2aResponse: {
+          type: "object",
+          required: ["jsonrpc"],
+          properties: {
+            jsonrpc: { type: "string" },
+            id: {},
+            result: {},
+            error: { type: "object" },
+          },
+        },
+        JobResponse: {
+          type: "object",
+          required: ["id", "status", "operation", "statusUrl", "result"],
+          properties: {
+            id: { type: "string" },
+            status: { type: "string", enum: ["succeeded"] },
+            operation: { type: "string", enum: ["search"] },
+            statusUrl: { type: "string" },
+            result: { $ref: "#/components/schemas/SearchResponse" },
           },
         },
         BatchResponse: {

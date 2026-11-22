@@ -106,7 +106,7 @@ export function developerSections(): PolicySection[] {
     {
       heading: "Command line",
       paragraphs: [
-        "The repository has a zero-dependency CLI in `packages/cli` (`ayushrai search`, `projects`, `project`, `compare`) that prints the API's JSON. It is not yet published to npm, so run it with `node packages/cli/bin/ayushrai.mjs` from a clone.",
+        "The repository has a zero-dependency CLI in `packages/cli` (`ayushrai search`, `projects`, `project`, `compare`) that prints the API's JSON. It is not yet published to npm. `package.json` sets `homepage` to this site and `repository` to the GitHub repo. Run it with `node packages/cli/bin/ayushrai.mjs` from a clone.",
       ],
     },
     {
@@ -114,16 +114,28 @@ export function developerSections(): PolicySection[] {
       paragraphs: [API_VERSIONING_POLICY],
     },
     {
+      heading: "Async search jobs",
+      paragraphs: [
+        "`POST /api/v1/jobs` with `{ \"operation\": \"search\", \"q\": \"agents\" }` returns `202 Accepted`. The body has `id`, `status`, `statusUrl`, and `result`. `Location` is the same poll URL. `GET /api/v1/jobs/{id}` returns that record. The search is the public lexical index, finished before the 202 is sent, so the poll is for a caller that lost the first response.",
+      ],
+    },
+    {
+      heading: "A2A",
+      paragraphs: [
+        "`/.well-known/agent-card.json` describes one skill, search-portfolio. `POST /api/a2a` accepts JSON-RPC `message/send`. The text parts are the query. The agent message text is the search JSON. There is no streaming and no write.",
+      ],
+    },
+    {
       heading: "Discovery",
       paragraphs: [
-        `API catalog (RFC 9727): \`${API_CATALOG_PATH}\`. ARD: \`${ARD_PATH}\`. MCP discovery: \`${AI_CATALOG_PATH}\`. Auth notes: \`/auth.md\`. Pricing: \`/pricing.md\` (free public API). Agent view: \`/?mode=agent\`. Index of pages: \`/llms.txt\`. Section indexes: \`/developers/llms.txt\`, \`/work/llms.txt\`, \`/products/llms.txt\`. Agent notes: \`/AGENTS.md\` and \`/SKILL.md\`.`,
+        `API catalog (RFC 9727): \`${API_CATALOG_PATH}\`. ARD: \`${ARD_PATH}\` lists the portfolio MCP and the docs MCP. MCP discovery: \`${AI_CATALOG_PATH}\`. Agent card: \`/.well-known/agent-card.json\`. Signature directory: \`/.well-known/http-message-signatures-directory\`. Auth notes: \`/auth.md\`. Pricing: \`/pricing.md\` (free public API). Agent view: \`/?mode=agent\`. Index of pages: \`/llms.txt\`. Section indexes: \`/developers/llms.txt\`, \`/work/llms.txt\`, \`/products/llms.txt\`. Agent plugin: \`/plugin.json\`. Agent notes: \`/AGENTS.md\` and \`/SKILL.md\`.`,
         "Every page has a Markdown version at the same path plus `.md`, and `Accept: text/markdown` on a page URL returns it.",
       ],
     },
     {
       heading: "Not provided",
       paragraphs: [
-        "There is no published SDK or CLI package on npm, no API key, no OAuth, and no paid tier. The MCP servers are not listed in a registry. There is no A2A agent-card because no A2A JSON-RPC endpoint is implemented. `/api/sandbox/v1/*` is an alias of the public reads, not a second dataset. `POST /api/v1/batch` runs up to 8 of those reads. `POST /api/send-email` and the batch accept an optional `Idempotency-Key` header. See `/pricing.md` for the free-access statement.",
+        "There is no published SDK or CLI package on npm, no API key, no OAuth, and no paid tier. The MCP servers are not listed on Smithery, mcp.so, or the ChatGPT app directory. `POST /api/a2a` is the A2A search endpoint named by `/.well-known/agent-card.json`. `/api/sandbox/v1/*` is an alias of the public reads, not a second dataset. `POST /api/v1/jobs` returns 202 for a lexical search and `GET /api/v1/jobs/{id}` polls it. `POST /api/v1/batch` runs up to 8 reads. `POST /api/send-email`, the batch, and the job accept an optional `Idempotency-Key` header. The signature directory publishes a public Ed25519 key. The API still accepts unsigned requests. See `/pricing.md` for the free-access statement.",
       ],
     },
   ];

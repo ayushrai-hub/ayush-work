@@ -43,6 +43,14 @@
       "destination": "/api/batch"
     },
     {
+      "source": "/api/v1/jobs/:id",
+      "destination": "/api/jobs?id=:id"
+    },
+    {
+      "source": "/api/v1/jobs",
+      "destination": "/api/jobs"
+    },
+    {
       "source": "/api/sandbox/v1/projects/:slug",
       "destination": "/api/projects?slug=:slug&environment=sandbox"
     },

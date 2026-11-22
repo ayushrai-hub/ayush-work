@@ -24,6 +24,8 @@ export const API_ROUTES = [
   "/api/mcp/docs",
   "/api/mcp/docs/server-card",
   "/api/v1/batch",
+  "/api/v1/jobs",
+  "/api/a2a",
   "/api/sandbox/v1/search",
   "/api/sandbox/v1/projects",
   "/api/sandbox/v1/compare",
@@ -34,10 +36,13 @@ export const API_ROUTES = [
 /** `/api/v1/projects/{slug}` and the sandbox alias of that path. */
 const PROJECT_DETAIL = /^\/api\/(?:sandbox\/)?v1\/projects\/[^/]+$/;
 
+/** `/api/v1/jobs/{id}` poll URLs. */
+const JOB_DETAIL = /^\/api\/v1\/jobs\/[^/]+$/;
+
 /** True when `pathname`, ignoring one trailing slash, is a deployed API route. */
 export function isKnownApiPath(pathname: string): boolean {
   const path = pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
-  return (API_ROUTES as readonly string[]).includes(path) || PROJECT_DETAIL.test(path);
+  return (API_ROUTES as readonly string[]).includes(path) || PROJECT_DETAIL.test(path) || JOB_DETAIL.test(path);
 }
 
 /** JSON 404 for paths under `/api/` that no function serves; null for known routes and other paths. */

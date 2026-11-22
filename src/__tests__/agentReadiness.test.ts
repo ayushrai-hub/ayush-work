@@ -294,7 +294,7 @@ describe("OpenAPI", () => {
         expect(Object.keys(operation.responses)).toContain("405");
       }
     }
-    expect(operations).toBe(14);
+    expect(operations).toBe(17);
     expect((spec.components as Record<string, unknown>).responses).toBeUndefined();
     const errorSchema = schemas.ErrorResponse as { properties: { error: { required: string[] } } };
     expect(errorSchema.properties.error.required).toEqual(["code", "message", "hint", "docs"]);
@@ -443,7 +443,7 @@ describe("auth, agent mode, and ask", () => {
     const doc = buildAgentModeDocument();
     expect(doc.api.authentication).toBe("none");
     expect(doc.mcp.url).toBe(`${ORIGIN}/api/mcp`);
-    expect(doc.capabilities.a2a).toBe(false);
+    expect(doc.capabilities.a2a).toBe(`${ORIGIN}/.well-known/agent-card.json`);
     expect(JSON.parse(agentFiles()["agent-mode.json"])).toEqual(doc);
 
     const response = markdownMiddleware(
