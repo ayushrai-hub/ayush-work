@@ -4,7 +4,7 @@
   "framework": "vite",
   "redirects": [
     {
-      "source": "/((?!api/|_vercel/|\\.well-known/)(?!.*\\.[A-Za-z0-9]+$).*[^/])",
+      "source": "/((?!api/|_vercel/|\\.well-known/|ask(?:/|$))(?!.*\\.[A-Za-z0-9]+$).*[^/])",
       "destination": "/$1/",
       "permanent": true
     }
@@ -171,6 +171,23 @@
         {
           "key": "Access-Control-Expose-Headers",
           "value": "ETag"
+        }
+      ]
+    },
+    {
+      "source": "/api/mcp/docs/server-card",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/mcp-server-card+json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
         }
       ]
     },
