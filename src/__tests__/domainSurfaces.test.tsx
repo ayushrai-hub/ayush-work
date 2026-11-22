@@ -64,9 +64,26 @@ describe("domain knowledge pages", () => {
       expect(markdown).toContain(page.h1);
       expect(markdown).toContain(canonicalUrl(page.path));
       expect(markdown).toContain(page.description);
-      for (const link of [...page.evidence, ...page.related]) {
+      expect(markdown).toContain("## Skills & capability matrix");
+      expect(markdown).toContain("## Core domain benchmarks & harnesses");
+      expect(markdown).toContain("## Scalable solutions & live proof of work");
+      expect(markdown).toContain("## Walkthrough video");
+      expect(markdown).toContain("## Human & agent discovery");
+      expect(page.skillsTable.length).toBeGreaterThanOrEqual(3);
+      expect(page.coreBenchmarks.length).toBeGreaterThanOrEqual(1);
+      expect(page.solutions.length).toBeGreaterThanOrEqual(2);
+      for (const link of [
+        ...page.evidence,
+        ...page.related,
+        ...page.agentAccess.powRoutes,
+        ...page.solutions.flatMap((s) => s.links),
+      ]) {
         if (/^https?:\/\//i.test(link.href)) continue;
         expect(isKnownRoute(pathnameOf(link.href))).toBe(true);
+      }
+      for (const b of page.coreBenchmarks) {
+        if (/^https?:\/\//i.test(b.href)) continue;
+        expect(isKnownRoute(pathnameOf(b.href))).toBe(true);
       }
     }
     expect(getDomainByPath("/ai-engineering/inference")).toBeUndefined();
@@ -102,6 +119,17 @@ describe("domain knowledge pages", () => {
     );
     expect(heading).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getAllByRole("table").length).toBeGreaterThanOrEqual(2);
+    expect(
+      screen.getByRole("heading", { name: /Table of skills & engineering depth/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Core domain benchmarks, harnesses & specs/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Scalable solutions & live proof of work/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Loom walkthrough coming soon/i)).toBeInTheDocument();
     await waitFor(() => {
       expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
         "href",

@@ -1,22 +1,28 @@
 /**
  * Domain dossier pages: `/ai-engineering` and its children `/ai-engineering/{llm-evaluation,
  * rlhf,llm-systems,agents,rag}`, `/software-engineering`, `/gtm-revops`, `/software-services`,
- * `/experience`, and `/open-source`. Each shows evidence-backed prose, evidence links, and named gaps.
+ * `/experience`, and `/open-source`.
  *
- * One component serves every domain: it looks up the record for the current pathname with
- * `getDomainByPath` and falls back to NotFoundPage when no record matches (so unknown
- * `/ai-engineering/*` paths render the 404 page). Breadcrumbs are built from each path prefix,
- * using the matching domain title or the raw segment. Emits WebPage + BreadcrumbList JSON-LD.
- * `/experience` additionally lists `experience` roles; `/open-source` lists deduplicated
- * repository links from products, projects, and the GitHub profile. Ends with ContactCta.
+ * Renders each `DomainRecord` in full engineering depth:
+ * - Breadcrumbs, PageHeader, and evidence level badge
+ * - Sticky jump navigation across the domain sections
+ * - "Numbers in the game" verifiable repository/test stat grid
+ * - Concise 3-stage journey card ("How we started", "The grind", "What we achieved")
+ * - Primary visual gallery artifact (`MediaGallery`)
+ * - Structured table of skills (`skillsTable`: skill, category, tools, repository proof, trade-off, status)
+ * - In-depth core domain benchmarks & harnesses table (`coreBenchmarks`: link, what it does, domain, category, metrics, trade-offs)
+ * - 2–3 scalable proof-of-work solutions (`solutions`: What, How, Why, Where, For Whom, Impact, Trade-off, visuals, and architecture flow)
+ * - Loom / YouTube walkthrough embed (`VideoEmbed`)
+ * - Human & Agent Discovery card (`.md` twin, `/api/v1/search`, MCP tool call, POW workbenches, keywords)
+ * - Child sub-domains ("In this section"), concise prose sections, experience/repo lists, evidence, related links, reading, and named gaps.
  *
  * Connects to:
  * - Routed in src/App.tsx as `ai-engineering`, `ai-engineering/*`, `software-engineering`,
  *   `gtm-revops`, `software-services`, `experience`, and `open-source`. Every `domains[].path` is prerendered
  *   and listed in the sitemap via src/lib/publicRoutes.ts.
- * - Content from src/content (`getDomainByPath`, `childDomains`, `evidenceLevelLabels` from
- *   domains.ts; `experience`, `products`, `projects`, `person`, `pageUpdatedAt("domains")`) and
- *   src/lib/canonical.ts; components PageSEO, ContactCta, PageHeader, Prose, SectionHeading, NotFoundPage.
+ * - Content from src/content (`getDomainByPath`, `childDomains`, `evidenceLevelLabels`,
+ *   `domainSkillStatusLabels` from domains.ts; `experience`, `products`, `projects`, `person`,
+ *   `pageUpdatedAt("domains")`) and src/lib/canonical.ts.
  * - Markdown twins `<path>.md` built from `renderDomainBody` in `buildPages()` in src/lib/agent/markdown.ts.
  */
 import { Link, useLocation } from "react-router-dom";
@@ -26,9 +32,11 @@ import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import SectionHeading from "../components/editorial/SectionHeading";
 import MediaGallery from "../components/editorial/MediaGallery";
+import VideoEmbed from "../components/editorial/VideoEmbed";
 import NotFoundPage from "./NotFoundPage";
 import {
   childDomains,
+  domainSkillStatusLabels,
   evidenceLevelLabels,
   experience,
   getDomainByPath,
@@ -38,6 +46,7 @@ import {
   products,
   projects,
 } from "../content";
+import type { DomainSkillRow } from "../content";
 import { canonicalUrl, personId, websiteId } from "../lib/canonical";
 import { softwareServicesFaqNode, softwareServicesNode } from "../lib/structuredData";
 
@@ -52,11 +61,12 @@ const DOMAIN_VISUAL_SLUG: Record<string, string> = {
   "/ai-engineering/rag": "mailu",
   "/software-engineering": "revenueroles",
   "/software-services": "praful-h",
+  "/experience": "revenueroles",
   "/open-source": "gtm-strato",
 };
 
 /**
- * Link for evidence, related, and further-reading entries (not the breadcrumb, despite the name).
+ * Link for evidence, related, benchmark, solution, and further-reading entries.
  * Absolute `http` URLs open in a new tab; site paths use a router `Link`.
  */
 function CrumbLink({ href, children }: { href: string; children: string }) {
@@ -71,6 +81,15 @@ function CrumbLink({ href, children }: { href: string; children: string }) {
     <Link to={href} className="link-underline">
       {children}
     </Link>
+  );
+}
+
+/** Small bordered status badge for a row in the domain skills table. */
+function SkillStatusBadge({ status }: { status: DomainSkillRow["status"] }) {
+  return (
+    <span className="inline-block border border-rule px-2 py-0.5 font-mono text-xs text-ink-faint">
+      {domainSkillStatusLabels[status]}
+    </span>
   );
 }
 
@@ -118,10 +137,7 @@ export default function DomainPage() {
     ],
   };
 
-  const repos =
-    page.path === "/open-source"
-      ? uniqueRepos()
-      : [];
+  const repos = page.path === "/open-source" ? uniqueRepos() : [];
 
   return (
     <>
@@ -155,7 +171,66 @@ export default function DomainPage() {
           dek={page.dek}
           updated={pageUpdatedAt("domains")}
         />
-        <p className="label -mt-6 mb-10">{evidenceLevelLabels[page.evidenceLevel]}</p>
+        <p className="label -mt-6 mb-8">{evidenceLevelLabels[page.evidenceLevel]}</p>
+
+        <nav
+          className="mb-10 flex flex-wrap gap-2 border-y border-rule py-3 text-sm"
+          aria-label="Domain sections"
+        >
+          <a href="#domain-journey" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Journey &amp; numbers
+          </a>
+          <a href="#domain-skills" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Skills table ({page.skillsTable.length})
+          </a>
+          <a href="#domain-benchmarks" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Core benchmarks ({page.coreBenchmarks.length})
+          </a>
+          <a href="#domain-solutions" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Scalable POW solutions ({page.solutions.length})
+          </a>
+          <a href="#domain-walkthrough" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Video walkthrough
+          </a>
+          <a href="#domain-agent-access" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Agent &amp; human search
+          </a>
+          <a href="#domain-evidence" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Evidence &amp; gaps
+          </a>
+        </nav>
+
+        {page.stats.length > 0 && (
+          <section className="mb-12" aria-label="Numbers in the game">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {page.stats.map((stat) => (
+                <div key={stat.label} className="border border-rule bg-paper-elevated p-4">
+                  <p className="font-display text-2xl text-ink">{stat.value}</p>
+                  <p className="mt-1 font-mono text-xs font-medium text-ink">{stat.label}</p>
+                  <p className="mt-1.5 text-xs text-ink-muted leading-relaxed">{stat.context}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section id="domain-journey" className="mb-14 scroll-mt-24">
+          <SectionHeading number="01" title="The journey: how we started, the grind, what we achieved" />
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="border border-rule bg-paper-elevated p-5">
+              <p className="font-mono text-xs text-ink-faint">01 · How we started</p>
+              <p className="mt-2 text-sm text-ink-muted leading-relaxed">{page.journey.started}</p>
+            </div>
+            <div className="border border-rule bg-paper-elevated p-5">
+              <p className="font-mono text-xs text-ink-faint">02 · The grind</p>
+              <p className="mt-2 text-sm text-ink-muted leading-relaxed">{page.journey.grind}</p>
+            </div>
+            <div className="border border-rule bg-paper-elevated p-5">
+              <p className="font-mono text-xs text-ink-faint">03 · What we achieved</p>
+              <p className="mt-2 text-sm text-ink leading-relaxed">{page.journey.achieved}</p>
+            </div>
+          </div>
+        </section>
 
         {(() => {
           const visualSlug = DOMAIN_VISUAL_SLUG[page.path];
@@ -194,6 +269,294 @@ export default function DomainPage() {
             </ul>
           </section>
         )}
+
+        {page.skillsTable.length > 0 && (
+          <section id="domain-skills" className="mt-14 scroll-mt-24">
+            <SectionHeading number="02" title="Table of skills & engineering depth" />
+            <p className="mb-5 max-w-measure text-sm text-ink-muted">
+              Every skill listed below names the category, tools, repository or role proof, and the
+              engineering trade-off accepted in code.
+            </p>
+            <div className="overflow-x-auto border border-rule">
+              <table className="w-full border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-rule bg-paper-elevated">
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Skill / capability
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Category
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Tools &amp; stack
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Depth &amp; repository proof
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Engineering trade-off
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-rule">
+                  {page.skillsTable.map((row) => (
+                    <tr key={row.skill} className="align-top">
+                      <th scope="row" className="px-4 py-3.5 font-medium text-ink">
+                        {row.skill}
+                      </th>
+                      <td className="px-4 py-3.5 font-mono text-xs text-ink-faint">
+                        {row.category}
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-xs text-ink-muted">{row.tools}</td>
+                      <td className="px-4 py-3.5 text-ink-muted">{row.depthAndProof}</td>
+                      <td className="px-4 py-3.5 text-ink-muted">{row.tradeoff}</td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <SkillStatusBadge status={row.status} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        {page.coreBenchmarks.length > 0 && (
+          <section id="domain-benchmarks" className="mt-16 scroll-mt-24">
+            <SectionHeading number="03" title="Core domain benchmarks, harnesses & specs" />
+            <p className="mb-5 max-w-measure text-sm text-ink-muted">
+              Direct links to the evaluation benchmarks, scoring engines, or verification harnesses
+              for this domain: what each does, its category, verifiable metrics, and trade-offs.
+            </p>
+            <div className="overflow-x-auto border border-rule">
+              <table className="w-full border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-rule bg-paper-elevated">
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Benchmark / harness
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      What it does
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Domain &amp; category
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Numbers &amp; metrics
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                      Trade-off
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-rule">
+                  {page.coreBenchmarks.map((b) => (
+                    <tr key={b.name} className="align-top">
+                      <th scope="row" className="px-4 py-3.5 font-medium text-ink">
+                        <CrumbLink href={b.href}>{b.name}</CrumbLink>
+                      </th>
+                      <td className="px-4 py-3.5 text-ink-muted">{b.whatItDoes}</td>
+                      <td className="px-4 py-3.5 font-mono text-xs text-ink-muted">
+                        <span className="block text-ink">{b.domain}</span>
+                        <span className="text-ink-faint">{b.category}</span>
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-xs text-ink">{b.metrics}</td>
+                      <td className="px-4 py-3.5 text-ink-muted">{b.tradeoff}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        {page.solutions.length > 0 && (
+          <section id="domain-solutions" className="mt-16 scroll-mt-24">
+            <SectionHeading number="04" title="Scalable solutions & live proof of work" />
+            <p className="mb-6 max-w-measure text-sm text-ink-muted">
+              In plain terms: what we built, how it works under the hood, why we built it, where it
+              runs, who uses it, the verified impact, and the trade-offs we accepted.
+            </p>
+            <ol className="space-y-12">
+              {page.solutions.map((sol, idx) => {
+                const visuals = sol.visualSlug ? getRecordVisuals(sol.visualSlug) : undefined;
+                return (
+                  <li
+                    key={sol.slug}
+                    id={`solution-${sol.slug}`}
+                    className="scroll-mt-24 border-t border-rule pt-8"
+                  >
+                    <div className="flex flex-wrap items-baseline gap-3">
+                      <span className="font-mono text-xs text-ink-faint">0{idx + 1}</span>
+                      <h3 className="font-display text-2xl text-ink">{sol.title}</h3>
+                      <span className="inline-block border border-rule px-2 py-0.5 font-mono text-xs text-ink-muted">
+                        {sol.badge}
+                      </span>
+                    </div>
+
+                    <div className="mt-5 grid gap-4 border border-rule bg-paper-elevated p-5 md:grid-cols-2 lg:grid-cols-3">
+                      <div>
+                        <h4 className="label mb-1">What we did</h4>
+                        <p className="text-sm text-ink-muted leading-relaxed">{sol.what}</p>
+                      </div>
+                      <div>
+                        <h4 className="label mb-1">How we built it</h4>
+                        <p className="text-sm text-ink-muted leading-relaxed">{sol.how}</p>
+                      </div>
+                      <div>
+                        <h4 className="label mb-1">Why it matters</h4>
+                        <p className="text-sm text-ink-muted leading-relaxed">{sol.why}</p>
+                      </div>
+                      <div>
+                        <h4 className="label mb-1">Where it lives</h4>
+                        <p className="text-sm text-ink-muted leading-relaxed">{sol.where}</p>
+                      </div>
+                      <div>
+                        <h4 className="label mb-1">For whom</h4>
+                        <p className="text-sm text-ink-muted leading-relaxed">{sol.forWhom}</p>
+                      </div>
+                      <div>
+                        <h4 className="label mb-1">Impact &amp; verified numbers</h4>
+                        <p className="text-sm text-ink leading-relaxed">{sol.impact}</p>
+                      </div>
+                    </div>
+
+                    <p className="mt-3 text-sm text-ink-muted">
+                      <span className="label mr-2">Trade-off</span>
+                      {sol.tradeoff}
+                    </p>
+
+                    {visuals && (visuals.gallery.length > 0 || visuals.diagram) && (
+                      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+                        {visuals.gallery.length > 0 && (
+                          <MediaGallery
+                            items={visuals.gallery}
+                            heading="System screens & artifacts"
+                            ariaLabel={`${sol.title} visual artifacts`}
+                          />
+                        )}
+                        {visuals.diagram && (
+                          <div>
+                            <h4 className="label mb-3">Architecture &amp; data flow</h4>
+                            <pre className="overflow-x-auto border border-rule bg-paper-elevated p-4 font-mono text-xs leading-relaxed text-ink">
+                              {visuals.diagram}
+                            </pre>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {sol.links.length > 0 && (
+                      <nav
+                        className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm"
+                        aria-label={`${sol.title} links`}
+                      >
+                        {sol.links.map((link) => (
+                          <CrumbLink key={`${link.href}-${link.label}`} href={link.href}>
+                            {link.label}
+                          </CrumbLink>
+                        ))}
+                      </nav>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        )}
+
+        <section
+          id="domain-walkthrough"
+          className="mt-16 scroll-mt-24"
+          aria-labelledby="domain-video-heading"
+        >
+          <SectionHeading number="05" title="Video walkthrough (Loom / YouTube)" />
+          <p id="domain-video-heading" className="sr-only">
+            {page.walkthrough.title}
+          </p>
+          <VideoEmbed
+            url={page.walkthrough.url}
+            title={page.walkthrough.title}
+            plannedTopics={page.walkthrough.plannedTopics}
+            slot={page.walkthrough.slot}
+          />
+        </section>
+
+        <section id="domain-agent-access" className="mt-16 scroll-mt-24">
+          <SectionHeading number="06" title="How humans & AI agents find, search, and verify this domain" />
+          <div className="border border-rule bg-paper-elevated p-5">
+            <div className="grid gap-4 md:grid-cols-3">
+              <div>
+                <p className="label mb-1">Markdown twin (.md)</p>
+                <a
+                  href={page.agentAccess.markdownPath}
+                  className="font-mono text-xs link-accent break-all"
+                >
+                  {page.agentAccess.markdownPath}
+                </a>
+                <p className="mt-1 text-xs text-ink-muted">
+                  Or send <code>Accept: text/markdown</code> to <code>{page.path}</code>.
+                </p>
+              </div>
+              <div>
+                <p className="label mb-1">Lexical search API</p>
+                <a
+                  href={page.agentAccess.searchQuery}
+                  className="font-mono text-xs link-accent break-all"
+                >
+                  GET {page.agentAccess.searchQuery}
+                </a>
+                <p className="mt-1 text-xs text-ink-muted">
+                  Free, unauthenticated JSON API (60 req/60s draft-11 RateLimit).
+                </p>
+              </div>
+              <div>
+                <p className="label mb-1">Streamable HTTP MCP call</p>
+                <code className="block font-mono text-xs text-ink break-all">
+                  {page.agentAccess.mcpTool}
+                </code>
+                <p className="mt-1 text-xs text-ink-muted">
+                  POST <code>/api/mcp</code> or <code>/api/mcp/docs</code> ·{" "}
+                  <Link to="/developers" className="link-underline">
+                    Developer docs
+                  </Link>
+                </p>
+              </div>
+            </div>
+
+            {page.agentAccess.powRoutes.length > 0 && (
+              <div className="mt-4 border-t border-rule pt-4">
+                <p className="label mb-2">Interactive proof-of-work workbenches</p>
+                <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                  {page.agentAccess.powRoutes.map((route) => (
+                    <li key={route.href}>
+                      <CrumbLink href={route.href}>{route.label}</CrumbLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {page.agentAccess.keywords.length > 0 && (
+              <div className="mt-4 border-t border-rule pt-4">
+                <p className="label mb-2">Domain keywords &amp; search tokens</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {page.agentAccess.keywords.map((kw) => (
+                    <span
+                      key={kw}
+                      className="border border-rule bg-paper px-2 py-0.5 font-mono text-xs text-ink-muted"
+                    >
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
 
         {page.sections.map((section) => (
           <section key={section.heading} className="mt-12 max-w-measure">
@@ -245,7 +608,12 @@ export default function DomainPage() {
             <ul className="max-w-measure divide-y divide-rule border-y border-rule">
               {repos.map((repo) => (
                 <li key={repo.href} className="py-4">
-                  <a href={repo.href} target="_blank" rel="noopener noreferrer" className="link-underline font-medium">
+                  <a
+                    href={repo.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline font-medium"
+                  >
                     {repo.label}
                   </a>
                   <p className="mt-1 text-sm text-ink-muted">{repo.note}</p>
@@ -255,8 +623,8 @@ export default function DomainPage() {
           </section>
         )}
 
-        <section className="mt-14">
-          <SectionHeading title="Evidence" />
+        <section id="domain-evidence" className="mt-14 scroll-mt-24">
+          <SectionHeading number="07" title="Evidence" />
           <ul className="max-w-measure divide-y divide-rule border-y border-rule">
             {page.evidence.map((item) => (
               <li key={`${item.href}-${item.label}`} className="py-4">
@@ -305,7 +673,9 @@ export default function DomainPage() {
           </section>
         )}
 
-        <ContactCta prompt={`For collaboration on ${inSentence(page.title)}, use contact, resume, or Calendly. Email ${person.email}.`} />
+        <ContactCta
+          prompt={`For collaboration on ${inSentence(page.title)}, use contact, resume, or Calendly. Email ${person.email}.`}
+        />
       </article>
     </>
   );

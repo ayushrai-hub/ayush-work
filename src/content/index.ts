@@ -76,10 +76,24 @@ export { capabilities } from "./capabilities";
 export {
   domains,
   childDomains,
+  domainSkillStatusLabels,
   evidenceLevelLabels,
   getDomainByPath,
   homeDomains,
   renderDomainBody,
+} from "./domains";
+export type {
+  DomainAgentAccess,
+  DomainBenchmarkRow,
+  DomainJourney,
+  DomainLink,
+  DomainRecord,
+  DomainSection,
+  DomainSkillRow,
+  DomainSolution,
+  DomainStat,
+  DomainWalkthrough,
+  EvidenceLevel,
 } from "./domains";
 export {
   gtmPortfolio,

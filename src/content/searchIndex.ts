@@ -74,7 +74,7 @@ export function buildSearchIndex(): SearchItem[] {
       type: "domain",
       summary: domain.description,
       href: domain.path,
-      tags: [domain.evidenceLevel, domain.label, "domain"],
+      tags: [domain.evidenceLevel, domain.label, "domain", ...domain.agentAccess.keywords],
     });
   }
 
