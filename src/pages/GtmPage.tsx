@@ -1,7 +1,8 @@
 /**
  * `/gtm`: flagship GTM engineering & revenue systems showcase.
  *
- * Renders `gtmPortfolio` top to bottom: positioning, vision for precision GTM and autonomous
+ * Renders `gtmPortfolio` top to bottom: positioning, the skill stack, a concise GTM systems
+ * index, agentic depth, vision for precision GTM and autonomous
  * revenue systems, structured capability and technical skills tables, a Loom/YouTube walkthrough
  * embed (VideoEmbed), the evidence key, seven real GTM and revenue systems resolved from
  * products.ts and projects.ts with problem/solution/architecture/verifiable metrics/visual
@@ -69,6 +70,8 @@ function SkillLevelBadge({ level }: { level: GtmSkillLevel }) {
 export default function GtmPage() {
   const {
     vision,
+    skillStack,
+    agentMotions,
     capabilityMatrix,
     agentWorkflows,
     walkthrough,
@@ -113,6 +116,15 @@ export default function GtmPage() {
           className="mt-8 flex flex-wrap gap-2 border-y border-rule py-3 text-sm"
           aria-label="GTM page sections"
         >
+          <a href="#gtm-skill-stack" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Skill stack
+          </a>
+          <a href="#gtm-system-index" className="px-2 py-1 text-ink-muted hover:text-ink">
+            GTM systems
+          </a>
+          <a href="#gtm-motions" className="px-2 py-1 text-ink-muted hover:text-ink">
+            Agentic depth
+          </a>
           <a href="#gtm-vision" className="px-2 py-1 text-ink-muted hover:text-ink">
             Vision
           </a>
@@ -136,8 +148,143 @@ export default function GtmPage() {
           </a>
         </nav>
 
+        <section id="gtm-skill-stack" className="mt-14 scroll-mt-24">
+          <SectionHeading number="01" title="Skill stack" />
+          <p className="mb-6 max-w-measure text-sm text-ink-muted">
+            Eight domains. The systems table is the work you can open.
+          </p>
+          <div className="overflow-x-auto border border-rule">
+            <table className="w-full border-collapse text-left text-sm">
+              <thead>
+                <tr className="border-b border-rule bg-paper-elevated">
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Domain
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Scope
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Tools
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-rule">
+                {skillStack.map((row) => (
+                  <tr key={row.domain} className="align-top">
+                    <th scope="row" className="px-4 py-3.5 font-medium text-ink">
+                      {row.domain}
+                    </th>
+                    <td className="px-4 py-3.5 text-ink-muted">{row.scope}</td>
+                    <td className="px-4 py-3.5 font-mono text-xs text-ink-muted">{row.tools}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="gtm-system-index" className="mt-16 scroll-mt-24">
+          <SectionHeading number="02" title="GTM systems" />
+          <p className="mb-6 max-w-measure text-sm text-ink-muted">
+            The GTM and revenue systems, one line each, with the place to open them.
+          </p>
+          <div className="overflow-x-auto border border-rule">
+            <table className="w-full border-collapse text-left text-sm">
+              <thead>
+                <tr className="border-b border-rule bg-paper-elevated">
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    System
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    What it does
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Stage
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Links
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-rule">
+                {proofs.map((proof) => (
+                  <tr key={proof.slug} className="align-top">
+                    <th scope="row" className="px-4 py-3.5 font-medium text-ink">
+                      <a href={`#gtm-${proof.slug}`} className="link-underline">
+                        {proof.title}
+                      </a>
+                    </th>
+                    <td className="px-4 py-3.5 text-ink-muted">{proof.blurb}</td>
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <EvidenceBadge evidence={proof.evidence} />
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <span className="flex flex-wrap gap-x-3 gap-y-1">
+                        <Link to={proof.href} className="link-underline">
+                          On this site
+                        </Link>
+                        {proof.githubUrl && (
+                          <ExternalLink href={proof.githubUrl}>GitHub</ExternalLink>
+                        )}
+                        {proof.demoUrl && <ExternalLink href={proof.demoUrl}>Live</ExternalLink>}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="gtm-motions" className="mt-16 scroll-mt-24">
+          <SectionHeading number="03" title="Agentic depth" />
+          <p className="mb-6 max-w-measure text-sm text-ink-muted">
+            What runs on its own, and the control that stays in code.
+          </p>
+          <div className="overflow-x-auto border border-rule">
+            <table className="w-full border-collapse text-left text-sm">
+              <thead>
+                <tr className="border-b border-rule bg-paper-elevated">
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Motion
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Autonomous step
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    Control
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                    System
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-rule">
+                {agentMotions.map((row) => (
+                  <tr key={row.motion} className="align-top">
+                    <th scope="row" className="px-4 py-3.5 font-medium text-ink">
+                      {row.motion}
+                    </th>
+                    <td className="px-4 py-3.5 text-ink-muted">{row.autonomous}</td>
+                    <td className="px-4 py-3.5 text-ink-muted">{row.control}</td>
+                    <td className="px-4 py-3.5">
+                      {row.href.startsWith("http") ? (
+                        <ExternalLink href={row.href}>{row.system}</ExternalLink>
+                      ) : (
+                        <Link to={row.href} className="link-underline">
+                          {row.system}
+                        </Link>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <section id="gtm-vision" className="mt-14 scroll-mt-24">
-          <SectionHeading number="01" title={vision.headline} />
+          <SectionHeading number="04" title={vision.headline} />
           <div className="max-w-measure space-y-4 text-ink-muted leading-relaxed">
             {vision.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -160,7 +307,7 @@ export default function GtmPage() {
         </section>
 
         <section id="gtm-capabilities" className="mt-16 scroll-mt-24">
-          <SectionHeading number="02" title="GTM engineering capabilities" />
+          <SectionHeading number="05" title="GTM engineering capabilities" />
           <p className="mb-6 max-w-measure text-sm text-ink-muted">
             Structured view of my GTM engineering scope across discovery, entity resolution,
             field-level provenance, deterministic 100-point scoring, enrichment waterfalls, bounded
@@ -221,7 +368,7 @@ export default function GtmPage() {
         </section>
 
         <section className="mt-16">
-          <SectionHeading number="03" title="How to read the evidence" />
+          <SectionHeading number="06" title="How to read the evidence" />
           <dl className="max-w-measure space-y-3">
             {(Object.keys(gtmEvidenceLabels) as GtmEvidence[]).map((key) => (
               <div key={key} className="flex flex-wrap items-baseline gap-3">
@@ -235,7 +382,7 @@ export default function GtmPage() {
         </section>
 
         <section id="gtm-systems" className="mt-16 scroll-mt-24">
-          <SectionHeading number="04" title="Product and projects" />
+          <SectionHeading number="07" title="Product and projects" />
           <p className="mb-6 max-w-measure text-sm text-ink-muted">
             Seven real GTM, revenue-data, and relationship-intelligence systems from public GitHub
             repositories, with their problem, solution, architecture, verifiable repository
@@ -360,7 +507,7 @@ export default function GtmPage() {
 
         <section id="gtm-agents" className="mt-16 scroll-mt-24">
           <SectionHeading
-            number="05"
+            number="08"
             title="Autonomous agents and AI-driven revenue workflows"
             link={{ to: "/pow/agentic-ai", label: "Open ORBIT agent workbench" }}
           />
@@ -427,7 +574,7 @@ export default function GtmPage() {
         </section>
 
         <section id="gtm-layers" className="mt-16 scroll-mt-24">
-          <SectionHeading number="06" title="GTM infrastructure layers: built and missing" />
+          <SectionHeading number="09" title="GTM infrastructure layers: built and missing" />
           <div className="max-w-measure divide-y divide-rule border-y border-rule">
             {layers.map((layer) => (
               <div key={layer.name} className="py-6">
@@ -448,7 +595,7 @@ export default function GtmPage() {
         </section>
 
         <section id="gtm-toolkit" className="mt-16 scroll-mt-24">
-          <SectionHeading number="07" title="What I already know" />
+          <SectionHeading number="10" title="What I already know" />
           <p className="mb-6 max-w-measure text-sm text-ink-muted">
             Levels: {Object.values(gtmSkillLevelLabels).join(" · ")}. A tool counts as in public
             code only when a linked repository uses it.
@@ -494,7 +641,7 @@ export default function GtmPage() {
         </section>
 
         <section id="gtm-lessons" className="mt-16 scroll-mt-24">
-          <SectionHeading number="08" title="Experiments and lessons learned" />
+          <SectionHeading number="11" title="Experiments and lessons learned" />
           <div className="grid gap-6 md:grid-cols-2">
             {lessonsLearned.map((lesson) => (
               <div key={lesson.title} className="border border-rule p-5">
@@ -511,7 +658,7 @@ export default function GtmPage() {
         </section>
 
         <section className="mt-16">
-          <SectionHeading number="09" title="What I am studying now" />
+          <SectionHeading number="12" title="What I am studying now" />
           <p className="max-w-measure text-ink-muted leading-relaxed">{studying.intro}</p>
           <div className="mt-6 grid max-w-4xl gap-x-10 gap-y-6 md:grid-cols-2">
             {studying.topics.map((topic) => (
@@ -528,7 +675,7 @@ export default function GtmPage() {
         </section>
 
         <section className="mt-16">
-          <SectionHeading number="10" title="Resources I am using" />
+          <SectionHeading number="13" title="Resources I am using" />
           <p className="mb-6 max-w-measure text-sm text-ink-muted">
             {reading.read} of {reading.total} read. {resources.note}
           </p>
@@ -555,7 +702,7 @@ export default function GtmPage() {
         </section>
 
         <section className="mt-16">
-          <SectionHeading number="11" title="What I will build next" />
+          <SectionHeading number="14" title="What I will build next" />
           <ol className="max-w-measure list-decimal space-y-2 pl-5 text-ink-muted">
             {nextBuilds.map((item) => (
               <li key={item}>{item}</li>

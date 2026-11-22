@@ -105,6 +105,9 @@ describe("GTM portfolio", () => {
   it("publishes a Markdown twin, a prerendered route, and a search entry", () => {
     const markdown = renderPageMarkdown("/gtm") ?? "";
     for (const heading of [
+      "## Skill stack",
+      "## GTM systems",
+      "## Agentic depth",
       "## Precision GTM and the future of autonomous revenue systems",
       "## GTM engineering capabilities",
       "## Walkthrough video",

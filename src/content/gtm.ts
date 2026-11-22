@@ -1,11 +1,12 @@
 /**
  * GTM engineering: the record behind /gtm and its Markdown twin /gtm.md.
  *
- * Holds what is specific to the GTM and revenue-systems showcase: positioning, vision for
- * precision GTM and autonomous revenue systems, the walkthrough video slot, per-project evidence
- * labels, problem/solution/architecture/scale/outcomes/limits for seven real GTM and revenue
- * builds, autonomous agent workflows, the GTM infrastructure layer map, the structured toolkit
- * tables with honest levels, active research and experiments, lessons learned, reading resources,
+ * Holds what is specific to the GTM and revenue-systems showcase: positioning, the skill stack,
+ * a concise systems index, agentic motion rows, vision for precision GTM and autonomous revenue
+ * systems, the walkthrough video slot, per-project evidence labels,
+ * problem/solution/architecture/scale/outcomes/limits for seven real GTM and revenue builds,
+ * autonomous agent workflows, the GTM infrastructure layer map, the structured toolkit tables
+ * with honest levels, active research and experiments, lessons learned, reading resources,
  * and next builds. Product and project facts (summaries, stacks, links, maturity) stay in
  * products.ts and projects.ts and are looked up by slug, so /products, /projects, search, the API,
  * and MCP say the same thing as this page. `renderGtmBody` builds the Markdown body from the same
@@ -53,6 +54,8 @@ export interface GtmProof {
   architectureNote?: string;
   /** Verifiable repository metrics (tests, connectors, schema states, dataset counts, never invented adoption). */
   verifiableMetrics?: string[];
+  /** One sentence for the systems index at the top of /gtm. */
+  blurb: string;
   /** GTM concepts the work demonstrates. */
   shows: string[];
   /** Stated limits. Shown next to the proof, never hidden. */
@@ -111,6 +114,22 @@ export interface GtmResourceGroup {
   items: GtmResource[];
 }
 
+/** One row in the skill-stack table: a domain, the work it covers, and the tools. */
+export interface GtmSkillStackRow {
+  domain: string;
+  scope: string;
+  tools: string;
+}
+
+/** One row in the agentic-depth table: what runs, what code enforces, and which system. */
+export interface GtmMotionRow {
+  motion: string;
+  autonomous: string;
+  control: string;
+  system: string;
+  href: string;
+}
+
 /** One capability row in the GTM engineering capability matrix table. */
 export interface GtmCapabilityRow {
   domain: string;
@@ -147,6 +166,8 @@ export interface GtmPortfolio {
     paragraphs: string[];
     pillars: GtmThesisPillar[];
   };
+  skillStack: GtmSkillStackRow[];
+  agentMotions: GtmMotionRow[];
   capabilityMatrix: GtmCapabilityRow[];
   agentWorkflows: GtmAgentWorkflow[];
   walkthrough: {
@@ -212,6 +233,100 @@ export const gtmPortfolio: GtmPortfolio = {
       },
     ],
   },
+  skillStack: [
+    {
+      domain: "GTM systems",
+      scope:
+        "GTM automation, lead research, account intelligence, lead qualification, revenue intelligence, relationship intelligence, data enrichment, research automation, workflow automation.",
+      tools: "Clay, Apollo, Sales Navigator, n8n, HubSpot",
+    },
+    {
+      domain: "Business and market intelligence",
+      scope:
+        "ICP and segmentation, TAM SAM SOM, buyer personas, buying committees, ABM, PLG and SLG, positioning, sales cycles, territory planning, acquisition economics.",
+      tools: "LinkedIn Sales Navigator, Apollo, Crunchbase, Similarweb, G2, BuiltWith",
+    },
+    {
+      domain: "Prospecting, data, and enrichment",
+      scope:
+        "Account and contact discovery, waterfall enrichment, email and phone verification, firmographics, technographics, entity resolution, dedup, buying intent, job-change, funding, and hiring signals, lead scoring.",
+      tools: "Clay, Claygent, Apollo, 11x, Overloop, Common Room, 6sense, Unify",
+    },
+    {
+      domain: "Outbound",
+      scope:
+        "Cold email architecture, LinkedIn outreach, multichannel sequences, signal-based and AI personalization, follow-ups, reply classification, meeting booking, SDR handoff.",
+      tools: "Smartlead, Instantly, Apollo, HubSpot",
+    },
+    {
+      domain: "Deliverability",
+      scope:
+        "Sending domains, SPF, DKIM, DMARC, mailbox provisioning, reputation, bounce and suppression handling, verification, sending volume.",
+      tools: "Smartlead, Instantly, Cloudflare",
+    },
+    {
+      domain: "Agentic automation",
+      scope:
+        "Workflow architecture, webhooks, retries, scheduled jobs, autonomous web research, AI prospect research, AI SDR preparation, agentic lead qualification, personalization pipelines, human approval, tool calling, state.",
+      tools: "n8n, Make, Zapier, Claygent, Claude Code, Codex, MCP, Playwright",
+    },
+    {
+      domain: "CRM and revenue operations",
+      scope:
+        "Lifecycle stages, lead routing, assignment rules, pipeline, duplicate control, sales handoff, opportunity management, renewal and expansion workflows.",
+      tools: "HubSpot, Salesforce",
+    },
+    {
+      domain: "Engineering, data, and analytics",
+      scope:
+        "Python, TypeScript, SQL, REST, webhooks, FastAPI, ETL, data modeling, PostgreSQL, Redis, auth, Docker, CI/CD. Reply rate, meetings, pipeline attribution, CAC, LTV, ARR, MRR.",
+      tools: "Python, TypeScript, FastAPI, Next.js, React, Streamlit, PostgreSQL, Supabase, Redis, Docker, Vercel, Inngest",
+    },
+  ],
+  agentMotions: [
+    {
+      motion: "Waterfall enrichment and scoring",
+      autonomous: "Hiring, funding, expansion, product, and technology signals are detected, then a fixed rubric ranks the account before a model is called.",
+      control: "Python owns the 0–100 score. The model writes research, and the score stays in code.",
+      system: "GTM-Strato and Revenue Intelligence Engine",
+      href: "/work/gtm-strato",
+    },
+    {
+      motion: "Clay, Apollo, and Sales Navigator",
+      autonomous: "A company run emits ready-to-use filter payloads for Clay, Apollo.io, and LinkedIn Sales Navigator.",
+      control: "The repository generates the filters. The vendor APIs stay outside the run.",
+      system: "GTM-Strato",
+      href: "https://github.com/ayushrai-hub/GTM-Strato",
+    },
+    {
+      motion: "Autonomous account research",
+      autonomous: "A temperature-0 pass reads public pages and returns segments, personas, and a research brief with each claim labeled.",
+      control: "A price with no source text is stored as Not found. Each claim is a website fact, a hypothesis, or missing.",
+      system: "GTM-Strato",
+      href: "https://github.com/ayushrai-hub/GTM-Strato",
+    },
+    {
+      motion: "Agentic lead qualification",
+      autonomous: "Rules sort every row into accepted, research-only, or rejected, and block a lead already delivered.",
+      control: "Each required field carries a public source URL. A direct phone that matches the switchboard is refused.",
+      system: "AIworks Lead Pipeline",
+      href: "/work/aiworks-leads",
+    },
+    {
+      motion: "Human approval before a write",
+      autonomous: "Research, filter files, and CRM-ready exports are prepared on a schedule or a run id.",
+      control: "Export and any outbound write wait in an approval queue. Approving still requires a read-back of the stored row.",
+      system: "Revenue Intelligence Engine and ORBIT",
+      href: "/pow/agentic-ai",
+    },
+    {
+      motion: "Tool calling and MCP",
+      autonomous: "Typed tools and two read-only MCP servers answer an agent from the public record.",
+      control: "The tool payload cannot grant its own approval. The portfolio servers expose no write tools.",
+      system: "ORBIT and this site",
+      href: "/developers",
+    },
+  ],
   capabilityMatrix: [
     {
       domain: "Account discovery & signal ingestion",
@@ -321,6 +436,8 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "revenueroles",
       kind: "product",
       evidence: "live",
+      blurb:
+        "Pulls Greenhouse, Lever, Ashby, and RemoteOK postings and classifies technical revenue roles by the work in the description.",
       stack: ["Next.js", "FastAPI", "Supabase Postgres", "pgvector", "Inngest", "Vercel"],
       problem:
         "Technical revenue roles (GTM Engineer, RevOps Engineer, Forward Deployed Engineer) are buried across employer ATS boards under inconsistent titles, forcing candidates and analysts to read every description.",
@@ -349,6 +466,8 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "gtm-strato",
       kind: "project",
       evidence: "local",
+      blurb:
+        "Reads a company site, keeps facts separate from guesses, scores fit in Python, and writes Apollo, Sales Navigator, and Clay filters.",
       problem:
         "LLM-generated ICPs usually mix real website facts with model guesses and invent arbitrary fit scores that GTM teams cannot audit or translate into prospecting filters.",
       solution:
@@ -375,6 +494,8 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "revenue-intelligence-engine",
       kind: "project",
       evidence: "synthetic",
+      blurb:
+        "Scores accounts on a 100-point rubric, drafts the research, and holds the export until a person approves it.",
       problem:
         "Revenue teams either research and score accounts manually in spreadsheets or let an unconstrained LLM assign opaque scores and push unreviewed copy toward outreach.",
       solution:
@@ -402,6 +523,8 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "relationship-intelligence-engine",
       kind: "project",
       evidence: "local",
+      blurb:
+        "Finds technical founders and hiring signals from public sources and stores a verification state on every field.",
       problem:
         "Public-source prospect scrapers overwrite fields without recording provenance, making it impossible to tell whether a founder's role or hiring signal was verified, inferred, or conflicting.",
       solution:
@@ -428,6 +551,8 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "aiworks-leads",
       kind: "project",
       evidence: "local",
+      blurb:
+        "Qualifies a lead sheet in code: a source URL on each required field, a direct phone distinct from the switchboard, and no repeat from an earlier run.",
       problem:
         "Researched B2B lead sheets frequently mix company switchboards with direct phones, lack source URLs, violate geography or seniority rules, and re-import leads already delivered in prior batches.",
       solution:
@@ -453,6 +578,8 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "spiderweb",
       kind: "project",
       evidence: "local",
+      blurb:
+        "Turns a personal LinkedIn export into a local graph of people, companies, and the rule that surfaced each path.",
       problem:
         "LinkedIn data exports are a pile of inconsistent CSVs that bury relationship history, shared companies, and warm-intro paths.",
       solution:
@@ -476,6 +603,8 @@ export const gtmPortfolio: GtmPortfolio = {
       slug: "mailu",
       kind: "project",
       evidence: "local",
+      blurb:
+        "Syncs one mailbox, categorizes it, and answers questions with a local model.",
       problem:
         "High-volume inbox history is hard to search by intent or relationship context without shipping private correspondence to a hosted third-party model.",
       solution:
@@ -830,6 +959,8 @@ export function videoEmbedUrl(url: string): string {
 export function renderGtmBody(): string {
   const {
     vision,
+    skillStack,
+    agentMotions,
     capabilityMatrix,
     agentWorkflows,
     walkthrough,
@@ -853,6 +984,32 @@ export function renderGtmBody(): string {
       (p) => `### ${p.title}\n\n${p.statement}\n\nProof: ${p.implementationDetail}`,
     ),
   ].join("\n\n");
+  const skillTable = [
+    "| Domain | Scope | Tools |",
+    "| --- | --- | --- |",
+    ...skillStack.map((row) => `| ${row.domain} | ${row.scope} | ${row.tools} |`),
+  ].join("\n");
+  const systemTable = [
+    "| System | What it does | Stage | Links |",
+    "| --- | --- | --- | --- |",
+    ...gtmProofs().map((proof) => {
+      const links = [
+        `[On this site](${proof.href})`,
+        proof.githubUrl && `[GitHub](${proof.githubUrl})`,
+        proof.demoUrl && `[Live](${proof.demoUrl})`,
+      ]
+        .filter(Boolean)
+        .join(", ");
+      return `| ${proof.title} | ${proof.blurb} | ${gtmEvidenceLabels[proof.evidence].label} | ${links} |`;
+    }),
+  ].join("\n");
+  const motionTable = [
+    "| Motion | Autonomous step | Control | System |",
+    "| --- | --- | --- | --- |",
+    ...agentMotions.map(
+      (row) => `| ${row.motion} | ${row.autonomous} | ${row.control} | [${row.system}](${row.href}) |`,
+    ),
+  ].join("\n");
   const capabilityTable = [
     "| Capability domain | Engineering focus | Tools & stack | Repository proof | Status |",
     "| --- | --- | --- | --- | --- |",
@@ -935,6 +1092,22 @@ export function renderGtmBody(): string {
     .join("\n\n");
   return [
     gtmPortfolio.positioning,
+    "",
+    "## Skill stack",
+    "",
+    "Eight domains. The systems table is the work you can open.",
+    "",
+    skillTable,
+    "",
+    "## GTM systems",
+    "",
+    systemTable,
+    "",
+    "## Agentic depth",
+    "",
+    "What runs on its own, and the control that stays in code.",
+    "",
+    motionTable,
     "",
     `## ${vision.headline}`,
     "",

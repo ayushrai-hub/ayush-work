@@ -196,9 +196,11 @@ export type {
   GtmProof,
   GtmResource,
   GtmResourceGroup,
+  GtmMotionRow,
   GtmSkill,
   GtmSkillGroup,
   GtmSkillLevel,
+  GtmSkillStackRow,
   GtmStudyTopic,
   GtmThesisPillar,
 } from "./gtm";
