@@ -143,7 +143,7 @@ export default function RevopsPowPage() {
           </p>
         </Section>
 
-        <Section id="workbench" number="C" title={`${revopsHero.projectName} — ${revopsHero.projectLine}`}>
+        <Section id="workbench" number="C" title={`${revopsHero.projectName}, ${revopsHero.projectLine}`}>
           <p className="max-w-measure text-ink-muted">{revopsHero.nameNote}</p>
           <p className="mt-3 max-w-measure text-sm text-ink-faint">
             Synthetic data. Simulated enrichment and CRM. Proposed production controls are labeled below and are not running.

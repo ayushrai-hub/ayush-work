@@ -45,9 +45,9 @@ Use **no authentication**. Send ordinary HTTPS GET (REST) or POST (MCP Streamabl
 
 Do **not** expect:
 
-- \`/.well-known/oauth-protected-resource\` (RFC 9728) — there is no OAuth resource server.
-- \`/.well-known/oauth-authorization-server\` (RFC 8414) — there is no authorization server on this origin.
-- \`WWW-Authenticate\` challenges on \`/api/v1/*\` or \`/api/mcp\` — those routes return 200 with public data, or typed JSON errors for bad input / rate limits, not 401.
+- \`/.well-known/oauth-protected-resource\` (RFC 9728), there is no OAuth resource server.
+- \`/.well-known/oauth-authorization-server\` (RFC 8414), there is no authorization server on this origin.
+- \`WWW-Authenticate\` challenges on \`/api/v1/*\` or \`/api/mcp\`, those routes return 200 with public data, or typed JSON errors for bad input / rate limits, not 401.
 
 ## Register / Claim / Exchange
 

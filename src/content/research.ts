@@ -29,7 +29,7 @@ export const research: ResearchItem[] = [
     title: "AI-assisted agricultural advisory exploration",
     status: "Experiment",
     summary:
-      "Exploring how satellite imagery, soil/weather signals, and models might support farming recommendations — early prototype work, not a deployed national system.",
+      "Exploring how satellite imagery, soil/weather signals, and models might support farming recommendations, early prototype work, not a deployed national system.",
     period: "2024-01 – present",
     context:
       "Exploratory project work, not a formal lab publication.",
@@ -40,7 +40,7 @@ export const research: ResearchItem[] = [
     ],
     technologies: ["Python", "TensorFlow", "Satellite APIs", "Computer Vision"],
     findings:
-      "Built toward a working prototype path. Earlier portfolio text claimed '20+ farmers' and '85% accuracy' — those numbers are not verified here and should not be cited until confirmed.",
+      "Built toward a working prototype path. Earlier portfolio text claimed '20+ farmers' and '85% accuracy', those numbers are not verified here and should not be cited until confirmed.",
     disclaimer:
       "Not a peer-reviewed paper. Treat as an investigation/experiment log.",
     fundingNote: "No funding claim verified.",
@@ -55,7 +55,7 @@ export const research: ResearchItem[] = [
     title: "NLP for legal document analysis",
     status: "Investigation",
     summary:
-      "Investigated NLP pipelines for contract and regulatory text — document structure, retrieval, and assisted review rather than autonomous legal advice.",
+      "Investigated NLP pipelines for contract and regulatory text, document structure, retrieval, and assisted review rather than autonomous legal advice.",
     period: "2023-08 – 2023-12",
     context:
       "Internal / academic exploration. Older materials named a funding source; it is unverified and not repeated here.",
@@ -80,7 +80,7 @@ export const research: ResearchItem[] = [
     title: "Smart campus energy monitoring notes",
     status: "Note",
     summary:
-      "Notes and early work around IoT-style energy monitoring and a dashboard for campus buildings — learning project more than a city-scale rollout.",
+      "Notes and early work around IoT-style energy monitoring and a dashboard for campus buildings, learning project more than a city-scale rollout.",
     period: "2023-03 – 2023-08",
     context:
       "Older copy named an external funding source and partner; that claim is unverified and not repeated here.",

@@ -124,7 +124,7 @@ export default function FoundingEngineerPowPage() {
 
         <section className="mt-16" id="buildlog" aria-labelledby="buildlog-heading">
           <h2 id="buildlog-heading" className="font-display text-2xl text-ink">
-            {foundingEngineer.workbenchName} — From problem to product
+            {foundingEngineer.workbenchName}, From problem to product
           </h2>
           <p className="mt-3 max-w-measure leading-relaxed text-ink-muted">{foundingEngineer.workbenchNote}</p>
           <div className="mt-6">

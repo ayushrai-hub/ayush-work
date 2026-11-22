@@ -78,7 +78,7 @@ export default function TimelinePage() {
         <PageHeader
           label="Timeline"
           title="The long arc"
-          dek="A chronological spine, cautious summaries, not a roadmap chrome."
+          dek="Work, builds, and study. The role entries name the company and the job, not a tenure."
         />
         <ol className="max-w-measure border-l border-rule pl-6 space-y-8">
           {sorted.map((entry) => {
@@ -90,11 +90,13 @@ export default function TimelinePage() {
                   aria-hidden
                 />
                 <p className="meta-row">
-                  <span>
-                    {entry.date}
-                    {entry.endDate ? ` – ${entry.endDate}` : ""}
-                  </span>
-                  <span aria-hidden="true">·</span>
+                  {entry.kind !== "role" && (
+                    <span>
+                      {entry.date}
+                      {entry.endDate ? ` – ${entry.endDate}` : ""}
+                    </span>
+                  )}
+                  {entry.kind !== "role" && <span aria-hidden="true">·</span>}
                   <span className="capitalize">{entry.kind}</span>
                 </p>
                 <h2 className="mt-1 font-display text-xl text-ink">

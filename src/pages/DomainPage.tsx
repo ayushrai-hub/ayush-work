@@ -199,10 +199,6 @@ export default function DomainPage() {
                   <p className="meta-row mt-1">
                     <span>{role.organization}</span>
                     <span aria-hidden="true">·</span>
-                    <span>
-                      {role.start} – {role.end}
-                    </span>
-                    <span aria-hidden="true">·</span>
                     <span>{role.location}</span>
                   </p>
                   <p className="mt-3 text-ink-muted leading-relaxed">{role.narrative}</p>
@@ -267,14 +263,16 @@ export default function DomainPage() {
           </section>
         )}
 
-        <section className="mt-14">
-          <SectionHeading title="Gaps" />
-          <ul className="max-w-measure list-disc space-y-2 pl-5 text-ink-muted">
-            {page.gaps.map((gap) => (
-              <li key={gap}>{gap}</li>
-            ))}
-          </ul>
-        </section>
+        {page.gaps.length > 0 && (
+          <section className="mt-14">
+            <SectionHeading title="Gaps" />
+            <ul className="max-w-measure list-disc space-y-2 pl-5 text-ink-muted">
+              {page.gaps.map((gap) => (
+                <li key={gap}>{gap}</li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <ContactCta prompt={`For collaboration on ${inSentence(page.title)}, use contact, resume, or Calendly. Email ${person.email}.`} />
       </article>

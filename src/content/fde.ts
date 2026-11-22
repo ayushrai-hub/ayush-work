@@ -1217,7 +1217,7 @@ export function renderFdeBody(): string {
     "",
     principles,
     "",
-    `## ${fdePow.relayName} — ${fdePow.relayLabel}`,
+    `## ${fdePow.relayName}, ${fdePow.relayLabel}`,
     "",
     "Personal proof-of-work project. A B2B SaaS company, in this scenario, has customer information spread across its CRM, support system, product analytics, and internal communication tools. Teams lack one place to see a deteriorating account, the evidence, and the next action. Investigation is manual, signals are missed, and decisions lack a shared trail.",
     "",

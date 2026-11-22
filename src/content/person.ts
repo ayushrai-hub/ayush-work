@@ -33,11 +33,11 @@ export const person: Person = {
   responseTime: "<24 hrs",
   roleTitle: "AI Engineer × Revenue × GTM",
   tagline:
-    "AI engineer building revenue systems, GTM data pipelines, deterministic qualification workflows, and bounded autonomous agents — with LLM evaluation discipline and every system's limits written down.",
+    "I build AI systems for evaluation, revenue, and operations. The model proposes. The software decides what is allowed to stick.",
   positioning:
-    "I'm Ayush Rai, an AI engineer working remotely (www.ayushrai.site) at the intersection of AI engineering, technical GTM, revenue operations, and autonomous agents. From April 2024 to August 2025 I worked as an SDE — AI Engineer at FoCDoT Technologies on model evaluation and coding/STEM analysis, and since August 2025 I have done contract LLM evaluation for frontier-lab programs through Outlier. Alongside that evaluation work, I build revenue-data pipelines, explainable ICP and lead-scoring engines, human-gated agent workflows, and product systems (RevenueRoles, GTM-Strato, Revenue Intelligence Engine, Relationship Intelligence Engine, AIworks lead pipeline, MedVoice, AGENYRA, and The Open Framework). I state what is live, what runs locally, and what is synthetic rather than inventing traction.",
+    "I'm Ayush Rai, an AI engineer. I review model outputs, score accounts and leads in code, and ship software for businesses that need a record of what happened. The products are RevenueRoles, GTM-Strato, the Revenue Intelligence Engine, MedVoice, AGENYRA, and The Open Framework.",
   footerLine:
-    "AI Engineer × Revenue × GTM — building revenue data systems, deterministic qualification pipelines, and human-gated autonomous agents remotely.",
+    "AI engineer. Evaluation, revenue systems, and software for businesses.",
   siteUrl: "https://www.ayushrai.site",
   resumeUrl:
     "https://drive.google.com/file/d/1JdAckW6i057eYNpdRVLYDMFp2Xo5vyJs/view?usp=sharing",

@@ -149,7 +149,7 @@ export default function FdePowPage() {
         <Section
           id="problem"
           number="02"
-          title={`${fdePow.relayName} — ${fdePow.relayLabel}`}
+          title={`${fdePow.relayName}, ${fdePow.relayLabel}`}
           intro="Personal proof-of-work project. The company in this section is a proposed demonstration, not a customer."
         >
           <p className="max-w-measure text-ink leading-relaxed">

@@ -512,7 +512,7 @@ export default function ResearchNotebook() {
                 <button type="button" className="link-underline text-left" onClick={() => setOpenId(row.id)}>
                   {row.id}
                 </button>
-                <span className="text-ink-muted"> — {row.question}</span>
+                <span className="text-ink-muted">, {row.question}</span>
               </li>
             ))}
           </ul>

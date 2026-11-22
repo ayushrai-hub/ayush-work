@@ -61,7 +61,7 @@ export interface PairedComparison {
 
 /** Label for the run’s execution flag. The fixture is not an executed job. */
 export function executionLabel(executed: boolean): string {
-  return executed ? "Executed evaluation job" : "Not executed — stored demonstration";
+  return executed ? "Executed evaluation job" : "Not executed, stored demonstration";
 }
 
 /** Accepted tasks only, in input order. */

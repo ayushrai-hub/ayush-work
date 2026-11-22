@@ -176,7 +176,7 @@ export function AnalyticsSample() {
                     <span className="block h-1.5 bg-accent" style={{ width: `${Math.round((count / peak) * 100)}%` }} />
                   </span>
                 </td>
-                <td className="py-3 font-mono text-ink-muted">{ratio === null ? "—" : `${ratio}%`}</td>
+                <td className="py-3 font-mono text-ink-muted">{ratio === null ? "none" : `${ratio}%`}</td>
               </tr>
             );
           })}

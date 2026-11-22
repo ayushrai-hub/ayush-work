@@ -38,7 +38,7 @@ export const aiResearchHero = {
   positioning:
     "I turn AI research questions into reproducible experiments and working systems.",
   supporting:
-    "I work at the intersection of AI research, model evaluation, and engineering—translating hypotheses into experiments, implementing methods, and investigating what the evidence actually supports.",
+    "I work at the intersection of AI research, model evaluation, and engineering, translating hypotheses into experiments, implementing methods, and investigating what the evidence actually supports.",
 } as const;
 
 /** Why the working name LABNOTE is not used. Labnote is an existing product at labnote.co. */

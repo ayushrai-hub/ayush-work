@@ -37,7 +37,7 @@ export const benchmarkPage = {
   projectLine: "Reproducible LLM evaluation workbench",
   status: "Personal engineering demonstration. Not a published benchmark and not an evaluation platform.",
   disclaimer:
-    "Synthetic demonstration results — not actual model benchmark scores. No model was called to produce this page.",
+    "Synthetic demonstration results, not actual model benchmark scores. No model was called to produce this page.",
 } as const;
 
 /** Engineering principles, each with one example from this demonstration. */
@@ -656,7 +656,7 @@ export const benchmarkPriorWork: { title: string; href?: string; body: string }[
   {
     title: "Contract evaluation, as published on this site",
     href: "/experience#focdot-sde-ai",
-    body: "FoCDoT, April 2024–August 2025: review of model outputs against criteria, and analysis of coding and STEM tasks. Outlier, from August 2025: contract evaluation, dataset quality, and Python or JavaScript task prompting. This site does not publish agreement statistics, sample sizes, or benchmark tables from that work.",
+    body: "FoCDoT: review of model outputs against criteria, and analysis of coding and STEM tasks. Outlier: contract evaluation, dataset quality, and Python or JavaScript task prompting. This site does not publish agreement statistics, sample sizes, or benchmark tables from that work.",
   },
   {
     title: "OpenAI-RLHF repository",
@@ -690,7 +690,7 @@ export function renderBenchmarkBody(): string {
     "",
     benchmarkPage.disclaimer,
     "",
-    `Project: ${benchmarkPage.projectName} — ${benchmarkPage.projectLine}.`,
+    `Project: ${benchmarkPage.projectName}, ${benchmarkPage.projectLine}.`,
     "",
     "## What this page is",
     "",

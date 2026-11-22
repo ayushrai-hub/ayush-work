@@ -395,7 +395,7 @@ export function ObservabilityDashboard() {
                     <dt className="text-sm text-ink">{metric.label}</dt>
                     <dd className="mt-1 font-mono text-sm text-ink-muted">
                       {metric.value}
-                      {metric.alert ? " — alert" : ""}
+                      {metric.alert ? ", alert" : ""}
                     </dd>
                   </div>
                 ))}

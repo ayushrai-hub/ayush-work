@@ -321,7 +321,7 @@ export const caseParts: PmCasePart[] = [
     status: "fact",
     paragraphs: [
       "The workflow the homepage describes is operational: discover from supported sources, extract the description, company, location, compensation, and application destination, verify eligibility, classify into the taxonomy, and publish a canonical listing with a direct application path.",
-      "What a person does outside the product — several boards, a spreadsheet, a lost tab — is a hypothesis in the discovery section. I am not describing it as observed behavior.",
+      "What a person does outside the product, several boards, a spreadsheet, a lost tab, is a hypothesis in the discovery section. I am not describing it as observed behavior.",
     ],
   },
   {

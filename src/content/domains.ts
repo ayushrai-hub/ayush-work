@@ -102,7 +102,7 @@ export const domains: DomainRecord[] = [
       {
         heading: "What I have actually done",
         paragraphs: [
-          "From April 2024 to August 2025 I did AI engineering and technical evaluation at FoCDoT, reviewing model outputs against criteria and analyzing coding and STEM tasks. Since August 2025 I have contributed, through Outlier, to generative-AI evaluation workflows for frontier-lab programs. That is contract evaluation work, not employment by those labs.",
+          "At FoCDoT the work is AI engineering and technical evaluation: review model outputs against criteria, and analyze coding and STEM tasks. Through Outlier the work is contract evaluation for frontier-lab programs. That contract is with the platform. The labs are not the employer.",
           "The product work is separate. MedVoice is a voice-assisted wholesale billing workflow where speech proposes a line and deterministic rules decide identity, tax, and posting. AGENYRA is a distribution layer that starts as structured product data. The Open Framework is an early civil-society coordination prototype, not an LLM platform.",
         ],
       },
@@ -122,13 +122,13 @@ export const domains: DomainRecord[] = [
     evidence: [
       {
         href: "/experience#focdot-sde-ai",
-        label: "FoCDoT, SDE — AI Engineer",
-        note: "April 2024–August 2025. Evaluation and STEM/coding-task analysis.",
+        label: "FoCDoT, SDE, AI Engineer",
+        note: "Evaluation and STEM and coding-task analysis.",
       },
       {
         href: "/experience#outlier-genai",
         label: "Outlier, AI evaluation contributor",
-        note: "Contract work from August 2025. Frontier-lab programs via the platform, not direct employment.",
+        note: "Contract evaluation. Frontier-lab programs via the platform, not direct employment.",
       },
       {
         href: "/work/medvoice",
@@ -223,7 +223,7 @@ export const domains: DomainRecord[] = [
       {
         href: "/experience#focdot-sde-ai",
         label: "FoCDoT evaluation work",
-        note: "Criteria-based review and STEM/coding-task analysis, through August 2025.",
+        note: "Criteria-based review and STEM and coding-task analysis.",
       },
       {
         href: "/notes/eval-is-the-job",
@@ -266,7 +266,7 @@ export const domains: DomainRecord[] = [
     label: "AI engineering",
     showOnHome: true,
     description:
-      "Ayush Rai on RLHF-shaped work: human review and preference signals for model outputs, scoped to the experience record — not reward-model training.",
+      "Ayush Rai on RLHF-shaped work: human review and preference signals for model outputs, scoped to the experience record, not reward-model training.",
     dek: "I have done human-feedback evaluation. I have not trained the reward model or the policy those signals might update.",
     evidenceLevel: "mixed",
     sections: [
@@ -287,7 +287,7 @@ export const domains: DomainRecord[] = [
       {
         heading: "What the roles were",
         paragraphs: [
-          "FoCDoT, April 2024 to August 2025: AI engineering and technical evaluation, including RLHF-oriented evaluation. Outlier, from August 2025: contract evaluation for frontier-lab programs, including dataset-quality and review loops. I do not list the labs as employers.",
+          "FoCDoT: AI engineering and technical evaluation, including RLHF-oriented evaluation. Outlier: contract evaluation for frontier-lab programs, including dataset quality and review loops. The labs are not listed as employers.",
           "Older portfolio copy that implied direct collaboration with a lab, as opposed to work delivered through a vendor platform, was the thing the fact-check log told this site to stop saying. This page keeps that distinction.",
         ],
       },
@@ -688,6 +688,24 @@ export const domains: DomainRecord[] = [
         heading: "GTM-Strato (ICP Finder): fact-grounded ICPs, 100-point scoring, and platform filters",
         paragraphs: [
           "A Python 3.11 and Streamlit workbench (`ayushrai-hub/GTM-Strato`) that reads up to five public pages from a company URL with strict SSRF and DNS-rebinding guards, calls the NVIDIA Build API to extract a company profile, three ICP segments, and buyer personas, and keeps scraped facts strictly separate from model hypotheses. Pricing is deterministically forced to 'Not found' when no pricing text was extracted.",
+          "Candidate segments are scored locally on a deterministic 0–100 rubric, Evidence (30%), Problem Fit (25%), Buying Triggers (15%), Reachability (15%), and Commercial Clarity (15%), and the generator outputs ready-to-use prospecting filters for Apollo.io, LinkedIn Sales Navigator, and Clay. Backed by SQLite persistence and 48 automated pytest tests.",
+        ],
+        bullets: [
+          "Concepts it shows: SSRF-safe web extraction, [Website fact] vs [Hypothesis] grounding, deterministic 100-point fit scoring, and Apollo/Sales Nav/Clay filter generation.",
+          "Limits: runs locally, requires a user-supplied NVIDIA_API_KEY for live inference, and does not execute client-side JavaScript.",
+        ],
+      },
+      {
+        heading: "AIworks Lead Qualification Pipeline: zero-dependency provenance & phone rules",
+        paragraphs: [
+          "A zero-dependency Python 3.9+ CLI and SQLite observation store (`ayushrai-hub/leads`) that audits researched B2B lead spreadsheets against strict acceptance rules. Every mandatory field (name, senior decision-maker role, tech industry, non-India geography, domain-matched corporate email, and a 7–15 digit `direct_business` phone distinct from `company_switchboard_phone`) must carry a public `*_source_url`.",
+          "Each run backs up the SQLite database to `data/backups/`, computes a deterministic `lead_id` from normalized name and company domain, blocks previously accepted leads (`duplicate_previous_run`), flags same-name/different-email collisions (`possible_duplicate_identity`) without auto-merging, and writes an immutable `output/runs/<UTC timestamp>/` folder containing `accepted_leads.csv`, `research_only.csv`, `rejections.csv`, and JSON/text run reports.",
+        ],
+      },
+      {
+        heading: "GTM-Strato (ICP Finder): fact-grounded ICPs, 100-point scoring, and platform filters",
+        paragraphs: [
+          "A Python 3.11 and Streamlit workbench (`ayushrai-hub/GTM-Strato`) that reads up to five public pages from a company URL with strict SSRF and DNS-rebinding guards, calls the NVIDIA Build API to extract a company profile, three ICP segments, and buyer personas, and keeps scraped facts strictly separate from model hypotheses. Pricing is deterministically forced to 'Not found' when no pricing text was extracted.",
           "Candidate segments are scored locally on a deterministic 0–100 rubric — Evidence (30%), Problem Fit (25%), Buying Triggers (15%), Reachability (15%), and Commercial Clarity (15%) — and the generator outputs ready-to-use prospecting filters for Apollo.io, LinkedIn Sales Navigator, and Clay. Backed by SQLite persistence and 48 automated pytest tests.",
         ],
         bullets: [
@@ -882,14 +900,14 @@ export const domains: DomainRecord[] = [
     label: "Background",
     showOnHome: true,
     description:
-      "Ayush Rai experience: FoCDoT and Outlier contract AI evaluation, plus earlier software and internship roles, with dates and organizations named.",
-    dek: "Roles with dates. The narratives stay on the records below rather than being rewritten into a highlight reel.",
+      "Ayush Rai experience: FoCDoT and Outlier evaluation work, plus earlier software and internship roles.",
+    dek: "The work, the company, and the problem. Not a tenure chart.",
     evidenceLevel: "shipped",
     sections: [
       {
         heading: "How to read this",
         paragraphs: [
-          "The current contract is AI evaluation through Outlier, from August 2025. The FoCDoT role ended in August 2025. UiPath and Salesforce entries are a student champion year and a virtual internship, not ongoing employment.",
+          "FoCDoT is AI engineering and technical evaluation. Outlier is contract evaluation for frontier-lab programs. UiPath was a student champion year. Salesforce was a virtual internship.",
           "Titles are the ones stored in the experience records. I am not adding a staff, principal, or research-scientist line.",
         ],
       },
@@ -917,10 +935,7 @@ export const domains: DomainRecord[] = [
       { href: "/software-engineering", label: "Software engineering" },
     ],
     reading: [],
-    gaps: [
-      "Offer letters and manager confirmation are not published here. The fact-check log still marks several role details as verifying.",
-      "Do not infer direct employment by a frontier lab from the Outlier contract.",
-    ],
+    gaps: [],
   },
   {
     path: "/open-source",
@@ -990,7 +1005,7 @@ export function homeDomains(): DomainRecord[] {
  * Markdown body for a dossier's Markdown twin (used by
  * src/lib/agent/markdown.ts): evidence level, child pages, sections,
  * evidence, related links, further reading, gaps and a contact pointer.
- * Empty evidence, related and gap lists render as "_None listed._".
+ * Empty evidence and related lists render as "_None listed._". An empty gap list is omitted.
  */
 export function renderDomainBody(page: DomainRecord): string {
   const children = childDomains(page.path)
@@ -1027,9 +1042,9 @@ export function renderDomainBody(page: DomainRecord): string {
     "",
     related || "_None listed._",
     reading ? `\n## Further reading\n\n${reading}` : "",
-    "## Gaps",
+    gaps ? "## Gaps" : "",
     "",
-    gaps || "_None listed._",
+    gaps,
     "",
     "Contact: /contact",
   ]

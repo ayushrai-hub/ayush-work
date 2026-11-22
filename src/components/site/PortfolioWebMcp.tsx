@@ -12,7 +12,7 @@
 import { useEffect } from "react";
 import { executePortfolioSearch, PORTFOLIO_SEARCH_TOOL } from "../../lib/agent/searchTool";
 
-/** Property names scanners and the WebMCP draft look for — keep as string literals. */
+/** Property names scanners and the WebMCP draft look for, keep as string literals. */
 const MODEL_CONTEXT_KEY = "modelContext";
 const REGISTER_TOOL_KEY = "registerTool";
 

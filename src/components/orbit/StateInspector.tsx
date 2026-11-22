@@ -44,9 +44,9 @@ export default function StateInspector({ run }: { run: Run }) {
           <OutcomeBanner outcome={run.outcome} />
         </div>
         <h4 className="mt-4 label">Completed</h4>
-        <p className="mt-1 font-mono text-xs text-ink-muted">{completed.map((step) => step.id).join(", ") || "—"}</p>
+        <p className="mt-1 font-mono text-xs text-ink-muted">{completed.map((step) => step.id).join(", ") || "none"}</p>
         <h4 className="mt-4 label">Still open</h4>
-        <p className="mt-1 font-mono text-xs text-ink-muted">{pending.map((step) => step.id).join(", ") || "—"}</p>
+        <p className="mt-1 font-mono text-xs text-ink-muted">{pending.map((step) => step.id).join(", ") || "none"}</p>
       </div>
       <div className="border border-rule p-4">
         <h3 className="font-display text-lg text-ink">Working context</h3>

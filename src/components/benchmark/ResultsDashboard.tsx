@@ -140,13 +140,13 @@ export default function ResultsDashboard({ run }: ResultsDashboardProps) {
 
 /** Renders successes/n, or an em dash when the filter has no rows. */
 function fraction(rate: RateSummary | undefined): string {
-  if (!rate || rate.n === 0) return "—";
+  if (!rate || rate.n === 0) return "none";
   return `${rate.successes}/${rate.n}`;
 }
 
 /** Renders the Wilson interval as integer percentages. */
 function interval(rate: RateSummary | undefined): string {
-  if (!rate || rate.n === 0) return "—";
+  if (!rate || rate.n === 0) return "none";
   const low = Math.round(rate.wilson.low * 100);
   const high = Math.round(rate.wilson.high * 100);
   return `${low}–${high}%`;

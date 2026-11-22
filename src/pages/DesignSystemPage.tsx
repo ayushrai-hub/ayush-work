@@ -58,10 +58,10 @@ export default function DesignSystemPage() {
         <section className="mb-16">
           <h2 className="font-display text-xl text-ink font-semibold mb-4">Typography</h2>
           <p className="font-display text-4xl text-ink mb-4">
-            Source Serif 4 — Display
+            Source Serif 4, Display
           </p>
           <p className="font-sans text-lg text-ink-muted mb-4">
-            Source Sans 3 — Body and UI. The quick brown fox jumps over the lazy
+            Source Sans 3, Body and UI. The quick brown fox jumps over the lazy
             dog.
           </p>
           <p className="text-sm text-ink-faint">

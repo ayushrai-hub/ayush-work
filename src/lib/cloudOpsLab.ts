@@ -662,7 +662,7 @@ export function sampleTelemetry(scenario: TelemetryScenario): TelemetrySnapshot 
       { id: "db", value: "healthy", alert: false },
       { id: "jobs", value: "0 failures", alert: false },
       { id: "queue", value: "2 waiting", alert: false },
-      { id: "deploy", value: "failed — previous version should stay", alert: true },
+      { id: "deploy", value: "failed, previous version should stay", alert: true },
       { id: "availability", value: "degraded if the failed version took traffic", alert: true },
     ],
     dependency: [

@@ -80,7 +80,7 @@ export const work: WorkItem[] = [
     role:
       "Designed and implemented the SSRF-hardened website extractor, Pydantic schemas, NVIDIA Build client, evidence-vs-hypothesis separator, deterministic 5-component scoring engine, platform filter generator, SQLite run store, and 48 pytest tests.",
     thinking:
-      "Three constraints keep an AI GTM research tool honest: first, untrusted website text must be fetched safely (ports 80/443 only, DNS resolution checked against private/loopback/reserved IP ranges before every hop, `robots.txt` respected, no JS execution); second, every profile field must carry an explicit evidence state (`Website fact` with cited URL, `Hypothesis`, or `Not found` — pricing is forced to `Not found` when no pricing text was extracted); third, the fit score must be computed by deterministic local code, never by another model prompt.",
+      "Three constraints keep an AI GTM research tool honest: first, untrusted website text must be fetched safely (ports 80/443 only, DNS resolution checked against private/loopback/reserved IP ranges before every hop, `robots.txt` respected, no JS execution); second, every profile field must carry an explicit evidence state (`Website fact` with cited URL, `Hypothesis`, or `Not found`, pricing is forced to `Not found` when no pricing text was extracted); third, the fit score must be computed by deterministic local code, never by another model prompt.",
     execution:
       "The extractor fetches up to five public pages per domain and passes delimited untrusted text to the analyzer. The generator produces a company profile, three distinct ICP segments, buyer personas, and platform-specific search filters for Apollo.io, LinkedIn Sales Navigator, and Clay. `scoring_engine.py` computes a 0–100 score across five weighted components: Evidence (30%), Problem Fit (25%), Buying Triggers (15%), Reachability (15%), and Commercial Clarity (15%). Automated tests (`tests/test_grounding.py`, `test_scoring.py`, `test_security.py`, `test_nvidia_client.py`, `test_database.py`, `test_features.py`, `test_streamlit_ui.py`) cover 48 test cases.",
     outcome:
@@ -112,13 +112,13 @@ export const work: WorkItem[] = [
     summary:
       "A synthetic-data GTM pipeline that scores 42 fictional companies on a transparent 100-point rubric, runs temperature-0 account research with a deterministic fallback, and gates CRM-ready export behind human approval.",
     problem:
-      "GTM teams routinely stitch together account research, signal hunting, qualification scoring, and outbound drafting by hand — or hand the entire loop to an LLM that assigns unexplainable scores and pushes unreviewed copy toward a CRM.",
+      "GTM teams routinely stitch together account research, signal hunting, qualification scoring, and outbound drafting by hand, or hand the entire loop to an LLM that assigns unexplainable scores and pushes unreviewed copy toward a CRM.",
     context:
       "Built in 2026 as an end-to-end systems demonstration (`REVENUE-INTELLIGENCE-ENGINE`) with a Python FastAPI backend, SQLAlchemy persistence, a Next.js GTM console, and 40 pytest tests. All 42 bundled companies, contacts, and buying signals are explicitly synthetic.",
     role:
       "Architected and built the staged Python workflow (`app/workflows/revenue_intelligence.py`), deterministic 100-point scorer, signal detector, temperature-0 research service with deterministic fallback, human approval queue, and Next.js operator console.",
     thinking:
-      "Prioritization scores should never come from an LLM guess. A deterministic 100-point rubric (ICP fit 30, growth signal 20, hiring signal 15, technology fit 15, GTM need 10, contactability 10) lets an operator audit exactly why an account ranked first. Language models belong in bounded synthesis — drafting the account problem, why-now trigger, and personalization — and every output must pause in a human approval queue before export.",
+      "Prioritization scores should never come from an LLM guess. A deterministic 100-point rubric (ICP fit 30, growth signal 20, hiring signal 15, technology fit 15, GTM need 10, contactability 10) lets an operator audit exactly why an account ranked first. Language models belong in bounded synthesis, drafting the account problem, why-now trigger, and personalization, and every output must pause in a human approval queue before export.",
     execution:
       "Each workflow run assigns a `run_id`, normalizes and deduplicates records by domain, runs a mock enrichment provider, detects five signal types (hiring, funding, expansion, product launch, technology adoption), scores accounts deterministically, generates labeled research briefs, and holds exports (CSV, JSON, XLSX) until a human approves the queue row. Re-runs perform idempotent upserts.",
     outcome:

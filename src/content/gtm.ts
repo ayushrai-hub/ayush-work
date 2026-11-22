@@ -51,7 +51,7 @@ export interface GtmProof {
   solution?: string;
   /** Concrete architecture and data flow in the repository. */
   architectureNote?: string;
-  /** Verifiable repository metrics (tests, connectors, schema states, dataset counts — never invented adoption). */
+  /** Verifiable repository metrics (tests, connectors, schema states, dataset counts, never invented adoption). */
   verifiableMetrics?: string[];
   /** GTM concepts the work demonstrates. */
   shows: string[];
@@ -176,12 +176,12 @@ export const gtmPortfolio: GtmPortfolio = {
   positioning:
     "I build data, qualification, and agentic decision systems for revenue teams: public-source discovery pipelines, SSRF-hardened company research, field-level provenance, deterministic 100-point ICP and lead scoring, and human-approval gates before anything touches a CRM or outbound channel.",
   background:
-    "From April 2024 to August 2025 I worked as an SDE — AI Engineer at FoCDoT Technologies on model evaluation and coding/STEM analysis, and since August 2025 I have contributed to frontier-lab evaluation programs through Outlier. I bring that evaluation discipline into GTM engineering: treating language models as untrusted proposers, keeping numerical scoring and rule checks in deterministic Python and TypeScript, and separating what runs in production from what runs locally or on synthetic fixtures.",
+    "Evaluation at FoCDoT and contract evaluation through Outlier is the same discipline I use in GTM engineering. A language model can read a messy page and propose a field. Scoring, duplicate checks, and the decision to write to a CRM stay in Python and TypeScript. Live, local, and synthetic runs stay labeled.",
   vision: {
     headline: "Precision GTM and the future of autonomous revenue systems",
     paragraphs: [
-      "Volume-first outbound is collapsing under its own noise. Cheap generative copy and bulk contact exports made it trivial to blast thousands of inboxes, which destroyed reply rates and forced mailbox providers to tighten sender thresholds. The next generation of revenue infrastructure is not a louder sequence sender — it is precision GTM: identifying the exact accounts with a verifiable technical or commercial trigger, proving where every field came from, and routing only high-conviction actions to humans.",
-      "In an autonomous revenue system, language models and deterministic software have strict, non-overlapping jobs. Models excel at reading unstructured inputs — parsing five pages of a prospect's website, extracting a job description's actual responsibilities, or summarizing why an account's recent hiring matters. They are terrible systems of record. Entity resolution, duplicate detection, 0–100 fit scoring, credit budgets, idempotency keys, and CRM schema validation must stay in deterministic code with unit tests.",
+      "Volume-first outbound is collapsing under its own noise. Cheap generative copy and bulk contact exports made it trivial to blast thousands of inboxes, which destroyed reply rates and forced mailbox providers to tighten sender thresholds. The next generation of revenue infrastructure is not a louder sequence sender, it is precision GTM: identifying the exact accounts with a verifiable technical or commercial trigger, proving where every field came from, and routing only high-conviction actions to humans.",
+      "In an autonomous revenue system, language models and deterministic software have strict, non-overlapping jobs. Models excel at reading unstructured inputs, parsing five pages of a prospect's website, extracting a job description's actual responsibilities, or summarizing why an account's recent hiring matters. They are terrible systems of record. Entity resolution, duplicate detection, 0–100 fit scoring, credit budgets, idempotency keys, and CRM schema validation must stay in deterministic code with unit tests.",
       "Autonomy in revenue operations should be earned stage by stage. Routine discovery, normalization, waterfall enrichment, signal extraction, and draft preparation can run on schedules or webhooks without human intervention. Anything that mutates a system of record or contacts a customer belongs behind an explicit human approval gate, with every claim linked to its source URL and timestamp.",
     ],
     pillars: [
@@ -275,7 +275,7 @@ export const gtmPortfolio: GtmPortfolio = {
         "SSRF/DNS validation blocks private/loopback IPs; pricing is forced to 'Not found' if no pricing text was extracted; 0–100 fit score is computed locally in Python, never by the model.",
       humanGate:
         "Every field is labeled [Website fact] (with cited URL), [Hypothesis], or [Not found] so an operator verifies hypotheses before launching a campaign.",
-      implementedIn: "GTM-Strato (ICP Finder) — 48 pytest tests",
+      implementedIn: "GTM-Strato (ICP Finder), 48 pytest tests",
       href: "https://github.com/ayushrai-hub/GTM-Strato",
     },
     {
@@ -286,7 +286,7 @@ export const gtmPortfolio: GtmPortfolio = {
         "100-point account ranking runs before the model is called; required JSON schema fields are validated; idempotent upserts prevent duplicate run artifacts.",
       humanGate:
         "Researched accounts enter a human approval queue; only approved records can be exported to CRM-ready CSV, JSON, or XLSX.",
-      implementedIn: "Revenue Intelligence Engine — 40 pytest tests",
+      implementedIn: "Revenue Intelligence Engine, 40 pytest tests",
       href: "https://github.com/ayushrai-hub/REVENUE-INTELLIGENCE-ENGINE",
     },
     {
@@ -297,7 +297,7 @@ export const gtmPortfolio: GtmPortfolio = {
         "Zod-validated tool inputs, retry budgets, 8 scripted failure modes (hallucinated tool, schema mismatch, rate limit, partial write), and post-write store verification.",
       humanGate:
         "Proposed -> Approved -> Executed -> Verified state machine; rejecting a proposal blocks the write, and approving still checks the store row.",
-      implementedIn: "Agentic AI POW (/pow/agentic-ai) — 13 Vitest tests",
+      implementedIn: "Agentic AI POW (/pow/agentic-ai), 13 Vitest tests",
       href: "/pow/agentic-ai",
     },
     {
@@ -365,7 +365,7 @@ export const gtmPortfolio: GtmPortfolio = {
       ],
       shows: [
         "Fact-vs-hypothesis grounding: every company profile field is labeled Website fact (with cited URL), Hypothesis, or Not found; pricing is forced to Not found when no pricing text was extracted.",
-        "Deterministic local 0–100 fit scoring across five weighted components — never produced by an LLM prompt.",
+        "Deterministic local 0–100 fit scoring across five weighted components, never produced by an LLM prompt.",
         "Actionable GTM output: generates platform-specific prospecting filters for Apollo.io, LinkedIn Sales Navigator, and Clay.",
         "Security discipline: blocks private, loopback, link-local, and reserved IPs on every DNS hop, ignores system proxies, respects robots.txt, and never executes page JavaScript.",
       ],
@@ -586,7 +586,7 @@ export const gtmPortfolio: GtmPortfolio = {
         { name: "Structured LLM output & grounding", level: "shipped", note: "Fact-vs-hypothesis separation via NVIDIA Build in GTM-Strato; temperature-0 JSON account research with deterministic fallback in Revenue Intelligence Engine." },
         { name: "Model Context Protocol (MCP) & tool schemas", level: "shipped", note: "Two stateless Streamable HTTP MCP servers (/api/mcp and /api/mcp/docs) plus the ORBIT deterministic tool-registry controller." },
         { name: "RAG and embeddings", level: "shipped", note: "MailU on a local model through Ollama and ChromaDB." },
-        { name: "LLM evaluation & RLHF rubrics", level: "used", note: "SDE — AI Engineer at FoCDoT (Apr 2024 – Aug 2025) and contract evaluation contributor via Outlier (Aug 2025 – present). Task materials are confidential." },
+        { name: "LLM evaluation and RLHF rubrics", level: "used", note: "SDE, AI Engineer at FoCDoT, and contract evaluation through Outlier. Task materials stay confidential." },
       ],
     },
     {

@@ -73,7 +73,7 @@ export default function BenchmarkEngineeringPage() {
           updated={pageUpdatedAt("pow")}
         />
         <p className="max-w-measure text-ink-muted leading-relaxed">
-          {benchmarkPage.projectName} — {benchmarkPage.projectLine}. {benchmarkPage.status} The
+          {benchmarkPage.projectName}, {benchmarkPage.projectLine}. {benchmarkPage.status} The
           walkthrough covers how a task is specified, how a dataset is checked, how a response is
           scored, and how a small sample should be read. It does not establish that a benchmark is
           valid because the page has charts.

@@ -26,7 +26,7 @@ export const agenticPow = {
   path: AGENTIC_PATH,
   title: "Agentic AI engineering",
   eyebrow: "Agentic AI engineering / proof of work",
-  headline: "Agents that do the work—and prove what they did.",
+  headline: "Agents that do the work, and prove what they did.",
   support:
     "I engineer AI systems that combine reasoning, tools, state, and verification to execute multi-step tasks with control.",
   status:
@@ -35,16 +35,16 @@ export const agenticPow = {
 
 /** Thesis points. Reasoning proposes; the system that owns the state has to confirm the effect. */
 export const agenticThesis = [
-  "Task interpretation — name the outcome before choosing a tool.",
-  "Planning and bounded execution — a plan is a proposal with a step budget, not a proof of completion.",
-  "Tool selection — this page uses a fixed plan so the controller, not a model, decides the next call.",
-  "State management — the run keeps the task, the step, the evidence, and the approval on one record.",
-  "Evidence collection — claims cite fixture rows.",
-  "Output validation — tool results have to match the contract the registry published.",
-  "Error handling — a timeout can be retried once; a bad argument cannot.",
-  "Human approval — a write waits. Approval is not the write.",
-  "Result verification — the task counts only when the store contains the row.",
-  "Observability — the trace shows inputs, outputs, and why a run stopped. Durations are not measured here.",
+  "Task interpretation, name the outcome before choosing a tool.",
+  "Planning and bounded execution, a plan is a proposal with a step budget, not a proof of completion.",
+  "Tool selection, this page uses a fixed plan so the controller, not a model, decides the next call.",
+  "State management, the run keeps the task, the step, the evidence, and the approval on one record.",
+  "Evidence collection, claims cite fixture rows.",
+  "Output validation, tool results have to match the contract the registry published.",
+  "Error handling, a timeout can be retried once; a bad argument cannot.",
+  "Human approval, a write waits. Approval is not the write.",
+  "Result verification, the task counts only when the store contains the row.",
+  "Observability, the trace shows inputs, outputs, and why a run stopped. Durations are not measured here.",
 ] as const;
 
 /** The bounded loop the architecture section draws. */
@@ -282,12 +282,12 @@ export function renderAgenticPowBody(): string {
     "",
     "## Roadmap",
     "",
-    ...agenticRoadmap.map((phase) => `- Phase ${phase.phase} — ${phase.title} (${phase.status}). ${phase.detail}`),
+    ...agenticRoadmap.map((phase) => `- Phase ${phase.phase}, ${phase.title} (${phase.status}). ${phase.detail}`),
     "",
     "## Related work",
     "",
     ...related.map((item) => `- ${item.title}. ${item.detail}`),
     "",
-    "An agent is only as useful as the work it can reliably complete—and the evidence that it completed it.",
+    "An agent is only as useful as the work it can reliably complete, and the evidence that it completed it.",
   ].join("\n");
 }

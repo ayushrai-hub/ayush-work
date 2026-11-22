@@ -19,7 +19,7 @@ export default function EducationPage() {
     <>
       <PageSEO
         title="Education"
-        description="Education and learning — factual list."
+        description="Education and learning, factual list."
         path="/education"
       />
       <div className="site-shell page-section">

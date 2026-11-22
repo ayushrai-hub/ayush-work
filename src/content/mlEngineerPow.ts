@@ -177,7 +177,7 @@ export function renderMlEngineerBody(): string {
       `### ${item.title}\n\n${item.href ? `Source: ${item.href}\n\n` : ""}Exists: ${item.exists}\n\nImplemented: ${item.implemented}\n\nDemonstrated: ${item.demonstrated}\n\nSynthetic: ${item.synthetic}\n\nIncomplete: ${item.incomplete}\n\nNext: ${item.next}`,
   ).join("\n\n");
   const roadmap = ROADMAP.map(
-    (stage) => `### Stage ${stage.stage} — ${stage.title}\n\n${stage.items.map((item) => `- ${item}`).join("\n")}`,
+    (stage) => `### Stage ${stage.stage}, ${stage.title}\n\n${stage.items.map((item) => `- ${item}`).join("\n")}`,
   ).join("\n\n");
   return [
     ML_SUPPORT,

@@ -24,6 +24,7 @@ import {
   leadership,
   pageUpdatedAt,
   person,
+  practice,
 } from "../content";
 
 /** About page component. Lazy-loaded by the `about` route in src/App.tsx. */
@@ -63,15 +64,40 @@ export default function AboutPage() {
           <Prose>
             <p>{person.positioning}</p>
             <p className="mt-4">
-              I work remotely. Day work leans toward AI evaluation and
-              generative systems; evenings and weekends go to products, client
-              sites, and careful notes on what actually shipped.
+              I work remotely. The day work is evaluation and the software around it. The other half is products and client sites.
             </p>
           </Prose>
         </div>
 
         <section className="mt-16">
-          <SectionHeading title="Where I’ve been working" />
+          <SectionHeading title="What I've done" />
+          <ul className="max-w-measure space-y-4 text-ink-muted">
+            {practice.did.map((item) => (
+              <li key={item} className="leading-relaxed">{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-16">
+          <SectionHeading title="What I'm doing" />
+          <ul className="max-w-measure space-y-4 text-ink-muted">
+            {practice.doing.map((item) => (
+              <li key={item} className="leading-relaxed">{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-16">
+          <SectionHeading title="Where this goes" />
+          <ul className="max-w-measure space-y-4 text-ink-muted">
+            {practice.aspirations.map((item) => (
+              <li key={item} className="leading-relaxed">{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-16">
+          <SectionHeading title="Companies" />
           <ul className="space-y-8 max-w-measure">
             {experience.map((role) => (
               <li id={role.slug} key={role.slug} className="scroll-mt-24 border-t border-rule pt-6">
@@ -79,11 +105,7 @@ export default function AboutPage() {
                 <p className="meta-row mt-1">
                   <span>{role.organization}</span>
                   <span aria-hidden="true">·</span>
-                  <span>
-                    {role.start} – {role.end}
-                  </span>
-                  <span aria-hidden="true">·</span>
-                  <span className="capitalize">{role.type}</span>
+                  <span>{role.location}</span>
                 </p>
                 <p className="mt-3 text-ink-muted leading-relaxed">
                   {role.narrative}

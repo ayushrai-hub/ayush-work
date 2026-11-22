@@ -245,7 +245,7 @@ export default function GtmPage() {
           <SectionHeading number="04" title="Product and projects" />
           <p className="mb-6 max-w-measure text-sm text-ink-muted">
             Seven real GTM, revenue-data, and relationship-intelligence systems from public GitHub
-            repositories — with their problem, solution, architecture, verifiable repository
+            repositories, with their problem, solution, architecture, verifiable repository
             metrics, visual artifacts, and explicit limits.
           </p>
           <ol className="space-y-12">

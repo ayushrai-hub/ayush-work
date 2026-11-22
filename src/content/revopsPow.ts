@@ -380,7 +380,7 @@ export function renderRevopsBody(): string {
     "",
     "## Roadmap",
     "",
-    ...revopsRoadmap.map((phase) => `- ${phase.phase}: ${phase.title} — ${phase.status}`),
+    ...revopsRoadmap.map((phase) => `- ${phase.phase}: ${phase.title}, ${phase.status}`),
     "",
     "Illustrative contracts on the HTML page are not a production API.",
   ].join("\n");

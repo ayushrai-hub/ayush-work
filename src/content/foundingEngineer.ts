@@ -139,12 +139,12 @@ export const foundingEngineer = {
   title: "Founding engineer",
   description:
     "Ayush Rai on founding engineering: taking an ambiguous product problem through architecture, implementation, deployment, and the next iteration, with the unfinished parts named.",
-  positioning: "I build products from zero to one—and take ownership of what happens after launch.",
+  positioning: "I build products from zero to one, and take ownership of what happens after launch.",
   support:
     "I work across product thinking, full-stack engineering, AI systems, infrastructure, and iteration to turn ambiguous problems into working software.",
   headline: "I don't just build features. I build the system that makes the product work.",
   heroDek:
-    "Product thinking, full-stack engineering, AI systems, infrastructure, and iteration—under one roof.",
+    "Product thinking, full-stack engineering, AI systems, infrastructure, and iteration, under one roof.",
   workbenchName: "BUILDLOG",
   workbenchNote:
     "BUILDLOG is the name of this on-page demonstration. Nothing else on this site uses that name. Northline is a fictional team. Every weight, user, and result inside the workbench is synthetic.",
@@ -378,10 +378,10 @@ export const buildLogContract = {
     "Decision: account id, pursue or skip, note optional, decided at. One current decision per account.",
   ],
   endpoints: [
-    "POST /imports — accepts a CSV, validates columns, writes accounts, returns counts and row errors.",
-    "PUT /icp — replaces the profile. Rejects weights that do not sum to 100.",
-    "GET /accounts?sort=score — returns the ranked list and the latest decision.",
-    "POST /accounts/:id/decision — records pursue or skip.",
+    "POST /imports, accepts a CSV, validates columns, writes accounts, returns counts and row errors.",
+    "PUT /icp, replaces the profile. Rejects weights that do not sum to 100.",
+    "GET /accounts?sort=score, returns the ranked list and the latest decision.",
+    "POST /accounts/:id/decision, records pursue or skip.",
   ],
   boundaries: [
     "The UI talks only to the API.",

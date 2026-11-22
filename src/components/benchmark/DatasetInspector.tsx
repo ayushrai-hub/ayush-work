@@ -150,7 +150,7 @@ export default function DatasetInspector() {
                 <td className="px-3 py-2 text-ink-muted">{task.difficulty}</td>
                 <td className="px-3 py-2 text-ink-muted">{task.validationStatus}</td>
                 <td className="px-3 py-2 text-ink-muted">{task.scoringMethod}</td>
-                <td className="px-3 py-2 font-mono text-xs text-ink-faint">{task.version || "—"}</td>
+                <td className="px-3 py-2 font-mono text-xs text-ink-faint">{task.version || "none"}</td>
               </tr>
             ))}
           </tbody>

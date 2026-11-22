@@ -51,6 +51,7 @@ export {
   getResearchBySlug,
 } from "./research";
 export { experience } from "./experience";
+export { practice } from "./practice";
 export { education } from "./education";
 export { leadership, leadershipNeedsConfirmation } from "./leadership";
 export {

@@ -38,6 +38,7 @@ import {
   now,
   pageUpdatedAt,
   person,
+  practice,
   principles,
   productCategoryLabels,
   productStageLabels,
@@ -176,6 +177,33 @@ export default function HomePage() {
             </figure>
           )}
         </div>
+      </section>
+
+      <section id="work-done" className="site-shell page-section border-t border-rule scroll-mt-20">
+        <SectionHeading title="What I've done" />
+        <ul className="max-w-measure space-y-4 text-ink-muted">
+          {practice.did.map((item) => (
+            <li key={item} className="leading-relaxed">{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="work-now" className="site-shell page-section border-t border-rule scroll-mt-20">
+        <SectionHeading title="What I'm doing" link={{ to: "/now", label: "Now page" }} />
+        <ul className="max-w-measure space-y-4 text-ink-muted">
+          {practice.doing.map((item) => (
+            <li key={item} className="leading-relaxed">{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="direction" className="site-shell page-section border-t border-rule scroll-mt-20">
+        <SectionHeading title="Where this goes" />
+        <ul className="max-w-measure space-y-4 text-ink-muted">
+          {practice.aspirations.map((item) => (
+            <li key={item} className="leading-relaxed">{item}</li>
+          ))}
+        </ul>
       </section>
 
       <section
@@ -320,7 +348,7 @@ export default function HomePage() {
                 Timeline
               </span>
               <span className="text-sm text-ink-muted sm:text-right">
-                Chronology of roles, builds, and transitions
+                Builds, study, and the companies the work was for
               </span>
             </Link>
           </li>

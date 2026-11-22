@@ -46,7 +46,7 @@ export function personNode() {
     jobTitle: person.roleTitle,
     description: person.tagline,
     image: absoluteUrl(person.portrait),
-    // Topics grounded in published domain dossiers and experience — not aspirational skills.
+    // Topics grounded in published domain dossiers and experience, not aspirational skills.
     knowsAbout: [
       "GTM engineering",
       "Revenue systems and RevOps engineering",

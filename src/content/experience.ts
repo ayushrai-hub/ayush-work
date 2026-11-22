@@ -19,7 +19,7 @@ import type { Experience } from "./types";
 export const experience: Experience[] = [
   {
     slug: "focdot-sde-ai",
-    title: "SDE — AI Engineer",
+    title: "SDE, AI Engineer",
     organization: "FoCDoT Technologies Pvt. Ltd",
     location: "Remote",
     start: "2024-04",
@@ -27,7 +27,7 @@ export const experience: Experience[] = [
     type: "full-time",
     current: false,
     narrative:
-      "I worked on AI engineering and technical evaluation at FoCDoT from April 2024 to August 2025. The work involved reviewing model outputs against evaluation criteria and analyzing coding and STEM tasks.",
+      "AI engineering and technical evaluation at FoCDoT. Review model outputs against criteria. Analyze coding and STEM tasks when the answer has to be right, not just fluent.",
     highlights: [
       "RLHF-oriented evaluation and model reliability work",
       "STEM and coding-task analysis for generative systems",
@@ -50,7 +50,7 @@ export const experience: Experience[] = [
     type: "part-time",
     current: true,
     narrative:
-      "Through Outlier, I have contributed to generative AI evaluation workflows — dataset quality for LLM training, prompting strategies for Python/JavaScript tasks, and review loops that catch brittle model behavior. It is hands-on evaluation and improvement work, not a keynote role.",
+      "Contract evaluation for frontier-lab programs through Outlier. Dataset quality, prompting for Python and JavaScript tasks, and review of model behavior that breaks under a real check. The labs are not the employer.",
     highlights: [
       "LLM training dataset and optimization workflows",
       "Prompting strategies for Python / JavaScript tasks",
@@ -75,7 +75,7 @@ export const experience: Experience[] = [
     type: "leadership",
     current: false,
     narrative:
-      "I spent a year as a Student Developer Champion around RPA and automation — workshops, mentoring, and community events. The useful part was learning how to teach tooling without turning sessions into vendor theater.",
+      "Student Developer Champion for RPA and automation. Workshops, mentoring, and community events. The useful part was teaching the tool without turning the room into a sales pitch.",
     highlights: [
       "Community workshops on automation / RPA",
       "Mentoring students exploring UiPath",
@@ -94,7 +94,7 @@ export const experience: Experience[] = [
     type: "internship",
     current: false,
     narrative:
-      "A structured virtual internship covering CRM concepts and Salesforce platform fundamentals — projects, ecosystem orientation, and certification-oriented learning rather than a long production tenure.",
+      "Virtual internship on CRM concepts and Salesforce platform fundamentals. Coursework, platform orientation, and certification practice.",
     highlights: [
       "CRM and cloud project coursework",
       "Salesforce platform fundamentals",

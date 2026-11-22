@@ -19,7 +19,7 @@ import { sampleSizePerGroup } from "../../../lib/dataScience/stats";
 
 /** Format a calculated number. Null and non-finite values stay visible as an em dash. */
 function fmt(value: number | null | undefined, digits = 2): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "none";
   return value.toLocaleString("en-US", { maximumFractionDigits: digits, minimumFractionDigits: digits });
 }
 
@@ -132,7 +132,7 @@ export default function InsightLab() {
 
   return (
     <div id="workbench">
-      <Block id="question" title="Insight Lab — from raw data to decisions">
+      <Block id="question" title="Insight Lab, from raw data to decisions">
         <p>
           <span className="mr-2 inline-block border border-rule px-2 py-0.5 font-mono text-[11px] uppercase tracking-label text-ink">
             Synthetic
@@ -291,7 +291,7 @@ export default function InsightLab() {
           <ul className="mt-2 list-disc pl-5 text-sm">
             {snapshot.cleaning.dropped.map((row) => (
               <li key={row.id}>
-                <span className="font-mono">{row.id}</span> — {row.reasons.join(" ")}
+                <span className="font-mono">{row.id}</span>, {row.reasons.join(" ")}
               </li>
             ))}
           </ul>
@@ -486,7 +486,7 @@ export default function InsightLab() {
                   <td className="px-2 py-1 font-mono">{fmt(row.lagUnits, 0)}</td>
                   <td className="px-2 py-1 font-mono">{fmt(row.rolling3, 1)}</td>
                   <td className="px-2 py-1 font-mono">{fmt(row.priceRelativeToEarlierCategoryMedian, 2)}</td>
-                  <td className="px-2 py-1 font-mono">{row.previousPromotion === null ? "—" : row.previousPromotion}</td>
+                  <td className="px-2 py-1 font-mono">{row.previousPromotion === null ? "none" : row.previousPromotion}</td>
                   <td className="px-2 py-1 font-mono">{fmt(row.futureUnits, 0)}</td>
                 </tr>
               ))}
@@ -547,7 +547,7 @@ export default function InsightLab() {
                   <td className="py-1 pr-3 font-mono">{model.nTest}</td>
                   <td className="py-1 pr-3 font-mono">{fmt(model.metrics?.mae ?? null)}</td>
                   <td className="py-1 pr-3 font-mono">{fmt(model.metrics?.rmse ?? null)}</td>
-                  <td className="py-1 pr-3 font-mono">{model.metrics?.mape === null || model.metrics === null ? "—" : fmt(model.metrics.mape)}</td>
+                  <td className="py-1 pr-3 font-mono">{model.metrics?.mape === null || model.metrics === null ? "none" : fmt(model.metrics.mape)}</td>
                   <td className="py-1 pr-3 font-mono">{fmt(model.metrics?.rSquared ?? null, 3)}</td>
                 </tr>
               ))}
@@ -740,7 +740,7 @@ export default function InsightLab() {
         <p>
           Using the cleaned sample’s unit standard deviation ({fmt(snapshot.unitsSummary.stdev)}) as a
           planning assumption, a two-sided normal-theory calculation at α 0.05 and power 0.80 needs
-          about {sampleSize ?? "—"} observations per group to detect a 4-unit mean difference. That
+          about {sampleSize ?? "none"} observations per group to detect a 4-unit mean difference. That
           formula assumes independent observations and a known variance. The retail rows are repeated
           products, so the formula is only a sketch. It is not a sample size I collected.
         </p>

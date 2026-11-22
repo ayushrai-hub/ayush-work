@@ -23,9 +23,9 @@ export const now: NowStatus = {
   lastUpdated: "2026-11-21",
   workingOn: [
     "GTM engineering and revenue data systems: GTM-Strato (ICP Finder with deterministic 100-point fit scoring and Apollo/Sales Nav/Clay filters), AIworks lead qualification CLI, RevenueRoles, and the Revenue Intelligence Engine",
-    "Contract LLM evaluation and code/STEM review workflows through Outlier (following SDE — AI Engineer role at FoCDoT, Apr 2024 – Aug 2025)",
-    "MedVoice — voice-assisted pharma wholesale billing where speech proposes candidate lines and deterministic rules decide medicine identity, integer-paise GST, and invoice posting",
-    "AGENYRA — structured product data and stage-honest representation before agent placement, and The Open Framework civil-society coordination prototype",
+    "Contract evaluation through Outlier: code, STEM, and dataset review for frontier-lab programs",
+    "MedVoice: voice-assisted pharma wholesale billing. Speech proposes a line. Rules decide the medicine, the GST in paise, and whether the invoice posts",
+    "AGENYRA: structured product data before any agent placement. The Open Framework: a civil-society coordination prototype",
   ],
   researching: [
     "Where deterministic rules must bound language models in revenue pipelines: separating scraped website facts from model hypotheses and keeping numerical scoring out of LLM prompts",
@@ -39,7 +39,7 @@ export const now: NowStatus = {
   ],
   thinking: [
     "Precision GTM: replacing high-volume sequence spam with evidence-backed account selection, field-level provenance, and transparent scoring",
-    "Why an agent is an execution controller with state, tool schemas, and human approval checkpoints — not an unconstrained prompt loop",
+    "An agent is a controller with state, tool schemas, and a person who approves the write. A prompt loop is not that.",
     "Keeping public engineering claims verifiable: every project states whether it is live, runs locally, or runs on synthetic demo data",
   ],
   reading: [

@@ -82,7 +82,7 @@ export const projects: Project[] = [
     slug: "aiworks-leads",
     title: "AIworks Lead Qualification Pipeline",
     summary:
-      "Zero-dependency Python CLI and SQLite verification store that audits researched B2B lead spreadsheets against strict qualification rules — requiring a public source URL on every mandatory field, verifying direct business phones against company switchboards, enforcing seniority and domain-match rules, deduplicating across prior runs with automatic pre-run SQLite backups, and writing immutable run folders (accepted_leads.csv, research_only.csv, rejections.csv, run_report.json). No paid contact vendor or API key.",
+      "Zero-dependency Python CLI and SQLite verification store that audits researched B2B lead spreadsheets against strict qualification rules, requiring a public source URL on every mandatory field, verifying direct business phones against company switchboards, enforcing seniority and domain-match rules, deduplicating across prior runs with automatic pre-run SQLite backups, and writing immutable run folders (accepted_leads.csv, research_only.csv, rejections.csv, run_report.json). No paid contact vendor or API key.",
     type: "project",
     category: "data",
     status: "active",

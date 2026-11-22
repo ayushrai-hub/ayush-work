@@ -49,7 +49,7 @@ export default function ExecutionTrace({ run }: { run: Run }) {
                   </div>
                   <div>
                     <dt className="label">Depends on</dt>
-                    <dd className="mt-1 font-mono text-xs text-ink-muted">{step.dependsOn.join(", ") || "—"}</dd>
+                    <dd className="mt-1 font-mono text-xs text-ink-muted">{step.dependsOn.join(", ") || "none"}</dd>
                   </div>
                   <div>
                     <dt className="label">Attempts</dt>
@@ -61,7 +61,7 @@ export default function ExecutionTrace({ run }: { run: Run }) {
                   </div>
                   <div>
                     <dt className="label">Evidence</dt>
-                    <dd className="mt-1 font-mono text-xs text-ink-muted">{step.evidenceIds.join(", ") || "—"}</dd>
+                    <dd className="mt-1 font-mono text-xs text-ink-muted">{step.evidenceIds.join(", ") || "none"}</dd>
                   </div>
                 </dl>
                 {step.error && <p className="mt-3 text-signal">{step.error}</p>}

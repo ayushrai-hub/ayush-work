@@ -105,7 +105,7 @@ export default function ProductsPage() {
     <>
       <PageSEO
         title="Products"
-        description="Ayush Rai products: The Open Framework, AGENYRA, and MedVoice, plus earlier MVPs. Stages stay specific — building is not production."
+        description="Ayush Rai products: The Open Framework, AGENYRA, and MedVoice, plus earlier MVPs. Stages stay specific, building is not production."
         path="/products"
       />
       <div className="site-shell page-section">

@@ -719,7 +719,7 @@ export function evaluateDemoCorpus(): DemoMetric[] {
       name: "Planned tool use",
       definition: "Whether the controller called the tool named on the step. This page does not ask a model to choose.",
       howComputed: "Compare each tool step's name with the tool that returned. A scripted plan makes this a controller check, not a model score.",
-      value: "Scripted plans only — not a model selection rate",
+      value: "Scripted plans only, not a model selection rate",
       illustrative: true,
     },
     {
@@ -735,7 +735,7 @@ export function evaluateDemoCorpus(): DemoMetric[] {
       name: "Unnecessary tool calls",
       definition: "Calls that did not add evidence or change an authorized row.",
       howComputed: "Not estimated. The plans are hand-written, so a model-waste rate is not available.",
-      value: "Not measured — plans are scripted",
+      value: "Not measured, plans are scripted",
       illustrative: true,
     },
     {

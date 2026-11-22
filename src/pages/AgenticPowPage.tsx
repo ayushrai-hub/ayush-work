@@ -287,7 +287,7 @@ export default function AgenticPowPage() {
 
         <section id="closing" className="mt-20 scroll-mt-28 border-t border-rule pt-10">
           <p className="max-w-measure font-display text-2xl leading-snug text-ink">
-            An agent is only as useful as the work it can reliably complete—and the evidence that it completed it.
+            An agent is only as useful as the work it can reliably complete, and the evidence that it completed it.
           </p>
           <div className="mt-6">
             <PowNav />

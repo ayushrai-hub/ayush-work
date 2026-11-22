@@ -187,6 +187,6 @@ export function scoreHoldout(supervised = buildSupervised().supervised): Holdout
  * Null becomes an em dash so an undefined R-squared is not shown as zero.
  */
 export function formatMetric(value: number | null, digits = 2): string {
-  if (value === null || Number.isNaN(value)) return "—";
+  if (value === null || Number.isNaN(value)) return "none";
   return value.toFixed(digits);
 }

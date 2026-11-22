@@ -111,7 +111,7 @@ describe("product management proof of work", () => {
     fireEvent.change(screen.getByLabelText("Segment"), { target: { value: "gtm" } });
     fireEvent.change(screen.getByLabelText("Window"), { target: { value: "7d" } });
     expect(within(table).getByText("5")).toBeInTheDocument();
-    expect(within(table).getAllByText("—").length).toBeGreaterThan(0);
+    expect(within(table).getAllByText("none").length).toBeGreaterThan(0);
     expect(screen.getByText(/not RevenueRoles performance/)).toBeInTheDocument();
   }, 20000);
 

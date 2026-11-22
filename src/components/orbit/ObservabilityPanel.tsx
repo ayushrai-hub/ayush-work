@@ -15,7 +15,7 @@ export default function ObservabilityPanel({ run }: { run: Run }) {
   const rows = [
     ["Task ID", run.id],
     ["Trace ID", `${run.id}:trace`],
-    ["Model request ID", "Not issued — no model call"],
+    ["Model request ID", "Not issued, no model call"],
     ["Approval events", String(run.audit.filter((event) => event.event.includes("approv") || event.event === "rejected").length)],
     ["Writes", String(run.store.writes)],
     ["Verification", run.steps.find((step) => step.tool === "verify_task_created")?.status ?? "not run"],
@@ -52,9 +52,9 @@ export default function ObservabilityPanel({ run }: { run: Run }) {
             {run.steps.map((step) => (
               <tr key={step.id} className="border-b border-rule">
                 <td className="py-2 pr-3 font-mono text-xs">{step.id}</td>
-                <td className="py-2 pr-3 font-mono text-xs">{step.tool ?? "—"}</td>
+                <td className="py-2 pr-3 font-mono text-xs">{step.tool ?? "none"}</td>
                 <td className="py-2 pr-3">{step.status}</td>
-                <td className="py-2 text-ink-muted">{step.error ?? "—"}</td>
+                <td className="py-2 text-ink-muted">{step.error ?? "none"}</td>
               </tr>
             ))}
           </tbody>

@@ -52,15 +52,15 @@ export default function FailureLab() {
           <dl className="mt-4 space-y-3 text-sm">
             <div>
               <dt className="label">Findings</dt>
-              <dd className="mt-1 text-ink-muted">{run.report.findings.join(" ") || "—"}</dd>
+              <dd className="mt-1 text-ink-muted">{run.report.findings.join(" ") || "none"}</dd>
             </div>
             <div>
               <dt className="label">Failures</dt>
-              <dd className="mt-1 text-ink-muted">{run.report.failures.join(" ") || "—"}</dd>
+              <dd className="mt-1 text-ink-muted">{run.report.failures.join(" ") || "none"}</dd>
             </div>
             <div>
               <dt className="label">Unresolved</dt>
-              <dd className="mt-1 text-ink-muted">{run.report.unresolved.join(" ") || "—"}</dd>
+              <dd className="mt-1 text-ink-muted">{run.report.unresolved.join(" ") || "none"}</dd>
             </div>
           </dl>
         )}

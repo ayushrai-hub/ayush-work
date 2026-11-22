@@ -30,6 +30,7 @@ import {
   now,
   pageUpdatedAt,
   person,
+  practice,
   principles,
   privacySections,
   productCategoryLabels,
@@ -341,6 +342,18 @@ function buildPages(): AgentPage[] {
       [
         person.positioning,
         "",
+        "## What I've done",
+        "",
+        bullets(practice.did),
+        "",
+        "## What I'm doing",
+        "",
+        bullets(practice.doing),
+        "",
+        "## Where this goes",
+        "",
+        bullets(practice.aspirations),
+        "",
         `Location: ${person.location}.`,
         `Email: ${person.email}`,
         `Phone: ${person.phoneDisplay} (WhatsApp: ${person.whatsappUrl})`,
@@ -372,14 +385,26 @@ function buildPages(): AgentPage[] {
       `About ${person.name}`,
       person.positioning,
       [
-        `Based in ${person.location}. Day work leans toward AI evaluation and generative systems; evenings and weekends go to products, client sites, and careful notes on what actually shipped.`,
+        `Based in ${person.location}. The day work is evaluation and the software around it. The other half is products and client sites.`,
         "",
-        "## Where I’ve been working",
+        "## What I've done",
+        "",
+        bullets(practice.did),
+        "",
+        "## What I'm doing",
+        "",
+        bullets(practice.doing),
+        "",
+        "## Where this goes",
+        "",
+        bullets(practice.aspirations),
+        "",
+        "## Companies",
         "",
         experience
           .map(
             (role) =>
-              `### ${role.title}\n\n${role.organization} · ${role.start} – ${role.end} · ${role.type}\n\n${role.narrative}`,
+              `### ${role.title}\n\n${role.organization} · ${role.location}\n\n${role.narrative}`,
           )
           .join("\n\n"),
         "",
@@ -624,7 +649,7 @@ function buildPages(): AgentPage[] {
         .sort((a, b) => b.date.localeCompare(a.date))
         .map(
           (entry) =>
-            `- ${entry.date}${entry.endDate ? ` – ${entry.endDate}` : ""} · ${entry.kind} · ${entry.title}: ${entry.summary}`,
+            `- ${entry.kind === "role" ? "" : `${entry.date}${entry.endDate ? ` – ${entry.endDate}` : ""} · `}${entry.kind} · ${entry.title}: ${entry.summary}`,
         )
         .join("\n"),
     ),
@@ -757,7 +782,7 @@ function buildPages(): AgentPage[] {
         experience
           .map(
             (role) =>
-              `### ${role.title} · ${role.organization}\n\n${role.start} – ${role.end} · ${role.location}\n\n${bullets(role.highlights)}`,
+              `### ${role.title}, ${role.organization}\n\n${role.location}\n\n${bullets(role.highlights)}`,
           )
           .join("\n\n"),
         "",
@@ -886,18 +911,18 @@ export function renderPageMarkdown(pathname: string): string | null {
  */
 export function renderDevelopersLlmsTxt(): string {
   return [
-    `# ${person.name} — Developers`,
+    `# ${person.name}, Developers`,
     "",
     "> Public REST API, OpenAPI, MCP, auth notes, and agent discovery for this site.",
     "",
     `- [Developer docs (Markdown)](${abs("/developers.md")})`,
-    `- [Authentication](${abs("/auth.md")}) — public API; no OAuth`,
-    `- [Pricing](${abs("/pricing.md")}) — free public API; no paid tiers`,
+    `- [Authentication](${abs("/auth.md")}), public API; no OAuth`,
+    `- [Pricing](${abs("/pricing.md")}), free public API; no paid tiers`,
     `- [OpenAPI](${abs("/openapi.json")})`,
     `- [ARD catalog](${abs("/.well-known/ard.json")})`,
     `- [AI Catalog (legacy)](${abs("/.well-known/ai-catalog.json")})`,
     `- [MCP Server Card](${abs("/api/mcp/server-card")})`,
-    `- [Docs MCP](${abs("/api/mcp/docs")}) — list_pages, get_page, search_docs`,
+    `- [Docs MCP](${abs("/api/mcp/docs")}), list_pages, get_page, search_docs`,
     `- [Docs MCP Server Card](${abs("/api/mcp/docs/server-card")})`,
     `- [Agent plugin manifest](${abs("/plugin.json")})`,
     `- [MCP client manifest](${abs("/mcp.json")})`,
@@ -911,7 +936,7 @@ export function renderDevelopersLlmsTxt(): string {
 /** Section index for case studies under `/work`. */
 export function renderWorkLlmsTxt(): string {
   return [
-    `# ${person.name} — Work`,
+    `# ${person.name}, Work`,
     "",
     "> Case studies: problem, role, execution, and outcomes for shipped work.",
     "",
@@ -928,7 +953,7 @@ export function renderWorkLlmsTxt(): string {
 /** Section index for products under `/products`. */
 export function renderProductsLlmsTxt(): string {
   return [
-    `# ${person.name} — Products`,
+    `# ${person.name}, Products`,
     "",
     "> Flagship and earlier products with stages kept specific.",
     "",

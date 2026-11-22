@@ -83,7 +83,7 @@ export function buildMcpCatalogEntry() {
       "List public projects on ayushrai.site",
     ],
     version: MCP_SERVER_INFO.version,
-    // HTTPS identity only — no fabricated signature or attestation.
+    // HTTPS identity only, no fabricated signature or attestation.
     trustManifest: {
       identity: origin(),
       identityType: "https",

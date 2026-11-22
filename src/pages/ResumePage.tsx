@@ -41,13 +41,9 @@ export default function ResumePage() {
             {experience.map((role) => (
               <li key={role.slug}>
                 <h3 className="font-display text-lg text-ink">
-                  {role.title} — {role.organization}
+                  {role.title}, {role.organization}
                 </h3>
                 <p className="meta-row mt-1">
-                  <span>
-                    {role.start} – {role.end}
-                  </span>
-                  <span aria-hidden="true">·</span>
                   <span>{role.location}</span>
                 </p>
                 <ul className="mt-2 list-disc pl-5 text-sm text-ink-muted space-y-1">
