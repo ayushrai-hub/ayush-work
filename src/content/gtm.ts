@@ -142,7 +142,6 @@ export interface GtmPortfolio {
   title: string;
   description: string;
   positioning: string;
-  background: string;
   vision: {
     headline: string;
     paragraphs: string[];
@@ -175,8 +174,6 @@ export const gtmPortfolio: GtmPortfolio = {
     "Ayush Rai on GTM engineering and revenue systems: 7 real GTM and revenue-data products/projects (RevenueRoles, GTM-Strato ICP Finder, Revenue Intelligence Engine, Relationship Intelligence Engine, AIworks Lead Qualification Pipeline, SpiderWeb, MailU), structured capability tables, human-gated autonomous agent workflows, and an honest map of what is shipped versus studied.",
   positioning:
     "I build data, qualification, and agentic decision systems for revenue teams: public-source discovery pipelines, SSRF-hardened company research, field-level provenance, deterministic 100-point ICP and lead scoring, and human-approval gates before anything touches a CRM or outbound channel.",
-  background:
-    "Evaluation at FoCDoT and contract evaluation through Outlier is the same discipline I use in GTM engineering. A language model can read a messy page and propose a field. Scoring, duplicate checks, and the decision to write to a CRM stay in Python and TypeScript. Live, local, and synthetic runs stay labeled.",
   vision: {
     headline: "Precision GTM and the future of autonomous revenue systems",
     paragraphs: [
@@ -938,8 +935,6 @@ export function renderGtmBody(): string {
     .join("\n\n");
   return [
     gtmPortfolio.positioning,
-    "",
-    gtmPortfolio.background,
     "",
     `## ${vision.headline}`,
     "",

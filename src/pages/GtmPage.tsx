@@ -108,13 +108,6 @@ export default function GtmPage() {
           dek={gtmPortfolio.positioning}
           updated={pageUpdatedAt("gtm")}
         />
-        <p className="max-w-measure text-ink-muted leading-relaxed">
-          {gtmPortfolio.background}{" "}
-          <Link to="/experience" className="link-underline">
-            Experience
-          </Link>
-          .
-        </p>
 
         <nav
           className="mt-8 flex flex-wrap gap-2 border-y border-rule py-3 text-sm"
