@@ -104,9 +104,22 @@ export function developerSections(): PolicySection[] {
       ],
     },
     {
-      heading: "Command line",
+      heading: "Batch reads and Idempotency-Key",
       paragraphs: [
-        "The repository has a zero-dependency CLI in `packages/cli` (`ayushrai search`, `projects`, `project`, `compare`) that prints the API's JSON. It is not yet published to npm. `package.json` sets `homepage` to this site and `repository` to the GitHub repo. Run it with `node packages/cli/bin/ayushrai.mjs` from a clone.",
+        "`POST /api/v1/batch` executes up to 8 public `GET` read operations (`/api/v1/search`, `/api/v1/projects`, `/api/v1/projects/{slug}`, `/api/v1/compare`) in one request and returns `{ \"results\": [{ \"status\", \"body\" }] }` in request order.",
+        "Every POST write or job operation (`POST /api/v1/batch`, `POST /api/v1/jobs`, and `POST /api/send-email`) supports the `Idempotency-Key` request header (up to 128 characters) and declares it in `/openapi.json`. Retrying with the same `Idempotency-Key` and identical payload replays the stored success with `Idempotent-Replayed: true`; reusing the key with a different payload returns `409 Conflict` (`idempotency_conflict`).",
+      ],
+    },
+    {
+      heading: "Sandbox and test environment",
+      paragraphs: [
+        "Agents can test integrations against `/api/sandbox/v1/search`, `/api/sandbox/v1/projects`, `/api/sandbox/v1/projects/{slug}`, and `/api/sandbox/v1/compare` (or by passing `?environment=sandbox`). Sandbox responses carry `X-Api-Environment: sandbox`, return the same read-only public records, and never mutate production data.",
+      ],
+    },
+    {
+      heading: "Command line and SDK",
+      paragraphs: [
+        "The repository has a zero-dependency CLI in `packages/cli` (`ayushrai search`, `projects`, `project`, `compare`) that prints the API's JSON, and a zero-dependency TypeScript/JavaScript SDK client in `packages/sdk` (`createAyushClient`). They are not yet published to npm. `package.json` sets `homepage` to this site and `repository` to the GitHub repo (`https://github.com/ayushrai-hub/ayush-work`). Run the CLI with `node packages/cli/bin/ayushrai.mjs` from a clone.",
       ],
     },
     {

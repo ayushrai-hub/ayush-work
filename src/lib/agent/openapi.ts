@@ -236,6 +236,11 @@ export function buildOpenApiDocument() {
         description:
           "Public API. Sandbox alias: /api/sandbox/v1/* returns the same published records and sets X-Api-Environment: sandbox. It does not write.",
       },
+      {
+        url: `${origin}/api/sandbox`,
+        description:
+          "Sandbox and test environment alias (/api/sandbox/v1/*). Read-only; returns the same published records with X-Api-Environment: sandbox.",
+      },
     ],
     security: [],
     paths: {
@@ -396,7 +401,15 @@ export function buildOpenApiDocument() {
             "202": {
               description: "Accepted. Poll statusUrl or the Location header. The search result is included.",
               headers: {
-                Location: { schema: { type: "string" }, description: "Poll URL for this job." },
+                ...rateLimitHeaders,
+                Location: {
+                  schema: { type: "string", format: "uri" },
+                  description: "Poll URL for this job.",
+                },
+                "Idempotent-Replayed": {
+                  schema: { type: "string", enum: ["true"] },
+                  description: "Present when replayed from a matching Idempotency-Key.",
+                },
               },
               content: json("JobResponse"),
             },
@@ -760,9 +773,9 @@ export function buildOpenApiDocument() {
           required: ["id", "status", "operation", "statusUrl", "result"],
           properties: {
             id: { type: "string" },
-            status: { type: "string", enum: ["succeeded"] },
+            status: { type: "string", enum: ["pending", "running", "succeeded", "failed"] },
             operation: { type: "string", enum: ["search"] },
-            statusUrl: { type: "string" },
+            statusUrl: { type: "string", format: "uri" },
             result: { $ref: "#/components/schemas/SearchResponse" },
           },
         },

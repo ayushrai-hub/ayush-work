@@ -35,7 +35,9 @@ import { renderSchemaFeed, renderSchemaMap, SCHEMA_FEED_PATH, SCHEMA_MAP_PATH } 
 import {
   listAgentPages,
   markdownPublicPath,
+  renderApiLlmsTxt,
   renderDevelopersLlmsTxt,
+  renderDocsLlmsTxt,
   renderLlmsFull,
   renderLlmsTxt,
   renderNotFoundMarkdown,
@@ -107,6 +109,8 @@ export function agentFiles(): Record<string, string> {
     "llms.txt": renderLlmsTxt(),
     "llms-full.txt": renderLlmsFull(),
     "developers/llms.txt": renderDevelopersLlmsTxt(),
+    "docs/llms.txt": renderDocsLlmsTxt(),
+    "api/llms.txt": renderApiLlmsTxt(),
     "work/llms.txt": renderWorkLlmsTxt(),
     "products/llms.txt": renderProductsLlmsTxt(),
     "openapi.json": `${JSON.stringify(buildOpenApiDocument(), null, 2)}\n`,

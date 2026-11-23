@@ -63,6 +63,17 @@
   to = "/.netlify/functions/batch"
   status = 200
 
+# Async search jobs. Ahead of the /api/* splat so they hit the jobs function.
+[[redirects]]
+  from = "/api/v1/jobs/:id"
+  to = "/.netlify/functions/jobs?id=:id"
+  status = 200
+
+[[redirects]]
+  from = "/api/v1/jobs"
+  to = "/.netlify/functions/jobs"
+  status = 200
+
 # Sandbox alias of the public reads. Same records, marked with X-Api-Environment.
 [[redirects]]
   from = "/api/sandbox/v1/projects/:slug"
@@ -151,6 +162,59 @@
     Access-Control-Allow-Methods = "GET"
     Access-Control-Allow-Headers = "Content-Type, If-None-Match"
     Access-Control-Expose-Headers = "ETag"
+
+[[headers]]
+  for = "/api/mcp/docs/server-card"
+  [headers.values]
+    Content-Type = "application/mcp-server-card+json"
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/.well-known/agent-card.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/.well-known/http-message-signatures-directory"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/plugin.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/mcp.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/openapi.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/llms-full.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+    X-Content-Type-Options = "nosniff"
 
 [[headers]]
   for = "/auth.md"

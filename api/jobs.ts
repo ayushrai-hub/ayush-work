@@ -36,9 +36,14 @@ function isNodeResponse(value: unknown): value is NodeResponse {
   return typeof candidate.status === "function" && typeof candidate.setHeader === "function" && typeof candidate.end === "function";
 }
 
-/** Public pathname: `/api/v1/jobs` or `/api/v1/jobs/{id}` when the rewrite passed `id`. */
-function publicPath(url: URL): string {
-  const id = url.searchParams.get("id");
+/** Public pathname: `/api/v1/jobs` or `/api/v1/jobs/{id}` from either the URL path or rewrite query. */
+function publicPath(url: URL, query?: Record<string, string | string[] | undefined>): string {
+  const cleanPath = url.pathname.replace(/\/$/, "");
+  if (cleanPath.startsWith("/api/v1/jobs/") && cleanPath.length > "/api/v1/jobs/".length) {
+    return cleanPath;
+  }
+  const queryId = typeof query?.id === "string" ? query.id : Array.isArray(query?.id) ? query.id[0] : undefined;
+  const id = url.searchParams.get("id") ?? queryId;
   return id ? `/api/v1/jobs/${id}` : "/api/v1/jobs";
 }
 
@@ -61,10 +66,16 @@ export default async function handler(request: unknown, response?: unknown) {
     return new Response(result.body, { status: result.status, headers: result.headers });
   }
 
-  const node = request as { method?: string; url?: string; headers?: HeaderBag; body?: unknown };
+  const node = request as {
+    method?: string;
+    url?: string;
+    query?: Record<string, string | string[] | undefined>;
+    headers?: HeaderBag;
+    body?: unknown;
+  };
   const url = new URL(node.url || "/api/jobs", "https://www.ayushrai.site");
   const result = agentApiResponse({
-    pathname: publicPath(url),
+    pathname: publicPath(url, node.query),
     method: node.method || "GET",
     params: url.searchParams,
     origin: headerValue(node.headers, "origin"),

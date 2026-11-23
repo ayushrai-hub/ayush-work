@@ -358,6 +358,7 @@ function buildPages(): AgentPage[] {
         `Email: ${person.email}`,
         `Phone: ${person.phoneDisplay} (WhatsApp: ${person.whatsappUrl})`,
         `GitHub: ${person.primaryProfiles.github}`,
+        `Source repository: https://github.com/ayushrai-hub/ayush-work`,
         `LinkedIn: ${person.primaryProfiles.linkedin}`,
         `Resume: ${person.resumeUrl}`,
         person.deepDive
@@ -928,6 +929,39 @@ export function renderDevelopersLlmsTxt(): string {
     `- [MCP client manifest](${abs("/mcp.json")})`,
     `- [Agent mode JSON](${abs("/?mode=agent")})`,
     `- [Ask (NLWeb-shaped, lexical)](${abs("/ask")})`,
+    `- [A2A Agent Card](${abs("/.well-known/agent-card.json")})`,
+    `- [Web Bot Auth Signature Directory](${abs("/.well-known/http-message-signatures-directory")})`,
+    `- [Source repository (GitHub)](https://github.com/ayushrai-hub/ayush-work)`,
+    `- [Root llms.txt](${abs("/llms.txt")})`,
+    "",
+  ].join("\n");
+}
+
+/** Section index at `/docs/llms.txt` for documentation and discovery surfaces. */
+export function renderDocsLlmsTxt(): string {
+  return renderDevelopersLlmsTxt();
+}
+
+/** Section index at `/api/llms.txt` for REST, MCP, A2A, and NLWeb API surfaces. */
+export function renderApiLlmsTxt(): string {
+  return [
+    `# ${person.name} (${person.siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}) API Index`,
+    "",
+    "> Public read-only REST API, OpenAPI 3.1 specification, sandbox environment, async search jobs, batch endpoint, MCP servers, and A2A endpoint.",
+    "",
+    `- [OpenAPI 3.1 specification](${abs("/openapi.json")})`,
+    `- [Developer portal and API docs](${abs("/developers.md")})`,
+    `- [Authentication docs](${abs("/auth.md")})`,
+    `- [Pricing docs](${abs("/pricing.md")})`,
+    `- [Search API](${abs("/api/v1/search")}): \`GET /api/v1/search?q=\``,
+    `- [Projects API](${abs("/api/v1/projects")}): \`GET /api/v1/projects\`, \`/api/v1/projects/{slug}\`, \`/api/v1/compare?slugs=a,b\``,
+    `- [Batch API](${abs("/api/v1/batch")}): \`POST /api/v1/batch\` with \`Idempotency-Key\``,
+    `- [Async Search Jobs API](${abs("/api/v1/jobs")}): \`POST /api/v1/jobs\` (202 Accepted) and \`GET /api/v1/jobs/{id}\``,
+    `- [Sandbox API](${abs("/api/sandbox/v1/search")}): \`GET /api/sandbox/v1/search\`, \`/api/sandbox/v1/projects\`, \`/api/sandbox/v1/compare\``,
+    `- [Portfolio MCP Server](${abs("/api/mcp")}) and [Server Card](${abs("/api/mcp/server-card")})`,
+    `- [Documentation MCP Server](${abs("/api/mcp/docs")}) and [Docs Server Card](${abs("/api/mcp/docs/server-card")})`,
+    `- [A2A Agent Card](${abs("/.well-known/agent-card.json")}) and [A2A JSON-RPC](${abs("/api/a2a")})`,
+    `- [NLWeb Ask](${abs("/ask")})`,
     `- [Root llms.txt](${abs("/llms.txt")})`,
     "",
   ].join("\n");
@@ -982,7 +1016,7 @@ export function renderLlmsTxt(): string {
     "",
     "Markdown twins use the same content records as the website. Fetch a URL ending in `.md`, or send `Accept: text/markdown` without `text/html`. A full dump of every page is at /llms-full.txt. This file lists the pages worth opening first.",
     "",
-    "Section indexes: [Developers](/developers/llms.txt), [Work](/work/llms.txt), [Products](/products/llms.txt).",
+    "Section indexes: [Developers](https://www.ayushrai.site/developers/llms.txt), [Docs](https://www.ayushrai.site/docs/llms.txt), [API](https://www.ayushrai.site/api/llms.txt), [Work](https://www.ayushrai.site/work/llms.txt), [Products](https://www.ayushrai.site/products/llms.txt).",
     "",
     OMISSION,
     "",
@@ -1033,6 +1067,7 @@ export function renderLlmsTxt(): string {
     `- [Contact](${abs("/contact.md")}): ${person.email}, ${person.phoneDisplay}`,
     `- [Privacy](${abs("/privacy.md")}): what the site collects and who processes it.`,
     `- GitHub: ${person.primaryProfiles.github}`,
+    `- [Site repository (ayush-work)](https://github.com/ayushrai-hub/ayush-work): source repository containing plugin.json, mcp.json, skills, packages/cli, and packages/sdk.`,
     `- LinkedIn: ${person.primaryProfiles.linkedin}`,
     `- ORCID: ${person.primaryProfiles.orcid}`,
     `- Hugging Face: ${person.primaryProfiles.huggingface}`,

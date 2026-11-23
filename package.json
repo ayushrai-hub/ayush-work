@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://www.ayushrai.site",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayushrai-hub/ayush-work.git"
+  },
+  "author": "Ayush Rai <ayushrai0211@gmail.com> (https://www.ayushrai.site)",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },

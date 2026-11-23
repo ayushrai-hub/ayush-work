@@ -18,13 +18,32 @@
     ORIGIN = "https://www.ayushrai.site";
   }
 
-  function getModelContext() {
-    // Keep these as literal member expressions for WebMCP scanners.
-    var docCtx = document.modelContext;
-    var navCtx = typeof navigator !== "undefined" ? navigator.modelContext : undefined;
-    var ctx = docCtx || navCtx;
-    if (!ctx || typeof ctx.registerTool !== "function") return null;
-    return ctx;
+  function hasModelContext() {
+    if (document.modelContext && typeof document.modelContext.registerTool === "function") {
+      return true;
+    }
+    if (
+      typeof navigator !== "undefined" &&
+      navigator.modelContext &&
+      typeof navigator.modelContext.registerTool === "function"
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  function registerOneTool(toolDef, options) {
+    if (document.modelContext && typeof document.modelContext.registerTool === "function") {
+      return document.modelContext.registerTool(toolDef, options);
+    }
+    if (
+      typeof navigator !== "undefined" &&
+      navigator.modelContext &&
+      typeof navigator.modelContext.registerTool === "function"
+    ) {
+      return navigator.modelContext.registerTool(toolDef, options);
+    }
+    return null;
   }
 
   function fetchJson(path) {
@@ -163,13 +182,12 @@
   ];
 
   function registerAll() {
-    var ctx = getModelContext();
-    if (!ctx || window.__ayushWebMcpRegistered) return;
+    if (!hasModelContext() || window.__ayushWebMcpRegistered) return;
     window.__ayushWebMcpRegistered = true;
     var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
     tools.forEach(function (tool) {
       try {
-        var result = ctx.registerTool(
+        var result = registerOneTool(
           {
             name: tool.name,
             description: tool.description,

@@ -42,13 +42,26 @@ export const API_ROUTES = [
   "/api/sandbox/v1/compare",
   "/api/ask",
   "/api/send-email",
+  "/api/llms.txt",
 ];
 
 const PROJECT_DETAIL = /^\/api\/(?:sandbox\/)?v1\/projects\/[^/]+$/;
 const JOB_DETAIL = /^\/api\/v1\/jobs\/[^/]+$/;
 
-const FALLBACK_NOT_FOUND =
-  "# Page not found\n\nThere is no page at this address. See https://www.ayushrai.site/llms.txt for every page.\n";
+const FALLBACK_NOT_FOUND = [
+  "# Page not found",
+  "",
+  "There is no page at this address on https://www.ayushrai.site/. It may have moved, or it never existed.",
+  "",
+  "Start here instead:",
+  "",
+  "- Index of every page: https://www.ayushrai.site/llms.txt",
+  "- Sitemap: https://www.ayushrai.site/sitemap.xml",
+  "- Agent guide: https://www.ayushrai.site/AGENTS.md",
+  "- Developer notes and API: https://www.ayushrai.site/developers",
+  "- Search: https://www.ayushrai.site/api/search?q=",
+  "",
+].join("\n");
 
 /** True for a listed API route or `/api/v1/projects/{slug}`; one trailing slash is ignored. */
 export function isKnownApiPath(pathname) {
@@ -165,7 +178,5 @@ export default async function handler(request, context) {
   const page = await context.next();
   if (page.status !== 404) return page;
 
-  const notFound = await fetch(new URL("/404.md", url.origin));
-  const body = notFound.ok ? await notFound.text() : FALLBACK_NOT_FOUND;
-  return markdown(request, body, 404);
+  return markdown(request, FALLBACK_NOT_FOUND, 404);
 }

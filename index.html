@@ -59,19 +59,9 @@
   <!-- document.modelContext.registerTool is in this document, with navigator.modelContext only as a fallback. -->
   <script>
     (function () {
-      function modelContext() {
-        var docCtx = document.modelContext;
-        var navCtx = navigator.modelContext;
-        var found = docCtx || navCtx;
-        if (!found || typeof found.registerTool !== "function") return null;
-        return found;
-      }
       function registerPortfolioTool() {
         if (window.__ayushWebMcpRegistered) return;
-        var ctx = modelContext();
-        if (!ctx) return;
-        window.__ayushWebMcpRegistered = true;
-        ctx.registerTool({
+        var tool = {
           name: "search_portfolio_projects",
           description: "Lexical search of Ayush Rai's public portfolio. Same records as GET /api/v1/search.",
           inputSchema: {
@@ -87,7 +77,14 @@
               headers: { Accept: "application/json" },
             }).then(function (res) { return res.json(); });
           },
-        });
+        };
+        if (document.modelContext && typeof document.modelContext.registerTool === "function") {
+          window.__ayushWebMcpRegistered = true;
+          document.modelContext.registerTool(tool);
+        } else if (typeof navigator !== "undefined" && navigator.modelContext && typeof navigator.modelContext.registerTool === "function") {
+          window.__ayushWebMcpRegistered = true;
+          navigator.modelContext.registerTool(tool);
+        }
       }
       document.addEventListener("DOMContentLoaded", registerPortfolioTool);
     })();

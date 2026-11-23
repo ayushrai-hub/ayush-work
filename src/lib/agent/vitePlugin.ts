@@ -249,7 +249,7 @@ function attach(middlewares: Connect.Server) {
       return;
     }
 
-    if (pathname.startsWith("/api/")) {
+    if (pathname.startsWith("/api/") && pathname !== "/api/llms.txt") {
       const response = agentApiResponse({
         pathname,
         method,

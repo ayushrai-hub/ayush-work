@@ -46,6 +46,7 @@ const API_ROUTES = [
   "/api/sandbox/v1/compare",
   "/api/ask",
   "/api/send-email",
+  "/api/llms.txt",
 ];
 
 const PROJECT_DETAIL = /^\/api\/(?:sandbox\/)?v1\/projects\/[^/]+$/;
@@ -181,9 +182,7 @@ export default async function middleware(request: Request): Promise<Response | u
     });
   }
 
-  const notFound = await fetch(new URL("/404.md", url.origin));
-  const body = notFound.ok ? await notFound.text() : FALLBACK_NOT_FOUND;
-  return new Response(request.method === "HEAD" ? null : body, {
+  return new Response(request.method === "HEAD" ? null : FALLBACK_NOT_FOUND, {
     status: 404,
     headers: MARKDOWN_HEADERS,
   });

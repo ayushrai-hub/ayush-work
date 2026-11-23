@@ -52,6 +52,14 @@ export default function SiteFooter() {
           <a href="/llms.txt" className="link-underline text-sm">
             llms.txt
           </a>
+          <a
+            href="https://github.com/ayushrai-hub/ayush-work"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-underline text-sm"
+          >
+            Source
+          </a>
           <Link to="/privacy" className="link-underline text-sm">
             Privacy
           </Link>

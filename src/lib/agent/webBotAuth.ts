@@ -13,7 +13,7 @@ export const WEB_BOT_AUTH_DIRECTORY_PATH = "/.well-known/http-message-signatures
 
 /**
  * Directory document: a `keys` array of Ed25519 JWKs with `kid`, `nbf`, and `exp`.
- * `nbf` is 2026-11-22 UTC. `exp` is 2028-11-22 UTC.
+ * `nbf` is 2025-01-01 UTC. `exp` is 2028-11-22 UTC.
  */
 export function buildWebBotAuthDirectory() {
   return {
@@ -23,7 +23,7 @@ export function buildWebBotAuthDirectory() {
         crv: "Ed25519",
         kid: "ayushrai-site-2026",
         x: "BvQcBgews581R3p5rivkM9W-Q8Ch3R_Ym2HYcqWP7mA",
-        nbf: 1795305600,
+        nbf: 1735689600,
         exp: 1858464000,
         use: "sig",
       },

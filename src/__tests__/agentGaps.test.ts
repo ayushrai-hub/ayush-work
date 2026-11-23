@@ -8,7 +8,11 @@
  * Connects to:
  * - src/lib/agent/http.ts, batch.ts, docsMcp.ts, mcpHttp.ts, openapi.ts, structuredData.ts.
  */
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it, beforeEach } from "vitest";
+import jobsHandler from "../../api/jobs";
+import { createAyushClient } from "../../packages/sdk/index.mjs";
 import { DOCS_HTTP_SURFACE, handleMcpRequest } from "../lib/agent/mcpHttp";
 import { buildAgentCard } from "../lib/agent/agentCard";
 import { agentFiles } from "../lib/agent/surfaces";
@@ -195,7 +199,57 @@ describe("declared agent surfaces", () => {
     });
     const directory = JSON.parse(files[".well-known/http-message-signatures-directory"]);
     expect(directory.keys[0]).toMatchObject(buildWebBotAuthDirectory().keys[0]);
+    expect(directory.keys[0].nbf).toBeLessThanOrEqual(Math.floor(Date.now() / 1000));
     expect(files["llms.txt"].startsWith("# ")).toBe(true);
     expect(files["llms.txt"]).toContain("](https://www.ayushrai.site/");
+    expect(files["llms.txt"]).toContain("/docs/llms.txt");
+    expect(files["llms.txt"]).toContain("/api/llms.txt");
+    expect(files["docs/llms.txt"]).toContain("/openapi.json");
+    expect(files["api/llms.txt"]).toContain("/api/v1/jobs");
+
+    const webMcpSource = readFileSync(resolve(__dirname, "../components/site/PortfolioWebMcp.tsx"), "utf8");
+    expect(webMcpSource).toContain("document.modelContext.registerTool");
+    expect(webMcpSource).toContain("navigator.modelContext.registerTool");
+  });
+
+  it("polls jobs through api/jobs handler via direct pathname and SDK client", async () => {
+    const createRes = (await jobsHandler(
+      new Request(`${ORIGIN}/api/v1/jobs`, {
+        method: "POST",
+        headers: { "content-type": "application/json", "idempotency-key": "handler-job-1" },
+        body: JSON.stringify({ operation: "search", q: "overlay" }),
+      }),
+    )) as Response;
+    expect(createRes.status).toBe(202);
+    const jobBody = (await createRes.json()) as { id: string };
+
+    const pollDirect = (await jobsHandler(
+      new Request(`${ORIGIN}/api/v1/jobs/${jobBody.id}`, { method: "GET" }),
+    )) as Response;
+    expect(pollDirect.status).toBe(200);
+    expect(((await pollDirect.json()) as { id: string }).id).toBe(jobBody.id);
+
+    const client = createAyushClient({
+      sandbox: true,
+      fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = new URL(String(input));
+        const res = agentApiResponse({
+          pathname: url.pathname,
+          method: init?.method ?? "GET",
+          params: url.searchParams,
+          clientKey: "sdk-test",
+          body: init?.body,
+          idempotencyKey:
+            init?.headers && typeof (init.headers as Record<string, string>)["Idempotency-Key"] === "string"
+              ? (init.headers as Record<string, string>)["Idempotency-Key"]
+              : undefined,
+        });
+        return new Response(res.body, { status: res.status, headers: res.headers });
+      },
+    });
+    const searchRes = (await client.search({ q: "overlay", limit: 1 })) as { match: string };
+    expect(searchRes.match).toBe("lexical");
+    const projRes = (await client.getProject("overlay-text-box")) as { project: { slug: string } };
+    expect(projRes.project.slug).toBe("overlay-text-box");
   });
 });

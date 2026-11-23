@@ -51,6 +51,10 @@ const RESOURCES = [
   { href: "/api/sandbox/v1/search", label: "Sandbox search" },
   { href: "/AGENTS.md", label: "AGENTS.md" },
   { href: "/SKILL.md", label: "SKILL.md" },
+  { href: "/developers/llms.txt", label: "developers/llms.txt" },
+  { href: "/docs/llms.txt", label: "docs/llms.txt" },
+  { href: "/api/llms.txt", label: "api/llms.txt" },
+  { href: "https://github.com/ayushrai-hub/ayush-work", label: "GitHub repository (ayush-work)" },
   { href: "/developers.md", label: "This page as Markdown" },
 ] as const;
 

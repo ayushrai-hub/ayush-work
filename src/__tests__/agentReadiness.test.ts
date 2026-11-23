@@ -552,8 +552,18 @@ describe("auth, agent mode, and ask", () => {
       type: "streamable-http",
       url: `${ORIGIN}/api/mcp/docs`,
     });
-    const skill = readFileSync(resolve(root, "skills/portfolio-discovery/SKILL.md"), "utf8");
-    expect(skill).toMatch(/^---\nname: portfolio-discovery\n/);
+    const skillDirs = [
+      "portfolio-discovery",
+      "portfolio-search",
+      "portfolio-project",
+      "portfolio-mcp",
+      "portfolio-batch-and-sandbox",
+      "portfolio-nlweb-and-a2a",
+    ];
+    for (const dir of skillDirs) {
+      const skill = readFileSync(resolve(root, `skills/${dir}/SKILL.md`), "utf8");
+      expect(skill, dir).toMatch(new RegExp(`^---\\nname: ${dir}\\ndescription: .+\\n---`));
+    }
   });
 
   it("publishes an honest free-access pricing.md without invented tiers", () => {

@@ -31,6 +31,7 @@ export const API_ROUTES = [
   "/api/sandbox/v1/compare",
   "/api/ask",
   "/api/send-email",
+  "/api/llms.txt",
 ] as const;
 
 /** `/api/v1/projects/{slug}` and the sandbox alias of that path. */
