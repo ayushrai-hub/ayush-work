@@ -1,13 +1,13 @@
 /**
- * Tests the /pow/fde forward-deployed engineering page, its interactions, and its Markdown twin.
+ * Tests the /pow/fde FDE portfolio page, the /pow/fde/relay RELAY deep dive, and their Markdown twins.
  *
- * Checks the hero, the simulated investigation, the stage, architecture, decision, failure, and
- * deployment controls, the roadmap statuses, related-work links taken from the product and project
- * records, and that the route is prerendered, indexed, and present in navigation.
+ * Checks the concise FDE portfolio (skills tables, projects table, project breakdowns, experience,
+ * RELAY callout, /fde redirect), all interactive RELAY controls on /pow/fde/relay, and that both
+ * routes are prerendered, in the sitemap, and indexed in search.
  *
  * Connects to:
- * - src/pages/FdePowPage.tsx, src/components/fde/*, src/content/fde.ts, src/App.tsx
- * - src/lib/agent/markdown.ts, src/lib/publicRoutes.ts, src/content/searchIndex.ts
+ * - src/pages/FdePowPage.tsx, src/pages/FdeRelayPage.tsx, src/components/fde/*, src/content/fde.ts
+ * - src/App.tsx, src/lib/agent/markdown.ts, src/lib/publicRoutes.ts, src/content/searchIndex.ts
  */
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -16,19 +16,45 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { AppRoutes } from "../App";
 import { nextRovingIndex } from "../components/fde/roving";
-import { accountScore, fdeAccounts, fdePow, fdeRelatedWork, fdeRoadmap, searchIndex } from "../content";
+import {
+  FDE_PATH,
+  FDE_RELAY_PATH,
+  accountScore,
+  fdeAccounts,
+  fdePortfolio,
+  fdePow,
+  fdeProofs,
+  fdeRelatedWork,
+  fdeRoadmap,
+  searchIndex,
+} from "../content";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { renderPageMarkdown } from "../lib/agent/markdown";
 import { canonicalUrl } from "../lib/canonical";
 import { prerenderRoutes, sitemapRoutes } from "../lib/publicRoutes";
 
-/** Renders the real routes at /pow/fde and waits for the lazy page. */
-async function renderFde() {
+/** Renders the real routes at /pow/fde (or /fde) and waits for the lazy portfolio page. */
+async function renderFdePortfolio(initialPath = FDE_PATH) {
   await import("../pages/FdePowPage");
   render(
     <HelmetProvider>
       <ThemeProvider>
-        <MemoryRouter initialEntries={["/pow/fde"]}>
+        <MemoryRouter initialEntries={[initialPath]}>
+          <AppRoutes />
+        </MemoryRouter>
+      </ThemeProvider>
+    </HelmetProvider>,
+  );
+  return screen.findByRole("heading", { level: 1, name: fdePortfolio.title }, { timeout: 5000 });
+}
+
+/** Renders the real routes at /pow/fde/relay and waits for the lazy RELAY deep-dive page. */
+async function renderFdeRelay() {
+  await import("../pages/FdeRelayPage");
+  render(
+    <HelmetProvider>
+      <ThemeProvider>
+        <MemoryRouter initialEntries={[FDE_RELAY_PATH]}>
           <AppRoutes />
         </MemoryRouter>
       </ThemeProvider>
@@ -37,8 +63,87 @@ async function renderFde() {
   return screen.findByRole("heading", { level: 1, name: fdePow.headline }, { timeout: 5000 });
 }
 
-/** Route, records, and the simulated investigation. */
-describe("FDE proof of work", () => {
+/** Main FDE portfolio page (/pow/fde) and /fde redirect. */
+describe("FDE portfolio page (/pow/fde)", () => {
+  it("resolves every FDE portfolio project against products or projects", () => {
+    const proofs = fdeProofs();
+    expect(proofs.length).toBeGreaterThanOrEqual(6);
+    expect(proofs.map((item) => item.slug)).toEqual(
+      fdePortfolio.projects.map((item) => item.slug),
+    );
+    expect(proofs[0]).toMatchObject({
+      slug: "revenueroles",
+      kind: "product",
+      demoUrl: "https://revenueroles.in",
+      href: "/products/revenueroles",
+    });
+  });
+
+  it("renders who I am, technical and soft skills tables, projects table, experience, and RELAY link", async () => {
+    await renderFdePortfolio();
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getAllByRole("table")).toHaveLength(3);
+    expect(screen.getByRole("heading", { level: 2, name: /Technical skill stack/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: /Forward deployed & soft skills/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: /Selected systems & projects/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: /Experience & education/ })).toBeInTheDocument();
+
+    const relayLink = screen.getByRole("link", { name: fdePortfolio.relayCallout.cta });
+    expect(relayLink).toHaveAttribute("href", FDE_RELAY_PATH);
+
+    const techSection = document.getElementById("fde-tech-skills") as HTMLElement;
+    const revRolesLinks = within(techSection).getAllByRole("link", { name: "RevenueRoles" });
+    expect(revRolesLinks.length).toBeGreaterThanOrEqual(3);
+    for (const link of revRolesLinks) {
+      expect(link).toHaveAttribute("href", "https://github.com/ayushrai-hub/RevenueRoles");
+    }
+    expect(within(techSection).getByRole("link", { name: "MailU" })).toHaveAttribute(
+      "href",
+      "https://github.com/ayushrai-hub/MailU",
+    );
+    expect(within(techSection).getByRole("link", { name: "MedVoice" })).toHaveAttribute(
+      "href",
+      "https://github.com/ayushrai-hub/MedVoiceERP",
+    );
+    expect(within(techSection).getByRole("link", { name: "SpiderWeb" })).toHaveAttribute(
+      "href",
+      "https://github.com/ayushrai-hub/SpiderWeb",
+    );
+
+    for (const proof of fdeProofs()) {
+      const card = document.getElementById(`fde-${proof.slug}`);
+      expect(card).not.toBeNull();
+      const scope = within(card as HTMLElement);
+      expect(scope.getByRole("heading", { level: 3, name: proof.title })).toBeInTheDocument();
+      if (proof.githubUrl) {
+        expect(scope.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", proof.githubUrl);
+      }
+      if (proof.demoUrl) {
+        expect(scope.getByRole("link", { name: "Live" })).toHaveAttribute("href", proof.demoUrl);
+      }
+    }
+  });
+
+  it("redirects /fde to /pow/fde", async () => {
+    expect(await renderFdePortfolio("/fde")).toBeInTheDocument();
+  });
+
+  it("publishes /pow/fde as Markdown, in the sitemap, prerendered, and in search", () => {
+    const markdown = renderPageMarkdown(FDE_PATH) ?? "";
+    expect(markdown).toContain("## Technical skill stack");
+    expect(markdown).toContain("## Forward deployed & soft skills");
+    expect(markdown).toContain("## Selected systems & projects");
+    expect(markdown).toContain("RELAY");
+    expect(markdown).toContain(FDE_RELAY_PATH);
+    expect(markdown).toContain(canonicalUrl(FDE_PATH));
+    expect(prerenderRoutes()).toContain(FDE_PATH);
+    expect(sitemapRoutes()).toContain(FDE_PATH);
+    expect(searchIndex.some((item) => item.href === FDE_PATH)).toBe(true);
+  });
+});
+
+/** Dedicated RELAY deep-dive page (/pow/fde/relay). */
+describe("RELAY FDE proof of work (/pow/fde/relay)", () => {
   it("scores an account as the sum of its rule points", () => {
     expect(accountScore(fdeAccounts[0])).toBe(90);
     expect(accountScore(fdeAccounts[1])).toBe(20);
@@ -72,12 +177,16 @@ describe("FDE proof of work", () => {
     expect(nextRovingIndex("ArrowDown", 0, 0)).toBeNull();
   });
 
-  it("renders the proposal, the navigation entry, and an empty investigation", async () => {
-    await renderFde();
+  it("renders the proposal, the back link to /pow/fde, and an empty investigation", async () => {
+    await renderFdeRelay();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getByRole("link", { name: /Back to FDE portfolio/ })).toHaveAttribute("href", FDE_PATH);
     expect(screen.getByText(/Personal engineering project/)).toBeInTheDocument();
     expect(screen.getByText("RELAY has no public repository yet.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Explore the engineering" })).toHaveAttribute("href", "/pow/fde#problem");
+    expect(screen.getByRole("link", { name: "Explore the engineering" })).toHaveAttribute(
+      "href",
+      `${FDE_RELAY_PATH}#problem`,
+    );
     expect(screen.getByRole("link", { name: "View my GitHub" })).toHaveAttribute(
       "href",
       "https://github.com/ayushrai-hub",
@@ -89,7 +198,7 @@ describe("FDE proof of work", () => {
 
   it("walks the workflow, architecture, decisions, failures, and deployment sequence", async () => {
     const user = userEvent.setup();
-    await renderFde();
+    await renderFdeRelay();
 
     const ingest = screen.getByRole("tab", { name: /Ingest events/ });
     ingest.focus();
@@ -112,7 +221,7 @@ describe("FDE proof of work", () => {
 
   it("investigates a synthetic account without calling a workflow", async () => {
     const user = userEvent.setup();
-    await renderFde();
+    await renderFdeRelay();
 
     await user.click(screen.getByRole("button", { name: /Harbor & Co/ }));
     expect(screen.getByRole("heading", { level: 3, name: "Harbor & Co" })).toBeInTheDocument();
@@ -152,7 +261,7 @@ describe("FDE proof of work", () => {
   });
 
   it("shows planned phases and links related work to the recorded URLs", async () => {
-    await renderFde();
+    await renderFdeRelay();
     expect(
       screen.getByText("Implemented in this repository as a client-side page. It is not a separate RELAY service."),
     ).toBeInTheDocument();
@@ -175,14 +284,14 @@ describe("FDE proof of work", () => {
     );
   });
 
-  it("publishes the same record as Markdown, the sitemap, and search", () => {
-    const markdown = renderPageMarkdown("/pow/fde") ?? "";
+  it("publishes /pow/fde/relay as Markdown, in the sitemap, prerendered, and in search", () => {
+    const markdown = renderPageMarkdown(FDE_RELAY_PATH) ?? "";
     expect(markdown).toContain(fdePow.headline);
     expect(markdown).toContain("Northline Analytics");
     expect(markdown).toContain("RELAY has no public repository yet.");
-    expect(markdown).toContain(canonicalUrl("/pow/fde"));
-    expect(prerenderRoutes()).toContain("/pow/fde");
-    expect(sitemapRoutes()).toContain("/pow/fde");
-    expect(searchIndex.some((item) => item.href === "/pow/fde")).toBe(true);
+    expect(markdown).toContain(canonicalUrl(FDE_RELAY_PATH));
+    expect(prerenderRoutes()).toContain(FDE_RELAY_PATH);
+    expect(sitemapRoutes()).toContain(FDE_RELAY_PATH);
+    expect(searchIndex.some((item) => item.href === FDE_RELAY_PATH)).toBe(true);
   });
 });

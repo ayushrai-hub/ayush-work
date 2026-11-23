@@ -43,6 +43,7 @@ const NoteDetailPage = lazy(() => import("./pages/NoteDetailPage"));
 const NowPage = lazy(() => import("./pages/NowPage"));
 const IdeasPage = lazy(() => import("./pages/IdeasPage"));
 const PrinciplesPage = lazy(() => import("./pages/PrinciplesPage"));
+const HowIWorkPage = lazy(() => import("./pages/HowIWorkPage"));
 const TimelinePage = lazy(() => import("./pages/TimelinePage"));
 const EducationPage = lazy(() => import("./pages/EducationPage"));
 const LeadershipPage = lazy(() => import("./pages/LeadershipPage"));
@@ -59,6 +60,7 @@ const DomainPage = lazy(() => import("./pages/DomainPage"));
 const GtmPage = lazy(() => import("./pages/GtmPage"));
 const PowIndexPage = lazy(() => import("./pages/PowIndexPage"));
 const FdePowPage = lazy(() => import("./pages/FdePowPage"));
+const FdeRelayPage = lazy(() => import("./pages/FdeRelayPage"));
 const ProductManagementPowPage = lazy(() => import("./pages/ProductManagementPowPage"));
 const MlEngineerPowPage = lazy(() => import("./pages/MlEngineerPowPage"));
 const AiResearchEngineeringPowPage = lazy(() => import("./pages/AiResearchEngineeringPowPage"));
@@ -106,6 +108,7 @@ export function AppRoutes() {
             <Route path="now" element={<NowPage />} />
             <Route path="ideas" element={<IdeasPage />} />
             <Route path="principles" element={<PrinciplesPage />} />
+            <Route path="how-i-work" element={<HowIWorkPage />} />
             <Route path="timeline" element={<TimelinePage />} />
             <Route path="education" element={<EducationPage />} />
             <Route path="leadership" element={<LeadershipPage />} />
@@ -126,7 +129,9 @@ export function AppRoutes() {
               path="pow/benchmark-engineering"
               element={<Navigate to="/pow/ai-benchmark" replace />}
             />
+            <Route path="fde" element={<Navigate to="/pow/fde" replace />} />
             <Route path="pow/fde" element={<FdePowPage />} />
+            <Route path="pow/fde/relay" element={<FdeRelayPage />} />
             <Route path="pow/agentic-ai" element={<AgenticPowPage />} />
             <Route path="pow/revops-engineering" element={<RevopsPowPage />} />
             <Route path="pow/revenue-operations" element={<Navigate to="/pow/revops-engineering" replace />} />

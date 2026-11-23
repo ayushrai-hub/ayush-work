@@ -940,17 +940,21 @@ export function loomEmbedUrl(url: string): string {
   return url.replace("loom.com/share/", "loom.com/embed/");
 }
 
-/** Converts a Loom or YouTube share/watch URL into an iframe-safe embed URL. */
+/** Converts a Loom, YouTube (watch/short/shorts/embed), or Vimeo URL into an iframe-safe embed URL. */
 export function videoEmbedUrl(url: string): string {
   const trimmed = url.trim();
   if (trimmed.includes("loom.com/share/")) {
     return loomEmbedUrl(trimmed);
   }
   const ytWatch = trimmed.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,})/,
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{6,})/,
   );
   if (ytWatch?.[1]) {
     return `https://www.youtube-nocookie.com/embed/${ytWatch[1]}`;
+  }
+  const vimeo = trimmed.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vimeo?.[1]) {
+    return `https://player.vimeo.com/video/${vimeo[1]}`;
   }
   return loomEmbedUrl(trimmed);
 }

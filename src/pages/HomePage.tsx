@@ -34,6 +34,7 @@ import {
   gtmPortfolio,
   gtmProofs,
   homeDomains,
+  howIWork,
   ideas,
   now,
   pageUpdatedAt,
@@ -206,6 +207,53 @@ export default function HomePage() {
         </ul>
       </section>
 
+      <section id="how-i-work" className="site-shell page-section border-t border-rule scroll-mt-20">
+        <SectionHeading
+          title="How I learn, build & work with teams"
+          link={{ to: "/how-i-work", label: "Read full operating manual" }}
+        />
+        <Prose>
+          <p>{howIWork.universalBuilderSummary}</p>
+        </Prose>
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="border border-rule bg-paper-elevated p-5">
+            <p className="font-mono text-xs text-ink-faint">01 · Rapid learning</p>
+            <h3 className="mt-2 font-display text-lg text-ink">Learn fast, implement accurately</h3>
+            <p className="mt-2 text-sm text-ink-muted leading-relaxed">
+              Primary docs first, thin vertical slice in hours, then tests and rubrics so startup
+              speed never turns into silent bugs.
+            </p>
+          </div>
+          <div className="border border-rule bg-paper-elevated p-5">
+            <p className="font-mono text-xs text-ink-faint">02 · Reading &amp; craft</p>
+            <h3 className="mt-2 font-display text-lg text-ink">Books, blogs, bottlenecks &amp; UX</h3>
+            <p className="mt-2 text-sm text-ink-muted leading-relaxed">
+              I read books, engineering blogs, and specs to connect business bottlenecks directly to
+              clean user experiences.
+            </p>
+          </div>
+          <div className="border border-rule bg-paper-elevated p-5">
+            <p className="font-mono text-xs text-ink-faint">03 · Team &amp; agency</p>
+            <h3 className="mt-2 font-display text-lg text-ink">High agency, zero-ego feedback</h3>
+            <p className="mt-2 text-sm text-ink-muted leading-relaxed">
+              Direct critique is debugging signal. I own ambiguity, iterate in tight loops, and keep
+              the people around me unblocked.
+            </p>
+          </div>
+        </div>
+        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          <Link to="/how-i-work" className="link-accent">
+            Full learning &amp; teamwork guide
+          </Link>
+          <Link to="/how-i-work#live-work-images" className="link-accent">
+            Live work snapshots
+          </Link>
+          <Link to="/how-i-work#live-work-videos" className="link-accent">
+            Videos &amp; walkthroughs
+          </Link>
+        </div>
+      </section>
+
       <section
         id="revenue-gtm-systems"
         className="site-shell page-section border-t border-rule scroll-mt-20"
@@ -323,6 +371,19 @@ export default function HomePage() {
               </span>
               <span className="text-sm text-ink-muted sm:text-right">
                 Background, path, and how I got here
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/how-i-work"
+              className="group flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+            >
+              <span className="font-display text-lg text-ink group-hover:text-accent">
+                How I work
+              </span>
+              <span className="text-sm text-ink-muted sm:text-right">
+                Rapid learning, reading, high-agency teamwork, live work images &amp; videos
               </span>
             </Link>
           </li>

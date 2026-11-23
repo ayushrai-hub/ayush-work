@@ -10,6 +10,7 @@
  * - Content from src/content (`principles`); components PageSEO, PageHeader.
  * - Markdown twin `/principles.md` built in `buildPages()` in src/lib/agent/markdown.ts.
  */
+import { Link } from "react-router-dom";
 import PageSEO from "../components/site/PageSEO";
 import PageHeader from "../components/editorial/PageHeader";
 import { principles } from "../content";
@@ -46,6 +47,14 @@ export default function PrinciplesPage() {
             </li>
           ))}
         </ol>
+        <p className="mt-12 max-w-measure border-t border-rule pt-8 text-sm text-ink-muted">
+          Want the practical side—how I learn unfamiliar tech fast, handle feedback, work with
+          teams, and live work snapshots &amp; videos?{" "}
+          <Link to="/how-i-work" className="link-accent">
+            Read How I work
+          </Link>
+          .
+        </p>
       </div>
     </>
   );

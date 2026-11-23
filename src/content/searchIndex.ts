@@ -29,6 +29,7 @@ import { leadership } from "./leadership";
 import { recognition } from "./recognition";
 import { ideas } from "./ideas";
 import { principles } from "./principles";
+import { howIWork } from "./howIWork";
 import { notes } from "./notes";
 import { writing } from "./writing";
 import { elsewhereProfiles } from "./elsewhere";
@@ -36,7 +37,7 @@ import { capabilities } from "./capabilities";
 import { domains } from "./domains";
 import { gtmPortfolio } from "./gtm";
 import { POW_PATH, powIndexDescription, powIndexTitle } from "./powPages";
-import { fdePow } from "./fde";
+import { fdePortfolio, fdePow } from "./fde";
 import { productManagementDescription } from "./productManagementPow";
 import { AI_RESEARCH_PATH, aiResearchDescription } from "./aiResearchPow";
 import { benchmarkPage } from "./benchmarkEngineering";
@@ -197,6 +198,31 @@ export function buildSearchIndex(): SearchItem[] {
     });
   }
 
+  items.push({
+    id: "principle:how-i-work",
+    title: howIWork.title,
+    type: "principle",
+    summary: howIWork.dek,
+    href: howIWork.path,
+    tags: [
+      "how i work",
+      "fast learner",
+      "learning",
+      "startup",
+      "high agency",
+      "teamwork",
+      "feedback",
+      "iteration",
+      "books",
+      "engineering blogs",
+      "user experience",
+      "business bottlenecks",
+      "videos",
+      "youtube",
+      "live work",
+    ],
+  });
+
   for (const n of notes) {
     items.push({
       id: `note:${n.slug}`,
@@ -258,9 +284,27 @@ export function buildSearchIndex(): SearchItem[] {
     id: "capability:fde",
     title: "Forward deployed engineering",
     type: "capability",
+    summary: fdePortfolio.description,
+    href: fdePortfolio.path,
+    tags: [
+      "capability",
+      "fde",
+      "forward deployed",
+      "ai systems",
+      "agents",
+      "fastapi",
+      "skills",
+      "proof of work",
+    ],
+  });
+
+  items.push({
+    id: "capability:fde-relay",
+    title: fdePow.title,
+    type: "capability",
     summary: fdePow.description,
     href: fdePow.path,
-    tags: ["capability", "fde", "forward deployed", "relay", "proof of work"],
+    tags: ["capability", "fde", "forward deployed", "relay", "customer operations", "proof of work"],
   });
 
   items.push({

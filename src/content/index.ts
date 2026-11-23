@@ -206,16 +206,20 @@ export type {
 } from "./gtm";
 export {
   FDE_PATH,
+  FDE_RELAY_PATH,
   accountScore,
   fdeAccounts,
   fdeDecisions,
+  fdeEvidenceLabels,
   fdeFailures,
   fdeLayers,
   fdePhaseStatusLabels,
+  fdePortfolio,
   fdePow,
   fdePrinciples,
   fdeProblemSteps,
   fdeProcess,
+  fdeProofs,
   fdeRelatedWork,
   fdeRoadmap,
   fdeSections,
@@ -224,6 +228,7 @@ export {
   fdeStageKindLabels,
   fdeStages,
   renderFdeBody,
+  renderFdeRelayBody,
 } from "./fde";
 export type {
   FdeAccount,
@@ -232,16 +237,22 @@ export type {
   FdeFailure,
   FdeLayer,
   FdePhaseStatus,
+  FdePortfolioProject,
   FdePrinciple,
   FdeProblemStep,
   FdeProcessStep,
+  FdeProofEvidence,
+  FdeProofLink,
   FdeRelatedWork,
   FdeRoadmapPhase,
   FdeSection,
   FdeShellViewId,
   FdeSignal,
+  FdeSoftSkillRow,
   FdeStage,
   FdeStageKind,
+  FdeTechSkillRow,
+  ResolvedFdeProject,
 } from "./fde";
 export {
   REVOPS_PATH,
@@ -253,4 +264,15 @@ export { privacySections, contactSections } from "./policies";
 export type { PolicySection } from "./policies";
 export { recordVisuals, getRecordVisuals } from "./visuals";
 export type { VisualArtifact, RecordVisuals } from "./visuals";
+export {
+  HOW_I_WORK_PATH,
+  howIWork,
+  renderHowIWorkBody,
+} from "./howIWork";
+export type {
+  LearningStep,
+  LiveWorkVideo,
+  ReadingHabit,
+  WorkingTrait,
+} from "./howIWork";
 export { searchIndex, buildSearchIndex } from "./searchIndex";

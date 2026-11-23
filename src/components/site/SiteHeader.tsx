@@ -44,6 +44,7 @@ const SECONDARY_NAV = [
   { to: "/now", label: "Now" },
   { to: "/ideas", label: "Ideas" },
   { to: "/timeline", label: "Timeline" },
+  { to: "/how-i-work", label: "How I work" },
   { to: "/principles", label: "Principles" },
   { to: "/elsewhere", label: "Elsewhere" },
   { to: "/contact", label: "Contact" },

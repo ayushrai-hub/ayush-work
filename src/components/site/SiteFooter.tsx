@@ -25,6 +25,7 @@ const FOOTER_LINKS = [
   { to: "/software-engineering", label: "Software" },
   { to: "/experience", label: "Experience" },
   { to: "/about", label: "About" },
+  { to: "/how-i-work", label: "How I work" },
   { to: "/contact", label: "Contact" },
   { to: "/resume", label: "Resume" },
   { to: POW_PATH, label: "POW" },

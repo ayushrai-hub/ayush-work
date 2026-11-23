@@ -2229,7 +2229,7 @@ export const domains: DomainRecord[] = [
     coreBenchmarks: [
       {
         name: "RELAY Forward-Deployed Delivery Sequence",
-        href: "/pow/fde#deployment",
+        href: "/pow/fde/relay#deployment",
         whatItDoes: "A 6-step engagement blueprint from problem scoping and data-contract definition to deterministic scoring, human approval gating, and runbook handoff.",
         domain: "Forward Deployed & Client Engineering",
         category: "Delivery & handoff architecture",

@@ -17,10 +17,13 @@ import ContactCta from "../components/site/ContactCta";
 import PageHeader from "../components/editorial/PageHeader";
 import Prose from "../components/editorial/Prose";
 import SectionHeading from "../components/editorial/SectionHeading";
+import MediaGallery from "../components/editorial/MediaGallery";
+import VideoEmbed from "../components/editorial/VideoEmbed";
 import {
   capabilities,
   education,
   experience,
+  howIWork,
   leadership,
   pageUpdatedAt,
   person,
@@ -94,6 +97,52 @@ export default function AboutPage() {
               <li key={item} className="leading-relaxed">{item}</li>
             ))}
           </ul>
+        </section>
+
+        <section id="how-i-work" className="mt-16 scroll-mt-24 border-t border-rule pt-12">
+          <SectionHeading
+            title="How I learn, collaborate & ship"
+            link={{ to: "/how-i-work", label: "Open full operating manual" }}
+          />
+          <Prose>
+            <p>{howIWork.universalBuilderSummary}</p>
+          </Prose>
+          <ul className="mt-6 grid gap-5 md:grid-cols-2">
+            {howIWork.teamAndPersonality.map((trait) => (
+              <li key={trait.slug} className="border border-rule bg-paper-elevated p-5">
+                <h3 className="font-display text-lg text-ink">{trait.title}</h3>
+                <p className="mt-1.5 text-sm text-ink-muted leading-relaxed">{trait.headline}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10 space-y-8 max-w-4xl">
+            <MediaGallery
+              items={howIWork.liveWorkImages}
+              heading="Live work snapshots & builds"
+              ariaLabel="About page live work snapshots"
+            />
+            <div>
+              <h3 className="font-display text-xl text-ink">
+                {howIWork.liveWorkVideos[2].title}
+              </h3>
+              <p className="mt-1.5 max-w-measure text-sm text-ink-muted leading-relaxed">
+                {howIWork.liveWorkVideos[2].description}
+              </p>
+              <VideoEmbed
+                url={howIWork.liveWorkVideos[2].url}
+                title={howIWork.liveWorkVideos[2].title}
+                plannedTopics={howIWork.liveWorkVideos[2].plannedTopics}
+                placeholderHeading="Video slot ready (YouTube, Loom, or Vimeo). Planned recording:"
+                caption={howIWork.liveWorkVideos[2].caption}
+                slot={howIWork.liveWorkVideos[2].id}
+              />
+            </div>
+          </div>
+          <p className="mt-6 text-sm">
+            <Link to="/how-i-work" className="link-accent">
+              See the full learning playbook, reading habits, and all video slots
+            </Link>
+          </p>
         </section>
 
         <section className="mt-16">

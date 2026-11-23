@@ -23,6 +23,7 @@ import {
   experience,
   featuredProducts,
   gtmPortfolio,
+  howIWork,
   ideas,
   leadership,
   contactSections,
@@ -40,12 +41,15 @@ import {
   recognition,
   renderDomainBody,
   renderGtmBody,
+  renderHowIWorkBody,
   POW_PATH,
   powIndexTitle,
   powIndexDescription,
   renderPowIndexBody,
+  fdePortfolio,
   fdePow,
   renderFdeBody,
+  renderFdeRelayBody,
   renderProductManagementBody,
   productManagementDescription,
   aiResearchDescription,
@@ -819,10 +823,18 @@ function buildPages(): AgentPage[] {
 
   pages.push(doc("/gtm", "GTM engineering", gtmPortfolio.description, renderGtmBody()));
 
+  pages.push(
+    doc(howIWork.path, howIWork.title, howIWork.description, renderHowIWorkBody()),
+  );
+
   pages.push(doc(POW_PATH, powIndexTitle, powIndexDescription, renderPowIndexBody()));
 
   pages.push(
-    doc(fdePow.path, fdePow.title, fdePow.description, renderFdeBody()),
+    doc(fdePortfolio.path, fdePortfolio.title, fdePortfolio.description, renderFdeBody()),
+  );
+
+  pages.push(
+    doc(fdePow.path, fdePow.title, fdePow.description, renderFdeRelayBody()),
   );
 
   pages.push(
@@ -1050,10 +1062,12 @@ export function renderLlmsTxt(): string {
     "## Profiles and contact",
     "",
     `- [About](${abs("/about.md")})`,
+    `- [How I work](${abs("/how-i-work.md")}): rapid learning approach, reading habits, business and UX instincts, high-agency teamwork, feedback loops, and live work media slots.`,
     `- [Experience](${abs("/experience.md")})`,
     `- [GTM engineering](${abs("/gtm.md")}): revenue data pipelines, scoring, and what is built versus still being learned.`,
     `- [POW](${abs("/pow.md")}): the proof-of-work pages for the roles this site addresses.`,
-    `- [Forward deployed engineering](${abs("/pow/fde.md")}): a personal proof of work for the proposed RELAY workflow. Not a customer deployment.`,
+    `- [Forward deployed engineering](${abs("/pow/fde.md")}): FDE skill tables, shipped AI and data systems, experience, and link to the RELAY proof-of-work deep dive.`,
+    `- [RELAY proof of work](${abs("/pow/fde/relay.md")}): a personal proof of work for the proposed RELAY customer-operations workflow. Not a customer deployment.`,
     `- [Product management proof of work](${abs("/pow/product-management.md")}): a RevenueRoles case study that separates the live product from hypotheses and unmeasured outcomes.`,
     `- [AI research engineering](${abs("/pow/ai-research-engineering.md")}): a prepared retrieval experiment. Not a model run and not a publication.`,
     `- [AI benchmark engineering](${abs("/pow/ai-benchmark.md")}): EVALFORGE, a synthetic evaluation demonstration. Not a published benchmark.`,

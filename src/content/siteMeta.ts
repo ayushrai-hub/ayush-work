@@ -21,18 +21,19 @@
  */
 export const siteMeta = {
   /** Whole-site content pass */
-  siteUpdatedAt: "2026-11-22",
+  siteUpdatedAt: "2026-11-23",
   /**
    * Per-area dates. Only set when that slice of content last meaningfully changed.
    * Omit a key to fall back to siteUpdatedAt. Keys are free strings, so a key
    * no page passes to `pageUpdatedAt` is silently unused (`resume` currently is).
    */
   pages: {
-    home: "2026-11-22",
+    home: "2026-11-23",
     domains: "2026-11-22",
     "gtm-revops": "2026-11-22",
     now: "2026-11-22",
-    about: "2026-11-22",
+    about: "2026-11-23",
+    "how-i-work": "2026-11-23",
     work: "2026-11-22",
     products: "2026-11-22",
     contact: "2026-10-14",
@@ -45,7 +46,7 @@ export const siteMeta = {
     "ai-research-engineering": "2026-10-19",
     "founding-engineer": "2026-10-19",
     "ai-data-scientist": "2026-10-19",
-    pow: "2026-11-22",
+    pow: "2026-11-23",
     resume: "2026-11-22",
   } as Record<string, string>,
 };

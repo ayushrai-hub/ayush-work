@@ -1,23 +1,346 @@
 /**
- * Forward deployed engineering proof of work: the record behind /pow/fde and /pow/fde.md.
+ * Forward deployed engineering portfolio and RELAY proof of work: the records behind
+ * /pow/fde, /pow/fde.md, /pow/fde/relay, and /pow/fde/relay.md.
  *
- * RELAY is a personal demonstration scenario for customer-operations intelligence. The accounts,
- * scores, and workflow are predefined in this module so the page can show them without a backend.
- * Phase 1 is this page. Later phases stay `planned`. Product and project facts in the related-work
- * list are read from products.ts and projects.ts by slug.
+ * `/pow/fde` is the concise, GTM-style FDE portfolio page: who I am, technical and soft FDE
+ * skills tables, a scannable projects table resolved from products.ts and projects.ts, experience
+ * from experience.ts and education.ts, and a link to the RELAY deep dive.
+ * `/pow/fde/relay` holds the full RELAY customer-operations proof of work (thesis, problem,
+ * interactive workflow, simulated preview, architecture, decisions, failure modes, deployment
+ * sequence, and roadmap). The accounts, scores, and workflow are predefined in this module so
+ * the page can show them without a backend.
  *
  * Connects to:
- * - src/pages/FdePowPage.tsx and src/components/fde/* render these records.
- * - `buildPages()` in src/lib/agent/markdown.ts calls `renderFdeBody` for /pow/fde.md.
- * - searchIndex.ts adds one item from `fdePow`.
- * - Depends on getProductBySlug (products.ts), getProjectBySlug (projects.ts), and person.ts.
+ * - src/pages/FdePowPage.tsx (/pow/fde) and src/pages/FdeRelayPage.tsx (/pow/fde/relay).
+ * - src/components/fde/* render the RELAY interactive panels on /pow/fde/relay.
+ * - `buildPages()` in src/lib/agent/markdown.ts calls `renderFdeBody` (/pow/fde.md) and
+ *   `renderFdeRelayBody` (/pow/fde/relay.md).
+ * - searchIndex.ts adds items for `/pow/fde` and `/pow/fde/relay`.
+ * - Depends on getProductBySlug (products.ts), getProjectBySlug (projects.ts), experience.ts,
+ *   education.ts, and person.ts.
  */
+import { education } from "./education";
+import { experience } from "./experience";
 import { person } from "./person";
 import { getProductBySlug } from "./products";
 import { getProjectBySlug } from "./projects";
 
-/** Route path for the proof-of-work page. Prerendered and indexed. */
+/** Route path for the main FDE portfolio page. Prerendered and indexed. */
 export const FDE_PATH = "/pow/fde";
+
+/** Route path for the dedicated RELAY proof-of-work deep dive. Prerendered and indexed. */
+export const FDE_RELAY_PATH = "/pow/fde/relay";
+
+/** How strong the evidence behind a listed FDE system is. */
+export type FdeProofEvidence = "live" | "local" | "synthetic" | "blueprint";
+
+/** Display label and one-line meaning for each FDE evidence level. */
+export const fdeEvidenceLabels: Record<FdeProofEvidence, { label: string; meaning: string }> = {
+  live: {
+    label: "Live",
+    meaning: "A public URL serves it today.",
+  },
+  local: {
+    label: "Runs locally",
+    meaning: "Code and tests are in a public repository; there is no hosted deployment.",
+  },
+  synthetic: {
+    label: "Synthetic demo",
+    meaning: "The workflow runs end to end on fictional data with mock enrichment.",
+  },
+  blueprint: {
+    label: "Interactive blueprint",
+    meaning: "Architecture, trade-offs, failure modes, and a client-side preview; not a live service.",
+  },
+};
+
+/** A single proof reference in a skill table cell; opens GitHub or an internal page when `href` is set. */
+export interface FdeProofLink {
+  label: string;
+  href?: string;
+}
+
+/** Look up the public GitHub repository URL for a product or project slug. */
+function repoUrl(kind: "product" | "project", slug: string): string {
+  const url =
+    kind === "product"
+      ? getProductBySlug(slug)?.githubUrl
+      : getProjectBySlug(slug)?.links?.github;
+  if (!url) throw new Error(`Missing GitHub URL for FDE skill proof: ${kind}:${slug}`);
+  return url;
+}
+
+/** One row in the FDE technical skills table. */
+export interface FdeTechSkillRow {
+  domain: string;
+  scope: string;
+  tools: string;
+  proof: FdeProofLink[];
+}
+
+/** One row in the FDE soft & customer-engineering skills table. */
+export interface FdeSoftSkillRow {
+  capability: string;
+  practice: string;
+  evidence: FdeProofLink[];
+}
+
+/** One system in the FDE portfolio projects table, resolved from products.ts or projects.ts. */
+export interface FdePortfolioProject {
+  slug: string;
+  kind: "product" | "project";
+  evidence: FdeProofEvidence;
+  /** Short stack labels for products, which have prose architecture instead of a technology list. */
+  stack?: string[];
+  /** One-line problem/outcome summary for the top table. */
+  blurb: string;
+  /** FDE engineering patterns demonstrated. */
+  demonstrates: string;
+  /** Honest limits kept next to the record. */
+  limit: string;
+}
+
+/** Resolved FDE portfolio project ready to render in tables, cards, and Markdown. */
+export interface ResolvedFdeProject {
+  slug: string;
+  kind: "product" | "project";
+  title: string;
+  summary: string;
+  blurb: string;
+  evidence: FdeProofEvidence;
+  stack: string[];
+  demonstrates: string;
+  limit: string;
+  href: string;
+  githubUrl?: string;
+  demoUrl?: string;
+}
+
+/** Main `/pow/fde` portfolio record: concise, scannable, and aligned with src/content/. */
+export const fdePortfolio = {
+  path: FDE_PATH,
+  title: "Forward deployed engineering",
+  eyebrow: "AI Systems Engineer · Forward Deployed Engineering",
+  description:
+    "Ayush Rai's Forward Deployed Engineering portfolio: technical and customer-facing skill tables, shipped AI and data-pipeline systems, experience, and the RELAY proof-of-work deep dive.",
+  positioning:
+    "I'm Ayush Rai, an AI systems engineer who works where the problem is still ambiguous and the systems are fragmented. I investigate operational workflows, integrate external data sources, build LLM-assisted pipelines with deterministic guardrails and human approval gates, and debug multi-component failures until the system holds up.",
+  techSkills: [
+    {
+      domain: "Programming",
+      scope: "Production scripts, typed full-stack web apps, APIs, and relational queries.",
+      tools: "Python, TypeScript, JavaScript, SQL",
+      proof: [{ label: "All public repositories", href: person.primaryProfiles.github }],
+    },
+    {
+      domain: "LLM / GenAI & Agentic Workflows",
+      scope: "Prompt engineering, structured outputs, retrieval pipelines, tool calling, deterministic scoring guardrails, and LLM evaluation.",
+      tools: "OpenAI APIs, NVIDIA Build NIM, Ollama, ChromaDB, Embeddings, Evaluation rubrics",
+      proof: [
+        { label: "RevenueRoles", href: repoUrl("product", "revenueroles") },
+        { label: "GTM-Strato", href: repoUrl("project", "gtm-strato") },
+        { label: "Revenue Intelligence Engine", href: repoUrl("project", "revenue-intelligence-engine") },
+        { label: "MailU", href: repoUrl("project", "mailu") },
+        { label: "FoCDoT / Outlier", href: "/about#focdot-sde-ai" },
+      ],
+    },
+    {
+      domain: "Backend, APIs & Async Pipelines",
+      scope: "REST APIs, webhooks, background job orchestration, SSRF-hardened web extraction, idempotent writes, and MCP servers.",
+      tools: "FastAPI, NestJS, Node.js, Inngest, REST APIs, MCP, OpenAPI",
+      proof: [
+        { label: "RevenueRoles", href: repoUrl("product", "revenueroles") },
+        { label: "Revenue Intelligence Engine", href: repoUrl("project", "revenue-intelligence-engine") },
+        { label: "MedVoice", href: repoUrl("product", "medvoice") },
+        { label: "this site's API/MCP", href: repoUrl("project", "personal-portfolio") },
+      ],
+    },
+    {
+      domain: "Data & Databases",
+      scope: "Relational schemas, provenance tracking, deduplication, vector search, and local-first SQLite / Postgres stores.",
+      tools: "PostgreSQL, Supabase, SQLite, PGlite, Redis, ChromaDB",
+      proof: [
+        { label: "RevenueRoles", href: repoUrl("product", "revenueroles") },
+        { label: "AIworks Leads", href: repoUrl("project", "aiworks-leads") },
+        { label: "Relationship Intelligence Engine", href: repoUrl("project", "relationship-intelligence-engine") },
+        { label: "SpiderWeb", href: repoUrl("project", "spiderweb") },
+      ],
+    },
+    {
+      domain: "Application Development",
+      scope: "Operator dashboards, approval queues, investigation views, and internal tools.",
+      tools: "Next.js, React, Vite, Streamlit, Tailwind CSS",
+      proof: [
+        { label: "RevenueRoles", href: repoUrl("product", "revenueroles") },
+        { label: "GTM-Strato", href: repoUrl("project", "gtm-strato") },
+        { label: "Revenue Intelligence Engine", href: repoUrl("project", "revenue-intelligence-engine") },
+        { label: "this site", href: repoUrl("project", "personal-portfolio") },
+      ],
+    },
+    {
+      domain: "Engineering & Reliability",
+      scope: "Automated test suites, failure-mode handling, CI/CD, containerization, and technical documentation.",
+      tools: "Git, GitHub Actions, Docker, pytest, Vitest, Playwright",
+      proof: [
+        { label: "GTM-Strato (48 pytest)", href: repoUrl("project", "gtm-strato") },
+        { label: "Revenue Intelligence Engine (40 pytest)", href: repoUrl("project", "revenue-intelligence-engine") },
+        { label: "this site", href: repoUrl("project", "personal-portfolio") },
+      ],
+    },
+  ] as FdeTechSkillRow[],
+  softSkills: [
+    {
+      capability: "Ambiguous problem scoping",
+      practice: "Map the real workflow, identify where handoffs break, and separate what code must enforce from what a model can draft before writing software.",
+      evidence: [
+        { label: "MedVoice", href: repoUrl("product", "medvoice") },
+        { label: "RELAY blueprint", href: FDE_RELAY_PATH },
+      ],
+    },
+    {
+      capability: "Stakeholder & technical communication",
+      practice: "Write plain-language trade-offs, explicit system limits, and structured documentation so operators and engineers see the same facts.",
+      evidence: [
+        { label: "Product & project records", href: "/products" },
+        { label: "Architecture Decision Records in RELAY", href: `${FDE_RELAY_PATH}#decisions` },
+      ],
+    },
+    {
+      capability: "Multi-component debugging",
+      practice: "Trace failures across prompts, model outputs, retrieval, external APIs, schemas, and backend state; verify fixes with repeatable tests.",
+      evidence: [
+        { label: "FoCDoT & Outlier model-failure analysis", href: "/about#focdot-sde-ai" },
+        { label: "GTM-Strato", href: repoUrl("project", "gtm-strato") },
+        { label: "Revenue Intelligence Engine", href: repoUrl("project", "revenue-intelligence-engine") },
+      ],
+    },
+    {
+      capability: "Iterative delivery & ownership",
+      practice: "Ship the smallest end-to-end slice first (ingest → validate → inspect → act), keep unbuilt layers clearly labeled, and iterate from real behavior.",
+      evidence: [
+        { label: "7 focused systems on GitHub", href: person.primaryProfiles.github },
+      ],
+    },
+    {
+      capability: "Customer-system integration mindset",
+      practice: "Coexist with existing CRMs, ATSs, and ERPs via adapters, idempotency keys, and human approval gates instead of forcing risky rip-and-replace writes.",
+      evidence: [
+        { label: "RevenueRoles", href: repoUrl("product", "revenueroles") },
+        { label: "MedVoice", href: repoUrl("product", "medvoice") },
+        { label: "Revenue Intelligence Engine", href: repoUrl("project", "revenue-intelligence-engine") },
+      ],
+    },
+  ] as FdeSoftSkillRow[],
+  projects: [
+    {
+      slug: "revenueroles",
+      kind: "product",
+      evidence: "live",
+      stack: ["Next.js", "Python", "FastAPI", "PostgreSQL", "Supabase", "Inngest"],
+      blurb: "AI-powered job intelligence platform with a Discover, Extract, Classify, Verify, and Deduplicate (DECV) pipeline over employer ATSs.",
+      demonstrates: "Multi-service architecture, async background processing, external ATS integration, and classification over messy real-world postings.",
+      limit: "Saved jobs, applications, and notifications are not built; no user or revenue metrics are published.",
+    },
+    {
+      slug: "revenue-intelligence-engine",
+      kind: "project",
+      evidence: "synthetic",
+      blurb: "End-to-end account scoring and research pipeline: deterministic 100-point rubric, temperature-0 evidence briefs, and a human approval queue before export.",
+      demonstrates: "Separating deterministic scoring from LLM synthesis, deterministic fallback when the model fails, and 40 pytest tests.",
+      limit: "Runs on 42 fictional companies with no real leads, CRM writes, or outbound.",
+    },
+    {
+      slug: "gtm-strato",
+      kind: "project",
+      evidence: "local",
+      blurb: "SSRF-hardened website extraction and ICP discovery engine separating cited site facts from LLM hypotheses, backed by SQLite and 48 pytest tests.",
+      demonstrates: "Security-conscious external ingestion (SSRF/DNS-rebinding guards), structured outputs with Pydantic, and deterministic rubric scoring.",
+      limit: "Runs locally via Streamlit; no hosted deployment.",
+    },
+    {
+      slug: "medvoice",
+      kind: "product",
+      evidence: "local",
+      stack: ["NestJS", "Next.js", "PostgreSQL", "Redis", "Kotlin"],
+      blurb: "Voice-assisted wholesale pharma billing workflow where speech proposes an order line and deterministic rules own identity, GST tax, and idempotent posting.",
+      demonstrates: "High-consequence workflow design, human confirmation on ambiguous matches, integer-money math, and adapter boundaries for legacy ERPs.",
+      limit: "Local mock speech and in-memory demo catalog; no public demo or warehouse deployment.",
+    },
+    {
+      slug: "aiworks-leads",
+      kind: "project",
+      evidence: "local",
+      blurb: "Zero-dependency Python CLI and SQLite verification store auditing B2B lead tables with mandatory source URLs, deduplication, and immutable run folders.",
+      demonstrates: "Strict data-quality contracts, auditability, pre-run SQLite backups, and zero-LLM deterministic pre-filtering.",
+      limit: "Local CLI tool; no paid vendor integrations or hosted UI.",
+    },
+    {
+      slug: "spiderweb",
+      kind: "project",
+      evidence: "local",
+      blurb: "Local network-intelligence app that turns a LinkedIn data export into a deduplicated, searchable graph of people, companies, and conversations.",
+      demonstrates: "Entity resolution, deduplication over noisy exports, and full-stack TypeScript/Postgres/Redis/Docker setup.",
+      limit: "Runs locally; no production deployment.",
+    },
+    {
+      slug: "personal-portfolio",
+      kind: "project",
+      evidence: "live",
+      blurb: "This site: one TypeScript content layer powering prerendered HTML, Markdown twins, lexical search, a versioned REST API, and two MCP servers.",
+      demonstrates: "Single-source-of-truth architecture, contract testing, OpenAPI/MCP tooling, and end-to-end Playwright verification.",
+      limit: "Static content redeployed on commit; no user accounts or live database writes.",
+    },
+  ] as FdePortfolioProject[],
+  relayCallout: {
+    eyebrow: "Dedicated FDE proof-of-work project",
+    title: "RELAY — Customer operations intelligence",
+    summary:
+      "Want to see how I design a customer-facing system from scratch? Open the RELAY project page for the 10-stage workflow, interactive simulated account investigation, architecture boundaries, 8 engineering trade-offs, 9 failure modes, and 8-step customer deployment playbook.",
+    note: "Personal engineering blueprint (Phase 1 implemented as a client-side interactive preview; not a live customer deployment).",
+    href: FDE_RELAY_PATH,
+    cta: "Open the RELAY proof of work",
+  },
+};
+
+/** Resolve every FDE portfolio project against products.ts or projects.ts so facts stay single-source. */
+export function fdeProofs(): ResolvedFdeProject[] {
+  return fdePortfolio.projects.map((item) => {
+    if (item.kind === "product") {
+      const product = getProductBySlug(item.slug);
+      if (!product) throw new Error(`Missing product for FDE portfolio: ${item.slug}`);
+      return {
+        slug: product.slug,
+        kind: "product",
+        title: product.title,
+        summary: product.summary,
+        blurb: item.blurb,
+        evidence: item.evidence,
+        stack: item.stack ?? [],
+        demonstrates: item.demonstrates,
+        limit: item.limit,
+        href: `/products/${product.slug}`,
+        githubUrl: product.githubUrl,
+        demoUrl: product.demoUrl,
+      };
+    }
+    const project = getProjectBySlug(item.slug);
+    if (!project) throw new Error(`Missing project for FDE portfolio: ${item.slug}`);
+    return {
+      slug: project.slug,
+      kind: "project",
+      title: project.title,
+      summary: project.summary,
+      blurb: item.blurb,
+      evidence: item.evidence,
+      stack: item.stack ?? project.technologies,
+      demonstrates: item.demonstrates,
+      limit: item.limit,
+      href: project.relatedWorkSlug ? `/work/${project.relatedWorkSlug}` : `/projects#${project.slug}`,
+      githubUrl: project.links?.github,
+      demoUrl: project.links?.demo,
+    };
+  });
+}
 
 /** How far a RELAY roadmap phase has actually gone. */
 export type FdePhaseStatus = "planned" | "in-progress" | "implemented" | "tested" | "deployed";
@@ -173,13 +496,13 @@ export interface FdeRelatedWork {
   links: { href: string; label: string }[];
 }
 
-/** Page identity, hero copy, and the lines that must stay attached to the proposal. */
+/** RELAY deep-dive page identity, hero copy, and the lines that must stay attached to the proposal. */
 export const fdePow = {
-  path: FDE_PATH,
-  title: "Forward deployed engineering",
+  path: FDE_RELAY_PATH,
+  title: "RELAY — Forward deployed engineering proof of work",
   description:
     "A personal proof of work for forward deployed engineering: the proposed RELAY customer-operations workflow, the architecture, and the decisions behind it.",
-  eyebrow: "Forward deployed engineering / proof of work",
+  eyebrow: "Forward deployed engineering / RELAY proof of work",
   headline: "I build systems that solve real operational problems.",
   dek: "From ambiguous problem statements to working software: I investigate workflows, connect systems, build AI-powered solutions, and validate the result.",
   status:
@@ -1110,8 +1433,124 @@ export function fdeRelatedWork(): FdeRelatedWork[] {
   });
 }
 
-/** Markdown body for /pow/fde.md, generated from the same records as the page. */
+/** Format a list of proof links for Markdown table cells. */
+function formatProofLinksMd(items: FdeProofLink[]): string {
+  return items.map((item) => (item.href ? `[${item.label}](${item.href})` : item.label)).join(", ");
+}
+
+/** Markdown body for /pow/fde.md, generated from the same records as the FDE portfolio page. */
 export function renderFdeBody(): string {
+  const techTable = [
+    "| Domain | Scope | Tools & stack | Proof |",
+    "| --- | --- | --- | --- |",
+    ...fdePortfolio.techSkills.map(
+      (row) => `| ${row.domain} | ${row.scope} | ${row.tools} | ${formatProofLinksMd(row.proof)} |`,
+    ),
+  ].join("\n");
+
+  const softTable = [
+    "| Capability | How I work in practice | Evidence |",
+    "| --- | --- | --- |",
+    ...fdePortfolio.softSkills.map(
+      (row) => `| ${row.capability} | ${row.practice} | ${formatProofLinksMd(row.evidence)} |`,
+    ),
+  ].join("\n");
+
+  const proofs = fdeProofs();
+  const projectTable = [
+    "| System | What it solves | Stack | Stage | Links |",
+    "| --- | --- | --- | --- | --- |",
+    ...proofs.map((item) => {
+      const links = [
+        `[On this site](${item.href})`,
+        ...(item.githubUrl ? [`[GitHub](${item.githubUrl})`] : []),
+        ...(item.demoUrl ? [`[Live](${item.demoUrl})`] : []),
+      ].join(", ");
+      return `| ${item.title} | ${item.blurb} | ${item.stack.join(", ")} | ${fdeEvidenceLabels[item.evidence].label} | ${links} |`;
+    }),
+    `| ${fdePow.relayName} | Customer-operations intelligence blueprint: 10-stage workflow, simulated investigation, architecture, trade-offs, and deployment playbook. | Design blueprint | ${fdeEvidenceLabels.blueprint.label} | [Open RELAY](${FDE_RELAY_PATH}) |`,
+  ].join("\n");
+
+  const projectDetails = proofs
+    .map((item) => {
+      const links = [
+        `- On this site: ${item.href}`,
+        ...(item.githubUrl ? [`- GitHub: ${item.githubUrl}`] : []),
+        ...(item.demoUrl ? [`- Live: ${item.demoUrl}`] : []),
+      ].join("\n");
+      return [
+        `### ${item.title} (${fdeEvidenceLabels[item.evidence].label})`,
+        "",
+        item.blurb,
+        "",
+        `Stack: ${item.stack.join(", ")}.`,
+        "",
+        `What it demonstrates: ${item.demonstrates}`,
+        "",
+        `Limits: ${item.limit}`,
+        "",
+        links,
+      ].join("\n");
+    })
+    .join("\n\n");
+
+  const expLines = experience
+    .map(
+      (role) =>
+        `### ${role.title} — ${role.organization} (${role.start} to ${role.end}, ${role.location})\n\n${role.narrative}\n\n${role.highlights.map((h) => `- ${h}`).join("\n")}`,
+    )
+    .join("\n\n");
+
+  const eduLines = education
+    .filter((ed) => ed.slug === "lncts-btech-cse")
+    .map(
+      (ed) =>
+        `- ${ed.degree}, ${ed.institution} (${ed.start} – ${ed.end}${ed.grade ? `, ${ed.grade}` : ""})`,
+    )
+    .join("\n");
+
+  return [
+    fdePortfolio.positioning,
+    "",
+    "## Technical skill stack",
+    "",
+    techTable,
+    "",
+    "## Forward deployed & soft skills",
+    "",
+    softTable,
+    "",
+    "## Selected systems & projects",
+    "",
+    projectTable,
+    "",
+    projectDetails,
+    "",
+    "## Experience & education",
+    "",
+    expLines,
+    "",
+    eduLines,
+    "",
+    `## ${fdePortfolio.relayCallout.title}`,
+    "",
+    fdePortfolio.relayCallout.summary,
+    "",
+    fdePortfolio.relayCallout.note,
+    "",
+    `- ${fdePortfolio.relayCallout.cta}: ${FDE_RELAY_PATH}`,
+    "",
+    "## Links",
+    "",
+    `- GitHub: ${person.primaryProfiles.github}`,
+    `- LinkedIn: ${person.primaryProfiles.linkedin}`,
+    `- Portfolio: ${person.siteUrl}`,
+    `- Email: ${person.email}`,
+  ].join("\n");
+}
+
+/** Markdown body for /pow/fde/relay.md, generated from the same records as the RELAY page. */
+export function renderFdeRelayBody(): string {
   const principles = fdePrinciples.map((item) => `### ${item.title}\n\n${item.body}`).join("\n\n");
   const problem = fdeProblemSteps.map((step, index) => `${index + 1}. ${step.title}. ${step.body}`).join("\n");
   const stages = fdeStages

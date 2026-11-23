@@ -62,7 +62,7 @@ const POW_NOTES: Record<string, string> = {
   "/gtm":
     "Revenue data pipelines, scoring, and what is built versus still being learned.",
   "/pow/fde":
-    "A personal proof of work for the proposed RELAY workflow. Not a customer deployment.",
+    "FDE skill tables, shipped AI and data systems, experience, and the RELAY proof-of-work deep dive.",
   "/pow/product-management":
     "A RevenueRoles case study that separates the live product from hypotheses and unmeasured outcomes.",
   "/pow/devops-engineer":
